@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BugTracker</string>
-    <string name="title_home">Home</string>
+    <string name="title_projects">Projects</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_account">Account</string>
+
 </resources>
