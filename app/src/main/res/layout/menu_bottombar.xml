@@ -12,7 +12,7 @@
         android:layout_gravity="bottom"
         app:fabCradleMargin="10dp"
         app:fabCradleRoundedCornerRadius="10dp"
-        app:fabCradleVerticalOffset="10dp">
+        app:fabCradleVerticalOffset="5dp">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             app:itemRippleColor="@color/transparent"
