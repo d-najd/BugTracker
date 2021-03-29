@@ -1,9 +1,11 @@
 package com.example.bugtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.bugtracker.activities.ProjectCreateActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,7 +34,18 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
+        Listeners();
     }
 
+    private void Listeners(){
+        View mainBtn = findViewById(R.id.mainBtn);
+
+        mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( MainActivity.this, ProjectCreateActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 }
