@@ -42,7 +42,24 @@
             app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <EditText
+            android:visibility="gone"
+            android:id="@+id/adapter_editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="start"
+            android:text="Example"
+            android:textAlignment="viewStart"
+            android:textColor="@color/teal_700"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
+            app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
+            app:layout_constraintTop_toBottomOf="@id/adapter_main_text"/>
+
         <TextView
+            android:visibility="visible"
             android:id="@+id/adapter_secondary_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

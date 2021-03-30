@@ -1,12 +1,14 @@
 package com.example.bugtracker.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -16,12 +18,12 @@ import com.example.bugtracker.R;
 
 import java.util.ArrayList;
 
-public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecyclerAdapter.RecyclerViewHolder>{
+public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCreateRecyclerAdapter.RecyclerViewHolder>{
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
 
-    public ProjectsRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public ProjectCreateRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -38,10 +40,22 @@ public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecycl
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         // Set the data to textview and imageview.
-        RecyclerData RecyclerData = DataArrayList.get(position);
-        holder.title.setText(RecyclerData.getTitle());
-        holder.description.setText(RecyclerData.getDescription());
-        holder.mainBtn.setImageResource(RecyclerData.getImgId());
+        RecyclerData ProjectCreateRecyclerData = DataArrayList.get(position);
+        holder.title.setText(ProjectCreateRecyclerData.getTitle());
+        holder.mainBtn.setImageResource(ProjectCreateRecyclerData.getImgId());
+
+        if (ProjectCreateRecyclerData.getEditText() != null && ProjectCreateRecyclerData.getDescription() != null)
+        {
+            Toast.makeText(mcontext, "Both Editext and Description \nhave text in them", Toast.LENGTH_SHORT).show();
+            Log.wtf("Error", "Both Editext and Description \nhave text in them" );
+        }
+        else if (ProjectCreateRecyclerData.getDescription() != null)
+            holder.description.setText(ProjectCreateRecyclerData.getDescription());
+
+        else if (ProjectCreateRecyclerData.getEditText() != null)
+            holder.editText.setText(ProjectCreateRecyclerData.getEditText());
+
+        holder.secondaryBtn.setVisibility(View.GONE);
 
         Listeners(holder, position);
     }
@@ -53,7 +67,7 @@ public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecycl
     }
 
     private void Listeners(RecyclerViewHolder holder, int position){
-        RecyclerData RecyclerData = DataArrayList.get(position);
+        RecyclerData ProjectCreateRecyclerData = DataArrayList.get(position);
         /*
         holder.mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,24 +76,6 @@ public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecycl
             }
         });
          */
-
-        holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean favorite = RecyclerData.getFavorite();
-
-                if (favorite) {
-                    RecyclerData.setFavorite(false);
-                    holder.secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
-                    holder.secondaryBtn.setColorFilter(Color.WHITE);
-                }
-                else {
-                    RecyclerData.setFavorite(true);
-                    holder.secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
-                    holder.secondaryBtn.setColorFilter(Color.YELLOW);
-                }
-            }
-        });
     }
 
 
@@ -88,6 +84,7 @@ public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecycl
 
         private TextView title;
         private TextView description;
+        private EditText editText;
         private ImageButton mainBtn;
         private ImageButton secondaryBtn;
 
@@ -95,6 +92,7 @@ public class ProjectsRecyclerAdapter extends RecyclerView.Adapter<ProjectsRecycl
             super(itemView);
             title = itemView.findViewById(R.id.adapter_main_text);
             description = itemView.findViewById(R.id.adapter_secondary_text);
+            editText = itemView.findViewById(R.id.editText);
             mainBtn = itemView.findViewById(R.id.adapter_mainImgBtn);
             secondaryBtn = itemView.findViewById(R.id.adapter_favorite_button);
         }

@@ -1,9 +1,6 @@
 package com.example.bugtracker.ui;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +13,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.adapters.ProjectsRecyclerAdapter;
-import com.example.bugtracker.adapters.ProjectsRecyclerData;
+import com.example.bugtracker.adapters.RecyclerData;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 
 public class ProjectsFragment extends Fragment {
     RecyclerView recyclerView;
-    private ArrayList<ProjectsRecyclerData> recyclerDataArrayList;
+    private ArrayList<RecyclerData> recyclerDataArrayList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         recyclerDataArrayList = new ArrayList<>();
 
-        recyclerDataArrayList.add(new ProjectsRecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
-        recyclerDataArrayList.add(new ProjectsRecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
-        recyclerDataArrayList.add(new ProjectsRecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background));
 
         recyclerView = root.findViewById(R.id.recyclerView_Act_checklist);
 
