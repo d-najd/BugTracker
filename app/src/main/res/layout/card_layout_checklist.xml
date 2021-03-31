@@ -15,7 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:paddingEnd="12dp"
+        android:paddingStart="12dp"
+        android:padding="8dp">
 
         <ImageButton
             android:id="@+id/adapter_mainImgBtn"
@@ -33,8 +35,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:gravity="start"
             android:text="Title"
+            android:textStyle="bold"
             android:textAlignment="viewStart"
             android:textColor="@color/white_gray"
             android:textSize="14sp"
@@ -47,16 +51,17 @@
             android:id="@+id/adapter_editText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
             android:gravity="start"
-            android:text="Example"
+            android:text=""
             android:textAlignment="viewStart"
             android:textColor="@color/teal_700"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
             app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
-            app:layout_constraintTop_toBottomOf="@id/adapter_main_text"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:visibility="visible"
@@ -64,8 +69,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
             android:gravity="start"
-            android:text="Example"
+            android:text=""
             android:textAlignment="viewStart"
             android:textColor="@color/teal_700"
             android:textSize="12sp"
@@ -75,6 +82,7 @@
             app:layout_constraintTop_toBottomOf="@id/adapter_main_text" />
 
         <ImageButton
+            android:visibility="gone"
             android:id="@+id/adapter_favorite_button"
             android:minWidth="36dp"
             android:minHeight="36dp"

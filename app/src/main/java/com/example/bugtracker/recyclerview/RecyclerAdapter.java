@@ -1,6 +1,7 @@
-package com.example.bugtracker.adapters;
+package com.example.bugtracker.recyclerview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -18,12 +18,12 @@ import com.example.bugtracker.R;
 
 import java.util.ArrayList;
 
-public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCreateRecyclerAdapter.RecyclerViewHolder>{
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
 
-    public ProjectCreateRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -40,22 +40,25 @@ public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCr
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         // Set the data to textview and imageview.
-        RecyclerData ProjectCreateRecyclerData = DataArrayList.get(position);
-        holder.title.setText(ProjectCreateRecyclerData.getTitle());
-        holder.mainBtn.setImageResource(ProjectCreateRecyclerData.getImgId());
+        RecyclerData RecyclerData = DataArrayList.get(position);
+        holder.title.setText(RecyclerData.getTitle());
+        holder.mainBtn.setImageResource(RecyclerData.getImgId());
 
-        if (ProjectCreateRecyclerData.getEditText() != null && ProjectCreateRecyclerData.getDescription() != null)
+        Log.wtf("what is going on", "??");
+
+        if (RecyclerData.getEditTextEnable())
         {
-            Toast.makeText(mcontext, "Both Editext and Description \nhave text in them", Toast.LENGTH_SHORT).show();
-            Log.wtf("Error", "Both Editext and Description \nhave text in them" );
+            holder.editText.setVisibility(View.VISIBLE);
+            holder.editText.setText(RecyclerData.getDescription());
+            holder.description.setVisibility(View.GONE);
+        } else if (RecyclerData.getDescription() != null){
+            holder.description.setText(RecyclerData.getDescription());
         }
-        else if (ProjectCreateRecyclerData.getDescription() != null)
-            holder.description.setText(ProjectCreateRecyclerData.getDescription());
+        else
+            holder.description.setVisibility(View.GONE);
 
-        else if (ProjectCreateRecyclerData.getEditText() != null)
-            holder.editText.setText(ProjectCreateRecyclerData.getEditText());
-
-        holder.secondaryBtn.setVisibility(View.GONE);
+        if (RecyclerData.getLayout() == 0)
+            holder.secondaryBtn.setVisibility(View.VISIBLE);
 
         Listeners(holder, position);
     }
@@ -67,7 +70,7 @@ public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCr
     }
 
     private void Listeners(RecyclerViewHolder holder, int position){
-        RecyclerData ProjectCreateRecyclerData = DataArrayList.get(position);
+        RecyclerData recyclerData = DataArrayList.get(position);
         /*
         holder.mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,8 +79,25 @@ public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCr
             }
         });
          */
-    }
 
+        holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean favorite = recyclerData.getFavorite();
+
+                if (favorite) {
+                    recyclerData.setFavorite(false);
+                    holder.secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
+                    holder.secondaryBtn.setColorFilter(Color.WHITE);
+                }
+                else {
+                    recyclerData.setFavorite(true);
+                    holder.secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
+                    holder.secondaryBtn.setColorFilter(Color.YELLOW);
+                }
+            }
+        });
+    }
 
     // View Holder Class to handle Recycler View.
     public class RecyclerViewHolder extends RecyclerView.ViewHolder {
@@ -92,7 +112,7 @@ public class ProjectCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectCr
             super(itemView);
             title = itemView.findViewById(R.id.adapter_main_text);
             description = itemView.findViewById(R.id.adapter_secondary_text);
-            editText = itemView.findViewById(R.id.editText);
+            editText = itemView.findViewById(R.id.adapter_editText);
             mainBtn = itemView.findViewById(R.id.adapter_mainImgBtn);
             secondaryBtn = itemView.findViewById(R.id.adapter_favorite_button);
         }

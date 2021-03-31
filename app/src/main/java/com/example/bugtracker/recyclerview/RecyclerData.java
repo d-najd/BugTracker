@@ -1,25 +1,34 @@
-package com.example.bugtracker.adapters;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.bugtracker.R;
+package com.example.bugtracker.recyclerview;
 
 public class RecyclerData {
 
     private String title;
     private String description;
-    private String editText;
     private int imgId;
+    private int layout; // which recyclerview we are using
     private Boolean favorite = false;
+    private Boolean editTextEnable = false;
 
-    public RecyclerData(String title, String description, String editText, int imgId) {
+    public RecyclerData(String title, String description, int imgId, boolean editTextEnable, int layout){
         this.title = title;
         this.imgId = imgId;
         this.description = description;
-        this.editText = editText;
+        this.editTextEnable = editTextEnable;
+        this.layout = layout;
     }
 
+    public RecyclerData(String title, String description, int imgId, int layout) {
+        this.title = title;
+        this.imgId = imgId;
+        this.description = description;
+        this.layout = layout;
+    }
 
+    public RecyclerData(String title, int imgId, int layout){
+        this.title = title;
+        this.imgId = imgId;
+        this.layout = layout;
+    }
 
     public String getTitle() {
         return title;
@@ -35,14 +44,6 @@ public class RecyclerData {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getEditText(){
-        return editText;
-    }
-
-    public void setEditText(String editText) {
-        this.editText = editText;
     }
 
     public int getImgId() {
@@ -61,4 +62,11 @@ public class RecyclerData {
     public void setFavorite(Boolean favorite){
         this.favorite = favorite;
     }
+
+    public Boolean getEditTextEnable()
+    {
+        return editTextEnable;
+    }
+
+    public int getLayout(){ return layout;}
 }
