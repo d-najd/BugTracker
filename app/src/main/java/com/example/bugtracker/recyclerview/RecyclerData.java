@@ -4,27 +4,27 @@ public class RecyclerData {
 
     private String title;
     private String description;
+    private String layout; // used for differentiating the recyclerViews
     private int imgId;
-    private int layout; // which recyclerview we are using
     private Boolean favorite = false;
     private Boolean editTextEnable = false;
 
-    public RecyclerData(String title, String description, int imgId, boolean editTextEnable, int layout){
+    public RecyclerData(String title, String description, int imgId, boolean editTextEnable, String layout){
         this.title = title;
-        this.imgId = imgId;
         this.description = description;
+        this.imgId = imgId;
         this.editTextEnable = editTextEnable;
         this.layout = layout;
     }
 
-    public RecyclerData(String title, String description, int imgId, int layout) {
+    public RecyclerData(String title, String description, int imgId, String layout) {
         this.title = title;
-        this.imgId = imgId;
         this.description = description;
+        this.imgId = imgId;
         this.layout = layout;
     }
 
-    public RecyclerData(String title, int imgId, int layout){
+    public RecyclerData(String title, int imgId, String layout){
         this.title = title;
         this.imgId = imgId;
         this.layout = layout;
@@ -68,5 +68,5 @@ public class RecyclerData {
         return editTextEnable;
     }
 
-    public int getLayout(){ return layout;}
+    public String getLayout(){ return layout;}
 }

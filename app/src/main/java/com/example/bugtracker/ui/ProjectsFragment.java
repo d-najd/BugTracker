@@ -1,9 +1,11 @@
 package com.example.bugtracker.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,12 +28,12 @@ public class ProjectsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         recyclerDataArrayList = new ArrayList<>();
+        recyclerView = root.findViewById(R.id.recyclerView_Fra_Projects);
+        String tag = recyclerView.getTag().toString();
 
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, 0));
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, 0));
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, 0));
-
-        recyclerView = root.findViewById(R.id.recyclerView_Act_checklist);
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
+        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());

@@ -2,13 +2,17 @@ package com.example.bugtracker.recyclerview;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -39,17 +43,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        // Set the data to textview and imageview.
         RecyclerData RecyclerData = DataArrayList.get(position);
+        String layout = RecyclerData.getLayout();
+
         holder.title.setText(RecyclerData.getTitle());
         holder.mainBtn.setImageResource(RecyclerData.getImgId());
-
-        Log.wtf("what is going on", "??");
 
         if (RecyclerData.getEditTextEnable())
         {
             holder.editText.setVisibility(View.VISIBLE);
-            holder.editText.setText(RecyclerData.getDescription());
+            holder.editText.setHint(RecyclerData.getDescription());
             holder.description.setVisibility(View.GONE);
         } else if (RecyclerData.getDescription() != null){
             holder.description.setText(RecyclerData.getDescription());
@@ -57,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         else
             holder.description.setVisibility(View.GONE);
 
-        if (RecyclerData.getLayout() == 0)
+        if (layout.equals("Projects"))
             holder.secondaryBtn.setVisibility(View.VISIBLE);
 
         Listeners(holder, position);
@@ -80,9 +83,26 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         });
          */
 
+        holder.editText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                recyclerData.setDescription(s + "");
+            }
+        });
+
         holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.wtf("test", v.getTag() + "");
                 boolean favorite = recyclerData.getFavorite();
 
                 if (favorite) {
@@ -97,19 +117,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 }
             }
         });
+
+        holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mcontext, DataArrayList.get(0).getDescription(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     // View Holder Class to handle Recycler View.
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder {
+    class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
         private TextView description;
-        private EditText editText;
+        public EditText editText;
         private ImageButton mainBtn;
         private ImageButton secondaryBtn;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
+
             title = itemView.findViewById(R.id.adapter_main_text);
             description = itemView.findViewById(R.id.adapter_secondary_text);
             editText = itemView.findViewById(R.id.adapter_editText);
