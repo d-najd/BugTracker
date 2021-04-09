@@ -43,19 +43,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        RecyclerData RecyclerData = DataArrayList.get(position);
-        String layout = RecyclerData.getLayout();
+        RecyclerData recyclerData = DataArrayList.get(position);
+        String layout = recyclerData.getTag();
 
-        holder.title.setText(RecyclerData.getTitle());
-        holder.mainBtn.setImageResource(RecyclerData.getImgId());
+        holder.title.setText(recyclerData.getTitle());
+        holder.mainBtn.setImageResource(recyclerData.getImgId());
 
-        if (RecyclerData.getEditTextEnable())
+        if (recyclerData.getEditTextEnable())
         {
             holder.editText.setVisibility(View.VISIBLE);
-            holder.editText.setHint(RecyclerData.getDescription());
+            holder.editText.setHint(recyclerData.getDescription());
             holder.description.setVisibility(View.GONE);
-        } else if (RecyclerData.getDescription() != null){
-            holder.description.setText(RecyclerData.getDescription());
+        } else if (recyclerData.getDescription() != null){
+            holder.description.setText(recyclerData.getDescription());
         }
         else
             holder.description.setVisibility(View.GONE);
@@ -121,7 +121,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mcontext, DataArrayList.get(0).getDescription(), Toast.LENGTH_SHORT).show();
+                if (recyclerData.getTag() == "Projects")
+                {
+
+                }
             }
         });
     }

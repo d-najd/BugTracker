@@ -2,6 +2,7 @@ package com.example.bugtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -67,7 +68,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addUser(v);
-                viewdata(v);
+                viewdata();
             }
         });
     }
@@ -97,7 +98,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
         }
     }
 
-    public void viewdata(View view)
+    public void viewdata()
     {
         myDbAdapter helper = new myDbAdapter(this);
 

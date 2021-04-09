@@ -7,12 +7,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.bugtracker.activities.ProjectCreateActivity;
-import com.example.bugtracker.ui.DashboardFragment;
+import com.example.bugtracker.ui.ProjectsFragment;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 
 public class myDbAdapter {
     myDbHelper myhelper;
-    public myDbAdapter(ProjectCreateActivity context)
+    public myDbAdapter(Context context)
     {
         myhelper = new myDbHelper(context);
     }
@@ -31,14 +34,15 @@ public class myDbAdapter {
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         String[] columns = {myDbHelper.UID,myDbHelper.NAME,myDbHelper.MyPASSWORD};
-        Cursor cursor =db.query(myDbHelper.TABLE_NAME,columns,null,null,null,null,null);
-        StringBuffer buffer= new StringBuffer();
+        Cursor cursor = db.query(myDbHelper.TABLE_NAME,columns,null,null,null,null,null);
+        StringBuffer buffer = new StringBuffer();
         while (cursor.moveToNext())
         {
             int cid = cursor.getInt(cursor.getColumnIndex(myDbHelper.UID));
             String name = cursor.getString(cursor.getColumnIndex(myDbHelper.NAME));
             String  password = cursor.getString(cursor.getColumnIndex(myDbHelper.MyPASSWORD));
-            buffer.append(cid+ "   " + name + "   " + password +" \n");
+            buffer.append(name + "/" + password +"/");
+            //buffer.append(cid + "/" + name + "/" + password +"/");
         }
         return buffer.toString();
     }
@@ -73,9 +77,9 @@ public class myDbAdapter {
         private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
                 " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " VARCHAR(255) ," + MyPASSWORD+" VARCHAR(225));";
         private static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
-        private ProjectCreateActivity context;
+        private Context context;
 
-        public myDbHelper(ProjectCreateActivity context) {
+        public myDbHelper(Context context) {
 
             super(context, DATABASE_NAME, null, DATABASE_Version);
             this.context = context;

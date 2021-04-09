@@ -4,30 +4,30 @@ public class RecyclerData {
 
     private String title;
     private String description;
-    private String layout; // used for differentiating the recyclerViews
+    private String tag; // used for differentiating the recyclerViews
     private int imgId;
     private Boolean favorite = false;
     private Boolean editTextEnable = false;
 
-    public RecyclerData(String title, String description, int imgId, boolean editTextEnable, String layout){
+    public RecyclerData(String title, String description, int imgId, boolean editTextEnable, String tag){
         this.title = title;
         this.description = description;
         this.imgId = imgId;
         this.editTextEnable = editTextEnable;
-        this.layout = layout;
+        this.tag = tag;
     }
 
-    public RecyclerData(String title, String description, int imgId, String layout) {
+    public RecyclerData(String title, String description, int imgId, String tag) {
         this.title = title;
         this.description = description;
         this.imgId = imgId;
-        this.layout = layout;
+        this.tag = tag;
     }
 
-    public RecyclerData(String title, int imgId, String layout){
+    public RecyclerData(String title, int imgId, String tag){
         this.title = title;
         this.imgId = imgId;
-        this.layout = layout;
+        this.tag = tag;
     }
 
     public String getTitle() {
@@ -68,5 +68,5 @@ public class RecyclerData {
         return editTextEnable;
     }
 
-    public String getLayout(){ return layout;}
+    public String getTag(){ return tag;}
 }

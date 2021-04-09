@@ -14,9 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
+import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
+import com.example.bugtracker.recyclerview.myDbAdapter;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,11 +32,8 @@ public class ProjectsFragment extends Fragment {
 
         recyclerDataArrayList = new ArrayList<>();
         recyclerView = root.findViewById(R.id.recyclerView_Fra_Projects);
-        String tag = recyclerView.getTag().toString();
 
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
-        recyclerDataArrayList.add(new RecyclerData("Add item", "Description", R.drawable.ic_launcher_background, tag));
+        retrieveData();
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());
@@ -49,14 +49,33 @@ public class ProjectsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        ItemTouchHelper itemTouchHelper;
+
+        itemTouchHelper = new ItemTouchHelper(ItemMoved);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        itemTouchHelper = new ItemTouchHelper(ItemSwiped);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return root;
     }
 
+    public void retrieveData()
+    {
+        String tag = recyclerView.getTag().toString();
+        myDbAdapter helper = new myDbAdapter(getContext());
+
+        String data = helper.getData();
+        String [] parts = data.split("/");
+        for (int i = 0; i < parts.length - 1; i++){
+            if (i % 2 == 0)
+                Log.wtf("test", parts[i]);
+                recyclerDataArrayList.add(new RecyclerData(parts[i], parts[i + 1], R.drawable.ic_launcher_background, tag));
+        }
+    }
+
     //used for reordering items
-    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(
+    ItemTouchHelper.SimpleCallback ItemMoved = new ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder
@@ -73,6 +92,26 @@ public class ProjectsFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            Toast.makeText(getContext(), "Swiped", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    ItemTouchHelper.SimpleCallback ItemSwiped = new ItemTouchHelper.SimpleCallback( 0, ItemTouchHelper.RIGHT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            myDbAdapter helper = new myDbAdapter(getContext());
+
+            //TODO FIXME
+            helper.delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getDescription());
+
+            recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+
+
         }
     };
 }
