@@ -34,7 +34,6 @@ public class ProjectsFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerView_Fra_Projects);
 
         retrieveData();
-
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());
 
@@ -67,10 +66,10 @@ public class ProjectsFragment extends Fragment {
 
         String data = helper.getData();
         String [] parts = data.split("/");
+
         for (int i = 0; i < parts.length - 1; i++){
-            if (i % 2 == 0)
-                Log.wtf("test", parts[i]);
-                recyclerDataArrayList.add(new RecyclerData(parts[i], parts[i + 1], R.drawable.ic_launcher_background, tag));
+            if (i % 3 == 0)
+                recyclerDataArrayList.add(new RecyclerData(parts[i], parts[i + 1], R.drawable.ic_launcher_background, tag, parts[i + 2]));
         }
     }
 
@@ -107,11 +106,10 @@ public class ProjectsFragment extends Fragment {
             myDbAdapter helper = new myDbAdapter(getContext());
 
             //TODO FIXME
-            helper.delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getDescription());
+            helper.delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 
+            recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
             recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
-
-
         }
     };
 }

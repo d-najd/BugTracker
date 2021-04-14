@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.bugtracker.activities.ProjectCreateActivity;
 import com.example.bugtracker.ui.ProjectsFragment;
@@ -40,20 +41,20 @@ public class myDbAdapter {
         {
             int cid = cursor.getInt(cursor.getColumnIndex(myDbHelper.UID));
             String name = cursor.getString(cursor.getColumnIndex(myDbHelper.NAME));
-            String  password = cursor.getString(cursor.getColumnIndex(myDbHelper.MyPASSWORD));
-            buffer.append(name + "/" + password +"/");
+            String password = cursor.getString(cursor.getColumnIndex(myDbHelper.MyPASSWORD));
+            buffer.append(name + "/" + password + "/" + cid + "/");
             //buffer.append(cid + "/" + name + "/" + password +"/");
         }
         return buffer.toString();
     }
 
-    public int delete(String uname)
+    public int delete(String id)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
-        String[] whereArgs ={uname};
-
-        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.NAME+" = ?",whereArgs);
-        return  count;
+        String[] whereArgs ={id};
+        Log.wtf("removing", id);
+        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.UID + " = ?",whereArgs);
+        return count;
     }
 
     public int updateName(String oldName , String newName)

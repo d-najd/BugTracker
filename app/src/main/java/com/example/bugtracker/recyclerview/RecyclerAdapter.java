@@ -1,6 +1,8 @@
 package com.example.bugtracker.recyclerview;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,9 +18,13 @@ import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.MainActivity;
 import com.example.bugtracker.R;
+import com.example.bugtracker.activities.CreateTaskActivity;
+import com.example.bugtracker.activities.ProjectCreateActivity;
 
 import java.util.ArrayList;
 
@@ -48,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         holder.title.setText(recyclerData.getTitle());
         holder.mainBtn.setImageResource(recyclerData.getImgId());
+        holder.id.setText(recyclerData.getId());
 
         if (recyclerData.getEditTextEnable())
         {
@@ -60,8 +67,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         else
             holder.description.setVisibility(View.GONE);
 
-        if (layout.equals("Projects"))
+        if (layout.equals(mcontext.getString(R.string.title_projects)))
             holder.secondaryBtn.setVisibility(View.VISIBLE);
+        
+        if (recyclerData.getSecondImgId() != 0){
+            holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
+            holder.secondaryBtn.setVisibility(View.VISIBLE);
+        }
 
         Listeners(holder, position);
     }
@@ -74,14 +86,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private void Listeners(RecyclerViewHolder holder, int position){
         RecyclerData recyclerData = DataArrayList.get(position);
-        /*
-        holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(mcontext, "Implement dragging with holding this button...", Toast.LENGTH_SHORT).show();
-            }
-        });
-         */
 
         holder.editText.addTextChangedListener(new TextWatcher() {
 
@@ -99,41 +103,193 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
-        holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.wtf("test", v.getTag() + "");
-                boolean favorite = recyclerData.getFavorite();
+        if (holder.title.getText().equals("Highlight"))
+        {
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean favorite = recyclerData.getFavorite();
 
-                if (favorite) {
-                    recyclerData.setFavorite(false);
-                    holder.secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
-                    holder.secondaryBtn.setColorFilter(Color.WHITE);
+                    if (favorite) {
+                        recyclerData.setFavorite(false);
+                        holder.mainBtn.setImageResource(R.drawable.ic_empty_star_24dp);
+                    } else {
+                        recyclerData.setFavorite(true);
+                        holder.mainBtn.setImageResource(R.drawable.ic_star_24dp);
+                    }
                 }
-                else {
-                    recyclerData.setFavorite(true);
-                    holder.secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
-                    holder.secondaryBtn.setColorFilter(Color.YELLOW);
+            });
+        } else if (holder.title.getText().equals("Due Date"))
+        {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mcontext, "add the shit", Toast.LENGTH_SHORT).show();
+                    DateTime1();
                 }
+            });
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mcontext, "add the shit", Toast.LENGTH_SHORT).show();
+                    DateTime1();
+                }
+            });
+        }
+
+        if (recyclerData.getTag().equals(R.string.title_projects)) {
+            holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean favorite = recyclerData.getFavorite();
+                    if (favorite) {
+                        recyclerData.setFavorite(false);
+                        holder.secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
+                        holder.secondaryBtn.setColorFilter(Color.WHITE);
+                    } else {
+                        recyclerData.setFavorite(true);
+                        holder.secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
+                        holder.secondaryBtn.setColorFilter(Color.YELLOW);
+                    }
+                }
+            });
+        }
+
+        //CreateProjects
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.Create_Project)))
+        {
+            if (holder.title.getText().equals("Tasks")) {
+                holder.title.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
+                        mcontext.startActivity(intent);
+                    }
+                });
+
+                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
+                        mcontext.startActivity(intent);
+                    }
+                });
             }
-        });
+        }
 
-        holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (recyclerData.getTag() == "Projects")
-                {
+        //TODO FIX THIS SHIT
+        else if (recyclerData.getTag().equals(R.string.Create_Task)){
+            Toast.makeText(mcontext, position, Toast.LENGTH_SHORT).show();
+            if (position == 0){
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SelectBetweenTaskEpic();
+                        Toast.makeText(mcontext, "test", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                /* TODO CHECK IF THIS NEEDS TO STAY HERE
+                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SelectBetweenTaskEpic();
+                        Toast.makeText(mcontext, "test", Toast.LENGTH_SHORT).show();
 
-                }
+                    }
+                });
+
+                 */
             }
-        });
+        }
     }
+
+    private void DateTime1(){
+        //TODO FIGURE OUT HOW TO DO CUSTOM DIALOGS
+        String [] test = new String[2];
+        test[0] = "Text";
+
+        test[1] = "Checklist";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+        builder.setTitle("Add")
+                .setItems(test, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0){
+                            Toast.makeText(mcontext, "Need to add Activity for this", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (which == 1){
+                        }
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void SelectBetweenTaskEpic(){
+        // Create an alert builder
+        String [] test = new String[2];
+        test[0] = "Text";
+
+        test[1] = "Checklist";
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+        builder.setTitle("Add")
+
+
+                // set the custom layout
+                //final View customLayout =
+                //        getLayoutInflater().inflate(R.layout.custom_layout, null);
+                //builder.setView(customLayout)
+
+
+                .setItems(test, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0){
+                            Toast.makeText(mcontext, "Need to add Activity for this", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (which == 1){
+                        }
+                    }
+                });
+
+
+        // the ok button for exiting
+
+                /*
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        // send data from the
+                        // AlertDialog to the Activity
+                        //EditText editText = customLayout.findViewById(R.id.ctmAct_1stTxt);
+                        //sendDialogDataToActivity(editText.getText().toString());
+                        checkListBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(MainActivity.this, "pressed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                */
+        // create and show
+        // the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // Do something with the data
+    // coming from the AlertDialog
+
 
     // View Holder Class to handle Recycler View.
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
         private TextView description;
+        private TextView id;
         public EditText editText;
         private ImageButton mainBtn;
         private ImageButton secondaryBtn;
@@ -146,6 +302,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             editText = itemView.findViewById(R.id.adapter_editText);
             mainBtn = itemView.findViewById(R.id.adapter_mainImgBtn);
             secondaryBtn = itemView.findViewById(R.id.adapter_favorite_button);
+            id = itemView.findViewById(R.id.adapter_setId);
         }
     }
 }

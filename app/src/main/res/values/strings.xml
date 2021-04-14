@@ -12,5 +12,7 @@
     <string name="add_user">add_user</string>
     <string name="update">update</string>
     <string name="delete">delete</string>
+    <string name="Create_Project">CreateProject</string>
+    <string name="Create_Task">CreateTask</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.example.bugtracker.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,8 +42,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
         //add subTasks for the selected Task
         recyclerDataArrayList.add(new RecyclerData("Sub Tasks", "No Task selected",  R.drawable.ic_list_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Roadmap",  R.drawable.ic_calendar_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData("Due Date", "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Reminder", "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Highlight", "Make the project stand out from the rest",  R.drawable.ic_star_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData("Highlight", "Make the project stand out from the rest",  R.drawable.ic_empty_star_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Created", Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
 
         // added data from arraylist to adapter class.
@@ -63,7 +65,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
         View mainBtn = findViewById(R.id.mainBtn);
 
-
         mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,10 @@ public class ProjectCreateActivity extends AppCompatActivity {
         EditText Name = (EditText) findViewById(R.id.Edt_Create_Project);
         String Pass = recyclerDataArrayList.get(0).getDescription();
 
+        String data = helper.getData();
+        String [] parts = data.split("/");
+        int size = parts.length;
+
         String t1 = Name.getText().toString();
         String t2 = Pass;
         if(t1.isEmpty() || t2.isEmpty())
@@ -93,7 +98,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 Message.message(this,"Insertion Unsuccessful");
             } else
             {
-                Message.message(this,"Insertion Successful");
+                Message.message(this, getString(R.string.title_projects));
+                recyclerDataArrayList.add(new RecyclerData(parts[size - 2], parts[size - 1], R.drawable.ic_launcher_background,  getString(R.string.title_projects) + "", parts[size]));
+                Message.message(this, getString(R.string.title_projects));
             }
         }
     }
