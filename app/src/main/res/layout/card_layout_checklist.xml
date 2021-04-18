@@ -1,54 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--XML implementation of Card Layout
+<?xml version="1.0" encoding="utf-8"?><!--XML implementation of Card Layout
 	Keep the width of card layout to match parent-->
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="@color/black">
+    app:cardBackgroundColor="@color/black"
+    app:cardCornerRadius="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:orientation="horizontal"
-        android:paddingEnd="12dp"
+        android:padding="8dp"
         android:paddingStart="12dp"
-        android:padding="8dp">
+        android:paddingEnd="12dp">
 
         <ImageButton
             android:id="@+id/adapter_mainImgBtn"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="start"
+            android:background="@color/transparent"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/transparent"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/adapter_main_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="52dp"
             android:layout_marginTop="8dp"
             android:gravity="start"
             android:text="Title"
-            android:textStyle="bold"
             android:textAlignment="viewStart"
             android:textColor="@color/white_gray"
             android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
-            app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:visibility="gone"
             android:id="@+id/adapter_editText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -59,17 +57,17 @@
             android:textAlignment="viewStart"
             android:textColor="@color/teal_700"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
             app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:visibility="visible"
             android:id="@+id/adapter_secondary_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="52dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="12dp"
             android:gravity="start"
@@ -77,23 +75,24 @@
             android:textAlignment="viewStart"
             android:textColor="@color/teal_700"
             android:textSize="12sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
-            app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/adapter_main_text" />
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/adapter_favorite_button"
-            android:minWidth="36dp"
-            android:minHeight="36dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:minWidth="36dp"
+            android:minHeight="36dp"
             android:src="@drawable/ic_empty_star_24dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/transparent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/adapter_setId"
@@ -102,6 +101,26 @@
             android:text=""
             android:textSize="0sp"
             android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/adapter_recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/adapter_secondary_text"
+            app:layout_constraintEnd_toEndOf="@+id/adapter_secondary_text"
+            app:layout_constraintStart_toStartOf="@+id/adapter_secondary_text"
+            app:layout_constraintTop_toTopOf="@+id/adapter_secondary_text" />
+
+        <Spinner
+            android:visibility="gone"
+            android:id="@+id/simpleSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

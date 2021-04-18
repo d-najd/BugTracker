@@ -15,7 +15,6 @@
         <item name="colorOnBackground">@color/dark_gray</item>
         <item name="colorOnError">@color/dark_red</item>
         !-->
-
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
