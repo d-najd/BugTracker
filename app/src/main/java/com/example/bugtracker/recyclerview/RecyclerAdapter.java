@@ -1,5 +1,7 @@
 package com.example.bugtracker.recyclerview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,8 +9,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.EditText;
@@ -25,6 +29,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,6 +38,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
+    private ImageView activeCalBtn;
 
     ArrayList<RecyclerData> arrayList = new ArrayList<>();
 
@@ -140,6 +147,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         if (holder.title.getText().equals("Highlight"))
         {
+
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -156,6 +164,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         } else if (holder.title.getText().equals("Due Date"))
         {
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -168,6 +177,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     DateTime1(v);
                 }
             });
+
         }
 
         if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) {
@@ -213,6 +223,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //TODO FIX THIS SHIT
         else if (recyclerData.getTag().equals(R.string.Create_Task)){
             Toast.makeText(mcontext, position, Toast.LENGTH_SHORT).show();
+
             if (position == 0){
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -242,7 +253,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
-
 
         CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
         TextView dayMonthTxt = dialogView.findViewById(R.id.day_month);
@@ -358,6 +368,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         });
 
         AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
+
         alertDialog.show();
 
 
@@ -373,10 +385,136 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_hour, viewGroup, false);
         builder.setView(dialogView);
 
-        ImageView image = dialogView.findViewById(R.id.clock);
 
         AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
         alertDialog.show();
+
+        //region clockClickListeners
+
+        ImageView clock00 = dialogView.findViewById(R.id.clock_00);
+        ImageView clock01 = dialogView.findViewById(R.id.clock_01);
+        ImageView clock02 = dialogView.findViewById(R.id.clock_02);
+        ImageView clock03 = dialogView.findViewById(R.id.clock_03);
+        ImageView clock04 = dialogView.findViewById(R.id.clock_04);
+        ImageView clock05 = dialogView.findViewById(R.id.clock_05);
+        ImageView clock06 = dialogView.findViewById(R.id.clock_06);
+        ImageView clock07 = dialogView.findViewById(R.id.clock_07);
+        ImageView clock08 = dialogView.findViewById(R.id.clock_08);
+        ImageView clock09 = dialogView.findViewById(R.id.clock_09);
+        ImageView clock10 = dialogView.findViewById(R.id.clock_10);
+        ImageView clock11 = dialogView.findViewById(R.id.clock_11);
+
+
+        clock00.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock00);
+            }
+        });
+        clock01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock01);
+            }
+        });
+        clock02.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock02);
+            }
+        });
+        clock03.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock03);
+            }
+        });
+        clock04.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock04);
+            }
+        });
+        clock05.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock05);
+            }
+        });
+        clock06.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock06);
+            }
+        });
+        clock07.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock07);
+            }
+        });
+        clock08.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock08);
+            }
+        });
+        clock09.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock09);
+            }
+        });
+        clock10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock10);
+            }
+        });
+        clock11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealFAB(clock11);
+            }
+        });
+
+
+        //endregion
+    }
+
+    private void revealFAB(ImageView imageView) {
+        //Check if any button is pressed
+        if (activeCalBtn == null)
+            activeCalBtn = imageView.findViewById(R.id.clock_00);
+
+        if (imageView != activeCalBtn) {
+            hideFAB(imageView);
+            activeCalBtn = imageView;
+
+            int cx = imageView.getWidth() / 2;
+            int cy = imageView.getHeight() / 2;
+            float finalRadius = (float) Math.hypot(cx, cy);
+            Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
+            imageView.setImageResource(R.drawable.ic_circle_blue_42dp);
+            anim.start();
+        }
+    }
+
+    private void hideFAB(ImageView imageView) {
+        int cx = imageView.getWidth() / 2;
+        int cy = imageView.getHeight() / 2;
+        float initialRadius = (float) Math.hypot(cx, cy);
+        Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                imageView.setImageResource(R.drawable.transparent);
+            }
+        });
+        anim.start();
     }
 
     private void SelectBetweenTaskEpic(){
@@ -432,6 +570,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
 
     // Do something with the data
     // coming from the AlertDialog

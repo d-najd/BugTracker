@@ -77,20 +77,321 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/minutes"
             app:layout_constraintTop_toBottomOf="@+id/am" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     <ImageView
         android:id="@+id/clock"
         android:layout_width="match_parent"
-        android:layout_height="375dp"
+        android:layout_height="400dp"
         android:src="@drawable/ic_circle_dark_24dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="70dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
+    <TextView
+        android:id="@+id/clock_00_txt"
+        android:translationZ="1dp"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/clock_00"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_circle_blue_42dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_00_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_00_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_00_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_00_txt" />
+
+    <TextView
+        android:id="@+id/clock_01_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:translationZ="1dp"
+        android:text="1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.660"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.059" />
+
+    <ImageView
+        android:id="@+id/clock_01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_01_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_01_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_01_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_01_txt" />
+
+    <TextView
+        android:id="@+id/clock_02_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="2"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.764"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.211" />
+
+    <ImageView
+        android:id="@+id/clock_02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_02_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_02_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_02_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_02_txt" />
+
+    <TextView
+        android:id="@+id/clock_03_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="16dp"
+        android:translationZ="1dp"
+        android:text="3"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/clock_03"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_03_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_03_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_03_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_03_txt" />
+
+    <TextView
+        android:id="@+id/clock_04_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="4"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.764"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.58" />
+
+    <ImageView
+        android:id="@+id/clock_04"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_04_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_04_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_04_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_04_txt" />
+
+    <TextView
+        android:id="@+id/clock_05_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="5"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.660"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.728" />
+
+    <ImageView
+        android:id="@+id/clock_05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_05_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_05_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_05_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_05_txt" />
+
+    <TextView
+        android:id="@+id/clock_06_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"
+        android:textColor="@color/white"
+        android:translationZ="1dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/clock_06"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_06_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_06_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_06_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_06_txt" />
+
+    <TextView
+        android:id="@+id/clock_07_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="7"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.340"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.729" />
+
+    <ImageView
+        android:id="@+id/clock_07"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_07_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_07_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_07_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_07_txt" />
+
+    <TextView
+        android:id="@+id/clock_08_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="8"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.583" />
+
+    <ImageView
+        android:id="@+id/clock_08"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_08_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_08_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_08_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_08_txt" />
+
+    <TextView
+        android:id="@+id/clock_09_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="16dp"
+        android:text="9"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ImageView
+        android:id="@+id/clock_09"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_09_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_09_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_09_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_09_txt" />
+
+    <TextView
+        android:id="@+id/clock_10_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="10"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.236"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.211" />
+
+    <ImageView
+        android:id="@+id/clock_10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_10_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_10_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_10_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_10_txt" />
+
+    <TextView
+        android:id="@+id/clock_11_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="11"
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/clock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.340"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.059" />
+
+    <ImageView
+        android:id="@+id/clock_11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/clock_11_txt"
+        app:layout_constraintEnd_toEndOf="@+id/clock_11_txt"
+        app:layout_constraintStart_toStartOf="@+id/clock_11_txt"
+        app:layout_constraintTop_toTopOf="@+id/clock_11_txt" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
