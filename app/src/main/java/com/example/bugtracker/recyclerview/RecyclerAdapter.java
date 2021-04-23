@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -29,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,7 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
-    private ImageView activeCalBtn;
+    private ImageView activeTimeBtn;
 
     ArrayList<RecyclerData> arrayList = new ArrayList<>();
 
@@ -385,7 +382,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_hour, viewGroup, false);
         builder.setView(dialogView);
 
-
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
         alertDialog.show();
@@ -405,74 +401,128 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         ImageView clock10 = dialogView.findViewById(R.id.clock_10);
         ImageView clock11 = dialogView.findViewById(R.id.clock_11);
 
+        TextView clock00_txt = dialogView.findViewById(R.id.clock_00_txt);
+        TextView clock01_txt = dialogView.findViewById(R.id.clock_01_txt);
+        TextView clock02_txt = dialogView.findViewById(R.id.clock_02_txt);
+        TextView clock03_txt = dialogView.findViewById(R.id.clock_03_txt);
+        TextView clock04_txt = dialogView.findViewById(R.id.clock_04_txt);
+        TextView clock05_txt = dialogView.findViewById(R.id.clock_05_txt);
+        TextView clock06_txt = dialogView.findViewById(R.id.clock_06_txt);
+        TextView clock07_txt = dialogView.findViewById(R.id.clock_07_txt);
+        TextView clock08_txt = dialogView.findViewById(R.id.clock_08_txt);
+        TextView clock09_txt = dialogView.findViewById(R.id.clock_09_txt);
+        TextView clock10_txt = dialogView.findViewById(R.id.clock_10_txt);
+        TextView clock11_txt = dialogView.findViewById(R.id.clock_11_txt);
 
-        clock00.setOnClickListener(new View.OnClickListener() {
+        TextView hours_txt = dialogView.findViewById(R.id.hours);
+        TextView minutes_txt = dialogView.findViewById(R.id.minutes);
+        TextView am_txt = dialogView.findViewById(R.id.am);
+        TextView pm_txt = dialogView.findViewById(R.id.pm);
+
+        hours_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                    hours_txt.setTextColor(mcontext.getColor(R.color.white));
+                    minutes_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+                }
+            }
+        });
+
+        minutes_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (minutes_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                    minutes_txt.setTextColor(mcontext.getColor(R.color.white));
+                    hours_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+                }
+            }
+        });
+
+        am_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        pm_txt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        if (activeTimeBtn == null)
+            activeTimeBtn = clock00;
+
+        clock00_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock00);
             }
         });
-        clock01.setOnClickListener(new View.OnClickListener() {
+        clock01_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock01);
             }
         });
-        clock02.setOnClickListener(new View.OnClickListener() {
+        clock02_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock02);
             }
         });
-        clock03.setOnClickListener(new View.OnClickListener() {
+        clock03_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock03);
             }
         });
-        clock04.setOnClickListener(new View.OnClickListener() {
+        clock04_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock04);
             }
         });
-        clock05.setOnClickListener(new View.OnClickListener() {
+        clock05_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock05);
             }
         });
-        clock06.setOnClickListener(new View.OnClickListener() {
+        clock06_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock06);
             }
         });
-        clock07.setOnClickListener(new View.OnClickListener() {
+        clock07_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock07);
             }
         });
-        clock08.setOnClickListener(new View.OnClickListener() {
+        clock08_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock08);
             }
         });
-        clock09.setOnClickListener(new View.OnClickListener() {
+        clock09_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock09);
             }
         });
-        clock10.setOnClickListener(new View.OnClickListener() {
+        clock10_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock10);
             }
         });
-        clock11.setOnClickListener(new View.OnClickListener() {
+        clock11_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 revealFAB(clock11);
@@ -485,19 +535,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private void revealFAB(ImageView imageView) {
         //Check if any button is pressed
-        if (activeCalBtn == null)
-            activeCalBtn = imageView.findViewById(R.id.clock_00);
 
-        if (imageView != activeCalBtn) {
-            hideFAB(imageView);
-            activeCalBtn = imageView;
-
+        if (imageView != activeTimeBtn) {
+            hideFAB(activeTimeBtn);
+            activeTimeBtn = imageView;
             int cx = imageView.getWidth() / 2;
             int cy = imageView.getHeight() / 2;
             float finalRadius = (float) Math.hypot(cx, cy);
             Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
-            imageView.setImageResource(R.drawable.ic_circle_blue_42dp);
+            imageView.setVisibility(View.VISIBLE);
+            //imageView.setImageResource(R.drawable.ic_circle_blue_42dp);
             anim.start();
+
         }
     }
 
@@ -511,7 +560,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                imageView.setImageResource(R.drawable.transparent);
+                imageView.setVisibility(View.INVISIBLE);
+                //imageView.setImageResource(R.drawable.transparent);
             }
         });
         anim.start();
