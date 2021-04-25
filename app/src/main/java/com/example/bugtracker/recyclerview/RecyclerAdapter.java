@@ -2,17 +2,25 @@ package com.example.bugtracker.recyclerview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -23,13 +31,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import android.animation.ObjectAnimator;
+import android.view.View;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
 
@@ -37,7 +52,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private Context mcontext;
     private ImageView activeTimeBtn;
 
-    ArrayList<RecyclerData> arrayList = new ArrayList<>();
+    private List<TextView> clock_texts = new ArrayList<TextView>();
+    private List<ImageView> clock_images = new ArrayList<ImageView>();
+
+    private List<String> clockHour_strings = new ArrayList<String>();
+    private List<String> clockMinute_strings = new ArrayList<String>();
 
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
@@ -198,7 +217,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //CreateProjects
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.Create_Project)))
         {
-            if (holder.title.getText().equals("Tasks")) {
+            if (holder.title.getText().equals("New Task")) {
                 holder.title.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -352,7 +371,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO start the activity to set time and set the date
+
                 DateTime2(v);
             }
         })
@@ -369,16 +388,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         alertDialog.show();
 
+        Window window = alertDialog.getWindow();
+        window.setLayout(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW);
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
-
-
     }
 
     private void DateTime2(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
+        AnimationHandler animationHandler = new AnimationHandler();
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_hour, viewGroup, false);
         builder.setView(dialogView);
 
@@ -386,33 +406,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
         alertDialog.show();
 
+        animationHandler.DateTimeListsToAdd();
+
         //region clockClickListeners
+        clock_images.add(dialogView.findViewById(R.id.clock_00));
+        clock_images.add(dialogView.findViewById(R.id.clock_01));
+        clock_images.add(dialogView.findViewById(R.id.clock_02));
+        clock_images.add(dialogView.findViewById(R.id.clock_03));
+        clock_images.add(dialogView.findViewById(R.id.clock_04));
+        clock_images.add(dialogView.findViewById(R.id.clock_05));
+        clock_images.add(dialogView.findViewById(R.id.clock_06));
+        clock_images.add(dialogView.findViewById(R.id.clock_07));
+        clock_images.add(dialogView.findViewById(R.id.clock_08));
+        clock_images.add(dialogView.findViewById(R.id.clock_09));
+        clock_images.add(dialogView.findViewById(R.id.clock_10));
+        clock_images.add(dialogView.findViewById(R.id.clock_11));
 
-        ImageView clock00 = dialogView.findViewById(R.id.clock_00);
-        ImageView clock01 = dialogView.findViewById(R.id.clock_01);
-        ImageView clock02 = dialogView.findViewById(R.id.clock_02);
-        ImageView clock03 = dialogView.findViewById(R.id.clock_03);
-        ImageView clock04 = dialogView.findViewById(R.id.clock_04);
-        ImageView clock05 = dialogView.findViewById(R.id.clock_05);
-        ImageView clock06 = dialogView.findViewById(R.id.clock_06);
-        ImageView clock07 = dialogView.findViewById(R.id.clock_07);
-        ImageView clock08 = dialogView.findViewById(R.id.clock_08);
-        ImageView clock09 = dialogView.findViewById(R.id.clock_09);
-        ImageView clock10 = dialogView.findViewById(R.id.clock_10);
-        ImageView clock11 = dialogView.findViewById(R.id.clock_11);
+        clock_texts.add(dialogView.findViewById(R.id.clock_00_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_01_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_02_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_03_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_04_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_05_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_06_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_07_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_08_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_09_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_10_txt));
+        clock_texts.add(dialogView.findViewById(R.id.clock_11_txt));
 
-        TextView clock00_txt = dialogView.findViewById(R.id.clock_00_txt);
-        TextView clock01_txt = dialogView.findViewById(R.id.clock_01_txt);
-        TextView clock02_txt = dialogView.findViewById(R.id.clock_02_txt);
-        TextView clock03_txt = dialogView.findViewById(R.id.clock_03_txt);
-        TextView clock04_txt = dialogView.findViewById(R.id.clock_04_txt);
-        TextView clock05_txt = dialogView.findViewById(R.id.clock_05_txt);
-        TextView clock06_txt = dialogView.findViewById(R.id.clock_06_txt);
-        TextView clock07_txt = dialogView.findViewById(R.id.clock_07_txt);
-        TextView clock08_txt = dialogView.findViewById(R.id.clock_08_txt);
-        TextView clock09_txt = dialogView.findViewById(R.id.clock_09_txt);
-        TextView clock10_txt = dialogView.findViewById(R.id.clock_10_txt);
-        TextView clock11_txt = dialogView.findViewById(R.id.clock_11_txt);
+        animationHandler.clock_images = clock_images;
+        animationHandler.clock_texts = clock_texts;
 
         TextView hours_txt = dialogView.findViewById(R.id.hours);
         TextView minutes_txt = dialogView.findViewById(R.id.minutes);
@@ -425,6 +449,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
                     hours_txt.setTextColor(mcontext.getColor(R.color.white));
                     minutes_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+
+                    animationHandler.DateTimeHours();
+                    animationHandler.PulseAnim(hours_txt);
                 }
             }
         });
@@ -435,6 +462,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 if (minutes_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
                     minutes_txt.setTextColor(mcontext.getColor(R.color.white));
                     hours_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+
+                    animationHandler.DateTimeMinutes();
+                    animationHandler.PulseAnim(minutes_txt);
                 }
             }
         });
@@ -442,93 +472,35 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         am_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (am_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                    am_txt.setTextColor(mcontext.getColor(R.color.white));
+                    pm_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+                }
             }
         });
 
         pm_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (pm_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                    pm_txt.setTextColor(mcontext.getColor(R.color.white));
+                    am_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+                }
             }
         });
 
         if (activeTimeBtn == null)
-            activeTimeBtn = clock00;
+            activeTimeBtn = clock_images.get(0);
 
-        clock00_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock00);
-            }
-        });
-        clock01_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock01);
-            }
-        });
-        clock02_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock02);
-            }
-        });
-        clock03_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock03);
-            }
-        });
-        clock04_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock04);
-            }
-        });
-        clock05_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock05);
-            }
-        });
-        clock06_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock06);
-            }
-        });
-        clock07_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock07);
-            }
-        });
-        clock08_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock08);
-            }
-        });
-        clock09_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock09);
-            }
-        });
-        clock10_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock10);
-            }
-        });
-        clock11_txt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealFAB(clock11);
-            }
-        });
-
+        for (int i = 0; i < clock_texts.size(); i++){
+            int finalI = i;
+            clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    revealFAB(clock_images.get(finalI));
+                }
+            });
+        }
 
         //endregion
     }
@@ -596,7 +568,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
 
         // the ok button for exiting
-
                 /*
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override

@@ -38,9 +38,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
         //will prob nee to find another way to difference between layouts
         recyclerDataArrayList.add(new RecyclerData("Notes", "Tap to add notes",  R.drawable.ic_note_24dp, true, tag));
         //need to make a menu like the subTask/list menu from tasks app, something like that but modified
-        recyclerDataArrayList.add(new RecyclerData("Tasks",  R.drawable.ic_sublist_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData("New Task",  R.drawable.ic_sublist_24dp, tag));
         //add subTasks for the selected Task
-        recyclerDataArrayList.add(new RecyclerData("Sub Tasks", "No Task selected",  R.drawable.ic_list_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData("Tasks", "No Task selected",  R.drawable.ic_list_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Roadmap",  R.drawable.ic_calendar_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Due Date", "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData("Reminder", "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
@@ -159,6 +159,5 @@ public class ProjectCreateActivity extends AppCompatActivity {
             }
         }
     }
-
      */
 }
