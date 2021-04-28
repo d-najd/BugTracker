@@ -1,5 +1,7 @@
 package com.example.bugtracker.recyclerview;
 
+import android.util.Log;
+
 public class RecyclerData {
 
     private String title;

@@ -33,19 +33,19 @@ public class CreateTaskActivity extends AppCompatActivity {
         String tag = recyclerView.getTag().toString();
 
         //types are epic for lot of tasks and task.
-        recyclerDataArrayList.add(new RecyclerData("Task", R.drawable.ic_task_24dp, R.drawable.ic_arrow_down_24dp,  tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.task), R.drawable.ic_task_24dp, R.drawable.ic_arrow_down_24dp,  tag));
         //need to make a menu like the subTask/list menu from tasks app, something like that but modified
-        recyclerDataArrayList.add(new RecyclerData("Summary","Tap to enter Summary", R.drawable.ic_text_24dp, true, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.summary),"Tap to enter Summary", R.drawable.ic_text_24dp, true, tag));
         //add subTasks for the selected Task
-        recyclerDataArrayList.add(new RecyclerData("Description", "Tap to enter Description", R.drawable.ic_note_24dp, true, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.description), "Tap to enter Description", R.drawable.ic_note_24dp, true, tag));
         recyclerDataArrayList.add(new RecyclerData("Take photo, record vid etc.", R.drawable.ic_null_background, tag));
-        recyclerDataArrayList.add(new RecyclerData("Due Date", "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Reminder", "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Assigned", "Assigned", R.drawable.ic_null_foreground, tag));
-        recyclerDataArrayList.add(new RecyclerData("Reporter", "Tap to add reminder", R.drawable.ic_null_foreground, tag));
-        recyclerDataArrayList.add(new RecyclerData("Labels", "Tap to add reminder", R.drawable.ic_list_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Highlight", "Make the project stand out from the rest", R.drawable.ic_empty_star_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Created", Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.due_date), "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.assigned), "Assigned", R.drawable.ic_null_foreground, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reporter), "Tap to add reminder", R.drawable.ic_null_foreground, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.labels), "Tap to add reminder", R.drawable.ic_list_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.highlight), "Make the project stand out from the rest", R.drawable.ic_empty_star_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.created), Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);

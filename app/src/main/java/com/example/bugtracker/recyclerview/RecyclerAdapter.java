@@ -51,6 +51,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private ImageView activeTimeBtn;
+    private RecyclerViewHolder holder;
+    List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
+
 
     private List<TextView> clock_texts = new ArrayList<TextView>();
     private List<ImageView> clock_images = new ArrayList<ImageView>();
@@ -67,7 +70,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_layout_checklist, parent, false);
         return new RecyclerViewHolder(view);
@@ -77,6 +79,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
         String layout = recyclerData.getTag();
+        this.holder = holder;
+        holderArrayList.add(holder);
 
         holder.title.setText(recyclerData.getTitle());
         holder.mainBtn.setImageResource(recyclerData.getImgId());
@@ -101,7 +105,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             holder.secondaryBtn.setVisibility(View.VISIBLE);
         }
 
-        if (holder.title.getText().equals("Tasks")) {
+        if (holder.title.getText().equals(mcontext.getString(R.string.tasks))) {
             /* I fucking hate this shit right here
             ArrayList<RecyclerData> recyclerDataArrayList;
 
@@ -132,7 +136,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
              */
         }
 
-        Listeners(holder, position);
+        Listeners(position);
     }
 
     @Override
@@ -141,7 +145,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return DataArrayList.size();
     }
 
-    private void Listeners(RecyclerViewHolder holder, int position){
+    private void Listeners(int position){
         RecyclerData recyclerData = DataArrayList.get(position);
 
         holder.editText.addTextChangedListener(new TextWatcher() {
@@ -161,7 +165,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
-        if (holder.title.getText().equals("Highlight"))
+        // TODO this one seems to change created instead of itself
+        if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
 
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
@@ -178,9 +183,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     }
                 }
             });
-        } else if (holder.title.getText().equals("Due Date"))
+        } else if (holder.title.getText().equals(mcontext.getString(R.string.due_date)))
         {
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -193,7 +197,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     DateTime1(v);
                 }
             });
-
         }
 
         if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) {
@@ -217,15 +220,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //CreateProjects
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.Create_Project)))
         {
-            if (holder.title.getText().equals("New Task")) {
-                holder.title.setOnClickListener(new View.OnClickListener() {
+            if (holder.title.getText().equals(mcontext.getString(R.string.new_task))) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mcontext, CreateTaskActivity.class);
                         mcontext.startActivity(intent);
                     }
                 });
-
                 holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -240,7 +242,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         else if (recyclerData.getTag().equals(R.string.Create_Task)){
             Toast.makeText(mcontext, position, Toast.LENGTH_SHORT).show();
 
-            if (position == 0){
+            if (position == 0){ //TODO this should be changed with the way of updatedatetime because its more reliable
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -265,7 +267,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @SuppressLint("SetTextI18n")
     private void DateTime1(View v){
-
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
@@ -371,7 +372,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //TODO UPDATE DATA
+                Toast.makeText(mcontext, curTime, Toast.LENGTH_SHORT).show();
+                UpdateDateTime(curTime, "null");
                 DateTime2(v);
             }
         })
@@ -505,6 +508,38 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //endregion
     }
 
+    private void UpdateDateTime(String curTime, String hour){
+        for (int i = 0; i < DataArrayList.size(); i++){
+            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.due_date))){
+                RecyclerViewHolder curHolder = holderArrayList.get(i);
+                if (hour.equals("null"))
+                    curHolder.description.setText(curTime + " 12PM");
+                else {
+                    curHolder.description.setText(curTime + " " + hour);
+                }
+                curHolder.mainBtn.setColorFilter(Color.YELLOW);
+            }
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder))){
+                RecyclerViewHolder curHolder = holderArrayList.get(i);
+                curHolder.description.setText("Remind me when due");
+                curHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mcontext, "Add the selection screen", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mcontext, "Add the selection screen", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                curHolder.mainBtn.setColorFilter(Color.YELLOW);
+
+            }
+        }
+    }
+
     private void revealFAB(ImageView imageView) {
         //Check if any button is pressed
 
@@ -592,14 +627,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         dialog.show();
     }
 
-
     // Do something with the data
     // coming from the AlertDialog
 
 
     // View Holder Class to handle Recycler View.
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-
         private TextView title;
         private TextView description;
         private TextView id;

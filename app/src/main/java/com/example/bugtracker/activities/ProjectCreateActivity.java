@@ -36,16 +36,16 @@ public class ProjectCreateActivity extends AppCompatActivity {
         String tag = recyclerView.getTag().toString();
 
         //will prob nee to find another way to difference between layouts
-        recyclerDataArrayList.add(new RecyclerData("Notes", "Tap to add notes",  R.drawable.ic_note_24dp, true, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.description), "Tap to add description",  R.drawable.ic_note_24dp, true, tag));
         //need to make a menu like the subTask/list menu from tasks app, something like that but modified
-        recyclerDataArrayList.add(new RecyclerData("New Task",  R.drawable.ic_sublist_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.new_task),  R.drawable.ic_sublist_24dp, tag));
         //add subTasks for the selected Task
-        recyclerDataArrayList.add(new RecyclerData("Tasks", "No Task selected",  R.drawable.ic_list_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Roadmap",  R.drawable.ic_calendar_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Due Date", "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Reminder", "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Highlight", "Make the project stand out from the rest",  R.drawable.ic_empty_star_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData("Created", Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.tasks), "No Task selected",  R.drawable.ic_list_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.roadmap),  R.drawable.ic_calendar_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.due_date), "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.highlight), "Make the project stand out from the rest",  R.drawable.ic_empty_star_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.created), Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
