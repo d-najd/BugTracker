@@ -2,25 +2,18 @@ package com.example.bugtracker.recyclerview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,19 +25,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
+import com.example.bugtracker.dialogs.ReminderDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
-import android.animation.ObjectAnimator;
-import android.view.View;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
 
@@ -53,7 +43,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private ImageView activeTimeBtn;
     private RecyclerViewHolder holder;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
-
 
     private List<TextView> clock_texts = new ArrayList<TextView>();
     private List<ImageView> clock_images = new ArrayList<ImageView>();
@@ -65,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
+
 
     @NonNull
     @Override
@@ -85,6 +75,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.title.setText(recyclerData.getTitle());
         holder.mainBtn.setImageResource(recyclerData.getImgId());
         holder.id.setText(recyclerData.getId());
+
+
 
         if (recyclerData.getEditTextEnable())
         {
@@ -132,10 +124,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(View.VISIBLE);
-
              */
         }
-
         Listeners(position);
     }
 
@@ -147,7 +137,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private void Listeners(int position){
         RecyclerData recyclerData = DataArrayList.get(position);
-
         holder.editText.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -373,7 +362,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //TODO UPDATE DATA
-                Toast.makeText(mcontext, curTime, Toast.LENGTH_SHORT).show();
                 UpdateDateTime(curTime, "null");
                 DateTime2(v);
             }
@@ -382,7 +370,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
 
@@ -522,20 +509,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder))){
                 RecyclerViewHolder curHolder = holderArrayList.get(i);
                 curHolder.description.setText("Remind me when due");
+                ReminderDialog reminderDialog = new ReminderDialog();
+
                 curHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mcontext, "Add the selection screen", Toast.LENGTH_SHORT).show();
+                        reminderDialog.startDialog(v, mcontext);
                     }
                 });
                 curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mcontext, "Add the selection screen", Toast.LENGTH_SHORT).show();
+                        reminderDialog.startDialog(v, mcontext);
                     }
                 });
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
-
             }
         }
     }
