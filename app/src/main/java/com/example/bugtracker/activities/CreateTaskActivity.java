@@ -40,7 +40,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.description), "Tap to enter Description", R.drawable.ic_note_24dp, true, tag));
         recyclerDataArrayList.add(new RecyclerData("Take photo, record vid etc.", R.drawable.ic_null_background, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.due_date), "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_full_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.assigned), "Assigned", R.drawable.ic_null_foreground, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.reporter), "Tap to add reminder", R.drawable.ic_null_foreground, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.labels), "Tap to add reminder", R.drawable.ic_list_24dp, tag));

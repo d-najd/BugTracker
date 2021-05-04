@@ -12,6 +12,8 @@
     <string name="summary">Summary</string>
     <string name="description">Description</string>
     <string name="reminder">Reminder</string>
+    <string name="reminder_type">Reminder Type</string>
+    <string name="repeat">Repeat</string>
     <string name="assigned">Assigned</string>
     <string name="reporter">Reporter</string>
     <string name="labels">Labels</string>
@@ -25,7 +27,7 @@
     <string name="add_user">add_user</string>
     <string name="update">update</string>
     <string name="delete">delete</string>
-    <string name="Create_Project">CreateProject</string>
-    <string name="Create_Task">CreateTask</string>
+    <string name="create_project">CreateProject</string>
+    <string name="create_task">CreateTask</string>
 
 </resources>

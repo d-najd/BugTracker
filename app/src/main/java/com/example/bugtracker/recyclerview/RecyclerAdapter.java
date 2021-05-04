@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
-import com.example.bugtracker.dialogs.ReminderDialog;
+import com.example.bugtracker.dialogs.RadioGroupDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,6 +49,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private List<String> clockHour_strings = new ArrayList<String>();
     private List<String> clockMinute_strings = new ArrayList<String>();
+
+    public int reminderSelected = -1;
+    public int reminderTypeSelected = -1;
+    public int repeatSelected = -1;
+
+    private boolean reminderAdded = false;
 
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
@@ -76,8 +82,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.mainBtn.setImageResource(recyclerData.getImgId());
         holder.id.setText(recyclerData.getId());
 
-
-
         if (recyclerData.getEditTextEnable())
         {
             holder.editText.setVisibility(View.VISIBLE);
@@ -89,8 +93,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         else
             holder.description.setVisibility(View.GONE);
 
-        if (layout.equals(mcontext.getString(R.string.title_projects)))
+        if (layout.equals(mcontext.getString(R.string.title_projects))){
             holder.secondaryBtn.setVisibility(View.VISIBLE);
+            }
         
         if (recyclerData.getSecondImgId() != 0){
             holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
@@ -138,7 +143,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private void Listeners(int position){
         RecyclerData recyclerData = DataArrayList.get(position);
         holder.editText.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -151,13 +155,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             public void afterTextChanged(Editable s)
             {
                 recyclerData.setDescription(s + "");
+                DataArrayList.get(position).setDescription(s + "");
             }
         });
 
         // TODO this one seems to change created instead of itself
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
-
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -188,7 +192,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
-        if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) {
+        if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) { //TODO FIX THIS IT SEEMS TO BE BROKEN SETTING STAR ON WRONG ITEM
             holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -206,30 +210,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
-        //CreateProjects
-        else if (recyclerData.getTag().equals(mcontext.getString(R.string.Create_Project)))
-        {
-            if (holder.title.getText().equals(mcontext.getString(R.string.new_task))) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
-                        mcontext.startActivity(intent);
-                    }
-                });
-                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
-                        mcontext.startActivity(intent);
-                    }
-                });
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.create_project))){
+            if (holder.title.getText().equals(mcontext.getString(R.string.reminder_type))){
+                holder.itemView.setVisibility(View.GONE);
+            }
+            else if (holder.title.getText().equals(mcontext.getString(R.string.repeat))){
+                holder.itemView.setVisibility(View.GONE);
             }
         }
 
+
         //TODO FIX THIS SHIT
-        else if (recyclerData.getTag().equals(R.string.Create_Task)){
-            Toast.makeText(mcontext, position, Toast.LENGTH_SHORT).show();
+        else if (recyclerData.getTag().equals(R.string.create_task)){
 
             if (position == 0){ //TODO this should be changed with the way of updatedatetime because its more reliable
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -250,6 +242,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 });
 
                  */
+            }
+
+            if (holder.title.getText().equals(mcontext.getString(R.string.new_task))) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
+                        mcontext.startActivity(intent);
+                    }
+                });
+                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
+                        mcontext.startActivity(intent);
+                    }
+                });
             }
         }
     }
@@ -361,7 +370,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //TODO UPDATE DATA
                 UpdateDateTime(curTime, "null");
                 DateTime2(v);
             }
@@ -487,7 +495,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    revealFAB(clock_images.get(finalI));
+                    RevealFAB(clock_images.get(finalI));
                 }
             });
         }
@@ -495,44 +503,138 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //endregion
     }
 
-    private void UpdateDateTime(String curTime, String hour){
-        for (int i = 0; i < DataArrayList.size(); i++){
-            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.due_date))){
-                RecyclerViewHolder curHolder = holderArrayList.get(i);
-                if (hour.equals("null"))
-                    curHolder.description.setText(curTime + " 12PM");
-                else {
+    private void UpdateDateTime(String curTime, String hour) {
+        RecyclerAdapter adapter = this;
+        RadioGroupDialog radioGroupDialog = new RadioGroupDialog();
+
+        int reminderPos = 0;
+
+        for (int i = 0; i < DataArrayList.size(); i++) {
+            RecyclerViewHolder curHolder = holderArrayList.get(i);
+
+            //TODO optimize with switch instead of if
+
+            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.due_date))) {
+
+                if (hour.equals("null")) {
+                    curHolder.description.setText(curTime + " 12pm");
+                    DataArrayList.get(i).setDescription(curTime + "12pm");
+                } else {
                     curHolder.description.setText(curTime + " " + hour);
+                    DataArrayList.get(i).setDescription(curTime + " " + hour);
                 }
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
             }
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder))){
-                RecyclerViewHolder curHolder = holderArrayList.get(i);
+
+            //this part is for the placement of the rest of the items
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && !reminderAdded) {
                 curHolder.description.setText("Remind me when due");
-                ReminderDialog reminderDialog = new ReminderDialog();
+                DataArrayList.get(i).setDescription("Remind me when due");
+                reminderPos = i;
+
+                ArrayList<String> values = new ArrayList<String>();
+                values.add("Don't remind me");
+                values.add("Remind me when due");
+                values.add("Remind me in advance");
 
                 curHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reminderDialog.startDialog(v, mcontext);
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
                     }
                 });
                 curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reminderDialog.startDialog(v, mcontext);
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
+                    }
+
+                });
+                curHolder.mainBtn.setColorFilter(Color.YELLOW);
+            }
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder_type)) && !reminderAdded) {
+                if (reminderPos == 0)
+                    Toast.makeText(mcontext, "Congragulations you managed to break the reminderpos stuff", Toast.LENGTH_SHORT).show();
+                notifyItemMoved(i, reminderPos + 1);
+
+                ArrayList<String> values = new ArrayList<String>();
+                values.add("Notification");
+                values.add("Alarm");
+                values.add("None");
+
+                curHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
+                    }
+                });
+                curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
                     }
                 });
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
+
+                curHolder.itemView.setVisibility(View.VISIBLE);
+            }
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && !reminderAdded) {
+                notifyItemMoved(i, reminderPos + 2);
+                holderArrayList.get(i).itemView.setVisibility(View.VISIBLE);
+
+                ArrayList<String> values = new ArrayList<String>();
+                values.add("Does not repeat");
+                values.add("Daily");
+                values.add("Weekly");
+                values.add("Monthly");
+                values.add("Yearly");
+                values.add("Specific days of week"); //TODO ADD THE ACTIVITIES FOR THESE 2 AND SWITCH COLOR WHEN PRESSING ANYTHING WHICH ISNT Does not repeat
+                values.add("Advanced");
+
+                curHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.repeat));
+                    }
+                });
+                curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.repeat));
+                    }
+                });
+                curHolder.itemView.setVisibility(View.VISIBLE);
+            }
+        }
+        reminderAdded = true;
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void RadioButtonUpdateText(int selected, String dialogName, String description){
+        for (int i = 0; i < DataArrayList.size(); i++) {
+            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && dialogName.equals(DataArrayList.get(i).getTitle())) {
+                reminderSelected = selected;
+                holderArrayList.get(i).description.setText(description);
+                DataArrayList.get(i).setDescription(description);
+            }
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder_type)) && dialogName.equals(DataArrayList.get(i).getTitle())) {
+                reminderTypeSelected = selected;
+                holderArrayList.get(i).description.setText(description);
+                DataArrayList.get(i).setDescription(description);
+            }
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && dialogName.equals(DataArrayList.get(i).getTitle())){
+                repeatSelected = selected;
+                holderArrayList.get(i).description.setText(description);
+                DataArrayList.get(i).setDescription(description);
             }
         }
     }
 
-    private void revealFAB(ImageView imageView) {
+    private void RevealFAB(ImageView imageView) {
         //Check if any button is pressed
 
         if (imageView != activeTimeBtn) {
-            hideFAB(activeTimeBtn);
+            HideFAB(activeTimeBtn);
             activeTimeBtn = imageView;
             int cx = imageView.getWidth() / 2;
             int cy = imageView.getHeight() / 2;
@@ -545,13 +647,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-    private void hideFAB(ImageView imageView) {
+    private void HideFAB(ImageView imageView) {
         int cx = imageView.getWidth() / 2;
         int cy = imageView.getHeight() / 2;
         float initialRadius = (float) Math.hypot(cx, cy);
         Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
 
-        anim.addListener(new AnimatorListenerAdapter() {
+        anim.addListener(new AnimatorListenerAdapter() { //TODO this seems to have got broken?
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
@@ -617,7 +719,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     // Do something with the data
     // coming from the AlertDialog
-
 
     // View Holder Class to handle Recycler View.
     class RecyclerViewHolder extends RecyclerView.ViewHolder {

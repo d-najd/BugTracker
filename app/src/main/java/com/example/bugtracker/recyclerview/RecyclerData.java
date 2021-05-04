@@ -81,7 +81,6 @@ public class RecyclerData {
         this.secondImgId = secondImgId;
     }
 
-
     public Boolean getFavorite()
     {
         return favorite;

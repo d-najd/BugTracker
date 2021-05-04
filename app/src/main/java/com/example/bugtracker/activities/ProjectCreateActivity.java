@@ -43,9 +43,12 @@ public class ProjectCreateActivity extends AppCompatActivity {
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.tasks), "No Task selected",  R.drawable.ic_list_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.roadmap),  R.drawable.ic_calendar_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.due_date), "Tap to add reminder",  R.drawable.ic_alarm_24dp, tag));
-        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder), "Tap to add reminder",  R.drawable.ic_notifications_full_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.highlight), "Make the project stand out from the rest",  R.drawable.ic_empty_star_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.created), Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminder_type), "Notification",  R.drawable.ic_notifications_24dp, tag));
+        recyclerDataArrayList.add(new RecyclerData(getString(R.string.repeat), "Does not repeat",  R.drawable.ic_repeat_24dp, tag));
+
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
@@ -62,7 +65,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
     }
 
     private void Listeners(){
-
         View mainBtn = findViewById(R.id.mainBtn);
 
         mainBtn.setOnClickListener(new View.OnClickListener() {

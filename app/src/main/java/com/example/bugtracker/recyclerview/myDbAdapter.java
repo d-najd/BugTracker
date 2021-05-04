@@ -81,13 +81,11 @@ public class myDbAdapter {
         private Context context;
 
         public myDbHelper(Context context) {
-
             super(context, DATABASE_NAME, null, DATABASE_Version);
             this.context = context;
         }
 
         public void onCreate(SQLiteDatabase db) {
-
             try {
                 db.execSQL(CREATE_TABLE);
             } catch (Exception e) {
