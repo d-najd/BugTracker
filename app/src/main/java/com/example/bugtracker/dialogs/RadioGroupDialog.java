@@ -22,9 +22,10 @@ import java.util.ArrayList;
 public class RadioGroupDialog {
 
     @SuppressLint("RestrictedApi")
-    public void startDialog(View v, Context mcontext, RecyclerAdapter adapter, ArrayList<String> titles, float textSize, int selected, int color, String dialogName){
+    public void StartDialog(View v, Context mcontext, RecyclerAdapter adapter, ArrayList<String> titles, int selected, int color, String dialogName){
         Handler h = new Handler() ;
         AppCompatRadioButton radioButton;
+        int textSize = 16;
         int padding = 35;
 
         ArrayList<AppCompatRadioButton> radioButtons = new ArrayList<>();
@@ -83,7 +84,8 @@ public class RadioGroupDialog {
             radioButton.setTextSize(textSize);
         }
 
-        CheckIfCheckingNeeded(mcontext, adapter, dialogName, radioButtons, selected);
+        if (selected != -1)
+            CheckIfCheckingNeeded(mcontext, adapter, dialogName, radioButtons, selected);
 
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);

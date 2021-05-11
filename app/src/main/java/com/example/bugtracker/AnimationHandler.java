@@ -4,10 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
@@ -53,6 +51,14 @@ public class AnimationHandler {
         clockMinute_strings.add("45");
         clockMinute_strings.add("50");
         clockMinute_strings.add("55");
+    }
+
+    public List<String> GetHourList(){
+        return clockHour_strings;
+    }
+
+    public List<String> GetMinuteList(){
+        return clockMinute_strings;
     }
 
     public void DateTimeMinutes(){

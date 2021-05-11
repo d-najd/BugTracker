@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -30,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
+import com.example.bugtracker.dialogs.BasicDialog;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
 
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int reminderSelected = -1;
     public int reminderTypeSelected = -1;
     public int repeatSelected = -1;
+
+    private String curTime = "null";
 
     private boolean reminderAdded = false;
 
@@ -159,24 +163,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
-        // TODO this one seems to change created instead of itself
+
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     boolean favorite = recyclerData.getFavorite();
-
                     if (favorite) {
                         recyclerData.setFavorite(false);
-                        holder.mainBtn.setImageResource(R.drawable.ic_empty_star_24dp);
+                        holderArrayList.get(position).mainBtn.setImageResource(R.drawable.ic_empty_star_24dp);
                     } else {
                         recyclerData.setFavorite(true);
-                        holder.mainBtn.setImageResource(R.drawable.ic_star_24dp);
+                        holderArrayList.get(position).mainBtn.setImageResource(R.drawable.ic_star_24dp);
                     }
                 }
             });
-        } else if (holder.title.getText().equals(mcontext.getString(R.string.due_date)))
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean favorite = recyclerData.getFavorite();
+                    if (favorite) {
+                        recyclerData.setFavorite(false);
+                        holderArrayList.get(position).mainBtn.setImageResource(R.drawable.ic_empty_star_24dp);
+                    } else {
+                        recyclerData.setFavorite(true);
+                        holderArrayList.get(position).mainBtn.setImageResource(R.drawable.ic_star_24dp);
+                    }
+                }
+            });
+        }
+        else if (holder.title.getText().equals(mcontext.getString(R.string.due_date)))
         {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -192,6 +209,31 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
+        else if (holder.title.getText().equals(mcontext.getString(R.string.reminder)))
+        {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
+                        BasicDialog basicDialog = new BasicDialog();
+                        basicDialog.StartDialog(mcontext, "Reminder Warning",
+                                "Tell me when. Set a date and time first", "OK, GOT IT");
+                    }
+                }
+            });
+
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
+                        BasicDialog basicDialog = new BasicDialog();
+                        basicDialog.StartDialog(mcontext, "Reminder Warning",
+                                "Tell me when. Set a date and time first", "OK, GOT IT");
+                    }
+                }
+            });
+        }
+
         if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) { //TODO FIX THIS IT SEEMS TO BE BROKEN SETTING STAR ON WRONG ITEM
             holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -199,12 +241,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     boolean favorite = recyclerData.getFavorite();
                     if (favorite) {
                         recyclerData.setFavorite(false);
-                        holder.secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
-                        holder.secondaryBtn.setColorFilter(Color.WHITE);
+                        holderArrayList.get(position).secondaryBtn.setImageResource(R.drawable.ic_empty_star_24dp);
                     } else {
                         recyclerData.setFavorite(true);
-                        holder.secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
-                        holder.secondaryBtn.setColorFilter(Color.YELLOW);
+                        holderArrayList.get(position).secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
                     }
                 }
             });
@@ -276,10 +316,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         String curTimeRaw = Calendar.getInstance().getTime().toString();
         String[] cutTimeSplitted = curTimeRaw.split("\\s+", 4);
-        String curTime = cutTimeSplitted[0] + ", " + cutTimeSplitted[1] + " " + cutTimeSplitted[2];
+        String curDate = cutTimeSplitted[0] + ", " + cutTimeSplitted[1] + " " + cutTimeSplitted[2];
 
         yearTxt.setText(Calendar.getInstance().getWeekYear() + "");
-        dayMonthTxt.setText(curTime);
+        dayMonthTxt.setText(curDate);
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -293,31 +333,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
                 switch (dayOfWeek){
                     case 1:
-                        dayStr = "Sun, ";
+                        dayStr = "Sunday, ";
                         break;
                     case 2:
-                        dayStr = "Mon, ";
+                        dayStr = "Monday, ";
                         break;
                     case 3:
-                        dayStr = "Tue, ";
+                        dayStr = "Tuesday, ";
                         break;
                     case 4:
-                        dayStr = "Wed, ";
+                        dayStr = "Wednesday, ";
                         break;
                     case 5:
-                        dayStr = "Thu, ";
+                        dayStr = "Thursday, ";
                         break;
                     case 6:
-                        dayStr = "Fri, ";
+                        dayStr = "Friday, ";
                         break;
                     case 7:
-                        dayStr = "Sat, ";
+                        dayStr = "Saturday, ";
                         break;
 
                     default:
                         Toast.makeText(mcontext, "HOW THE FUCK DID YOU MANAGE TO BREAK THIS?", Toast.LENGTH_SHORT).show();
                         throw new IllegalStateException("Unexpected value: " + dayOfWeek);
                 }
+
                 switch (month){
                     case 0:
                         monthStr = "Jan ";
@@ -370,8 +411,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                UpdateDateTime(curTime, "null");
-                DateTime2(v);
+                UpdateDateTime(curDate, "null");
+                DateTime2(v, curDate);
             }
         })
 
@@ -393,12 +434,50 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
     }
 
-    private void DateTime2(View v){
+    private void DateTime2(View v, String curDate){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
         AnimationHandler animationHandler = new AnimationHandler();
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_hour, viewGroup, false);
-        builder.setView(dialogView);
+
+        TextView hours_txt = dialogView.findViewById(R.id.hours);
+        TextView minutes_txt = dialogView.findViewById(R.id.minutes);
+        TextView am_txt = dialogView.findViewById(R.id.am);
+        TextView pm_txt = dialogView.findViewById(R.id.pm);
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String hour = "null";
+                        String minutes = "null";
+
+                        for (int i = 0; i < clockHour_strings.size(); i++){
+                            if (hours_txt.getText().toString().equals(clockHour_strings.get(i)))
+                                hour = hours_txt.getText().toString();
+                            if (minutes_txt.getText().toString().equals(clockMinute_strings.get(i)))
+                                minutes = minutes_txt.getText().toString();
+                        }
+
+                        if (!hour.equals("null") && !minutes.equals("null")){
+                            if (am_txt.getCurrentTextColor() != mcontext.getColor(R.color.light_gray))
+                                curTime = hour + ":" + minutes + "am";
+                            else
+                                curTime = hour + ":" + minutes + "pm";
+                        }
+                        else
+                            Toast.makeText(mcontext, "something went wrong with setting getting" +
+                                    "the hours_txt or minutes_txt", Toast.LENGTH_SHORT).show();
+
+                        UpdateDateTime(curDate, curTime);
+                    }
+                })
+
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });;
 
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
@@ -407,6 +486,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         animationHandler.DateTimeListsToAdd();
 
         //region clockClickListeners
+
         clock_images.add(dialogView.findViewById(R.id.clock_00));
         clock_images.add(dialogView.findViewById(R.id.clock_01));
         clock_images.add(dialogView.findViewById(R.id.clock_02));
@@ -436,20 +516,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         animationHandler.clock_images = clock_images;
         animationHandler.clock_texts = clock_texts;
 
-        TextView hours_txt = dialogView.findViewById(R.id.hours);
-        TextView minutes_txt = dialogView.findViewById(R.id.minutes);
-        TextView am_txt = dialogView.findViewById(R.id.am);
-        TextView pm_txt = dialogView.findViewById(R.id.pm);
+        /* TODO FIXME TODO
+
+            THERE IS A BUG AND EVERYTHING CRASHES IF YOU SELECT A HOUR AND MINUTES AND COME BACK TO
+            CHANGE IT FROM HOUR TO MINUTE, NO IDEA WHAT CAUSES IT, IT SAYS OUT OF BOUNDS OR
+            SOMETHING BUT IT ISNT
+
+         */
 
         hours_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)) {
                     hours_txt.setTextColor(mcontext.getColor(R.color.white));
                     minutes_txt.setTextColor(mcontext.getColor(R.color.light_gray));
 
                     animationHandler.DateTimeHours();
                     animationHandler.PulseAnim(hours_txt);
+
+                    outerloop:
+                    for (int i = 0; i < clock_images.size(); i++) {
+                        if (hours_txt.getText().toString().equals(clockHour_strings.get(i)) && activeTimeBtn != clock_images.get(i)) {
+                            HideFAB(activeTimeBtn);
+                            RevealFAB(clock_images.get(i));
+                            break outerloop;
+                        }
+                    }
                 }
             }
         });
@@ -463,6 +555,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
                     animationHandler.DateTimeMinutes();
                     animationHandler.PulseAnim(minutes_txt);
+
+                    outerloop:
+                    for (int i = 0; i < clock_images.size(); i++){
+                        if (minutes_txt.getText().toString().equals(clockMinute_strings.get(i)) && activeTimeBtn != clock_images.get(i)){
+                            HideFAB(activeTimeBtn);
+                            RevealFAB(clock_images.get(i));
+                            break outerloop;
+                        }
+                    }
                 }
             }
         });
@@ -495,6 +596,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.white))
+                        hours_txt.setText(clockHour_strings.get(finalI));
+                    else
+                        minutes_txt.setText(clockMinute_strings.get(finalI));
                     RevealFAB(clock_images.get(finalI));
                 }
             });
@@ -503,7 +608,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //endregion
     }
 
-    private void UpdateDateTime(String curTime, String hour) {
+    private void UpdateDateTime(String curDate, String curTime) {
         RecyclerAdapter adapter = this;
         RadioGroupDialog radioGroupDialog = new RadioGroupDialog();
 
@@ -511,47 +616,46 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         for (int i = 0; i < DataArrayList.size(); i++) {
             RecyclerViewHolder curHolder = holderArrayList.get(i);
-
-            //TODO optimize with switch instead of if
-
             if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.due_date))) {
 
-                if (hour.equals("null")) {
-                    curHolder.description.setText(curTime + " 12pm");
-                    DataArrayList.get(i).setDescription(curTime + "12pm");
+                if (curTime.equals("null")) {
+                    curHolder.description.setText(curDate + " 12am");
+                    DataArrayList.get(i).setDescription(curDate + "12am");
                 } else {
-                    curHolder.description.setText(curTime + " " + hour);
-                    DataArrayList.get(i).setDescription(curTime + " " + hour);
+                    curHolder.description.setText(curDate + " " + curTime);
+                    DataArrayList.get(i).setDescription(curDate + " " + curTime);
                 }
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
             }
 
             //this part is for the placement of the rest of the items
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && !reminderAdded) {
-                curHolder.description.setText("Remind me when due");
-                DataArrayList.get(i).setDescription("Remind me when due");
-                reminderPos = i;
+            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && !reminderAdded)
+            {
+                    curHolder.description.setText("Remind me when due");
+                    DataArrayList.get(i).setDescription("Remind me when due");
+                    reminderPos = i;
 
-                ArrayList<String> values = new ArrayList<String>();
-                values.add("Don't remind me");
-                values.add("Remind me when due");
-                values.add("Remind me in advance");
+                    ArrayList<String> values = new ArrayList<String>();
+                    values.add("Don't remind me");
+                    values.add("Remind me when due");
+                    values.add("Remind me in advance");
 
-                curHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
-                    }
-                });
-                curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
-                    }
+                    curHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            radioGroupDialog.StartDialog(v, mcontext, adapter, values, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
+                        }
+                    });
+                    curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            radioGroupDialog.StartDialog(v, mcontext, adapter, values, 1, Color.YELLOW, mcontext.getString(R.string.reminder));
+                        }
 
-                });
-                curHolder.mainBtn.setColorFilter(Color.YELLOW);
+                    });
+                    curHolder.mainBtn.setColorFilter(Color.YELLOW);
             }
+
             else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder_type)) && !reminderAdded) {
                 if (reminderPos == 0)
                     Toast.makeText(mcontext, "Congragulations you managed to break the reminderpos stuff", Toast.LENGTH_SHORT).show();
@@ -565,13 +669,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 curHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
+                        radioGroupDialog.StartDialog(v, mcontext, adapter, values, 0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
                     }
                 });
                 curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
+                        radioGroupDialog.StartDialog(v, mcontext, adapter, values,0, Color.YELLOW, mcontext.getString(R.string.reminder_type));
                     }
                 });
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
@@ -594,13 +698,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 curHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.repeat));
+                        radioGroupDialog.StartDialog(v, mcontext, adapter, values,0, Color.YELLOW, mcontext.getString(R.string.repeat));
                     }
                 });
                 curHolder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        radioGroupDialog.startDialog(v, mcontext, adapter, values, 16, 0, Color.YELLOW, mcontext.getString(R.string.repeat));
+                        radioGroupDialog.StartDialog(v, mcontext, adapter, values,0, Color.YELLOW, mcontext.getString(R.string.repeat));
                     }
                 });
                 curHolder.itemView.setVisibility(View.VISIBLE);
@@ -632,7 +736,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private void RevealFAB(ImageView imageView) {
         //Check if any button is pressed
-
         if (imageView != activeTimeBtn) {
             HideFAB(activeTimeBtn);
             activeTimeBtn = imageView;
@@ -641,9 +744,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             float finalRadius = (float) Math.hypot(cx, cy);
             Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
             imageView.setVisibility(View.VISIBLE);
-            //imageView.setImageResource(R.drawable.ic_circle_blue_42dp);
             anim.start();
-
         }
     }
 
@@ -653,12 +754,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         float initialRadius = (float) Math.hypot(cx, cy);
         Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
 
-        anim.addListener(new AnimatorListenerAdapter() { //TODO this seems to have got broken?
+        anim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 imageView.setVisibility(View.INVISIBLE);
-                //imageView.setImageResource(R.drawable.transparent);
             }
         });
         anim.start();
@@ -672,14 +772,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         test[1] = "Checklist";
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         builder.setTitle("Add")
-
-
-                // set the custom layout
-                //final View customLayout =
-                //        getLayoutInflater().inflate(R.layout.custom_layout, null);
-                //builder.setView(customLayout)
-
-
                 .setItems(test, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -690,35 +782,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         }
                     }
                 });
-
-
-        // the ok button for exiting
-                /*
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        // send data from the
-                        // AlertDialog to the Activity
-                        //EditText editText = customLayout.findViewById(R.id.ctmAct_1stTxt);
-                        //sendDialogDataToActivity(editText.getText().toString());
-                        checkListBtn.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(MainActivity.this, "pressed", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-                */
-        // create and show
-        // the alert dialog
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-    // Do something with the data
-    // coming from the AlertDialog
 
     // View Holder Class to handle Recycler View.
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
