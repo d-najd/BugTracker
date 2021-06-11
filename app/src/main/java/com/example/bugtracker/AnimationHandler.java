@@ -17,8 +17,14 @@ public class AnimationHandler {
     public List<TextView> clock_texts = new ArrayList<TextView>();
     public List<ImageView> clock_images = new ArrayList<ImageView>();
 
-    private final List<String> clockHour_strings = new ArrayList<String>();
-    private final List<String> clockMinute_strings = new ArrayList<String>();
+    public final List<String> clockHour_strings = new ArrayList<String>();
+    public final List<String> clockMinute_strings = new ArrayList<String>();
+
+    //TODO FIXME there seems to be a bug when switching from hours to minutes, for example
+    //if the hour was 1:00 (that's 5 on the minutes) and we switched the minutes to 20 for example
+    //when we switch to hour it will return to 1 but the same thing does'nt happen with the minutes
+    //so when we switch to minutes it will stay at 5 minutes when instead it should go to 20 and
+    //loop between them when switching
 
     public void PulseAnim(TextView textView){
         ObjectAnimator pulseAnim = ObjectAnimator.ofPropertyValuesHolder(

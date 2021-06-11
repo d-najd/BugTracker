@@ -75,6 +75,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return new RecyclerViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
@@ -100,7 +101,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         if (layout.equals(mcontext.getString(R.string.title_projects))){
             holder.secondaryBtn.setVisibility(View.VISIBLE);
             }
-        
+
         if (recyclerData.getSecondImgId() != 0){
             holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
             holder.secondaryBtn.setVisibility(View.VISIBLE);
@@ -487,34 +488,43 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         //region clockClickListeners
 
-        clock_images.add(dialogView.findViewById(R.id.clock_00));
-        clock_images.add(dialogView.findViewById(R.id.clock_01));
-        clock_images.add(dialogView.findViewById(R.id.clock_02));
-        clock_images.add(dialogView.findViewById(R.id.clock_03));
-        clock_images.add(dialogView.findViewById(R.id.clock_04));
-        clock_images.add(dialogView.findViewById(R.id.clock_05));
-        clock_images.add(dialogView.findViewById(R.id.clock_06));
-        clock_images.add(dialogView.findViewById(R.id.clock_07));
-        clock_images.add(dialogView.findViewById(R.id.clock_08));
-        clock_images.add(dialogView.findViewById(R.id.clock_09));
-        clock_images.add(dialogView.findViewById(R.id.clock_10));
-        clock_images.add(dialogView.findViewById(R.id.clock_11));
+            //TODO THE SIZE OF CLOCKIMAGES AND CLOCKTEXTS KEEPS INCREASING
+            //Toast.makeText(mcontext, clock_images.size() + "", Toast.LENGTH_SHORT).show();
+            //put it under clockimages line
+            clock_images.clear();
+            clock_texts.clear();
 
-        clock_texts.add(dialogView.findViewById(R.id.clock_00_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_01_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_02_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_03_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_04_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_05_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_06_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_07_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_08_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_09_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_10_txt));
-        clock_texts.add(dialogView.findViewById(R.id.clock_11_txt));
+                clock_images.add(dialogView.findViewById(R.id.clock_00));
+                clock_images.add(dialogView.findViewById(R.id.clock_01));
+                clock_images.add(dialogView.findViewById(R.id.clock_02));
+                clock_images.add(dialogView.findViewById(R.id.clock_03));
+                clock_images.add(dialogView.findViewById(R.id.clock_04));
+                clock_images.add(dialogView.findViewById(R.id.clock_05));
+                clock_images.add(dialogView.findViewById(R.id.clock_06));
+                clock_images.add(dialogView.findViewById(R.id.clock_07));
+                clock_images.add(dialogView.findViewById(R.id.clock_08));
+                clock_images.add(dialogView.findViewById(R.id.clock_09));
+                clock_images.add(dialogView.findViewById(R.id.clock_10));
+                clock_images.add(dialogView.findViewById(R.id.clock_11));
 
-        animationHandler.clock_images = clock_images;
-        animationHandler.clock_texts = clock_texts;
+                clock_texts.add(dialogView.findViewById(R.id.clock_00_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_01_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_02_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_03_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_04_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_05_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_06_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_07_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_08_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_09_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_10_txt));
+                clock_texts.add(dialogView.findViewById(R.id.clock_11_txt));
+
+            animationHandler.clock_images = clock_images;
+            animationHandler.clock_texts = clock_texts;
+
+            clockMinute_strings = animationHandler.clockMinute_strings;
+            clockHour_strings = animationHandler.clockHour_strings;
 
         /* TODO FIXME TODO
 
@@ -537,8 +547,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     outerloop:
                     for (int i = 0; i < clock_images.size(); i++) {
                         if (hours_txt.getText().toString().equals(clockHour_strings.get(i)) && activeTimeBtn != clock_images.get(i)) {
-                            HideFAB(activeTimeBtn);
-                            RevealFAB(clock_images.get(i));
+                            HideFAB(activeTimeBtn, v);
+                            RevealFAB(clock_images.get(i), v);
                             break outerloop;
                         }
                     }
@@ -556,11 +566,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     animationHandler.DateTimeMinutes();
                     animationHandler.PulseAnim(minutes_txt);
 
+                    if (clockMinute_strings.size() == 0)
+
+
                     outerloop:
                     for (int i = 0; i < clock_images.size(); i++){
                         if (minutes_txt.getText().toString().equals(clockMinute_strings.get(i)) && activeTimeBtn != clock_images.get(i)){
-                            HideFAB(activeTimeBtn);
-                            RevealFAB(clock_images.get(i));
+                            HideFAB(activeTimeBtn, v);
+                            RevealFAB(clock_images.get(i), v);
                             break outerloop;
                         }
                     }
@@ -593,6 +606,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         for (int i = 0; i < clock_texts.size(); i++){
             int finalI = i;
+            Log.wtf("the size is ", clock_texts.size() + " and current element is " + clock_texts.get(finalI).getText().toString());
             clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -600,7 +614,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         hours_txt.setText(clockHour_strings.get(finalI));
                     else
                         minutes_txt.setText(clockMinute_strings.get(finalI));
-                    RevealFAB(clock_images.get(finalI));
+                    RevealFAB(clock_images.get(finalI), v);
                 }
             });
         }
@@ -734,34 +748,44 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-    private void RevealFAB(ImageView imageView) {
-        //Check if any button is pressed
+    private void RevealFAB(ImageView imageView, View v) {
         if (imageView != activeTimeBtn) {
-            HideFAB(activeTimeBtn);
-            activeTimeBtn = imageView;
-            int cx = imageView.getWidth() / 2;
-            int cy = imageView.getHeight() / 2;
-            float finalRadius = (float) Math.hypot(cx, cy);
-            Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
-            imageView.setVisibility(View.VISIBLE);
-            anim.start();
+            HideFAB(activeTimeBtn, v);
+            v.post(new Runnable() {
+                @Override
+                public void run() {
+                    activeTimeBtn = imageView;
+                    int cx = imageView.getWidth() / 2;
+                    int cy = imageView.getHeight() / 2;
+                    float finalRadius = (float) Math.hypot(cx, cy);
+                    Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
+                    imageView.setVisibility(View.VISIBLE);
+                    anim.start();
+                }
+            });
         }
     }
 
-    private void HideFAB(ImageView imageView) {
-        int cx = imageView.getWidth() / 2;
-        int cy = imageView.getHeight() / 2;
-        float initialRadius = (float) Math.hypot(cx, cy);
-        Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
-
-        anim.addListener(new AnimatorListenerAdapter() {
+    private void HideFAB(ImageView imageView, View v) {
+        v.post(new Runnable() {
             @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                imageView.setVisibility(View.INVISIBLE);
+            public void run() {
+
+                int cx = imageView.getWidth() / 2;
+                int cy = imageView.getHeight() / 2;
+                float initialRadius = (float) Math.hypot(cx, cy);
+                Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
+
+                anim.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        imageView.setVisibility(View.INVISIBLE);
+                    }
+                });
+                anim.start();
             }
         });
-        anim.start();
     }
 
     private void SelectBetweenTaskEpic(){
