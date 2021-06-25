@@ -42,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
-    private ImageView activeTimeBtn;
+    private int activeTimeBtn = 0; //needs to be integer because when the dialog is opened again new set of buttons is created and it fucks up everything
     private RecyclerViewHolder holder;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
 
@@ -488,7 +488,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         //region clockClickListeners
 
-            //TODO THE SIZE OF CLOCKIMAGES AND CLOCKTEXTS KEEPS INCREASING
             //Toast.makeText(mcontext, clock_images.size() + "", Toast.LENGTH_SHORT).show();
             //put it under clockimages line
             clock_images.clear();
@@ -526,14 +525,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             clockMinute_strings = animationHandler.clockMinute_strings;
             clockHour_strings = animationHandler.clockHour_strings;
 
-        /* TODO FIXME TODO
-
-            THERE IS A BUG AND EVERYTHING CRASHES IF YOU SELECT A HOUR AND MINUTES AND COME BACK TO
-            CHANGE IT FROM HOUR TO MINUTE, NO IDEA WHAT CAUSES IT, IT SAYS OUT OF BOUNDS OR
-            SOMETHING BUT IT ISNT
-
-         */
-
         hours_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -544,6 +535,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     animationHandler.DateTimeHours();
                     animationHandler.PulseAnim(hours_txt);
 
+
+                    //TODO FIXME I am guessing this is for when you have selected the hour to be 2
+                    //and you change it to minutes it will be to 10, so if you change the minutes to
+                    //30 for example when you switch time if it stays it will be 6 instead of 2 (the
+                    //hour) so it needs to be changed back, but for some reason this doesnt seem to,
+                    //work and for some reason I seem to be using a for loop which is going to
+                    //reveal every single clock_image wtf? also its connected with the crashing when
+                    //you try to set time for second time.
+                    /*
                     outerloop:
                     for (int i = 0; i < clock_images.size(); i++) {
                         if (hours_txt.getText().toString().equals(clockHour_strings.get(i)) && activeTimeBtn != clock_images.get(i)) {
@@ -552,6 +552,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                             break outerloop;
                         }
                     }
+                     */
                 }
             }
         });
@@ -566,9 +567,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     animationHandler.DateTimeMinutes();
                     animationHandler.PulseAnim(minutes_txt);
 
-                    if (clockMinute_strings.size() == 0)
-
-
+                    //TODO FIXME for explanation check above like 10 lines up.
+                    /*
                     outerloop:
                     for (int i = 0; i < clock_images.size(); i++){
                         if (minutes_txt.getText().toString().equals(clockMinute_strings.get(i)) && activeTimeBtn != clock_images.get(i)){
@@ -577,6 +577,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                             break outerloop;
                         }
                     }
+                     */
                 }
             }
         });
@@ -601,12 +602,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
-        if (activeTimeBtn == null)
-            activeTimeBtn = clock_images.get(0);
-
         for (int i = 0; i < clock_texts.size(); i++){
             int finalI = i;
-            Log.wtf("the size is ", clock_texts.size() + " and current element is " + clock_texts.get(finalI).getText().toString());
             clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -749,11 +746,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     }
 
     private void RevealFAB(ImageView imageView, View v) {
-        if (imageView != activeTimeBtn) {
-            HideFAB(activeTimeBtn, v);
+        if (imageView != clock_images.get(activeTimeBtn)) {
+            HideFAB(clock_images.get(activeTimeBtn), v);
             v.post(new Runnable() {
                 @Override
                 public void run() {
+                    //THE ACTIVETIMEBTN NEEDS TO BE INT BECAUSE WHEN THE DIALOG IS RELOADED TO
+                    //CHANGE THE TIME AGAIN IT REPLACES ALL ITEMS THUS REMOVING THE ACTIVETIMEBTN
+                    //SO THATS WHY IT HAS TO BE INTEGER AND CHECK FOR CURRENT ITEM
                     activeTimeBtn = imageView;
                     int cx = imageView.getWidth() / 2;
                     int cy = imageView.getHeight() / 2;
@@ -767,23 +767,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     }
 
     private void HideFAB(ImageView imageView, View v) {
+        int cx = imageView.getWidth() / 2;
+        int cy = imageView.getHeight() / 2;
+        float initialRadius = (float) Math.hypot(cx, cy);
+        Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                imageView.setVisibility(View.INVISIBLE);
+            }
+        });
+        anim.start();
+
         v.post(new Runnable() {
             @Override
             public void run() {
 
-                int cx = imageView.getWidth() / 2;
-                int cy = imageView.getHeight() / 2;
-                float initialRadius = (float) Math.hypot(cx, cy);
-                Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, initialRadius, 0);
-
-                anim.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        imageView.setVisibility(View.INVISIBLE);
-                    }
-                });
-                anim.start();
             }
         });
     }
