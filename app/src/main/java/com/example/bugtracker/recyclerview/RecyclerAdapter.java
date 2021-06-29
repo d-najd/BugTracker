@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
@@ -42,13 +41,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
-    private int activeTimeBtn = 0; //needs to be integer because when the dialog is opened again new set of buttons is created and it fucks up everything
+    private int activeHourBtn = 0; //needs to be integer because when the dialog is opened again new set of buttons is created and it fucks up everything
+    private int activeMinuteBtn = 0;
+    private boolean hourSelected = true; //to know whether the hours or minutes are selected so that activehour/minuteBtn can be selected
+    private boolean am_pm_Selected = true; //true for am false for pm
     private RecyclerViewHolder holder;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
 
     private List<TextView> clock_texts = new ArrayList<TextView>();
     private List<ImageView> clock_images = new ArrayList<ImageView>();
-
     private List<String> clockHour_strings = new ArrayList<String>();
     private List<String> clockMinute_strings = new ArrayList<String>();
 
@@ -74,7 +75,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 .inflate(R.layout.card_layout_checklist, parent, false);
         return new RecyclerViewHolder(view);
     }
-
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
@@ -446,6 +446,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         TextView am_txt = dialogView.findViewById(R.id.am);
         TextView pm_txt = dialogView.findViewById(R.id.pm);
 
+        hourSelected = true;
+
         builder.setView(dialogView)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -483,6 +485,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
         alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW);
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
 
         animationHandler.DateTimeListsToAdd();
 
@@ -525,34 +530,28 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             clockMinute_strings = animationHandler.clockMinute_strings;
             clockHour_strings = animationHandler.clockHour_strings;
 
+        hours_txt.setText(clockHour_strings.get(activeHourBtn));
+        minutes_txt.setText(clockMinute_strings.get(activeMinuteBtn));
+
+        if (!am_pm_Selected)
+        {
+            pm_txt.setTextColor(mcontext.getColor(R.color.white));
+            am_txt.setTextColor(mcontext.getColor(R.color.light_gray));
+        }
+
         hours_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)) {
+                    hourSelected = true;
                     hours_txt.setTextColor(mcontext.getColor(R.color.white));
                     minutes_txt.setTextColor(mcontext.getColor(R.color.light_gray));
 
                     animationHandler.DateTimeHours();
                     animationHandler.PulseAnim(hours_txt);
 
-
-                    //TODO FIXME I am guessing this is for when you have selected the hour to be 2
-                    //and you change it to minutes it will be to 10, so if you change the minutes to
-                    //30 for example when you switch time if it stays it will be 6 instead of 2 (the
-                    //hour) so it needs to be changed back, but for some reason this doesnt seem to,
-                    //work and for some reason I seem to be using a for loop which is going to
-                    //reveal every single clock_image wtf? also its connected with the crashing when
-                    //you try to set time for second time.
-                    /*
-                    outerloop:
-                    for (int i = 0; i < clock_images.size(); i++) {
-                        if (hours_txt.getText().toString().equals(clockHour_strings.get(i)) && activeTimeBtn != clock_images.get(i)) {
-                            HideFAB(activeTimeBtn, v);
-                            RevealFAB(clock_images.get(i), v);
-                            break outerloop;
-                        }
-                    }
-                     */
+                    RevealFAB(clock_images.get(activeHourBtn), true);
+                    HideFAB(clock_images.get(activeMinuteBtn));
                 }
             }
         });
@@ -561,23 +560,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onClick(View v) {
                 if (minutes_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                    hourSelected = false;
                     minutes_txt.setTextColor(mcontext.getColor(R.color.white));
                     hours_txt.setTextColor(mcontext.getColor(R.color.light_gray));
 
                     animationHandler.DateTimeMinutes();
                     animationHandler.PulseAnim(minutes_txt);
 
-                    //TODO FIXME for explanation check above like 10 lines up.
-                    /*
-                    outerloop:
-                    for (int i = 0; i < clock_images.size(); i++){
-                        if (minutes_txt.getText().toString().equals(clockMinute_strings.get(i)) && activeTimeBtn != clock_images.get(i)){
-                            HideFAB(activeTimeBtn, v);
-                            RevealFAB(clock_images.get(i), v);
-                            break outerloop;
-                        }
-                    }
-                     */
+                    RevealFAB(clock_images.get(activeMinuteBtn), true);
+                    HideFAB(clock_images.get(activeHourBtn));
                 }
             }
         });
@@ -585,7 +576,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         am_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (am_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                if (!am_pm_Selected){
+                    am_pm_Selected = true;
                     am_txt.setTextColor(mcontext.getColor(R.color.white));
                     pm_txt.setTextColor(mcontext.getColor(R.color.light_gray));
                 }
@@ -595,7 +587,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         pm_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (pm_txt.getCurrentTextColor() == mcontext.getColor(R.color.light_gray)){
+                if (am_pm_Selected){
+                    am_pm_Selected = false;
                     pm_txt.setTextColor(mcontext.getColor(R.color.white));
                     am_txt.setTextColor(mcontext.getColor(R.color.light_gray));
                 }
@@ -604,6 +597,19 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         for (int i = 0; i < clock_texts.size(); i++){
             int finalI = i;
+            if (finalI == activeHourBtn) {
+                v.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int cx = clock_images.get(finalI).getWidth() / 2;
+                        int cy = clock_images.get(finalI).getHeight() / 2;
+                        float finalRadius = (float) Math.hypot(cx, cy);
+                        Animator anim = ViewAnimationUtils.createCircularReveal(clock_images.get(finalI), cx, cy, 0, finalRadius);
+                        clock_images.get(finalI).setVisibility(View.VISIBLE);
+                        anim.start();
+                    }
+                });
+            }
             clock_texts.get(i).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -611,7 +617,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         hours_txt.setText(clockHour_strings.get(finalI));
                     else
                         minutes_txt.setText(clockMinute_strings.get(finalI));
-                    RevealFAB(clock_images.get(finalI), v);
+                    RevealFAB(clock_images.get(finalI), false);
                 }
             });
         }
@@ -745,28 +751,39 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-    private void RevealFAB(ImageView imageView, View v) {
-        if (imageView != clock_images.get(activeTimeBtn)) {
-            HideFAB(clock_images.get(activeTimeBtn), v);
-            v.post(new Runnable() {
-                @Override
-                public void run() {
-                    //THE ACTIVETIMEBTN NEEDS TO BE INT BECAUSE WHEN THE DIALOG IS RELOADED TO
-                    //CHANGE THE TIME AGAIN IT REPLACES ALL ITEMS THUS REMOVING THE ACTIVETIMEBTN
-                    //SO THATS WHY IT HAS TO BE INTEGER AND CHECK FOR CURRENT ITEM
-                    activeTimeBtn = imageView;
-                    int cx = imageView.getWidth() / 2;
-                    int cy = imageView.getHeight() / 2;
-                    float finalRadius = (float) Math.hypot(cx, cy);
-                    Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
-                    imageView.setVisibility(View.VISIBLE);
-                    anim.start();
-                }
-            });
+
+
+
+    //specialpass is to skip checking and if you are completly sure that it will work and no way to fail
+    //also special pass wont hidebuttons bc both will be hidden once they are enabled by default
+    //thus fucking everything up so they have to be manualy dissabled outside of here
+    private void RevealFAB(ImageView imageView, boolean specialPass) {
+        if ((imageView != clock_images.get(activeHourBtn) && hourSelected) ||
+                (imageView != clock_images.get(activeMinuteBtn) && !hourSelected) || specialPass) {
+
+            if (!specialPass) {
+                HideFAB(clock_images.get(activeMinuteBtn));
+                HideFAB(clock_images.get(activeHourBtn));
+            }
+
+            int imageViewId = Integer.parseInt(imageView.toString().substring
+                    (imageView.toString().length() - 3, imageView.toString().length() - 1));
+            if (hourSelected) {
+                activeHourBtn = imageViewId;
+            }
+            else {
+                activeMinuteBtn = imageViewId;
+            }
+            int cx = imageView.getWidth() / 2;
+            int cy = imageView.getHeight() / 2;
+            float finalRadius = (float) Math.hypot(cx, cy);
+            Animator anim = ViewAnimationUtils.createCircularReveal(imageView, cx, cy, 0, finalRadius);
+            imageView.setVisibility(View.VISIBLE);
+            anim.start();
         }
     }
 
-    private void HideFAB(ImageView imageView, View v) {
+    private void HideFAB(ImageView imageView) {
         int cx = imageView.getWidth() / 2;
         int cy = imageView.getHeight() / 2;
         float initialRadius = (float) Math.hypot(cx, cy);
@@ -779,13 +796,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
         anim.start();
-
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        });
     }
 
     private void SelectBetweenTaskEpic(){

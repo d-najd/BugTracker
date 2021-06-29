@@ -130,7 +130,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_circle_blue_42dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/clock_00_txt"
         app:layout_constraintEnd_toEndOf="@+id/clock_00_txt"
         app:layout_constraintStart_toStartOf="@+id/clock_00_txt"
