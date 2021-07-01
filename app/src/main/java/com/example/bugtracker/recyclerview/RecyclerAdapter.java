@@ -61,21 +61,37 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int repeatSelected = -1;
 
     private String curTime = "null";
+    private String type = "null";
 
     private boolean reminderAdded = false;
 
-    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext, String type) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
+        this.type = type;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_layout_checklist, parent, false);
+        View view = null;
+        if (type.equals("1")) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_layout_checklist, parent, false);
+        }
+        else if (type.equals("2")) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.card_layout_project_table, parent, false);
+        }
+        else{
+            Message.message(mcontext, "there is problem with getting cardlayout, " +
+                    "current type (tag) is " + type);
+        }
+        assert view != null;
         return new RecyclerViewHolder(view);
+        //TODO it should detect when to use the different cardlayouts but there needs to be created
+        //case in bindview and recyclerdata as well
     }
 
     @Override

@@ -54,7 +54,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
 
         // added data from arraylist to adapter class.
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
+        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this, "1");
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
