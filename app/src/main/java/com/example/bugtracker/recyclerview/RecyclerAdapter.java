@@ -28,8 +28,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
+import com.example.bugtracker.MainActivity;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
+import com.example.bugtracker.activities.ProjectCreateActivity;
+import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialog;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
 
@@ -65,7 +68,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
-
 
     @NonNull
     @Override
@@ -235,7 +237,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
-        if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) { //TODO FIX THIS IT SEEMS TO BE BROKEN SETTING STAR ON WRONG ITEM
+        if (recyclerData.getTag().equals(mcontext.getString(R.string.title_projects))) {
             holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -247,6 +249,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         recyclerData.setFavorite(true);
                         holderArrayList.get(position).secondaryBtn.setImageResource(R.drawable.ic_star_24dp);
                     }
+                }
+            });
+
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    mcontext.startActivity(intent);
+                }
+            });
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    mcontext.startActivity(intent);
                 }
             });
         }

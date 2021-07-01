@@ -21,6 +21,7 @@ import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.example.bugtracker.recyclerview.myDbAdapter;
+import com.example.bugtracker.ui.ProjectsFragment;
 
 import java.util.ArrayList;
 
@@ -84,10 +85,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
         EditText Name = (EditText) findViewById(R.id.Edt_Create_Project);
         String Pass = recyclerDataArrayList.get(0).getDescription();
 
-        String data = helper.getData();
-        String [] parts = data.split("/");
-        int size = parts.length;
-
         String t1 = Name.getText().toString();
         String t2 = Pass;
         if(t1.isEmpty() || t2.isEmpty())
@@ -100,11 +97,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
             if(id<=0)
             {
                 Message.message(this,"Insertion Unsuccessful");
-            } else
-            {
-                Message.message(this, getString(R.string.title_projects));
-                recyclerDataArrayList.add(new RecyclerData(parts[size - 2], parts[size - 1], R.drawable.ic_launcher_background,  getString(R.string.title_projects) + "", parts[size]));
-                Message.message(this, getString(R.string.title_projects));
             }
         }
     }

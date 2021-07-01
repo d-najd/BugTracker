@@ -29,5 +29,6 @@
     <string name="delete">delete</string>
     <string name="create_project">CreateProject</string>
     <string name="create_task">CreateTask</string>
+    <string name="create">Create</string>
 
 </resources>

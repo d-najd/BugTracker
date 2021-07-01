@@ -122,15 +122,6 @@
             app:layout_constraintStart_toStartOf="@+id/adapter_secondary_text"
             app:layout_constraintTop_toTopOf="@+id/adapter_secondary_text" />
 
-        <Spinner
-            android:visibility="gone"
-            android:id="@+id/simpleSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
