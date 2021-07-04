@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateTaskActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private ArrayList<RecyclerData> recyclerDataArrayList;
 
     @Override
@@ -48,7 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.created), Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
 
         // added data from arraylist to adapter class.
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this, "1");
+        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.

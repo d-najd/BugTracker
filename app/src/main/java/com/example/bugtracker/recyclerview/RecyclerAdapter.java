@@ -28,10 +28,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
-import com.example.bugtracker.MainActivity;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
-import com.example.bugtracker.activities.ProjectCreateActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialog;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
@@ -44,11 +42,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
+    private RecyclerViewHolder holder;
     private int activeHourBtn = 0; //needs to be integer because when the dialog is opened again new set of buttons is created and it fucks up everything
     private int activeMinuteBtn = 0;
     private boolean hourSelected = true; //to know whether the hours or minutes are selected so that activehour/minuteBtn can be selected
     private boolean am_pm_Selected = true; //true for am false for pm
-    private RecyclerViewHolder holder;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
 
     private List<TextView> clock_texts = new ArrayList<TextView>();
@@ -61,37 +59,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int repeatSelected = -1;
 
     private String curTime = "null";
-    private String type = "null";
 
     private boolean reminderAdded = false;
 
-    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext, String type) {
+    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
-        this.type = type;
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
-        View view = null;
-        if (type.equals("1")) {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_layout_checklist, parent, false);
-        }
-        else if (type.equals("2")) {
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_layout_project_table, parent, false);
-        }
-        else{
-            Message.message(mcontext, "there is problem with getting cardlayout, " +
-                    "current type (tag) is " + type);
-        }
-        assert view != null;
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.card_layout_checklist, parent, false);
         return new RecyclerViewHolder(view);
-        //TODO it should detect when to use the different cardlayouts but there needs to be created
-        //case in bindview and recyclerdata as well
     }
 
     @Override
@@ -105,22 +87,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.mainBtn.setImageResource(recyclerData.getImgId());
         holder.id.setText(recyclerData.getId());
 
-        if (recyclerData.getEditTextEnable())
-        {
+        if (recyclerData.getEditTextEnable()) {
             holder.editText.setVisibility(View.VISIBLE);
             holder.editText.setHint(recyclerData.getDescription());
             holder.description.setVisibility(View.GONE);
-        } else if (recyclerData.getDescription() != null){
+        } else if (recyclerData.getDescription() != null) {
             holder.description.setText(recyclerData.getDescription());
-        }
-        else
+        } else
             holder.description.setVisibility(View.GONE);
 
-        if (layout.equals(mcontext.getString(R.string.title_projects))){
+        if (layout.equals(mcontext.getString(R.string.title_projects))) {
             holder.secondaryBtn.setVisibility(View.VISIBLE);
-            }
+        }
 
-        if (recyclerData.getSecondImgId() != 0){
+        if (recyclerData.getSecondImgId() != 0) {
             holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
             holder.secondaryBtn.setVisibility(View.VISIBLE);
         }
@@ -785,9 +765,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-
-
-
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail
     //also special pass wont hidebuttons bc both will be hidden once they are enabled by default
     //thus fucking everything up so they have to be manualy dissabled outside of here
@@ -866,7 +843,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-
             title = itemView.findViewById(R.id.adapter_main_text);
             description = itemView.findViewById(R.id.adapter_secondary_text);
             editText = itemView.findViewById(R.id.adapter_editText);

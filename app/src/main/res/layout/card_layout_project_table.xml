@@ -19,7 +19,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TO DO"
+            android:text="title"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:layout_marginStart="12dp"
@@ -61,7 +61,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/background_of_create"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:src="@color/gray"
@@ -71,26 +71,26 @@
             app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
         <ImageView
-            android:id="@+id/Create_Img"
+            android:id="@+id/create_Img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:src="@drawable/ic_add_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageView4" />
+            app:layout_constraintTop_toTopOf="@+id/background_of_create" />
 
         <TextView
-            android:id="@+id/Create_Txt"
+            android:id="@+id/create_Txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="@string/create"
+            android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/Create_Img"
-            app:layout_constraintStart_toEndOf="@+id/Create_Img"
-            app:layout_constraintTop_toTopOf="@+id/Create_Img"
-            android:layout_marginStart="12dp"
-            android:textColor="@color/white"/>
+            app:layout_constraintBottom_toBottomOf="@+id/create_Img"
+            app:layout_constraintStart_toEndOf="@+id/create_Img"
+            app:layout_constraintTop_toTopOf="@+id/create_Img" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

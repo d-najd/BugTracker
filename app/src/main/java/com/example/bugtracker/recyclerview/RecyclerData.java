@@ -2,6 +2,10 @@ package com.example.bugtracker.recyclerview;
 
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
 public class RecyclerData {
 
     private String title;
@@ -10,6 +14,8 @@ public class RecyclerData {
     private String id;
     private int imgId;
     private int secondImgId;
+    private ArrayList<String> titles;
+    private ArrayList<Integer> imgIds;
     private Boolean favorite = false;
     private Boolean editTextEnable = false;
 
@@ -47,6 +53,30 @@ public class RecyclerData {
         this.imgId = imgId;
         this.tag = tag;
         this.secondImgId = secondImgId;
+    }
+
+    public RecyclerData(String title, ArrayList<String> titles, ArrayList<Integer> imgIds, String tag)
+    {
+        this.title = title;
+        this.titles = titles;
+        this.imgIds = imgIds;
+        this.tag = tag;
+    }
+
+    public ArrayList<String> getTitles(){
+        return titles;
+    }
+
+    public void setTitles(ArrayList<String> titles){
+        this.titles = titles;
+    }
+
+    public ArrayList<Integer> getImgIds(){
+        return imgIds;
+    }
+
+    public void setImgIds(ArrayList<Integer> titles){
+        this.imgIds = imgIds;
     }
 
     public String getTitle() {

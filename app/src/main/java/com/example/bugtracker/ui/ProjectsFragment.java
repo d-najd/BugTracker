@@ -38,7 +38,7 @@ public class ProjectsFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerView_Fra_Projects);
 
         // added data from arraylist to adapter class.
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext(), "1");
+        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
 

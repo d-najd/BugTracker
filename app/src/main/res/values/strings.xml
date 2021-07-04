@@ -30,5 +30,6 @@
     <string name="create_project">CreateProject</string>
     <string name="create_task">CreateTask</string>
     <string name="create">Create</string>
+    <string name="create_board">create_board</string>
 
 </resources>
