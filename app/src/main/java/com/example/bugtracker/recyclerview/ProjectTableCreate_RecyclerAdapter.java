@@ -43,9 +43,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);
-
-        holder.title.setText(recyclerData.getTitle());
-        holder.numberOfItems.setText(recyclerData.getTitles().size());
         TableData(recyclerData, holder);
 
     }
@@ -58,21 +55,21 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         for (int i = 0; i < tableSize; i++){
             recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
                     recyclerData.getImgIds().get(i),  recyclerData.getTag()));
-
         }
 
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
-        // at last set adapter to recycler view.
-        holder.recyclerView.setHasFixedSize(false);
+
+       // breakpoint here
+                //TODO use this to make vertical recyclerview https://stackoverflow.com/questions/68200773/vertical-recyclerview-nested-inside-vertical-recyclerview
+                // or this https://medium.com/@kunalpandey311997/android-nested-recyclerview-tutorial-kotlin-244feaa3724f
+        holder.recyclerView.setHasFixedSize(true);
 
         RecyclerView recyclerView = holder.recyclerView;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
-
     }
 
 
@@ -93,12 +90,12 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
-            numberOfItems = itemView.findViewById(R.id.number_of_items);
-            moreVertical = itemView.findViewById(R.id.more_vertical);
+            //numberOfItems = itemView.findViewById(R.id.number_of_items);
+            //moreVertical = itemView.findViewById(R.id.more_vertical);
             recyclerView = itemView.findViewById(R.id.recyclerView);
-            backgroundofCreate = itemView.findViewById(R.id.background_of_create);
-            createImg = itemView.findViewById(R.id.create_Img);
-            createTxt = itemView.findViewById(R.id.create_Txt);
+            //backgroundofCreate = itemView.findViewById(R.id.background_of_create);
+            //createImg = itemView.findViewById(R.id.create_Img);
+            //createTxt = itemView.findViewById(R.id.create_Txt);
         }
     }
 }

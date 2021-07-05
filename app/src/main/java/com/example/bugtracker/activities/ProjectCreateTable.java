@@ -25,6 +25,8 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<RecyclerData> recyclerDataArrayList;
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<Integer> imgIds = new ArrayList<>();
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+
 
 
     @Override
@@ -55,11 +57,12 @@ public class ProjectCreateTable extends AppCompatActivity {
         // in this method '1' represents number of columns to be displayed in grid view.
 
         //TODO this affects the size needs to be fixed maybe using fragments?
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,  LinearLayoutManager.VERTICAL, false);
 
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setRecycledViewPool(viewPool);
 
        // recyclerDataArrayList.get(0)
     }
