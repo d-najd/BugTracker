@@ -5,26 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
     app:cardBackgroundColor="@color/black"
-    app:cardCornerRadius="5dp">
+    app:cardCornerRadius="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:padding="8dp"
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:id="@+id/surface"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/adapter_mainImgBtn"
@@ -40,7 +29,7 @@
 
         <TextView
             android:id="@+id/adapter_main_text"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginTop="8dp"
@@ -56,9 +45,9 @@
 
         <EditText
             android:id="@+id/adapter_editText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="48dp"
             android:layout_marginTop="20dp"
             android:gravity="start"
             android:text=""
@@ -73,7 +62,7 @@
 
         <TextView
             android:id="@+id/adapter_secondary_text"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
             android:layout_marginTop="4dp"
@@ -104,23 +93,13 @@
 
         <TextView
             android:id="@+id/adapter_setId"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="0sp"
             android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/adapter_recyclerView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/adapter_secondary_text"
-            app:layout_constraintEnd_toEndOf="@+id/adapter_secondary_text"
-            app:layout_constraintStart_toStartOf="@+id/adapter_secondary_text"
-            app:layout_constraintTop_toTopOf="@+id/adapter_secondary_text" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

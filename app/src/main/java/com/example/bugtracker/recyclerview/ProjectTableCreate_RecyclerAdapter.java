@@ -1,5 +1,6 @@
 package com.example.bugtracker.recyclerview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,12 +46,13 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         this.holder = holder;
         holderArrayList.add(holder);
 
-        holder.title.setText(recyclerData.getTitle());
-        holder.numberOfItems.setText(recyclerData.getTitles().size());
+        //holder.title.setText(recyclerData.getTitle());
+        //holder.numberOfItems.setText(recyclerData.getTitles().size());
         TableData(recyclerData, holder);
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void TableData(RecyclerData recyclerData, RecyclerViewHolder holder) {
         int tableSize = recyclerData.getTitles().size();
 
@@ -70,9 +73,14 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
         RecyclerView recyclerView = holder.recyclerView;
         recyclerView.setLayoutManager(layoutManager);
+
+        //this is the seperator, the thing between the items the exmpty space
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(mcontext.getDrawable(R.drawable.shape_seperator));
+        recyclerView.addItemDecoration(dividerItemDecoration);
+
         recyclerView.setAdapter(adapter);
-
-
     }
 
 
@@ -93,12 +101,12 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
-            numberOfItems = itemView.findViewById(R.id.number_of_items);
-            moreVertical = itemView.findViewById(R.id.more_vertical);
+            //numberOfItems = itemView.findViewById(R.id.number_of_items);
+            //moreVertical = itemView.findViewById(R.id.more_vertical);
             recyclerView = itemView.findViewById(R.id.recyclerView);
-            backgroundofCreate = itemView.findViewById(R.id.background_of_create);
-            createImg = itemView.findViewById(R.id.create_Img);
-            createTxt = itemView.findViewById(R.id.create_Txt);
+            //backgroundofCreate = itemView.findViewById(R.id.background_of_create);
+            //createImg = itemView.findViewById(R.id.create_Img);
+            //createTxt = itemView.findViewById(R.id.create_Txt);
         }
     }
 }

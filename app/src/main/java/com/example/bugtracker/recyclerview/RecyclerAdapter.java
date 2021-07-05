@@ -849,7 +849,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             mainBtn = itemView.findViewById(R.id.adapter_mainImgBtn);
             secondaryBtn = itemView.findViewById(R.id.adapter_favorite_button);
             id = itemView.findViewById(R.id.adapter_setId);
-            recyclerView = itemView.findViewById(R.id.adapter_recyclerView);
         }
     }
 }

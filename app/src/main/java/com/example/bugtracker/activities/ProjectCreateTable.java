@@ -25,7 +25,7 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<RecyclerData> recyclerDataArrayList;
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<Integer> imgIds = new ArrayList<>();
-
+    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,7 @@ public class ProjectCreateTable extends AppCompatActivity {
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setRecycledViewPool(viewPool);
 
        // recyclerDataArrayList.get(0)
     }
