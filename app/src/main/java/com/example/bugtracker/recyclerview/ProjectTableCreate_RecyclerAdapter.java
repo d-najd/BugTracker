@@ -2,6 +2,7 @@ package com.example.bugtracker.recyclerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,27 +47,30 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         this.holder = holder;
         holderArrayList.add(holder);
 
-        //holder.title.setText(recyclerData.getTitle());
-        //holder.numberOfItems.setText(recyclerData.getTitles().size());
+        holder.title.setText(recyclerData.getTitle());
+        holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
         TableData(recyclerData, holder);
-
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     private void TableData(RecyclerData recyclerData, RecyclerViewHolder holder) {
         int tableSize = recyclerData.getTitles().size();
 
-        Message.message(mcontext, "table size is " + tableSize);
+        //recyclerDataArrayList.clear();
 
         for (int i = 0; i < tableSize; i++){
             recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
                     recyclerData.getImgIds().get(i),  recyclerData.getTag()));
-
         }
+
+        Message.message(mcontext, "RecyclerDataArrayList is shared between the" +
+                "recyclerviews which means all recyclerviews have the same data which means" +
+                "there needs to be a way to differenciate them, maybe saving them to a database" +
+                "and pulling data from there?");
 
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
+                LinearLayoutManager.VERTICAL, false);
 
         // at last set adapter to recycler view.
         holder.recyclerView.setHasFixedSize(false);
@@ -74,7 +78,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         RecyclerView recyclerView = holder.recyclerView;
         recyclerView.setLayoutManager(layoutManager);
 
-        //this is the seperator, the thing between the items the exmpty space
+        //this is the seperator, the thing between the items the empty space
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 layoutManager.getOrientation());
         dividerItemDecoration.setDrawable(mcontext.getDrawable(R.drawable.shape_seperator));
@@ -94,19 +98,17 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         private TextView numberOfItems;
         private ImageButton moreVertical;
         private RecyclerView recyclerView;
-        private ImageView backgroundofCreate;
         private ImageView createImg;
         private TextView createTxt;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
-            //numberOfItems = itemView.findViewById(R.id.number_of_items);
-            //moreVertical = itemView.findViewById(R.id.more_vertical);
+            numberOfItems = itemView.findViewById(R.id.number_of_items);
+            moreVertical = itemView.findViewById(R.id.more_vertical);
             recyclerView = itemView.findViewById(R.id.recyclerView);
-            //backgroundofCreate = itemView.findViewById(R.id.background_of_create);
-            //createImg = itemView.findViewById(R.id.create_Img);
-            //createTxt = itemView.findViewById(R.id.create_Txt);
+            createImg = itemView.findViewById(R.id.create_Img);
+            createTxt = itemView.findViewById(R.id.create_Txt);
         }
     }
 }
