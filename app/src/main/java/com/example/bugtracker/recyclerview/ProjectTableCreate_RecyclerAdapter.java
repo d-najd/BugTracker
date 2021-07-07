@@ -16,7 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
+import com.example.bugtracker.activities.ProjectCreateTable;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +66,17 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                     recyclerData.getImgIds().get(i),  recyclerData.getTag()));
         }
 
+        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
+
+        projectCreateTable.SaveData(recyclerData.getTitles(), recyclerData.getImgIds());
+        projectCreateTable.GetData();
+
+        /*
         Message.message(mcontext, "RecyclerDataArrayList is shared between the" +
                 "recyclerviews which means all recyclerviews have the same data which means" +
                 "there needs to be a way to differenciate them, maybe saving them to a database" +
                 "and pulling data from there?");
+         */
 
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
 
@@ -86,7 +97,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
         recyclerView.setAdapter(adapter);
     }
-
 
     @Override
     public int getItemCount() {
