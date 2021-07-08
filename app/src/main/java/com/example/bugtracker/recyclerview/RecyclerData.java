@@ -63,6 +63,11 @@ public class RecyclerData {
         this.tag = tag;
     }
 
+    public RecyclerData(String title, String tag) {
+        this.title = title;
+        this.tag = tag;
+    }
+
     public ArrayList<String> getTitles(){
         return titles;
     }

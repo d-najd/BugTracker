@@ -63,7 +63,7 @@ public class myDbAdapter {
         ContentValues contentValues = new ContentValues();
         contentValues.put(myDbHelper.NAME,newName);
         String[] whereArgs= {oldName};
-        int count =db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.NAME+" = ?",whereArgs );
+        int count = db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.NAME+" = ?",whereArgs );
         return count;
     }
 
@@ -75,9 +75,9 @@ public class myDbAdapter {
         private static final String UID = "_id";     // Column I (Primary Key)
         private static final String NAME = "Name";    //Column II
         private static final String MyPASSWORD = "Password";    // Column III
-        private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
-                " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " VARCHAR(255) ," + MyPASSWORD+" VARCHAR(225));";
-        private static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
+                " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " VARCHAR(255) ," + MyPASSWORD + " VARCHAR(225));";
+        private static final String DROP_TABLE ="DROP TABLE IF EXISTS " + TABLE_NAME;
         private Context context;
 
         public myDbHelper(Context context) {
@@ -89,7 +89,7 @@ public class myDbAdapter {
             try {
                 db.execSQL(CREATE_TABLE);
             } catch (Exception e) {
-                Message.message(context,""+e);
+                Message.message(context,"" + e);
             }
         }
 

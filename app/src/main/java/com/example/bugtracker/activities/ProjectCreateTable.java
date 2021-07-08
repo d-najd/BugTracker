@@ -11,14 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ArrayListToBytes;
 import com.example.bugtracker.R;
+import com.example.bugtracker.StringToList;
 import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 public class ProjectCreateTable extends AppCompatActivity {
@@ -48,25 +51,29 @@ public class ProjectCreateTable extends AppCompatActivity {
         imgIds.add(R.drawable.ic_launcher_foreground);
         imgIds.add(R.drawable.ic_launcher_foreground);
 
-        //types are epic for lot of tasks and task.
-        // added data from arraylist to adapter class.
-        recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
+        //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
 
-        //titles.add("Example 1");
-        //titles.add("Example 2");
-        //titles.add("Example 2");
-        //titles.add("Example 2");
+        //for data
+        String data = GetData(this);
+
+        if (data == null){
+            Log.wtf("DATA IS EMPTY", "the data is null there is problem");
+            finishAndRemoveTask();
+        }
+
+        String [] parts = data.split("/");
+
+        titles = StringToList.StringToList(parts[1], null);
+        imgIds = StringToList.StringToList(parts[2], 0);
+
+        recyclerDataArrayList.add(new RecyclerData(parts[0], titles, imgIds, tag));
+
+        recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
 
-       // imgIds.add(R.drawable.ic_launcher_background);
-        //imgIds.add(R.drawable.ic_launcher_foreground);
-        //imgIds.add(R.drawable.ic_launcher_foreground);
-        //imgIds.add(R.drawable.ic_launcher_foreground);
 
-
-        recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
-
-        ProjectTableCreate_RecyclerAdapter adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+        ProjectTableCreate_RecyclerAdapter adapter = new
+                ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
@@ -84,29 +91,18 @@ public class ProjectCreateTable extends AppCompatActivity {
         recyclerView.setRecycledViewPool(viewPool);
     }
 
-    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds) {
-        File file= null;
+    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, Context context) {
         FileOutputStream fileOutputStream = null;
 
-        byte[] titlesbyte = ArrayListToBytes.arrayListToBytes(titles, null);
-        byte[] imgIdsbyte = ArrayListToBytes.arrayListToBytes(imgIds, 0);
+
+        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
+        File f = new File(context.getFilesDir(), "ProjectTable.txt");
 
         try {
-            Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", "fileOutputStream");
-            //Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", "fileOutputStream");
-            //Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", fileOutputStream + "");
-            //Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", fileOutputStream + "");
-            //Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", fileOutputStream + "");
-
-
-            file = getFilesDir();
-            fileOutputStream = openFileOutput("ProjectTable.txt", Context.MODE_PRIVATE); //MODE PRIVATE
-
-            Log.wtf("HETJGIFDJIHDGIDFJGHJDOUFHSDUIORDFGNIDFNGFODIFGIDGHIREHGIORHEOIGHREOUGEHGOIURHGUOEROHERGIOEU", fileOutputStream + "");
-
-            fileOutputStream.write(titlesbyte);
-            fileOutputStream.write(imgIdsbyte);
-            Message.message(this,"Saved \n" + "Path --" + file + "\tCode.txt");
+            //TODO for not removing data?
+            //fileOutputStream = context.openFileOutput("ProjectTable.txt", Context.MODE_APPEND);
+            fileOutputStream = context.openFileOutput("ProjectTable.txt", Context.MODE_PRIVATE);
+            fileOutputStream.write(data.getBytes());
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -118,22 +114,23 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
     }
 
-    public void GetData(){
+    public String GetData(Context context){
+        String data = null;
+
         try {
-            FileInputStream fileInputStream = openFileInput("ProjectTable.txt");
+            FileInputStream fileInputStream = context.openFileInput("ProjectTable.txt");
             int read = -1;
             StringBuffer buffer = new StringBuffer();
-            while((read =fileInputStream.read())!= -1){
+            while((read = fileInputStream.read())!= -1){
                 buffer.append((char)read);
             }
-            Log.d("Code", buffer.toString());
-            String name = buffer.substring(0,buffer.indexOf(" "));
-            String pass = buffer.substring(buffer.indexOf(" ")+1);
-            Message.message(this, name);
+            data = buffer.toString();
+            Log.wtf("Code", data);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return data;
     }
-
-
 }

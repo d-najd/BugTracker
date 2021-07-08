@@ -2,6 +2,7 @@ package com.example.bugtracker.recyclerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,31 +53,29 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         holderArrayList.add(holder);
 
         holder.title.setText(recyclerData.getTitle());
-        holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
+
+        //TODO find out why they are on top of each other (the columns) and a way to properly place them
+        if (recyclerData.getTitles() != null && mcontext.getString(R.string.add_column).equals(recyclerData.getTitle())) {
+            holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
+        }else{
+            AddColumn(holder);
+        }
         TableData(recyclerData, holder);
     }
 
     private void TableData(RecyclerData recyclerData, RecyclerViewHolder holder) {
-        int tableSize = recyclerData.getTitles().size();
+        int tableSize = 0;
+        if (recyclerData.getTitles() != null && mcontext.getString(R.string.add_column).equals(recyclerData.getTitle()))
+            tableSize = recyclerData.getTitles().size();
 
         //recyclerDataArrayList.clear();
 
-        for (int i = 0; i < tableSize; i++){
-            recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
-                    recyclerData.getImgIds().get(i),  recyclerData.getTag()));
+        if (tableSize != 0) {
+            for (int i = 0; i < tableSize; i++) {
+                recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
+                        recyclerData.getImgIds().get(i), recyclerData.getTag()));
+            }
         }
-
-        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
-
-        projectCreateTable.SaveData(recyclerData.getTitles(), recyclerData.getImgIds());
-        projectCreateTable.GetData();
-
-        /*
-        Message.message(mcontext, "RecyclerDataArrayList is shared between the" +
-                "recyclerviews which means all recyclerviews have the same data which means" +
-                "there needs to be a way to differenciate them, maybe saving them to a database" +
-                "and pulling data from there?");
-         */
 
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
 
@@ -96,6 +95,15 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private void AddColumn(RecyclerViewHolder holder){
+        holder.numberOfItems.setVisibility(View.GONE);
+        holder.recyclerView.setVisibility(View.GONE);
+        holder.createTxt.setVisibility(View.GONE);
+        holder.createImg.setVisibility(View.GONE);
+        holder.moreVertical.setVisibility(View.GONE);
+        holder.title.setTextColor(mcontext.getColor(R.color.blue));
     }
 
     @Override
