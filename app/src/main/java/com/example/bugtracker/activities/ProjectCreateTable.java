@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ArrayListToBytes;
@@ -39,12 +40,10 @@ public class ProjectCreateTable extends AppCompatActivity {
         recyclerView = findViewById(R.id.main_recyclerview);
         String tag = recyclerView.getTag().toString();
 
-
         titles.add("Example 1");
         titles.add("Example 2");
         titles.add("Example 2");
         titles.add("Example 2");
-
 
         imgIds.add(R.drawable.ic_launcher_background);
         imgIds.add(R.drawable.ic_launcher_foreground);
@@ -52,6 +51,8 @@ public class ProjectCreateTable extends AppCompatActivity {
         imgIds.add(R.drawable.ic_launcher_foreground);
 
         //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
+
+        //SaveData(titles, imgIds, "TO DO", this);
 
         //for data
         String data = GetData(this);
@@ -67,10 +68,9 @@ public class ProjectCreateTable extends AppCompatActivity {
         imgIds = StringToList.StringToList(parts[2], 0);
 
         recyclerDataArrayList.add(new RecyclerData(parts[0], titles, imgIds, tag));
+        recyclerDataArrayList.add(new RecyclerData(parts[0], titles, imgIds, tag));
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
-
-
 
         ProjectTableCreate_RecyclerAdapter adapter = new
                 ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
@@ -78,12 +78,7 @@ public class ProjectCreateTable extends AppCompatActivity {
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
 
-        //TODO need to add ability to move from one to other, maybe using multiple fragments and
-        //making 1 half visible and beign able to move from one to other?
-
-        //TODO make each element seperatly scrollable, when you scroll it scrolls everything instead
-        //of the inner recyclerview
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 100);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
 
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
@@ -93,7 +88,6 @@ public class ProjectCreateTable extends AppCompatActivity {
 
     public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, Context context) {
         FileOutputStream fileOutputStream = null;
-
 
         String data = title + "/" + titles.toString() + "/" + imgIds + "/";
         File f = new File(context.getFilesDir(), "ProjectTable.txt");

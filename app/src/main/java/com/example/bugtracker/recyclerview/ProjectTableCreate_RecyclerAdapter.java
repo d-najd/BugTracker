@@ -2,22 +2,26 @@ package com.example.bugtracker.recyclerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
+import com.example.bugtracker.dialogs.BasicDialog;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,8 +33,10 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private RecyclerViewHolder holder;
-    List<RecyclerViewHolder> holderArrayList = new ArrayList<>();
+    private List<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+
+    private String newColumnName = null;
 
     public ProjectTableCreate_RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
@@ -55,7 +61,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         holder.title.setText(recyclerData.getTitle());
 
         //TODO find out why they are on top of each other (the columns) and a way to properly place them
-        if (recyclerData.getTitles() != null && mcontext.getString(R.string.add_column).equals(recyclerData.getTitle())) {
+        if (recyclerData.getTitles() != null && !mcontext.getString(R.string.add_column).equals(recyclerData.getTitle())) {
             holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
         }else{
             AddColumn(holder);
@@ -65,11 +71,10 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
     private void TableData(RecyclerData recyclerData, RecyclerViewHolder holder) {
         int tableSize = 0;
-        if (recyclerData.getTitles() != null && mcontext.getString(R.string.add_column).equals(recyclerData.getTitle()))
+        if (recyclerData.getTitles() != null && !mcontext.getString(R.string.add_column).equals(recyclerData.getTitle()))
             tableSize = recyclerData.getTitles().size();
 
-        //recyclerDataArrayList.clear();
-
+        recyclerDataArrayList.clear();
         if (tableSize != 0) {
             for (int i = 0; i < tableSize; i++) {
                 recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
@@ -104,6 +109,53 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         holder.createImg.setVisibility(View.GONE);
         holder.moreVertical.setVisibility(View.GONE);
         holder.title.setTextColor(mcontext.getColor(R.color.blue));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextDialog(v, mcontext, "Add column", "ADD", "CANCEL");
+            }
+        });
+    }
+
+    private void editTextDialog(View v, Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt){
+        //Sadly I cant find a way to return data from a void (the postive button), anyway the dialog
+        //is available in basicDialog if I need it
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+        ViewGroup viewGroup = v.findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(mcontext).inflate(R.layout.dialog_edit_text, viewGroup, false);
+
+        EditText editText = dialogView.findViewById(R.id.editText);
+        builder.setView(dialogView)
+                .setTitle(title)
+                .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        /* TODO find a way to save the data
+                        newColumnName = editText.getText().toString();
+                        ArrayList<String> titles = new ArrayList<>();
+                        ArrayList<Integer> imgs = new ArrayList<>();
+                        titles.add("TEST");
+                        imgs.add(R.drawable.ic_launcher_foreground);
+
+                        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
+                        projectCreateTable.SaveData(titles, imgs, editText.getText().toString(), mcontext);
+
+                         */
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
+
+        alertDialog.show();
     }
 
     @Override

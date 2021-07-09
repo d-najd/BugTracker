@@ -214,8 +214,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
-                        BasicDialog basicDialog = new BasicDialog();
-                        basicDialog.StartDialog(mcontext, "Reminder Warning",
+                        BasicDialog.basicDialog(mcontext, "Reminder Warning",
                                 "Tell me when. Set a date and time first", "OK, GOT IT");
                     }
                 }
@@ -225,8 +224,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
-                        BasicDialog basicDialog = new BasicDialog();
-                        basicDialog.StartDialog(mcontext, "Reminder Warning",
+                        BasicDialog.basicDialog(mcontext, "Reminder Warning",
                                 "Tell me when. Set a date and time first", "OK, GOT IT");
                     }
                 }
