@@ -1,8 +1,12 @@
 package com.example.bugtracker.activities;
 
 import android.content.Context;
+import android.media.MediaScannerConnection;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +20,13 @@ import com.example.bugtracker.StringToList;
 import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
+import com.example.bugtracker.recyclerview.myDbAdapter;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -31,6 +37,7 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+    private String projectName; //data is passed through intent
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +46,16 @@ public class ProjectCreateTable extends AppCompatActivity {
         recyclerDataArrayList = new ArrayList<>();
         recyclerView = findViewById(R.id.main_recyclerview);
         String tag = recyclerView.getTag().toString();
+        projectName = getIntent().getExtras().getString("projectName");
+        //TODO finish working on save data thingy
 
-        titles.add("Example 1");
-        titles.add("Example 2");
-        titles.add("Example 2");
-        titles.add("Example 2");
+
+        makeFolders();
+
+        titles.add("TEST");
+        titles.add("TEST");
 
         imgIds.add(R.drawable.ic_launcher_background);
-        imgIds.add(R.drawable.ic_launcher_foreground);
-        imgIds.add(R.drawable.ic_launcher_foreground);
         imgIds.add(R.drawable.ic_launcher_foreground);
 
         //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
@@ -55,7 +63,9 @@ public class ProjectCreateTable extends AppCompatActivity {
         //SaveData(titles, imgIds, "TO DO", this);
 
         //for data
-        String data = GetData(this);
+
+        String data = null;
+        //String data = GetData(this);
 
         if (data == null){
             Log.wtf("DATA IS EMPTY", "the data is null there is problem");
@@ -86,33 +96,42 @@ public class ProjectCreateTable extends AppCompatActivity {
         recyclerView.setRecycledViewPool(viewPool);
     }
 
-    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, Context context) {
-        FileOutputStream fileOutputStream = null;
+
+    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
+        BufferedWriter writer = null;
 
         String data = title + "/" + titles.toString() + "/" + imgIds + "/";
-        File f = new File(context.getFilesDir(), "ProjectTable.txt");
+        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
 
         try {
-            //TODO for not removing data?
-            //fileOutputStream = context.openFileOutput("ProjectTable.txt", Context.MODE_APPEND);
-            fileOutputStream = context.openFileOutput("ProjectTable.txt", Context.MODE_PRIVATE);
-            fileOutputStream.write(data.getBytes());
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+
+            // Refresh the data so it can seen when the device is plugged in a
+            // computer. You may have to unplug and replug the device to see the
+            // latest changes. This is not necessary if the user should not modify
+            // the files.
+            MediaScannerConnection.scanFile(this,
+                    new String[]{f.toString()},
+                    null,
+                    null);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
             try {
-                fileOutputStream.close();
+                writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public String GetData(Context context){
+    public String GetData(String projectName){
         String data = null;
 
         try {
-            FileInputStream fileInputStream = context.openFileInput("ProjectTable.txt");
+            FileInputStream fileInputStream = this.openFileInput("ProjectTable.txt");
             int read = -1;
             StringBuffer buffer = new StringBuffer();
             while((read = fileInputStream.read())!= -1){
@@ -126,5 +145,25 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
 
         return data;
+    }
+
+    private void makeFolders(){
+        //makes folders where the data is stored
+        //TODO add function which checks if premissions for writing data are allowed
+
+        File folder = new File(this.getFilesDir(), "ProjectData");
+
+        boolean success = true;
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
+
+        folder = new File(this.getFilesDir() + File.separator + "ProjectData",
+                "ProjectBoard");
+
+        success = true;
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
     }
 }

@@ -69,7 +69,6 @@ public class ProjectsFragment extends Fragment {
 
     }
 
-
     public void retrieveData()
     {
         recyclerView.getAdapter().notifyItemRangeRemoved(0, recyclerDataArrayList.size());

@@ -7,12 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.bugtracker.activities.ProjectCreateActivity;
-import com.example.bugtracker.ui.ProjectsFragment;
-
-import java.util.ArrayList;
-import java.util.Map;
-
 
 public class myDbAdapter {
     myDbHelper myhelper;
@@ -25,8 +19,8 @@ public class myDbAdapter {
     {
         SQLiteDatabase dbb = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.NAME, name);
-        contentValues.put(myDbHelper.MyPASSWORD, pass);
+        contentValues.put(myDbHelper.title, name);
+        contentValues.put(myDbHelper.description, pass);
         long id = dbb.insert(myDbHelper.TABLE_NAME, null , contentValues);
         return id;
     }
@@ -34,14 +28,14 @@ public class myDbAdapter {
     public String getData()
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
-        String[] columns = {myDbHelper.UID,myDbHelper.NAME,myDbHelper.MyPASSWORD};
+        String[] columns = {myDbHelper.id,myDbHelper.title,myDbHelper.description};
         Cursor cursor = db.query(myDbHelper.TABLE_NAME,columns,null,null,null,null,null);
         StringBuffer buffer = new StringBuffer();
         while (cursor.moveToNext())
         {
-            int cid = cursor.getInt(cursor.getColumnIndex(myDbHelper.UID));
-            String name = cursor.getString(cursor.getColumnIndex(myDbHelper.NAME));
-            String password = cursor.getString(cursor.getColumnIndex(myDbHelper.MyPASSWORD));
+            int cid = cursor.getInt(cursor.getColumnIndex(myDbHelper.id));
+            String name = cursor.getString(cursor.getColumnIndex(myDbHelper.title));
+            String password = cursor.getString(cursor.getColumnIndex(myDbHelper.description));
             buffer.append(name + "/" + password + "/" + cid + "/");
             //buffer.append(cid + "/" + name + "/" + password +"/");
         }
@@ -53,7 +47,7 @@ public class myDbAdapter {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         String[] whereArgs ={id};
         Log.wtf("removing", id);
-        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.UID + " = ?",whereArgs);
+        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.id + " = ?",whereArgs);
         return count;
     }
 
@@ -61,22 +55,22 @@ public class myDbAdapter {
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.NAME,newName);
+        contentValues.put(myDbHelper.title,newName);
         String[] whereArgs= {oldName};
-        int count = db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.NAME+" = ?",whereArgs );
+        int count = db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.title +" = ?",whereArgs );
         return count;
     }
 
     static class myDbHelper extends SQLiteOpenHelper
     {
-        private static final String DATABASE_NAME = "myDatabase";    // Database Name
+        private static final String DATABASE_NAME = "ProjectCreateTable";    // Database Name
         private static final String TABLE_NAME = "myTable";   // Table Name
         private static final int DATABASE_Version = 1;    // Database Version
-        private static final String UID = "_id";     // Column I (Primary Key)
-        private static final String NAME = "Name";    //Column II
-        private static final String MyPASSWORD = "Password";    // Column III
+        private static final String id = "_id";     // Column I (Primary Key)
+        private static final String title = "Name";    //Column II
+        private static final String description = "Password";    // Column III
         private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
-                " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME + " VARCHAR(255) ," + MyPASSWORD + " VARCHAR(225));";
+                " ("+ id +" INTEGER PRIMARY KEY AUTOINCREMENT, " + title + " VARCHAR(255) ," + description + " VARCHAR(225));";
         private static final String DROP_TABLE ="DROP TABLE IF EXISTS " + TABLE_NAME;
         private Context context;
 

@@ -146,7 +146,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
                         ProjectCreateTable projectCreateTable = new ProjectCreateTable();
                         projectCreateTable.SaveData(titles, imgs, editText.getText().toString(), mcontext);
-
                          */
 
                     }
