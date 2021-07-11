@@ -41,32 +41,34 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         makeFolders();
 
-        titles.add("TEST");
-        titles.add("TEST");
+        //titles.add("rere");
+        //titles.add("TEST");
 
-        imgIds.add(R.drawable.ic_launcher_background);
-        imgIds.add(R.drawable.ic_launcher_foreground);
+        //imgIds.add(R.drawable.ic_launcher_background);
+        //imgIds.add(R.drawable.ic_launcher_foreground);
 
         //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
 
-        //SaveData(titles, imgIds, "TO DO", projectName);
+        saveData(titles, imgIds, "TO DO", projectName);
 
         //for data
+        //removeData(1, projectName);
         String data = getData(projectName);
 
-        ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
-        data = dataList.toString().substring(1, dataList.toString().length() - 1);
-        //TODO NEED TO REPLACE (, ) without the () with / this belongs in removedata
+        //ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
+        //String test = dataList.toString().substring(1, dataList.toString().length() - 1)
+        //        .replace(", ", "/") + "/";
+
         if (data == null){
             Log.wtf("DATA IS EMPTY", "the data is null there is problem");
         } else {
             String[] parts = data.split("/");
 
-            for (int i = 0; i < parts.length / 4; i++){
-                titles = StringToList.StringToList(parts[2 + (i * 4)], null);
-                imgIds = StringToList.StringToList(parts[3 + (i * 4)], 0);
+            for (int i = 0; i < parts.length / 3; i++){
+                titles = StringToList.StringToList(parts[1 + (i * 3)], null);
+                imgIds = StringToList.StringToList(parts[2 + (i * 3)], 0);
 
-                recyclerDataArrayList.add(new RecyclerData(parts[1 + (i * 4)], titles, imgIds, tag));
+                recyclerDataArrayList.add(new RecyclerData(parts[i * 3], titles, imgIds, tag));
             }
 
             recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
@@ -122,10 +124,10 @@ public class ProjectCreateTable extends AppCompatActivity {
         String dataOld = getData(projectName);
         if (dataOld != null) {
             String[] parts = dataOld.split("/");
-            id = parts.length / 4;
+            id = parts.length / 3;
         }
 
-        String data = id + "/" + title + "/" + titles.toString() + "/" + imgIds + "/";
+        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
 
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
@@ -143,16 +145,29 @@ public class ProjectCreateTable extends AppCompatActivity {
 
 
     public void removeData(int id, String projectName){
+
+        //TODO there might be a problem with
         String data = getData(projectName);
 
-        ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
+        String[] parts = data.split("/");
 
-        dataList.remove(id * 4);
-        dataList.remove(1 + (id * 4));
-        dataList.remove(2 + (id * 4));
-        dataList.remove(3 + (id * 4));
+        //this part is for splitting, ex if the id is 1, the startingStr will get data from
+        //0 up until 1 and stop, and endstr will get data from 2 and on
 
-        data = dataList.toString();
+        String endStr = "";
+        String startStr = "";
+
+        if (id != 0){
+            for (int i = 0; i < id * 3; i++){
+                startStr += parts[i] + "/";
+            }
+        }
+
+        for (int i = (id + 1) * 3; i < parts.length; i++){
+            endStr += parts[i] + "/";
+        }
+
+        data = startStr + endStr;
 
         BufferedWriter writer = null;
 
@@ -160,7 +175,7 @@ public class ProjectCreateTable extends AppCompatActivity {
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         try {
-            writer = new BufferedWriter(new FileWriter(f, true));
+            writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
         } catch (Exception ex) {
             ex.printStackTrace();
