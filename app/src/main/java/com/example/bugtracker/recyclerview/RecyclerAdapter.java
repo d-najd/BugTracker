@@ -251,7 +251,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTable.class);
-                    intent.putExtra("projectName", "projectName");
+                    intent.putExtra("projectName", holder.title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });
@@ -259,7 +259,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTable.class);
-                    intent.putExtra("projectName", "projectName");
+                    intent.putExtra("projectName", holder.title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });

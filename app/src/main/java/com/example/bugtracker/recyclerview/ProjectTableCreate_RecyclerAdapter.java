@@ -1,10 +1,7 @@
 package com.example.bugtracker.recyclerview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
-import com.example.bugtracker.dialogs.BasicDialog;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +28,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     private RecyclerViewHolder holder;
     private List<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+    public ProjectCreateTable projectCreateTableActivity;
+    public String projectName;
 
     private String newColumnName = null;
 
@@ -116,6 +111,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 editTextDialog(v, mcontext, "Add column", "ADD", "CANCEL");
             }
         });
+
+
     }
 
     private void editTextDialog(View v, Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt){
@@ -137,17 +134,13 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        /* TODO find a way to save the data
                         newColumnName = editText.getText().toString();
                         ArrayList<String> titles = new ArrayList<>();
                         ArrayList<Integer> imgs = new ArrayList<>();
                         titles.add("TEST");
                         imgs.add(R.drawable.ic_launcher_foreground);
 
-                        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
-                        projectCreateTable.SaveData(titles, imgs, editText.getText().toString(), mcontext);
-                         */
-
+                        projectCreateTableActivity.saveData(titles, imgs, editText.getText().toString(), projectName);
                     }
                 });
 

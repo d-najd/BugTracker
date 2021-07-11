@@ -1,35 +1,25 @@
 package com.example.bugtracker.activities;
 
-import android.content.Context;
-import android.media.MediaScannerConnection;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bugtracker.ArrayListToBytes;
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
-import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.example.bugtracker.recyclerview.myDbAdapter;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ProjectCreateTable extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -49,7 +39,6 @@ public class ProjectCreateTable extends AppCompatActivity {
         projectName = getIntent().getExtras().getString("projectName");
         //TODO finish working on save data thingy
 
-
         makeFolders();
 
         titles.add("TEST");
@@ -60,62 +49,87 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
 
-        //SaveData(titles, imgIds, "TO DO", this);
+        //SaveData(titles, imgIds, "TO DO", projectName);
 
         //for data
+        String data = getData(projectName);
 
-        String data = null;
-        //String data = GetData(this);
-
+        ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
+        data = dataList.toString().substring(1, dataList.toString().length() - 1);
+        //TODO NEED TO REPLACE (, ) without the () with / this belongs in removedata
         if (data == null){
             Log.wtf("DATA IS EMPTY", "the data is null there is problem");
-            finishAndRemoveTask();
+        } else {
+            String[] parts = data.split("/");
+
+            for (int i = 0; i < parts.length / 4; i++){
+                titles = StringToList.StringToList(parts[2 + (i * 4)], null);
+                imgIds = StringToList.StringToList(parts[3 + (i * 4)], 0);
+
+                recyclerDataArrayList.add(new RecyclerData(parts[1 + (i * 4)], titles, imgIds, tag));
+            }
+
+            recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
+
+            ProjectTableCreate_RecyclerAdapter adapter = new
+                    ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+
+            // setting grid layout manager to implement grid view.
+            // in this method '1' represents number of columns to be displayed in grid view.
+
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+
+            // at last set adapter to recycler view.
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+            adapter.projectCreateTableActivity = this;
+            adapter.projectName = projectName;
+            recyclerView.setRecycledViewPool(viewPool);
         }
-
-        String [] parts = data.split("/");
-
-        titles = StringToList.StringToList(parts[1], null);
-        imgIds = StringToList.StringToList(parts[2], 0);
-
-        recyclerDataArrayList.add(new RecyclerData(parts[0], titles, imgIds, tag));
-        recyclerDataArrayList.add(new RecyclerData(parts[0], titles, imgIds, tag));
-
-        recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
-
-        ProjectTableCreate_RecyclerAdapter adapter = new
-                ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
-
-        // setting grid layout manager to implement grid view.
-        // in this method '1' represents number of columns to be displayed in grid view.
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-
-        // at last set adapter to recycler view.
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setRecycledViewPool(viewPool);
     }
 
 
-    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
-        BufferedWriter writer = null;
+    public String getData(String projectName){
+        String data = null;
 
-        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
+        BufferedInputStream reader = null; // here needs to be done work
+
         File f = new File(this.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         try {
-            writer = new BufferedWriter(new FileWriter(f, false));
-            writer.write(data);
+            FileInputStream fileInputStream = new FileInputStream(f);
+            int read = -1;
+            StringBuffer buffer = new StringBuffer();
+            while((read = fileInputStream.read())!= -1){
+                buffer.append((char)read);
+            }
+            data = buffer.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 
-            // Refresh the data so it can seen when the device is plugged in a
-            // computer. You may have to unplug and replug the device to see the
-            // latest changes. This is not necessary if the user should not modify
-            // the files.
-            MediaScannerConnection.scanFile(this,
-                    new String[]{f.toString()},
-                    null,
-                    null);
+
+    public void saveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
+        BufferedWriter writer = null;
+        int id = 0;
+
+        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String dataOld = getData(projectName);
+        if (dataOld != null) {
+            String[] parts = dataOld.split("/");
+            id = parts.length / 4;
+        }
+
+        String data = id + "/" + title + "/" + titles.toString() + "/" + imgIds + "/";
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, true));
+            writer.write(data);
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -127,24 +141,36 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
     }
 
-    public String GetData(String projectName){
-        String data = null;
+
+    public void removeData(int id, String projectName){
+        String data = getData(projectName);
+
+        ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
+
+        dataList.remove(id * 4);
+        dataList.remove(1 + (id * 4));
+        dataList.remove(2 + (id * 4));
+        dataList.remove(3 + (id * 4));
+
+        data = dataList.toString();
+
+        BufferedWriter writer = null;
+
+        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
 
         try {
-            FileInputStream fileInputStream = this.openFileInput("ProjectTable.txt");
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
-            while((read = fileInputStream.read())!= -1){
-                buffer.append((char)read);
+            writer = new BufferedWriter(new FileWriter(f, true));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            data = buffer.toString();
-            Log.wtf("Code", data);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return data;
     }
 
     private void makeFolders(){
@@ -153,17 +179,14 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         File folder = new File(this.getFilesDir(), "ProjectData");
 
-        boolean success = true;
         if (!folder.exists()) {
-            success = folder.mkdirs();
+            folder.mkdirs();
         }
 
         folder = new File(this.getFilesDir() + File.separator + "ProjectData",
                 "ProjectBoard");
-
-        success = true;
         if (!folder.exists()) {
-            success = folder.mkdirs();
+            folder.mkdirs();
         }
     }
 }
