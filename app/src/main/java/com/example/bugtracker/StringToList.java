@@ -16,7 +16,6 @@ public class StringToList {
         for (int i = 0; i < parts.length; i++){
             list.add(parts[i]);
         }
-        Log.wtf("TETET", list.toString());
         return list;
     }
 
