@@ -49,10 +49,10 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
 
-        saveData(titles, imgIds, "TO DO", projectName);
+        //saveData(titles, imgIds, "TO DO", projectName);
 
         //for data
-        //removeData(1, projectName);
+        //removeData(2, projectName);
         String data = getData(projectName);
 
         //ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));

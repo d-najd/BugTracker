@@ -53,20 +53,21 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         this.holder = holder;
         holderArrayList.add(holder);
 
-        holder.title.setText(recyclerData.getTitle());
-
-        //TODO find out why they are on top of each other (the columns) and a way to properly place them
-        if (recyclerData.getTitles() != null && !mcontext.getString(R.string.add_column).equals(recyclerData.getTitle())) {
-            holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
+        if (position != DataArrayList.size() - 1) {
+            holder.title.setText(recyclerData.getTitle());
+            if (recyclerData.getTitles() != null)
+                holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
+            else
+                holder.numberOfItems.setText("0");
         }else{
-            AddColumn(holder);
+            newColumnCreator(holder, recyclerData);
         }
         TableData(recyclerData, holder);
     }
 
     private void TableData(RecyclerData recyclerData, RecyclerViewHolder holder) {
         int tableSize = 0;
-        if (recyclerData.getTitles() != null && !mcontext.getString(R.string.add_column).equals(recyclerData.getTitle()))
+        if (recyclerData.getTitles() != null)
             tableSize = recyclerData.getTitles().size();
 
         recyclerDataArrayList.clear();
@@ -97,12 +98,13 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         recyclerView.setAdapter(adapter);
     }
 
-    private void AddColumn(RecyclerViewHolder holder){
+    private void newColumnCreator(RecyclerViewHolder holder, RecyclerData recyclerData){
         holder.numberOfItems.setVisibility(View.GONE);
         holder.recyclerView.setVisibility(View.GONE);
         holder.createTxt.setVisibility(View.GONE);
         holder.createImg.setVisibility(View.GONE);
         holder.moreVertical.setVisibility(View.GONE);
+        holder.title.setText("                    " + recyclerData.getTitle());
         holder.title.setTextColor(mcontext.getColor(R.color.blue));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +136,14 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        /* TODO there seems to be a problem with adding a new column,
+                        when you add new column it bugs the placement of all the others,
+                        maybe the recyclerview isnt notified that a new item is added (column)?
+                        also there seems to be a problem when the dialog is created and removes all
+                        the data in the other columns for some reason, maybe the app thinks that
+                        they are not visible and hides them for optimization?
+
+
                         newColumnName = editText.getText().toString();
                         ArrayList<String> titles = new ArrayList<>();
                         ArrayList<Integer> imgs = new ArrayList<>();
@@ -141,7 +151,9 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                         imgs.add(R.drawable.ic_launcher_foreground);
 
                         projectCreateTableActivity.saveData(titles, imgs, editText.getText().toString(), projectName);
+                    */
                     }
+
                 });
 
         AlertDialog alertDialog = builder.create();

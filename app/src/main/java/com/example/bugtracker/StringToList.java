@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class StringToList {
     public static ArrayList<String> StringToList(String data, String string) {
+        if (data.equals("[]")){
+            return null;
+        }
         ArrayList<String> list = new ArrayList<>();
         data = data.substring(1, data.length() - 1); //remove the [] at ends
 
@@ -20,6 +23,12 @@ public class StringToList {
     }
 
     public static ArrayList<Integer> StringToList(String data, int integer){
+        Log.wtf(data, data);
+        if (data.equals("[]"))
+        {
+            return null;
+        }
+
         ArrayList<Integer> list = new ArrayList<>();
         data = data.substring(1, data.length() - 1); //remove the [] at ends
 
