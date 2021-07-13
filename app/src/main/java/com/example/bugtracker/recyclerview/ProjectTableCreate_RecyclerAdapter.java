@@ -57,7 +57,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
         MoreVerticalSpinner();
 
-       // Listeners();
+        //TODO the spinner needs to be finished so it removes columns etc..
+        //Listeners();
 
         //to create the correct type of column, in other words if it needs to create the
         //column that adds more columns (last one) or the other one
