@@ -13,8 +13,12 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- need to find a way to make the cancelButton more responsive.
+    adding padding somehow or making the arrow smaller while img size
+    is the same, like a big black border but still responsive on press-->
+
     <ImageButton
-        android:id="@+id/cancel_button"
+        android:id="@+id/cancelButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_margin="13dp"
@@ -33,7 +37,7 @@
         android:paddingTop="24dp"
         android:paddingEnd="71dp"
         android:shadowColor="@color/black"
-        android:text="@string/project_name"
+        android:text="@string/projectName"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,11 +46,11 @@
         tools:ignore="RtlSymmetry" />
 
     <EditText
-        android:id="@+id/Edt_Create_Project"
+        android:id="@+id/edtCreateProject"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:hint="@string/let_s_give_it_a_name"
+        android:hint="@string/letsGiveitaName"
         android:lines="1"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -66,10 +70,10 @@
         app:layout_constraintTop_toTopOf="@+id/textView" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_Act_CreateProject"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:tag="@string/create_project"
+        android:tag="@string/createProject"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +84,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:backgroundTint="@color/dark_green"
+        android:backgroundTint="@color/darkGreen"
         android:src="@drawable/ic_add_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

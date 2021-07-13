@@ -12,14 +12,12 @@ import com.example.bugtracker.StringToList;
 import com.example.bugtracker.recyclerview.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ProjectCreateTable extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -34,31 +32,24 @@ public class ProjectCreateTable extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects_board);
         recyclerDataArrayList = new ArrayList<>();
-        recyclerView = findViewById(R.id.main_recyclerview);
+        recyclerView = findViewById(R.id.mainRecyclerView);
         String tag = recyclerView.getTag().toString();
         projectName = getIntent().getExtras().getString("projectName");
-        //TODO finish working on save data thingy
 
-        makeFolders();
+        MakeFolders();
 
-        //titles.add("rere");
         //titles.add("TEST");
-
+        //titles.add("TEST");
         //imgIds.add(R.drawable.ic_launcher_background);
         //imgIds.add(R.drawable.ic_launcher_foreground);
 
-        //recyclerDataArrayList.add(new RecyclerData("TO DO", titles, imgIds, tag));
-
         //saveData(titles, imgIds, "TO DO", projectName);
 
-        //for data
         //removeData(2, projectName);
-        String data = getData(projectName);
 
-        //ArrayList<String> dataList = new ArrayList<>(Arrays.asList(data.split("/")));
-        //String test = dataList.toString().substring(1, dataList.toString().length() - 1)
-        //        .replace(", ", "/") + "/";
+        String data = GetData(projectName);
 
+        //for getting the data nad putting it in arrayList so it can be used by the adapter
         if (data == null){
             Log.wtf("DATA IS EMPTY", "the data is null there is problem");
         } else {
@@ -73,8 +64,7 @@ public class ProjectCreateTable extends AppCompatActivity {
 
             recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-            ProjectTableCreate_RecyclerAdapter adapter = new
-                    ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+            ProjectTableCreate_RecyclerAdapter adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
 
             // setting grid layout manager to implement grid view.
             // in this method '1' represents number of columns to be displayed in grid view.
@@ -86,15 +76,14 @@ public class ProjectCreateTable extends AppCompatActivity {
             recyclerView.setAdapter(adapter);
             adapter.projectCreateTableActivity = this;
             adapter.projectName = projectName;
+            adapter.intent = getIntent();
             recyclerView.setRecycledViewPool(viewPool);
         }
     }
 
 
-    public String getData(String projectName){
+    public String GetData(String projectName){
         String data = null;
-
-        BufferedInputStream reader = null; // here needs to be done work
 
         File f = new File(this.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
@@ -114,14 +103,14 @@ public class ProjectCreateTable extends AppCompatActivity {
     }
 
 
-    public void saveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
+    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
         BufferedWriter writer = null;
         int id = 0;
 
         File f = new File(this.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String dataOld = getData(projectName);
+        String dataOld = GetData(projectName);
         if (dataOld != null) {
             String[] parts = dataOld.split("/");
             id = parts.length / 3;
@@ -144,10 +133,10 @@ public class ProjectCreateTable extends AppCompatActivity {
     }
 
 
-    public void removeData(int id, String projectName){
+    public void RemoveData(int id, String projectName){
 
         //TODO there might be a problem with
-        String data = getData(projectName);
+        String data = GetData(projectName);
 
         String[] parts = data.split("/");
 
@@ -188,7 +177,7 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
     }
 
-    private void makeFolders(){
+    private void MakeFolders(){
         //makes folders where the data is stored
         //TODO add function which checks if premissions for writing data are allowed
 

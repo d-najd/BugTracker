@@ -1,8 +1,6 @@
 package com.example.bugtracker.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +12,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bugtracker.MainActivity;
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.ProjectCreateActivity;
-import com.example.bugtracker.activities.ProjectCreateTable;
-import com.example.bugtracker.recyclerview.Message;
 import com.example.bugtracker.recyclerview.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.example.bugtracker.recyclerview.myDbAdapter;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -35,7 +28,7 @@ public class ProjectsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         recyclerDataArrayList = new ArrayList<>();
-        recyclerView = root.findViewById(R.id.recyclerView_Fra_Projects);
+        recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
 
         // added data from arraylist to adapter class.
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());
@@ -65,18 +58,18 @@ public class ProjectsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        retrieveData();
+        RetrieveData();
 
     }
 
-    public void retrieveData()
+    public void RetrieveData()
     {
         recyclerView.getAdapter().notifyItemRangeRemoved(0, recyclerDataArrayList.size());
         recyclerDataArrayList.clear();
         String tag = recyclerView.getTag().toString();
         myDbAdapter helper = new myDbAdapter(getContext());
 
-        String data = helper.getData();
+        String data = helper.GetData();
         String [] parts = data.split("/");
 
         for (int i = 0; i < parts.length - 1; i++){
@@ -121,7 +114,7 @@ public class ProjectsFragment extends Fragment {
             myDbAdapter helper = new myDbAdapter(getContext());
 
             //TODO FIXME
-            helper.delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
+            helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 
             recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
             recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());

@@ -8,24 +8,24 @@
     <fragment
         android:id="@+id/navigation_projects"
         android:name="com.example.bugtracker.ui.ProjectsFragment"
-        android:label="@string/title_projects"
+        android:label="@string/titleProjects"
         tools:layout="@layout/fragment_projects" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.bugtracker.ui.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="@string/titleDashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.bugtracker.ui.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/titleNotifications"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_account"
         android:name="com.example.bugtracker.ui.AccountFragment"
-        android:label="@string/title_account"
+        android:label="@string/titleAccount"
         tools:layout="@layout/fragment_account" />
 </navigation>

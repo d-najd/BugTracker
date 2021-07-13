@@ -4,12 +4,12 @@
     <item
         android:id="@+id/navigation_projects"
         android:icon="@drawable/ic_projects_24dp"
-        android:title="@string/title_projects" />
+        android:title="@string/titleProjects" />
 
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:title="@string/titleDashboard" />
 
     <item
         android:id="@+id/placeholder"
@@ -18,10 +18,10 @@
     <item
         android:id="@+id/navigation_notifications"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/title_notifications" />
+        android:title="@string/titleNotifications" />
     <item
         android:id="@+id/navigation_account"
         android:icon="@drawable/ic_account_24dp"
-        android:title="@string/title_account" />
+        android:title="@string/titleAccount" />
 
 </menu>

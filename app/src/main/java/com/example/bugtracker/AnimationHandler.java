@@ -14,11 +14,11 @@ import java.util.List;
 
 public class AnimationHandler {
 
-    public List<TextView> clock_texts = new ArrayList<TextView>();
-    public List<ImageView> clock_images = new ArrayList<ImageView>();
+    public List<TextView> clockTexts = new ArrayList<TextView>();
+    public List<ImageView> clockImages = new ArrayList<ImageView>();
 
-    public final List<String> clockHour_strings = new ArrayList<String>();
-    public final List<String> clockMinute_strings = new ArrayList<String>();
+    public final List<String> clockHourStrings = new ArrayList<String>();
+    public final List<String> clockMinuteStrings = new ArrayList<String>();
 
     //TODO FIXME there seems to be a bug when switching from hours to minutes, for example
     //if the hour was 1:00 (that's 5 on the minutes) and we switched the minutes to 20 for example
@@ -42,29 +42,29 @@ public class AnimationHandler {
 
     public void DateTimeListsToAdd(){
         for (int i = 0; i < 12; i++)
-            clockHour_strings.add(i + "");
-        clockHour_strings.set(0, "12");
+            clockHourStrings.add(i + "");
+        clockHourStrings.set(0, "12");
 
-        clockMinute_strings.add("00");
-        clockMinute_strings.add("05");
-        clockMinute_strings.add("10");
-        clockMinute_strings.add("15");
-        clockMinute_strings.add("20");
-        clockMinute_strings.add("25");
-        clockMinute_strings.add("30");
-        clockMinute_strings.add("35");
-        clockMinute_strings.add("40");
-        clockMinute_strings.add("45");
-        clockMinute_strings.add("50");
-        clockMinute_strings.add("55");
+        clockMinuteStrings.add("00");
+        clockMinuteStrings.add("05");
+        clockMinuteStrings.add("10");
+        clockMinuteStrings.add("15");
+        clockMinuteStrings.add("20");
+        clockMinuteStrings.add("25");
+        clockMinuteStrings.add("30");
+        clockMinuteStrings.add("35");
+        clockMinuteStrings.add("40");
+        clockMinuteStrings.add("45");
+        clockMinuteStrings.add("50");
+        clockMinuteStrings.add("55");
     }
 
     public List<String> GetHourList(){
-        return clockHour_strings;
+        return clockHourStrings;
     }
 
     public List<String> GetMinuteList(){
-        return clockMinute_strings;
+        return clockMinuteStrings;
     }
 
     public void DateTimeMinutes(){
@@ -73,11 +73,11 @@ public class AnimationHandler {
         int duration = 175;
         float size = 1.71f;
         float smallSize = 1.43f;
-        float clockWidth = clock_texts.get(0).getWidth();
-        float clockHeight = clock_texts.get(0).getHeight();
+        float clockWidth = clockTexts.get(0).getWidth();
+        float clockHeight = clockTexts.get(0).getHeight();
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(0),
+                clockTexts.get(0),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockWidth / size));
 
@@ -87,10 +87,10 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(0).setText(clockMinute_strings.get(0));
+                clockTexts.get(0).setText(clockMinuteStrings.get(0));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(0),
+                        clockTexts.get(0),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / size, 0));
 
@@ -100,7 +100,7 @@ public class AnimationHandler {
 
         //1
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(1),
+                clockTexts.get(1),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / smallSize));
@@ -110,9 +110,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(1).setText(clockMinute_strings.get(1));
+                clockTexts.get(1).setText(clockMinuteStrings.get(1));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(1),
+                        clockTexts.get(1),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / smallSize, 0));
@@ -123,7 +123,7 @@ public class AnimationHandler {
 
         //2
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(2),
+                clockTexts.get(2),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / size));
@@ -133,9 +133,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(2).setText(clockMinute_strings.get(2));
+                clockTexts.get(2).setText(clockMinuteStrings.get(2));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(2),
+                        clockTexts.get(2),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / size, 0));
@@ -146,7 +146,7 @@ public class AnimationHandler {
         //3
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(3),
+                clockTexts.get(3),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size));
 
@@ -155,9 +155,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(3).setText(clockMinute_strings.get(3));
+                clockTexts.get(3).setText(clockMinuteStrings.get(3));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(3),
+                        clockTexts.get(3),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", 0, -clockWidth / size, 0));
 
@@ -167,7 +167,7 @@ public class AnimationHandler {
 
         //4
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(4),
+                clockTexts.get(4),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / size));
@@ -177,9 +177,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(4).setText(clockMinute_strings.get(4));
+                clockTexts.get(4).setText(clockMinuteStrings.get(4));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(4),
+                        clockTexts.get(4),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / size, 0));
@@ -190,7 +190,7 @@ public class AnimationHandler {
 
         //5
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(5),
+                clockTexts.get(5),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / smallSize));
@@ -200,9 +200,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(5).setText(clockMinute_strings.get(5));
+                clockTexts.get(5).setText(clockMinuteStrings.get(5));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(5),
+                        clockTexts.get(5),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / smallSize, 0));
@@ -214,7 +214,7 @@ public class AnimationHandler {
         //6
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(6),
+                clockTexts.get(6),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationY",   clockHeight / size));
 
@@ -224,10 +224,10 @@ public class AnimationHandler {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                clock_texts.get(6).setText(clockMinute_strings.get(6));
+                clockTexts.get(6).setText(clockMinuteStrings.get(6));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(6),
+                        clockTexts.get(6),
 
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / size, 0));
@@ -238,7 +238,7 @@ public class AnimationHandler {
 
         //7
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(7),
+                clockTexts.get(7),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / smallSize));
@@ -248,9 +248,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(7).setText(clockMinute_strings.get(7));
+                clockTexts.get(7).setText(clockMinuteStrings.get(7));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(7),
+                        clockTexts.get(7),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / smallSize, 0));
@@ -261,7 +261,7 @@ public class AnimationHandler {
 
         //8
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(8),
+                clockTexts.get(8),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / size));
@@ -271,9 +271,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(8).setText(clockMinute_strings.get(8));
+                clockTexts.get(8).setText(clockMinuteStrings.get(8));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(8),
+                        clockTexts.get(8),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / size, 0));
@@ -284,7 +284,7 @@ public class AnimationHandler {
 
         //9
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(9),
+                clockTexts.get(9),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size));
 
@@ -293,9 +293,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(9).setText(clockMinute_strings.get(9));
+                clockTexts.get(9).setText(clockMinuteStrings.get(9));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(9),
+                        clockTexts.get(9),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", 0, clockWidth / size, 0));
 
@@ -305,7 +305,7 @@ public class AnimationHandler {
 
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(10),
+                clockTexts.get(10),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / size));
@@ -315,9 +315,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(10).setText(clockMinute_strings.get(10));
+                clockTexts.get(10).setText(clockMinuteStrings.get(10));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(10),
+                        clockTexts.get(10),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / size, 0));
@@ -327,7 +327,7 @@ public class AnimationHandler {
         });
         //11
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(11),
+                clockTexts.get(11),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / smallSize));
@@ -337,9 +337,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(11).setText(clockMinute_strings.get(11));
+                clockTexts.get(11).setText(clockMinuteStrings.get(11));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(11),
+                        clockTexts.get(11),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / smallSize, 0));
@@ -355,11 +355,11 @@ public class AnimationHandler {
         int duration = 200;
         float size = 1.71f;
         float smallSize = 1.43f;
-        float clockWidth = clock_texts.get(0).getWidth();
-        float clockHeight = clock_texts.get(0).getHeight();
+        float clockWidth = clockTexts.get(0).getWidth();
+        float clockHeight = clockTexts.get(0).getHeight();
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(0),
+                clockTexts.get(0),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationY",  0, clockHeight / size));
 
@@ -371,10 +371,10 @@ public class AnimationHandler {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                clock_texts.get(0).setText(clockHour_strings.get(0));
+                clockTexts.get(0).setText(clockHourStrings.get(0));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(0),
+                        clockTexts.get(0),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationY",  -clockWidth / size, 0));
 
@@ -384,7 +384,7 @@ public class AnimationHandler {
 
         //1
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(1),
+                clockTexts.get(1),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / smallSize));
@@ -394,9 +394,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(1).setText(clockHour_strings.get(1));
+                clockTexts.get(1).setText(clockHourStrings.get(1));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(1),
+                        clockTexts.get(1),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / smallSize, 0));
@@ -407,7 +407,7 @@ public class AnimationHandler {
 
         //2
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(2),
+                clockTexts.get(2),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / size));
@@ -417,9 +417,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(2).setText(clockHour_strings.get(2));
+                clockTexts.get(2).setText(clockHourStrings.get(2));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(2),
+                        clockTexts.get(2),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / size, 0));
@@ -430,7 +430,7 @@ public class AnimationHandler {
         //3
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(3),
+                clockTexts.get(3),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size));
 
@@ -440,10 +440,10 @@ public class AnimationHandler {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                clock_texts.get(3).setText(clockHour_strings.get(3));
+                clockTexts.get(3).setText(clockHourStrings.get(3));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(3),
+                        clockTexts.get(3),
 
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", 0, clockWidth / size, 0));
@@ -454,7 +454,7 @@ public class AnimationHandler {
 
         //4
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(4),
+                clockTexts.get(4),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / size));
@@ -464,9 +464,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(4).setText(clockHour_strings.get(4));
+                clockTexts.get(4).setText(clockHourStrings.get(4));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(4),
+                        clockTexts.get(4),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / size, 0));
@@ -477,7 +477,7 @@ public class AnimationHandler {
 
         //5
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(5),
+                clockTexts.get(5),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   -clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / smallSize));
@@ -487,9 +487,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(5).setText(clockHour_strings.get(5));
+                clockTexts.get(5).setText(clockHourStrings.get(5));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(5),
+                        clockTexts.get(5),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / smallSize, 0));
@@ -499,7 +499,7 @@ public class AnimationHandler {
         });
         //6
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(6),
+                clockTexts.get(6),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationY",   -clockHeight / size));
 
@@ -509,10 +509,10 @@ public class AnimationHandler {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                clock_texts.get(6).setText(clockHour_strings.get(6));
+                clockTexts.get(6).setText(clockHourStrings.get(6));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(6),
+                        clockTexts.get(6),
 
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / size, 0));
@@ -523,7 +523,7 @@ public class AnimationHandler {
 
         //7
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(7),
+                clockTexts.get(7),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / smallSize));
@@ -533,9 +533,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(7).setText(clockHour_strings.get(7));
+                clockTexts.get(7).setText(clockHourStrings.get(7));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(7),
+                        clockTexts.get(7),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / smallSize, 0));
@@ -546,7 +546,7 @@ public class AnimationHandler {
 
         //8
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(8),
+                clockTexts.get(8),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, -clockHeight / size));
@@ -556,9 +556,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(8).setText(clockHour_strings.get(8));
+                clockTexts.get(8).setText(clockHourStrings.get(8));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(8),
+                        clockTexts.get(8),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   clockHeight / size, 0));
@@ -569,7 +569,7 @@ public class AnimationHandler {
 
         //9
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(9),
+                clockTexts.get(9),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size));
 
@@ -579,10 +579,10 @@ public class AnimationHandler {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
 
-                clock_texts.get(9).setText(clockHour_strings.get(9));
+                clockTexts.get(9).setText(clockHourStrings.get(9));
 
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(9),
+                        clockTexts.get(9),
 
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", 0, -clockWidth / size, 0));
@@ -594,7 +594,7 @@ public class AnimationHandler {
         //10
 
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(10),
+                clockTexts.get(10),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / smallSize),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / size));
@@ -604,9 +604,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(10).setText(clockHour_strings.get(10));
+                clockTexts.get(10).setText(clockHourStrings.get(10));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(10),
+                        clockTexts.get(10),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / smallSize, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / size, 0));
@@ -617,7 +617,7 @@ public class AnimationHandler {
 
         //11
         fadeOut = ObjectAnimator.ofPropertyValuesHolder(
-                clock_texts.get(11),
+                clockTexts.get(11),
                 PropertyValuesHolder.ofFloat("alpha", 1, 0),
                 PropertyValuesHolder.ofFloat("translationX",   clockWidth / size),
                 PropertyValuesHolder.ofFloat("translationY", 0, clockHeight / smallSize));
@@ -627,9 +627,9 @@ public class AnimationHandler {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                clock_texts.get(11).setText(clockHour_strings.get(11));
+                clockTexts.get(11).setText(clockHourStrings.get(11));
                 fadeIn[0] = ObjectAnimator.ofPropertyValuesHolder(
-                        clock_texts.get(11),
+                        clockTexts.get(11),
                         PropertyValuesHolder.ofFloat("alpha", 0, 1),
                         PropertyValuesHolder.ofFloat("translationX", -clockWidth / size, 0),
                         PropertyValuesHolder.ofFloat("translationY",   -clockHeight / smallSize, 0));

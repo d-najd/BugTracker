@@ -15,7 +15,7 @@ public class myDbAdapter {
         myhelper = new myDbHelper(context);
     }
 
-    public long insertData(String name, String pass)
+    public long InsertData(String name, String pass)
     {
         SQLiteDatabase dbb = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -25,7 +25,7 @@ public class myDbAdapter {
         return id;
     }
 
-    public String getData()
+    public String GetData()
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         String[] columns = {myDbHelper.id,myDbHelper.title,myDbHelper.description};
@@ -42,7 +42,7 @@ public class myDbAdapter {
         return buffer.toString();
     }
 
-    public int delete(String id)
+    public int Delete(String id)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         String[] whereArgs ={id};
@@ -51,7 +51,7 @@ public class myDbAdapter {
         return count;
     }
 
-    public int updateName(String oldName , String newName)
+    public int UpdateName(String oldName , String newName)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

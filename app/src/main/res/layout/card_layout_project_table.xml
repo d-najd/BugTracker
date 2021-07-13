@@ -22,7 +22,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="4dp"
+                android:paddingStart="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="12dp"
                 android:text="EXAMPLE TITLE 12345"
@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/number_of_items"
+                android:id="@+id/numberOfItems"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -43,8 +43,19 @@
                 app:layout_constraintStart_toEndOf="@+id/title"
                 app:layout_constraintTop_toTopOf="@+id/title" />
 
+
+            <Spinner
+                android:id="@+id/spinnerMoreVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@drawable/transparent"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
             <ImageButton
-                android:id="@+id/more_vertical"
+                android:id="@+id/moreVertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -57,16 +68,18 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/title" />
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintTop_toBottomOf="@+id/title" />
 
 
-            <!--can be replaced with a plus (add) which is bigger -->
+            <!--TODO needs to be replaced with plus which is blue-->
 
             <ImageButton
-                android:id="@+id/create_Img"
+                android:id="@+id/createImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/transparent"
@@ -76,15 +89,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
             <TextView
-                android:id="@+id/create_Txt"
+                android:id="@+id/createTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="@string/create"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/create_Img"
-                app:layout_constraintStart_toEndOf="@+id/create_Img"
-                app:layout_constraintTop_toTopOf="@+id/create_Img" />
+                app:layout_constraintBottom_toBottomOf="@+id/createImg"
+                app:layout_constraintStart_toEndOf="@+id/createImg"
+                app:layout_constraintTop_toTopOf="@+id/createImg" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

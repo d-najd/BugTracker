@@ -16,7 +16,7 @@
         android:paddingEnd="12dp">
 
         <ImageButton
-            android:id="@+id/adapter_mainImgBtn"
+            android:id="@+id/adapterMainBtn"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="start"
@@ -28,7 +28,7 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/adapter_main_text"
+            android:id="@+id/adapterMainText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
@@ -39,12 +39,12 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
+            app:layout_constraintEnd_toStartOf="@+id/adapterFavoriteBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/adapter_editText"
+            android:id="@+id/adapterEditTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="48dp"
@@ -52,16 +52,16 @@
             android:gravity="start"
             android:text=""
             android:textAlignment="viewStart"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/hintColor"
             android:textSize="12sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
-            app:layout_constraintStart_toEndOf="@+id/adapter_mainImgBtn"
+            app:layout_constraintEnd_toStartOf="@+id/adapterFavoriteBtn"
+            app:layout_constraintStart_toEndOf="@+id/adapterMainBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/adapter_secondary_text"
+            android:id="@+id/adapterSecondaryTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
@@ -70,16 +70,16 @@
             android:gravity="start"
             android:text=""
             android:textAlignment="viewStart"
-            android:textColor="@color/hint_color"
+            android:textColor="@color/hintColor"
             android:textSize="12sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/adapter_favorite_button"
+            app:layout_constraintEnd_toStartOf="@+id/adapterFavoriteBtn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adapter_main_text" />
+            app:layout_constraintTop_toBottomOf="@id/adapterMainText" />
 
         <ImageButton
-            android:id="@+id/adapter_favorite_button"
+            android:id="@+id/adapterFavoriteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/transparent"
@@ -92,7 +92,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/adapter_setId"
+            android:id="@+id/adapterSetID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""

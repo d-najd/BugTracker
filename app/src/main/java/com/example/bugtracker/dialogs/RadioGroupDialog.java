@@ -45,7 +45,7 @@ public class RadioGroupDialog {
                 });
 
         AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.dark_gray);
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
 
         for (int i = 0; i < titles.size(); i++) {
             radioButton = new AppCompatRadioButton(mcontext);
@@ -99,7 +99,7 @@ public class RadioGroupDialog {
             else
                 radioButtons.get(adapter.reminderSelected).setChecked(true);
         }
-        else if (dialogName.equals(mcontext.getString(R.string.reminder_type))) {
+        else if (dialogName.equals(mcontext.getString(R.string.reminderType))) {
             if (adapter.reminderTypeSelected == -1)
                 radioButtons.get(selected).setChecked(true);
             else

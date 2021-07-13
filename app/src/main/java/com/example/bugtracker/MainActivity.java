@@ -1,11 +1,8 @@
 package com.example.bugtracker;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.bugtracker.activities.ProjectCreateActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -32,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_projects, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.navigation_account)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.navHostFragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
