@@ -55,10 +55,11 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         String layout = recyclerData.getTag();
         this.holder = holder;
 
-        MoreVerticalSpinner();
 
-        //TODO the spinner needs to be finished so it removes columns etc..
-        //Listeners();
+        //TODO DONT EVER USE SPINERS, CREATE YOUR OWN, the link below should be of help
+        //https://stackoverflow.com/questions/27440687/alternative-to-highly-flawed-spinner-class-in-android
+
+        MoreVerticalCustomSpinner();
 
         //to create the correct type of column, in other words if it needs to create the
         //column that adds more columns (last one) or the other one
@@ -74,27 +75,12 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         TableData(recyclerData);
     }
 
-    private void MoreVerticalSpinner(){
+    private void MoreVerticalCustomSpinner(){
         String[] columnSpinnerOptions = {mcontext.getString(R.string.renameColumn),
                 mcontext.getString(R.string.moveColumnLeft),
                 mcontext.getString(R.string.moveColumnRight),
                 mcontext.getString(R.string.deleteColumn)};
 
-        ArrayAdapter adapter = new ArrayAdapter(mcontext, android.R.layout.simple_spinner_item, columnSpinnerOptions);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //Setting the ArrayAdapter data on the Spinner
-        holder.spinnerMoreVertical.setAdapter(adapter);
-
-    }
-
-    private void Listeners(){
-        holder.spinnerMoreVertical.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.wtf("Pressed ", position + "");
-                Message.message(mcontext, "pressed " + position);
-            }
-        });
     }
 
     private void TableData(RecyclerData recyclerData) {
@@ -160,7 +146,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         private RecyclerView recyclerView;
         private ImageView createImg;
         private TextView createTxt;
-        private Spinner spinnerMoreVertical;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -170,7 +155,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
             recyclerView = itemView.findViewById(R.id.recyclerView);
             createImg = itemView.findViewById(R.id.createImg);
             createTxt = itemView.findViewById(R.id.createTxt);
-            spinnerMoreVertical = itemView.findViewById(R.id.spinnerMoreVertical);
         }
     }
 }
