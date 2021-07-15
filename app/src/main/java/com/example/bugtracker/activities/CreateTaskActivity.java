@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;

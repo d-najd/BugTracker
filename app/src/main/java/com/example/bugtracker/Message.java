@@ -1,4 +1,4 @@
-package com.example.bugtracker.recyclerview;
+package com.example.bugtracker;
 
 import android.content.Context;
 import android.widget.Toast;

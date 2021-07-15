@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.Message;
-import com.example.bugtracker.recyclerview.RecyclerAdapter;
+import com.example.bugtracker.Message;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.example.bugtracker.recyclerview.myDbAdapter;
+import com.example.bugtracker.recyclerview.Adapters.myDbAdapter;
 
 import java.util.ArrayList;
 

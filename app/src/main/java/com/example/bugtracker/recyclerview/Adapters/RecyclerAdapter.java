@@ -1,4 +1,4 @@
-package com.example.bugtracker.recyclerview;
+package com.example.bugtracker.recyclerview.Adapters;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -33,6 +33,7 @@ import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialogs;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
+import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 import java.util.Calendar;

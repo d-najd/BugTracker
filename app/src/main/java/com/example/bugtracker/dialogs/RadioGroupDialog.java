@@ -15,7 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatRadioButton;
 
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 
 import java.util.ArrayList;
 

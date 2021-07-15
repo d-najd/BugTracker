@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
-import com.example.bugtracker.recyclerview.ProjectTableCreate_RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.io.BufferedWriter;

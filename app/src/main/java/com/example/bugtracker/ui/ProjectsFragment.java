@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.example.bugtracker.recyclerview.myDbAdapter;
+import com.example.bugtracker.recyclerview.Adapters.myDbAdapter;
 
 import java.util.ArrayList;
 import java.util.Collections;

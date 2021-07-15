@@ -1,16 +1,17 @@
-package com.example.bugtracker.recyclerview;
+package com.example.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialogs;
+import com.example.bugtracker.recyclerview.CustomSpinnerCreator;
+import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,10 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     public ProjectCreateTable projectCreateTableActivity;
     public String projectName;
     public Intent intent;
+
+    public String popUpContents[];
+    public PopupWindow popupWindowDogs;
+    public int position;
 
     private String newColumnName = null;
 
@@ -56,7 +63,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         this.holder = holder;
 
 
-        //TODO DONT EVER USE SPINERS, CREATE YOUR OWN, the link below should be of help
+        //TODO DONT EVER USE SPINNERS, CREATE YOUR OWN, the link below should be of help
         //https://stackoverflow.com/questions/27440687/alternative-to-highly-flawed-spinner-class-in-android
 
         MoreVerticalCustomSpinner();
@@ -76,11 +83,23 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     }
 
     private void MoreVerticalCustomSpinner(){
-        String[] columnSpinnerOptions = {mcontext.getString(R.string.renameColumn),
-                mcontext.getString(R.string.moveColumnLeft),
-                mcontext.getString(R.string.moveColumnRight),
-                mcontext.getString(R.string.deleteColumn)};
+        //maybe create a thingy that adds ::num automaticly?
 
+        List<String> columnSpinnerData = new ArrayList<String>();
+
+        columnSpinnerData.add(mcontext.getString(R.string.renameColumn));
+        columnSpinnerData.add(mcontext.getString(R.string.moveColumnLeft));
+        columnSpinnerData.add(mcontext.getString(R.string.moveColumnRight));
+        columnSpinnerData.add(mcontext.getString(R.string.deleteColumn));
+
+        ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
+
+        holder.moreVertical.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CustomSpinnerCreator(mcontext, columnSpinnerData, projectTableCreate_recyclerAdapter, v, -5, 0);
+            }
+        });
     }
 
     private void TableData(RecyclerData recyclerData) {
