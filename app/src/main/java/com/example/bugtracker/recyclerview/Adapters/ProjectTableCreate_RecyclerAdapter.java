@@ -3,11 +3,14 @@ package com.example.bugtracker.recyclerview.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialogs;
@@ -27,6 +31,8 @@ import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.Method;
+
 
 public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreate_RecyclerAdapter.RecyclerViewHolder> {
     private ArrayList<RecyclerData> DataArrayList;
@@ -37,9 +43,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     public String projectName;
     public Intent intent;
 
-    public String popUpContents[];
-    public PopupWindow popupWindowDogs;
-    public int position;
+    public String test;
 
     private String newColumnName = null;
 
@@ -62,11 +66,9 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         String layout = recyclerData.getTag();
         this.holder = holder;
 
+        MoreVerticalCustomSpinner(position);
 
-        //TODO DONT EVER USE SPINNERS, CREATE YOUR OWN, the link below should be of help
-        //https://stackoverflow.com/questions/27440687/alternative-to-highly-flawed-spinner-class-in-android
-
-        MoreVerticalCustomSpinner();
+        Listeners(position);
 
         //to create the correct type of column, in other words if it needs to create the
         //column that adds more columns (last one) or the other one
@@ -77,14 +79,21 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
             else
                 holder.numberOfItems.setText("0");
         }else{
-            NewColumnCreator(recyclerData);
+            NewColumnCreator();
         }
         TableData(recyclerData);
     }
 
-    private void MoreVerticalCustomSpinner(){
-        //maybe create a thingy that adds ::num automaticly?
+    private void Listeners(int position){
+        holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message.message(mcontext, "Pressed button at " + position);
+            }
+        });
+    }
 
+    private void MoreVerticalCustomSpinner(int position){
         List<String> columnSpinnerData = new ArrayList<String>();
 
         columnSpinnerData.add(mcontext.getString(R.string.renameColumn));
@@ -92,14 +101,24 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         columnSpinnerData.add(mcontext.getString(R.string.moveColumnRight));
         columnSpinnerData.add(mcontext.getString(R.string.deleteColumn));
 
+
         ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
 
         holder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CustomSpinnerCreator(mcontext, columnSpinnerData, projectTableCreate_recyclerAdapter, v, -5, 0);
+                new CustomSpinnerCreator(mcontext, columnSpinnerData, position, projectTableCreate_recyclerAdapter, v, -390, 0);
             }
         });
+    }
+
+    public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
+        switch (itemPosition){
+            case 3:
+                projectCreateTableActivity.RemoveData(holderPosition, projectName);
+                break;
+
+        }
     }
 
     private void TableData(RecyclerData recyclerData) {
@@ -135,14 +154,15 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         recyclerView.setAdapter(adapter);
     }
 
-    private void NewColumnCreator(RecyclerData recyclerData){
+    private void NewColumnCreator(){
         holder.numberOfItems.setVisibility(View.GONE);
         holder.recyclerView.setVisibility(View.GONE);
         holder.createTxt.setVisibility(View.GONE);
         holder.createImg.setVisibility(View.GONE);
         holder.moreVertical.setVisibility(View.GONE);
-        holder.title.setText("                    " + recyclerData.getTitle());
-        holder.title.setTextColor(mcontext.getColor(R.color.blue));
+        holder.title.setVisibility(View.GONE);
+        holder.addColumnTxt.setVisibility(View.VISIBLE);
+        holder.addColumnBtn.setVisibility(View.GONE);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,12 +179,14 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
-        private TextView title;
+        private EditText title;
         private TextView numberOfItems;
         private ImageButton moreVertical;
         private RecyclerView recyclerView;
         private ImageView createImg;
         private TextView createTxt;
+        private TextView addColumnTxt;
+        private Button addColumnBtn;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -174,6 +196,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
             recyclerView = itemView.findViewById(R.id.recyclerView);
             createImg = itemView.findViewById(R.id.createImg);
             createTxt = itemView.findViewById(R.id.createTxt);
+            addColumnTxt = itemView.findViewById(R.id.addColumn);
+            addColumnBtn = itemView.findViewById(R.id.createColumnBtn);
         }
     }
 }

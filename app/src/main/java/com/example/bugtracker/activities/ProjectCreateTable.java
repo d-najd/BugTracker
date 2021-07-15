@@ -26,6 +26,7 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private String projectName; //data is passed through intent
+    private ProjectTableCreate_RecyclerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +62,24 @@ public class ProjectCreateTable extends AppCompatActivity {
 
                 recyclerDataArrayList.add(new RecyclerData(parts[i * 3], titles, imgIds, tag));
             }
-
-            recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
-
-            ProjectTableCreate_RecyclerAdapter adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
-
-            // setting grid layout manager to implement grid view.
-            // in this method '1' represents number of columns to be displayed in grid view.
-
-            LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-
-            // at last set adapter to recycler view.
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-            adapter.projectCreateTableActivity = this;
-            adapter.projectName = projectName;
-            adapter.intent = getIntent();
-            recyclerView.setRecycledViewPool(viewPool);
         }
+
+        recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
+
+        adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+
+        // setting grid layout manager to implement grid view.
+        // in this method '1' represents number of columns to be displayed in grid view.
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+
+        // at last set adapter to recycler view.
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        adapter.projectCreateTableActivity = this;
+        adapter.projectName = projectName;
+        adapter.intent = getIntent();
+        recyclerView.setRecycledViewPool(viewPool);
     }
 
 
@@ -121,6 +122,7 @@ public class ProjectCreateTable extends AppCompatActivity {
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
             writer.write(data);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -171,6 +173,11 @@ public class ProjectCreateTable extends AppCompatActivity {
         } finally {
             try {
                 writer.close();
+
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
             } catch (IOException e) {
                 e.printStackTrace();
             }

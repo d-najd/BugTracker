@@ -35,15 +35,11 @@ public class CustomSpinnerRecyclerAdapter implements OnItemClickListener {
         fadeInAnimation.setDuration(10);
         view.startAnimation(fadeInAnimation);
 
-        // get the text and set it as the button text
         String selectedItemText = ((TextView)view).getText().toString();
-        //if (projectTableCreate_RecyclerAdapter != null) {
-            //projectTableCreate_RecyclerAdapter.position = position;
-        //}
 
-        // get the position
-        //String selectedItemPosition = ((TextView)view).getTag().toString();
-        Message.message(mcontext, "Pressed: " + selectedItemText + " at " + position);
+        customSpinnerCreator.SendInfoBack(selectedItemText, position);
+
+        //Message.message(mcontext, "Pressed: " + selectedItemText + " at " + position);
         popupWindow.dismiss();
     }
 }

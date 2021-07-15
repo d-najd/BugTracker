@@ -13,27 +13,27 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.recyclerview.Adapters.CustomSpinnerRecyclerAdapter;
 import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
 
 import java.util.List;
 
-public class CustomSpinnerCreator {
+public class CustomSpinnerCreator<T> {
     private Context mcontext;
     private List<String> data;
     private View v;
-    String[] popUpContents;
+    private int holderPosition;
+    private String[] popUpContents;
     private ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
 
-    //TODO find a way to not use class names and need to create constructor for every class
-    //instead use something like object? android studio says smtn about type paramaters, that may
-    //be of use
-    public CustomSpinnerCreator(Context mcontext, List<String> data,
+    public CustomSpinnerCreator(Context mcontext, List<String> data, int holderPosition,
                                      ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter,
                                      View v, int xoff, int yoff){
         this.mcontext = mcontext;
         this.data = data;
+        this.holderPosition = holderPosition;
         this.projectTableCreate_recyclerAdapter = projectTableCreate_recyclerAdapter;
         popUpContents = new String[data.size()];
         data.toArray(popUpContents);
@@ -41,7 +41,7 @@ public class CustomSpinnerCreator {
         PopupWindow().showAsDropDown(v, xoff, yoff);
     }
 
-    public PopupWindow PopupWindow() {
+    private PopupWindow PopupWindow() {
 
         // initialize a pop up window type
         PopupWindow popupWindow = new PopupWindow(mcontext);
@@ -57,6 +57,7 @@ public class CustomSpinnerCreator {
 
         // some other visual settings
         popupWindow.setFocusable(true);
+        popupWindow.setBackgroundDrawable(mcontext.getDrawable(R.color.darkGray));
         popupWindow.setWidth(500);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
 
@@ -76,9 +77,12 @@ public class CustomSpinnerCreator {
                 TextView listItem = new TextView(mcontext);
 
                 listItem.setText(text);
-                listItem.setTextSize(22);
-                listItem.setPadding(10, 10, 10, 10);
-                listItem.setTextColor(Color.WHITE);
+                listItem.setTextSize(18);
+                if (position != getCount() - 1)
+                    listItem.setPadding(32, 32, 32, 26);
+                else
+                    listItem.setPadding(32, 26, 32, 50);
+                listItem.setTextColor(Color.LTGRAY);
 
                 return listItem;
             }
@@ -87,4 +91,9 @@ public class CustomSpinnerCreator {
         return adapter;
     }
 
+    public void SendInfoBack(String itemText, int itemPosition){
+        if (projectTableCreate_recyclerAdapter != null){
+            projectTableCreate_recyclerAdapter.CustomSpinnerItemPressed(itemText, holderPosition, itemPosition);
+        }
+    }
 }
