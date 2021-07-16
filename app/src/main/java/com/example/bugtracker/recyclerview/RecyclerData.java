@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class RecyclerData {
@@ -22,6 +23,13 @@ public class RecyclerData {
     public RecyclerData(String title, String description, int imgId, boolean editTextEnable, String tag){
         this.title = title;
         this.description = description;
+        this.imgId = imgId;
+        this.editTextEnable = editTextEnable;
+        this.tag = tag;
+    }
+
+    public RecyclerData(String title, int imgId, boolean editTextEnable, String tag){
+        this.title = title;
         this.imgId = imgId;
         this.editTextEnable = editTextEnable;
         this.tag = tag;
@@ -80,7 +88,7 @@ public class RecyclerData {
         return imgIds;
     }
 
-    public void setImgIds(ArrayList<Integer> titles){
+    public void setImgIds (ArrayList<Integer> imgIds){
         this.imgIds = imgIds;
     }
 

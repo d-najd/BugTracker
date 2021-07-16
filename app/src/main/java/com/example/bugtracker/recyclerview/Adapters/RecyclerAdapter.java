@@ -275,8 +275,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         }
 
-
-        //TODO FIX THIS SHIT
+        //TODO FIX THIS
         else if (recyclerData.getTag().equals(R.string.createTask)){
 
             if (position == 0){ //TODO this should be changed with the way of updatedatetime because its more reliable
@@ -317,6 +316,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 });
             }
         }
+
+        else if (recyclerData.getTag().equals(R.string.createBoard))
+            CreateBoardListeners();
+    }
+
+    private void CreateBoardListeners(){
+        holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")

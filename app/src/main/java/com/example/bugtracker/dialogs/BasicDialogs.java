@@ -70,6 +70,7 @@ public class BasicDialogs {
         alertDialog.show();
     }
 
+    //for adding new column
     public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt, String projectName, ProjectCreateTable projectCreateTableActivity, Intent intent){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 

@@ -37,19 +37,19 @@ import java.lang.reflect.Method;
 public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreate_RecyclerAdapter.RecyclerViewHolder> {
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
-    public RecyclerViewHolder holder;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+    private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
+    private String tag;
+    public RecyclerViewHolder holder;
     public ProjectCreateTable projectCreateTableActivity;
     public String projectName;
     public Intent intent;
 
-    public String test;
-
-    private String newColumnName = null;
 
     public ProjectTableCreate_RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
+        this.tag = DataArrayList.get(0).getTag();
     }
 
     @NonNull
@@ -65,6 +65,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         RecyclerData recyclerData = DataArrayList.get(position);
         String layout = recyclerData.getTag();
         this.holder = holder;
+        holderArrayList.add(holder);
 
         MoreVerticalCustomSpinner(position);
 
@@ -88,7 +89,42 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message.message(mcontext, "Pressed button at " + position);
+                //TODO make a cardview that looks simular to the items and use that for adding new
+                // elements, setting editText bugs everything, also save the data after the item is
+                // created
+                recyclerDataArrayList.clear();
+
+                RecyclerViewHolder curholder = holderArrayList.get(position);
+                RecyclerData curData = DataArrayList.get(position);
+
+                ArrayList<String> titles = new ArrayList<>();
+                ArrayList<Integer> imgIds = new ArrayList<>();
+
+                if (curData.getTitles() != null) {
+                    titles = curData.getTitles();
+                    imgIds = curData.getImgIds();
+                }
+
+                titles.add("TEST");
+                imgIds.add(R.drawable.ic_account_24dp);
+
+                curData.setTitles(titles);
+                curData.setImgIds(imgIds);
+
+                for (int i = 0; i < titles.size(); i++) {
+                    recyclerDataArrayList.add(new RecyclerData(titles.get(i),
+                            imgIds.get(i), tag));
+                }
+
+                /* way too buggy to use.
+                for (int i = 0; i < titles.size(); i++) {
+                    recyclerDataArrayList.add(new RecyclerData(titles.get(i),
+                            imgIds.get(i), true, tag));
+                }
+
+                 */
+
+                curholder.recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
@@ -130,7 +166,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         if (tableSize != 0) {
             for (int i = 0; i < tableSize; i++) {
                 recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
-                        recyclerData.getImgIds().get(i), recyclerData.getTag()));
+                        recyclerData.getImgIds().get(i), tag));
             }
         }
 

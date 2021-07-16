@@ -83,6 +83,7 @@ public class ProjectCreateTable extends AppCompatActivity {
     }
 
 
+    //region Storage
     public String GetData(String projectName){
         String data = null;
 
@@ -136,10 +137,11 @@ public class ProjectCreateTable extends AppCompatActivity {
 
 
     public void RemoveData(int id, String projectName){
+        BufferedWriter writer = null;
+        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
 
-        //TODO there might be a problem with
         String data = GetData(projectName);
-
         String[] parts = data.split("/");
 
         //this part is for splitting, ex if the id is 1, the startingStr will get data from
@@ -160,11 +162,6 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         data = startStr + endStr;
 
-        BufferedWriter writer = null;
-
-        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
@@ -184,6 +181,37 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
     }
 
+    /* TODO finish this
+    private void ReplaceData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName, int id, boolean keepPreviousItems){
+        BufferedWriter writer = null;
+
+        File f = new File(this.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String dataOld = GetData(projectName);
+        if (dataOld != null) {
+            String[] parts = dataOld.split("/");
+            id = parts.length / 3;
+        }
+
+        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, true));
+            writer.write(data);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+     */
+
     private void MakeFolders(){
         //makes folders where the data is stored
         //TODO add function which checks if premissions for writing data are allowed
@@ -200,4 +228,6 @@ public class ProjectCreateTable extends AppCompatActivity {
             folder.mkdirs();
         }
     }
+
+    //endregion
 }
