@@ -82,13 +82,6 @@ public class ProjectCreateTable extends AppCompatActivity {
         recyclerView.setRecycledViewPool(viewPool);
     }
 
-
-    public void test(){
-        adapter.notifyItemChanged(0);
-    }
-
-
-
     //region Storage
     public String GetData(String projectName){
         String data = null;

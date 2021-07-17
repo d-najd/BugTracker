@@ -128,8 +128,13 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 }
 
                  */
-                projectCreateTableActivity.test();
-                //curholder.recyclerView.getAdapter().notifyItemInserted(0);
+                //TODO replace this with insterted range,
+
+                //TODO try to get data from memory and pass it first before trying to find problem with
+                // the replacing of data while new item in the column is created, maybe get the data from
+                // memory? that may fix the problem with the editext as well but it should refresh the data
+                // thus refreshing the editext and making you not able to type but have to try first.
+                curholder.recyclerView.getAdapter().notifyDataSetChanged();
             }
         });
     }
@@ -158,7 +163,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
             case 3:
                 projectCreateTableActivity.RemoveData(holderPosition, projectName);
                 break;
-
         }
     }
 
@@ -227,7 +231,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         private TextView createTxt;
         private TextView addColumnTxt;
         private Button addColumnBtn;
-
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);

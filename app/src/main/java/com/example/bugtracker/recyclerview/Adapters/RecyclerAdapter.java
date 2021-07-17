@@ -11,7 +11,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
-import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
@@ -44,16 +42,19 @@ import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
 
-    public ArrayList<RecyclerData> DataArrayList;
+    public ArrayList<RecyclerData> recyclerDataArrayList;
     private Context mcontext;
     private RecyclerViewHolder holder;
     private int activeHourBtn = 0; //needs to be integer because when the dialog is opened again new set of buttons is created and it fucks up everything
     private int activeMinuteBtn = 0;
     private boolean hourSelected = true; //to know whether the hours or minutes are selected so that activehour/minuteBtn can be selected
     private boolean am_pm_Selected = true; //true for am false for pm
-    private boolean test = false;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
-
+    private ArrayList<RecyclerData> arrayListOFrecyclerDataArrayList; // each element has arraylist of data so array of the data of each element
+    private ArrayList<Boolean> hasBeenCreated = new ArrayList<>(); // is used for knowing whether certan element has been created and if so that element to not be RECREATED FOR NO REASON,
+    //the creator behind editext decided it would be fun if when you press the editext for it to refresh all the nested recyclerviews and because the data is in arraylist
+    //instead of regular list (list[]) the data ISNT DELETED AFTER ELEMENT IS CREATED AND IT STAYS thus giving all the nested recyclerviews the same data as the data from the recyclerview which
+    //has the editext, cant find better way to do this oh and the dude who decided to do that and the dude who set the source code TO READ ONLY need to go to hell
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -69,8 +70,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private boolean reminderAdded = false;
 
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
-        this.DataArrayList = recyclerDataArrayList;
+        this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
+        hasBeenCreated.clear();
     }
 
     @NonNull
@@ -83,89 +85,74 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        RecyclerData recyclerData = DataArrayList.get(position);
-        String layout = recyclerData.getTag();
-        this.holder = holder;
-        holderArrayList.add(holder);
+    public  void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
+        //this thing is for checking whether the item has been activated before so it doesnt SET THE
+        //WRONG DATA, the edittext on PRESSING READDS ALL THE ITEMS CURRENTLY VISIBLE FOR NO REASON
+        //WHATSOEVER, also lists (ex test[]) dont work because the data isnt passed on creation soo
+        //its pointless to try that unless you try to set it in onbindview but that will destroy the
+        //whole purpuse and it probably wont work either way
+        if (hasBeenCreated.size() > position)
+        {
+            if (hasBeenCreated.get(position) == false) {
+                hasBeenCreated.set(position, true);
+                RecyclerData recyclerData = recyclerDataArrayList.get(position);
+                String layout = recyclerData.getTag();
+                this.holder = holder;
+                holderArrayList.add(holder);
 
-        Listeners(position);
+                Listeners(position);
 
-        holder.title.setText(recyclerData.getTitle());
-        holder.mainBtn.setImageResource(recyclerData.getImgId());
+                holder.title.setText(recyclerData.getTitle());
+                holder.mainBtn.setImageResource(recyclerData.getImgId());
 
-        if (recyclerData.getEditTextEnable()) {
-            holder.editText.setVisibility(View.VISIBLE);
-            holder.editText.setHint(recyclerData.getDescription());
-            holder.description.setVisibility(View.GONE);
-            if (recyclerData.getTitle() == null){
-                holder.title.setVisibility(View.GONE);
-                holder.editText.setTextSize(14);
-
-                //for removing the margins and making it more centered
-                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
-                p.setMargins(0, 10, 0, 10);
-                holder.editText.requestLayout();
-
-                if (recyclerData.getDescription() != null)
+                if (recyclerData.getEditTextEnable()) {
+                    holder.editText.setVisibility(View.VISIBLE);
                     holder.editText.setHint(recyclerData.getDescription());
+                    holder.description.setVisibility(View.GONE);
+                    if (recyclerData.getTitle() == null) {
+                        holder.title.setVisibility(View.GONE);
+                        holder.editText.setTextSize(14);
+
+                        //for removing the margins and making it more centered
+                        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
+                        p.setMargins(0, 10, 0, 10);
+                        holder.editText.requestLayout();
+
+                        if (recyclerData.getDescription() != null)
+                            holder.editText.setHint(recyclerData.getDescription());
+                    }
+                } else if (recyclerData.getDescription() != null) {
+                    holder.description.setText(recyclerData.getDescription());
+                } else
+                    holder.description.setVisibility(View.GONE);
+
+                if (layout.equals(mcontext.getString(R.string.titleProjects))) {
+                    holder.secondaryBtn.setVisibility(View.VISIBLE);
+                }
+
+                if (recyclerData.getSecondImgId() != 0) {
+                    holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
+                    holder.secondaryBtn.setVisibility(View.VISIBLE);
+                }
+
+                //DataArrayList.clear();
+                //Test();
             }
-        } else if (recyclerData.getDescription() != null) {
-            holder.description.setText(recyclerData.getDescription());
-        } else
-            holder.description.setVisibility(View.GONE);
-
-        if (layout.equals(mcontext.getString(R.string.titleProjects))) {
-            holder.secondaryBtn.setVisibility(View.VISIBLE);
+        }else {
+            hasBeenCreated.add(false);
+            onBindViewHolder(holder, position);
         }
-
-        if (recyclerData.getSecondImgId() != 0) {
-            holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
-            holder.secondaryBtn.setVisibility(View.VISIBLE);
-        }
-
-        if (holder.title.getText().equals(mcontext.getString(R.string.tasks))) {
-            /* I hate this right here
-            ArrayList<RecyclerData> recyclerDataArrayList;
-
-            recyclerDataArrayList = new ArrayList<>();
-
-            recyclerDataArrayList.add(new RecyclerData("efefe",  R.drawable.ic_sublist_24dp, "tag"));
-            recyclerDataArrayList.add(new RecyclerData("efefe",  R.drawable.ic_sublist_24dp, "tag"));
-            recyclerDataArrayList.add(new RecyclerData("efefe",  R.drawable.ic_sublist_24dp, "tag"));
-            recyclerDataArrayList.add(new RecyclerData("efefe",  R.drawable.ic_sublist_24dp, "tag"));
-
-
-            // added data from arraylist to adapter class.
-            RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
-
-            // setting grid layout manager to implement grid view.
-            // in this method '1' represents number of columns to be displayed in grid view.
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
-
-            // at last set adapter to recycler view.
-            RecyclerView recyclerView = holder.recyclerView;
-
-            Toast.makeText(mcontext,  recyclerView + "", Toast.LENGTH_SHORT).show();
-
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setVisibility(View.VISIBLE);
-             */
-        }
-
-        //DataArrayList.clear();
     }
 
     @Override
     public int getItemCount() {
         // this method returns the size of recyclerview
-        return DataArrayList.size();
+        return recyclerDataArrayList.size();
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
-        RecyclerData recyclerData = DataArrayList.get(position);
+        RecyclerData recyclerData = recyclerDataArrayList.get(position);
 
         holder.editText.setOnTouchListener((v, event) -> {
             holderArrayList.clear();
@@ -188,10 +175,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             {
                 Log.wtf("HELLO, hi", "hi");
                 recyclerData.setDescription(s + "");
-                DataArrayList.get(position).setDescription(s + "");
+                recyclerDataArrayList.get(position).setDescription(s + "");
             }
         });
-
 
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
@@ -222,6 +208,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 }
             });
         }
+
         else if (holder.title.getText().equals(mcontext.getString(R.string.dueDate)))
         {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -693,25 +680,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         int reminderPos = 0;
 
-        for (int i = 0; i < DataArrayList.size(); i++) {
+        for (int i = 0; i < recyclerDataArrayList.size(); i++) {
             RecyclerViewHolder curHolder = holderArrayList.get(i);
-            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.dueDate))) {
+            if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.dueDate))) {
 
                 if (curTime.equals("null")) {
                     curHolder.description.setText(curDate + " 12am");
-                    DataArrayList.get(i).setDescription(curDate + "12am");
+                    recyclerDataArrayList.get(i).setDescription(curDate + "12am");
                 } else {
                     curHolder.description.setText(curDate + " " + curTime);
-                    DataArrayList.get(i).setDescription(curDate + " " + curTime);
+                    recyclerDataArrayList.get(i).setDescription(curDate + " " + curTime);
                 }
                 curHolder.mainBtn.setColorFilter(Color.YELLOW);
             }
 
             //this part is for the placement of the rest of the items
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && !reminderAdded)
+            else if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && !reminderAdded)
             {
                     curHolder.description.setText("Remind me when due");
-                    DataArrayList.get(i).setDescription("Remind me when due");
+                    recyclerDataArrayList.get(i).setDescription("Remind me when due");
                     reminderPos = i;
 
                     ArrayList<String> values = new ArrayList<String>();
@@ -735,7 +722,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     curHolder.mainBtn.setColorFilter(Color.YELLOW);
             }
 
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminderType)) && !reminderAdded) {
+            else if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminderType)) && !reminderAdded) {
                 if (reminderPos == 0)
                     Toast.makeText(mcontext, "Congragulations you managed to break the reminderpos stuff", Toast.LENGTH_SHORT).show();
                 notifyItemMoved(i, reminderPos + 1);
@@ -761,7 +748,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
                 curHolder.itemView.setVisibility(View.VISIBLE);
             }
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && !reminderAdded) {
+            else if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && !reminderAdded) {
                 notifyItemMoved(i, reminderPos + 2);
                 holderArrayList.get(i).itemView.setVisibility(View.VISIBLE);
 
@@ -794,21 +781,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @SuppressLint("SetTextI18n")
     public void RadioButtonUpdateText(int selected, String dialogName, String description){
-        for (int i = 0; i < DataArrayList.size(); i++) {
-            if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && dialogName.equals(DataArrayList.get(i).getTitle())) {
+        for (int i = 0; i < recyclerDataArrayList.size(); i++) {
+            if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminder)) && dialogName.equals(recyclerDataArrayList.get(i).getTitle())) {
                 reminderSelected = selected;
                 holderArrayList.get(i).description.setText(description);
-                DataArrayList.get(i).setDescription(description);
+                recyclerDataArrayList.get(i).setDescription(description);
             }
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminderType)) && dialogName.equals(DataArrayList.get(i).getTitle())) {
+            else if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.reminderType)) && dialogName.equals(recyclerDataArrayList.get(i).getTitle())) {
                 reminderTypeSelected = selected;
                 holderArrayList.get(i).description.setText(description);
-                DataArrayList.get(i).setDescription(description);
+                recyclerDataArrayList.get(i).setDescription(description);
             }
-            else if (DataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && dialogName.equals(DataArrayList.get(i).getTitle())){
+            else if (recyclerDataArrayList.get(i).getTitle().equals(mcontext.getString(R.string.repeat)) && dialogName.equals(recyclerDataArrayList.get(i).getTitle())){
                 repeatSelected = selected;
                 holderArrayList.get(i).description.setText(description);
-                DataArrayList.get(i).setDescription(description);
+                recyclerDataArrayList.get(i).setDescription(description);
             }
         }
     }
