@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -28,6 +30,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
+import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
@@ -48,7 +51,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private int activeMinuteBtn = 0;
     private boolean hourSelected = true; //to know whether the hours or minutes are selected so that activehour/minuteBtn can be selected
     private boolean am_pm_Selected = true; //true for am false for pm
+    private boolean test = false;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
+
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -84,14 +89,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.holder = holder;
         holderArrayList.add(holder);
 
+        Listeners(position);
+
         holder.title.setText(recyclerData.getTitle());
         holder.mainBtn.setImageResource(recyclerData.getImgId());
-        holder.id.setText(recyclerData.getId());
 
         if (recyclerData.getEditTextEnable()) {
             holder.editText.setVisibility(View.VISIBLE);
             holder.editText.setHint(recyclerData.getDescription());
             holder.description.setVisibility(View.GONE);
+            if (recyclerData.getTitle() == null){
+                holder.title.setVisibility(View.GONE);
+                holder.editText.setTextSize(14);
+
+                //for removing the margins and making it more centered
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
+                p.setMargins(0, 10, 0, 10);
+                holder.editText.requestLayout();
+
+                if (recyclerData.getDescription() != null)
+                    holder.editText.setHint(recyclerData.getDescription());
+            }
         } else if (recyclerData.getDescription() != null) {
             holder.description.setText(recyclerData.getDescription());
         } else
@@ -135,7 +153,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             recyclerView.setVisibility(View.VISIBLE);
              */
         }
-        Listeners(position);
+
+        //DataArrayList.clear();
     }
 
     @Override
@@ -144,20 +163,30 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return DataArrayList.size();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
         RecyclerData recyclerData = DataArrayList.get(position);
+
+        holder.editText.setOnTouchListener((v, event) -> {
+            holderArrayList.clear();
+            return false;
+        });
+
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.wtf("HELLO", "HI");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.wtf("HELLO, hello", "hi");
             }
 
             @Override
             public void afterTextChanged(Editable s)
             {
+                Log.wtf("HELLO, hi", "hi");
                 recyclerData.setDescription(s + "");
                 DataArrayList.get(position).setDescription(s + "");
             }
@@ -854,7 +883,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private TextView title;
         private TextView description;
-        private TextView id;
         public EditText editText;
         private ImageButton mainBtn;
         private ImageButton secondaryBtn;
@@ -867,7 +895,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             editText = itemView.findViewById(R.id.adapterEditTxt);
             mainBtn = itemView.findViewById(R.id.adapterMainBtn);
             secondaryBtn = itemView.findViewById(R.id.adapterFavoriteBtn);
-            id = itemView.findViewById(R.id.adapterSetID);
         }
     }
 }

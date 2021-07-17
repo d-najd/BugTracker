@@ -83,6 +83,12 @@ public class ProjectCreateTable extends AppCompatActivity {
     }
 
 
+    public void test(){
+        adapter.notifyItemChanged(0);
+    }
+
+
+
     //region Storage
     public String GetData(String projectName){
         String data = null;

@@ -28,10 +28,11 @@ public class RecyclerData {
         this.tag = tag;
     }
 
-    public RecyclerData(String title, int imgId, boolean editTextEnable, String tag){
-        this.title = title;
+
+    public RecyclerData(int imgId, String description, boolean editTextEnable, String tag){
         this.imgId = imgId;
         this.editTextEnable = editTextEnable;
+        this.description = description;
         this.tag = tag;
     }
 

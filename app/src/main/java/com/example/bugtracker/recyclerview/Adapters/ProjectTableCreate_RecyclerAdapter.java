@@ -3,6 +3,7 @@ package com.example.bugtracker.recyclerview.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -100,21 +102,24 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 ArrayList<String> titles = new ArrayList<>();
                 ArrayList<Integer> imgIds = new ArrayList<>();
 
-                if (curData.getTitles() != null) {
-                    titles = curData.getTitles();
-                    imgIds = curData.getImgIds();
-                }
+               // if (curData.getTitles() != null) {
+              //      titles = curData.getTitles();
+               //     imgIds = curData.getImgIds();
+               // }
 
                 titles.add("TEST");
                 imgIds.add(R.drawable.ic_account_24dp);
 
-                curData.setTitles(titles);
-                curData.setImgIds(imgIds);
+                //curData.setTitles(titles);
+                //curData.setImgIds(imgIds);
 
                 for (int i = 0; i < titles.size(); i++) {
                     recyclerDataArrayList.add(new RecyclerData(titles.get(i),
                             imgIds.get(i), tag));
                 }
+                boolean test = true;
+
+                recyclerDataArrayList.add(new RecyclerData(R.drawable.ic_account_24dp, "Summary", true, tag));
 
                 /* way too buggy to use.
                 for (int i = 0; i < titles.size(); i++) {
@@ -123,8 +128,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 }
 
                  */
-
-                curholder.recyclerView.getAdapter().notifyDataSetChanged();
+                projectCreateTableActivity.test();
+                //curholder.recyclerView.getAdapter().notifyItemInserted(0);
             }
         });
     }
@@ -162,7 +167,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         if (recyclerData.getTitles() != null)
             tableSize = recyclerData.getTitles().size();
 
-        recyclerDataArrayList.clear();
         if (tableSize != 0) {
             for (int i = 0; i < tableSize; i++) {
                 recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
@@ -223,6 +227,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         private TextView createTxt;
         private TextView addColumnTxt;
         private Button addColumnBtn;
+
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
