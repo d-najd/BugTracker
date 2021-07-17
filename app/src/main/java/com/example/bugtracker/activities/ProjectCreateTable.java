@@ -28,6 +28,8 @@ public class ProjectCreateTable extends AppCompatActivity {
     private String projectName; //data is passed through intent
     private ProjectTableCreate_RecyclerAdapter adapter;
 
+    private ArrayList<Boolean> hasBeenCreated = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +180,22 @@ public class ProjectCreateTable extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void ClearTest(){
+        hasBeenCreated.clear();
+    }
+
+    public void ReplaceTestPositive(int position){
+        hasBeenCreated.set(position, true);
+    }
+
+    public void ReplaceTestNegative(){
+        hasBeenCreated.add(false);
+    }
+
+    public ArrayList<Boolean> GetTest(){
+        return hasBeenCreated;
     }
 
     /* TODO finish this

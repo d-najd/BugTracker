@@ -55,6 +55,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     //the creator behind editext decided it would be fun if when you press the editext for it to refresh all the nested recyclerviews and because the data is in arraylist
     //instead of regular list (list[]) the data ISNT DELETED AFTER ELEMENT IS CREATED AND IT STAYS thus giving all the nested recyclerviews the same data as the data from the recyclerview which
     //has the editext, cant find better way to do this oh and the dude who decided to do that and the dude who set the source code TO READ ONLY need to go to hell
+    public ProjectCreateTable projectCreateTable;
+
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -72,13 +74,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
-        hasBeenCreated.clear();
+        if (projectCreateTable != null)
+            projectCreateTable.ClearTest();
     }
 
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
+
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_layout_checklist, parent, false);
         return new RecyclerViewHolder(view);
@@ -91,57 +95,27 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //WHATSOEVER, also lists (ex test[]) dont work because the data isnt passed on creation soo
         //its pointless to try that unless you try to set it in onbindview but that will destroy the
         //whole purpuse and it probably wont work either way
-        if (hasBeenCreated.size() > position)
-        {
-            if (hasBeenCreated.get(position) == false) {
-                hasBeenCreated.set(position, true);
-                RecyclerData recyclerData = recyclerDataArrayList.get(position);
-                String layout = recyclerData.getTag();
-                this.holder = holder;
-                holderArrayList.add(holder);
 
-                Listeners(position);
-
-                holder.title.setText(recyclerData.getTitle());
-                holder.mainBtn.setImageResource(recyclerData.getImgId());
-
-                if (recyclerData.getEditTextEnable()) {
-                    holder.editText.setVisibility(View.VISIBLE);
-                    holder.editText.setHint(recyclerData.getDescription());
-                    holder.description.setVisibility(View.GONE);
-                    if (recyclerData.getTitle() == null) {
-                        holder.title.setVisibility(View.GONE);
-                        holder.editText.setTextSize(14);
-
-                        //for removing the margins and making it more centered
-                        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
-                        p.setMargins(0, 10, 0, 10);
-                        holder.editText.requestLayout();
-
-                        if (recyclerData.getDescription() != null)
-                            holder.editText.setHint(recyclerData.getDescription());
-                    }
-                } else if (recyclerData.getDescription() != null) {
-                    holder.description.setText(recyclerData.getDescription());
+        if (projectCreateTable != null) {
+            hasBeenCreated = projectCreateTable.GetTest();
+            if (hasBeenCreated.size() > position) {
+                if (hasBeenCreated.get(position) == false) {
+                    projectCreateTable.ReplaceTestPositive(position);
+                    hasBeenCreated = projectCreateTable.GetTest();
+                    //hasBeenCreated.set(position, true);
+                    TESTING(position, holder);
                 } else
-                    holder.description.setVisibility(View.GONE);
-
-                if (layout.equals(mcontext.getString(R.string.titleProjects))) {
-                    holder.secondaryBtn.setVisibility(View.VISIBLE);
-                }
-
-                if (recyclerData.getSecondImgId() != 0) {
-                    holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
-                    holder.secondaryBtn.setVisibility(View.VISIBLE);
-                }
-
-                //DataArrayList.clear();
-                //Test();
+                    RemoveTest(holder);
+            } else {
+                projectCreateTable.ReplaceTestNegative();
+                hasBeenCreated = projectCreateTable.GetTest();
+                //hasBeenCreated.add(false);
+                onBindViewHolder(holder, position);
             }
-        }else {
-            hasBeenCreated.add(false);
-            onBindViewHolder(holder, position);
         }
+        else
+            TESTING(position, holder);
+
     }
 
     @Override
@@ -150,15 +124,63 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return recyclerDataArrayList.size();
     }
 
+    private void RemoveTest(RecyclerViewHolder holder){
+        int actualPosition = holder.getAdapterPosition();
+        recyclerDataArrayList.remove(actualPosition);
+        notifyItemRemoved(actualPosition);
+        notifyItemRangeChanged(actualPosition, recyclerDataArrayList.size());
+    }
+
+    private void TESTING(int position, RecyclerViewHolder holder){
+        RecyclerData recyclerData = recyclerDataArrayList.get(position);
+        String layout = recyclerData.getTag();
+        this.holder = holder;
+        holderArrayList.add(holder);
+        holder.itemView.setVisibility(View.VISIBLE);
+
+        Listeners(position);
+
+        holder.title.setText(recyclerData.getTitle());
+        holder.mainBtn.setImageResource(recyclerData.getImgId());
+
+        if (recyclerData.getEditTextEnable()) {
+            holder.editText.setVisibility(View.VISIBLE);
+            holder.editText.setHint(recyclerData.getDescription());
+            holder.description.setVisibility(View.GONE);
+            if (recyclerData.getTitle() == null) {
+                holder.title.setVisibility(View.GONE);
+                holder.editText.setTextSize(14);
+
+                //for removing the margins and making it more centered
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
+                p.setMargins(0, 10, 0, 10);
+                holder.editText.requestLayout();
+
+                if (recyclerData.getDescription() != null)
+                    holder.editText.setHint(recyclerData.getDescription());
+            }
+        } else if (recyclerData.getDescription() != null) {
+            holder.description.setText(recyclerData.getDescription());
+        } else
+            holder.description.setVisibility(View.GONE);
+
+        if (layout.equals(mcontext.getString(R.string.titleProjects))) {
+            holder.secondaryBtn.setVisibility(View.VISIBLE);
+        }
+
+        if (recyclerData.getSecondImgId() != 0) {
+            holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
+            holder.secondaryBtn.setVisibility(View.VISIBLE);
+        }
+
+        //DataArrayList.clear();
+        //Test();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
         RecyclerData recyclerData = recyclerDataArrayList.get(position);
-
-        holder.editText.setOnTouchListener((v, event) -> {
-            holderArrayList.clear();
-            return false;
-        });
-
+/*
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -178,6 +200,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 recyclerDataArrayList.get(position).setDescription(s + "");
             }
         });
+
+ */
 
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
@@ -332,26 +356,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 });
             }
         }
-
-        else if (recyclerData.getTag().equals(R.string.createBoard))
-            CreateBoardListeners();
     }
 
-    private void CreateBoardListeners(){
-        holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-            }
-        });
-    }
 
     @SuppressLint("SetTextI18n")
     private void DateTime1(View v){
