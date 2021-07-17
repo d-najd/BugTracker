@@ -125,7 +125,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
 
         if (holder.title.getText().equals(mcontext.getString(R.string.tasks))) {
-            /* I fucking hate this shit right here
+            /* I hate this right here
             ArrayList<RecyclerData> recyclerDataArrayList;
 
             recyclerDataArrayList = new ArrayList<>();
