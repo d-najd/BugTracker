@@ -1,17 +1,14 @@
 package com.example.bugtracker.activities;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
 import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
@@ -86,6 +83,7 @@ public class ProjectCreateTable extends AppCompatActivity {
         adapter.projectName = projectName;
         adapter.intent = getIntent();
         recyclerView.setRecycledViewPool(viewPool);
+
     }
 
     //region Storage
@@ -190,25 +188,53 @@ public class ProjectCreateTable extends AppCompatActivity {
         return hasBeenCreated;
     }
 
-    /* TODO finish this
-    private void ReplaceData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName, int id, boolean keepPreviousItems){
+    public void ReplaceData(String newItemTitle, String projectName, int id, boolean keepPreviousItems){
         BufferedWriter writer = null;
+        String dataOld = GetData(projectName);
+        String data = "";
+
+        if (dataOld == null){
+            Log.wtf("the data seems to be null", "Stop the activity");
+            Message.message(this, "The data seems to be null, stop the activity");
+        }
+
+        String[] parts = dataOld.split("/");
+
 
         File f = new File(this.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String dataOld = GetData(projectName);
-        if (dataOld != null) {
-            String[] parts = dataOld.split("/");
-            id = parts.length / 3;
+        //old title without the ] at the end
+        String title = parts[(id * 3) + 1].substring(0, parts[(id * 3) + 1].length() - 1);
+        String imgId = parts[(id * 3) + 2].substring(0, parts[(id * 3) + 2].length() - 1);
+
+        //adding the new data
+        //also this checks if the length is 1 because if the list is empty it will be left with [
+        // and if we add the ", " it will end up like [, data] which will cause some trouble down
+        // the road
+        if (title.length() != 1) {
+            title += (", " + newItemTitle + "]");
+            imgId += (", " + "2131165294" + "]"); // the number is for a drawable, can change later
+        } else {
+            title += (newItemTitle + "]");
+            imgId += ("2131165294" + "]");
         }
 
-        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
+        parts[(id * 3) + 1] = title;
+        parts[(id * 3) + 2] = imgId;
 
+        if (keepPreviousItems) {
+            for (int i = 0; i < parts.length; i++) {
+                data += (parts[i] + "/");
+            }
+        } else
+        {
+            Log.wtf("", "add a case where it wont keep the previous items");
+            Message.message(this, "add a case where it wont keep the previous items");
+        }
         try {
-            writer = new BufferedWriter(new FileWriter(f, true));
+            writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -219,7 +245,6 @@ public class ProjectCreateTable extends AppCompatActivity {
             }
         }
     }
-     */
 
     private void MakeFolders(){
         //makes folders where the data is stored

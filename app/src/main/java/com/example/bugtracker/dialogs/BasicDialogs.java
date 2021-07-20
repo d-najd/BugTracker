@@ -38,37 +38,9 @@ public class BasicDialogs {
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
     }
 
-    public static void BasicDialog(View v, Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt){
-        //this is editext dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
-        ViewGroup viewGroup = v.findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(mcontext).inflate(R.layout.dialog_edit_text, viewGroup, false);
-
-        final String[] newColumnName = {null};
-
-        EditText editText = dialogView.findViewById(R.id.editText);
-        builder.setView(dialogView)
-                .setTitle(title)
-                .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //TODO add a way to get the data
-                        Log.wtf("HELLOOOOO", "need to retrieve data");
-                        newColumnName[0] = String.valueOf(editText.getText());
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-    }
+    //TODO optimize these so that it checks the creation of the dialog doesnt need to be repeated
+    // 100 times, make a switch and pass the data from onswitch and check... and put the other stuff
+    // inside a function
 
     //for adding new column
     public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt, String projectName, ProjectCreateTable projectCreateTableActivity, Intent intent){
@@ -89,9 +61,16 @@ public class BasicDialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> titlesEmptyArr = new ArrayList<>();
                         ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
+
+                        //titlesEmptyArr.add("HOHOHO");
+                        //imgsEmptyArr.add(R.drawable.ic_account_24dp);
                         String title = editText.getText().toString();
 
                         projectCreateTableActivity.SaveData(titlesEmptyArr, imgsEmptyArr, title, projectName);
+
+                        //TODO seems like refreshing the activity doesnt solve all problems,
+                        // if the first element is empty while adding new element it sets the data
+                        // to the first instead of last or some other problems
 
                         //the data from the recyclerviews gets removed for some reason when editText
                         //is pressed, refreshing the activity is the only way that I can think of,
@@ -109,4 +88,43 @@ public class BasicDialogs {
 
         alertDialog.show();
     }
+
+    //TODO refreshing the data to fix problems doesnt seem to work out, need to fidn other way to
+    // refresh the activity
+
+    //for adding new item inside the column
+    public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt, int position, String projectName, ProjectCreateTable projectCreateTableActivity, Intent intent){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+
+        final EditText editText = new EditText(mcontext);
+
+        builder.setView(editText)
+                .setTitle(title)
+                .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String title = editText.getText().toString();
+
+                        projectCreateTableActivity.ReplaceData(title, projectName, position, true);
+
+                        projectCreateTableActivity.finish();
+                        projectCreateTableActivity.overridePendingTransition(0, 0);
+                        projectCreateTableActivity.startActivity(intent);
+                        projectCreateTableActivity.overridePendingTransition(0, 0);
+                    }
+
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
+
+        alertDialog.show();
+    }
+
 }

@@ -60,6 +60,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private List<String> clockHourStrings = new ArrayList<String>(); //strings for hours and minutes (1-12hours)...
     private List<String> clockMinuteStrings = new ArrayList<String>();
 
+    public ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
+
     public int reminderSelected = -1;
     public int reminderTypeSelected = -1;
     public int repeatSelected = -1;
@@ -77,7 +79,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
-
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_layout_checklist, parent, false);
         return new RecyclerViewHolder(view);
@@ -130,15 +131,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
-
-
     @Override
     public int getItemCount() {
-        // this method returns the size of recyclerview
-        if (recyclerDataArrayList != null)
-            return recyclerDataArrayList.size();
-        else
-            return 0;
+        return recyclerDataArrayList.size();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -164,8 +159,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 recyclerDataArrayList.get(position).setDescription(s + "");
             }
         });
-
-
 
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {

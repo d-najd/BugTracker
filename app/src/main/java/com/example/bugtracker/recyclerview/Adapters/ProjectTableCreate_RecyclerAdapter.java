@@ -99,40 +99,29 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                ArrayList<String> titles = new ArrayList<>();
-                ArrayList<Integer> imgIds = new ArrayList<>();
+              //  ArrayList<String> titles = new ArrayList<>();
+               // ArrayList<Integer> imgIds = new ArrayList<>();
 
                // if (curData.getTitles() != null) {
-              //      titles = curData.getTitles();
+               //     titles = curData.getTitles();
                //     imgIds = curData.getImgIds();
                // }
 
-                titles.add("TEST");
-                imgIds.add(R.drawable.ic_account_24dp);
 
                 //curData.setTitles(titles);
                 //curData.setImgIds(imgIds);
 
-                for (int i = 0; i < titles.size(); i++) {
-                    recyclerDataArrayList.add(new RecyclerData(titles.get(i),
-                            imgIds.get(i), tag));
-                }
-                recyclerDataArrayList.add(new RecyclerData(R.drawable.ic_account_24dp, "Summary", true, tag));
+                BasicDialogs.EditTextDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity, intent);
 
-                /* way too buggy to use.
-                for (int i = 0; i < titles.size(); i++) {
-                    recyclerDataArrayList.add(new RecyclerData(titles.get(i),
-                            imgIds.get(i), true, tag));
-                }
+                //recyclerDataArrayList.add(new RecyclerData(R.drawable.ic_account_24dp, "Summary", true, tag));
 
-                 */
                 //TODO replace this with insterted range,
 
                 //TODO try to get data from memory and pass it first before trying to find problem with
                 // the replacing of data while new item in the column is created, maybe get the data from
                 // memory? that may fix the problem with the editext as well but it should refresh the data
                 // thus refreshing the editext and making you not able to type but have to try first.
-                curholder.recyclerView.getAdapter().notifyDataSetChanged();
+                //curholder.recyclerView.getAdapter().notifyDataSetChanged();
 
             }
         });
@@ -167,6 +156,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
     private void TableData(RecyclerData recyclerData, int position) {
         int tableSize = 0;
+        recyclerDataArrayList.clear();
         if (recyclerData.getTitles() != null)
             tableSize = recyclerData.getTitles().size();
 
@@ -176,6 +166,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                         recyclerData.getImgIds().get(i), tag));
             }
         }
+
 
         RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
 
@@ -195,6 +186,9 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.setAdapter(adapter);
+
+        ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
+        adapter.projectTableCreate_recyclerAdapter = projectTableCreate_recyclerAdapter;
     }
 
     private void NewColumnCreator(){
