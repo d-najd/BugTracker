@@ -7,18 +7,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,13 +54,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private boolean hourSelected = true; //to know whether the hours or minutes are selected so that activehour/minuteBtn can be selected
     private boolean am_pm_Selected = true; //true for am false for pm
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
-    private ArrayList<RecyclerData> arrayListOFrecyclerDataArrayList; // each element has arraylist of data so array of the data of each element
-    private ArrayList<Boolean> hasBeenCreated = new ArrayList<>(); // is used for knowing whether certan element has been created and if so that element to not be RECREATED FOR NO REASON,
-    //the creator behind editext decided it would be fun if when you press the editext for it to refresh all the nested recyclerviews and because the data is in arraylist
-    //instead of regular list (list[]) the data ISNT DELETED AFTER ELEMENT IS CREATED AND IT STAYS thus giving all the nested recyclerviews the same data as the data from the recyclerview which
-    //has the editext, cant find better way to do this oh and the dude who decided to do that and the dude who set the source code TO READ ONLY need to go to hell
-    public ProjectCreateTable projectCreateTable;
-
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -74,8 +71,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
-        if (projectCreateTable != null)
-            projectCreateTable.ClearTest();
     }
 
     @NonNull
@@ -90,53 +85,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public  void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        //this thing is for checking whether the item has been activated before so it doesnt SET THE
-        //WRONG DATA, the edittext on PRESSING READDS ALL THE ITEMS CURRENTLY VISIBLE FOR NO REASON
-        //WHATSOEVER, also lists (ex test[]) dont work because the data isnt passed on creation soo
-        //its pointless to try that unless you try to set it in onbindview but that will destroy the
-        //whole purpuse and it probably wont work either way
-
-        if (projectCreateTable != null) {
-            hasBeenCreated = projectCreateTable.GetTest();
-            if (hasBeenCreated.size() > position) {
-                if (hasBeenCreated.get(position) == false) {
-                    projectCreateTable.ReplaceTestPositive(position);
-                    hasBeenCreated = projectCreateTable.GetTest();
-                    //hasBeenCreated.set(position, true);
-                    TESTING(position, holder);
-                } else
-                    RemoveTest(holder);
-            } else {
-                projectCreateTable.ReplaceTestNegative();
-                hasBeenCreated = projectCreateTable.GetTest();
-                //hasBeenCreated.add(false);
-                onBindViewHolder(holder, position);
-            }
-        }
-        else
-            TESTING(position, holder);
-
-    }
-
-    @Override
-    public int getItemCount() {
-        // this method returns the size of recyclerview
-        return recyclerDataArrayList.size();
-    }
-
-    private void RemoveTest(RecyclerViewHolder holder){
-        int actualPosition = holder.getAdapterPosition();
-        recyclerDataArrayList.remove(actualPosition);
-        notifyItemRemoved(actualPosition);
-        notifyItemRangeChanged(actualPosition, recyclerDataArrayList.size());
-    }
-
-    private void TESTING(int position, RecyclerViewHolder holder){
         RecyclerData recyclerData = recyclerDataArrayList.get(position);
+
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);
         holder.itemView.setVisibility(View.VISIBLE);
+
+        Log.wtf("the id is", recyclerData.getId());
 
         Listeners(position);
 
@@ -172,15 +128,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             holder.secondaryBtn.setImageResource(recyclerData.getSecondImgId());
             holder.secondaryBtn.setVisibility(View.VISIBLE);
         }
+    }
 
-        //DataArrayList.clear();
-        //Test();
+
+
+    @Override
+    public int getItemCount() {
+        // this method returns the size of recyclerview
+        if (recyclerDataArrayList != null)
+            return recyclerDataArrayList.size();
+        else
+            return 0;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
         RecyclerData recyclerData = recyclerDataArrayList.get(position);
-/*
+
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -201,7 +165,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
- */
+
 
         if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
         {
@@ -357,7 +321,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     private void DateTime1(View v){
@@ -879,7 +842,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         public EditText editText;
         private ImageButton mainBtn;
         private ImageButton secondaryBtn;
-        public RecyclerView recyclerView;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);

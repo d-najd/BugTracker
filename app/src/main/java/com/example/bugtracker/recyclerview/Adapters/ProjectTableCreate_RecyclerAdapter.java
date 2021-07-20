@@ -84,7 +84,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         }else{
             NewColumnCreator();
         }
-        TableData(recyclerData);
+        TableData(recyclerData, position);
     }
 
     private void Listeners(int position){
@@ -132,7 +132,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
                 // the replacing of data while new item in the column is created, maybe get the data from
                 // memory? that may fix the problem with the editext as well but it should refresh the data
                 // thus refreshing the editext and making you not able to type but have to try first.
-                curholder.recyclerView.getAdapter().notifyItemInserted(0);
+                curholder.recyclerView.getAdapter().notifyDataSetChanged();
+
             }
         });
     }
@@ -164,7 +165,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         }
     }
 
-    private void TableData(RecyclerData recyclerData) {
+    private void TableData(RecyclerData recyclerData, int position) {
         int tableSize = 0;
         if (recyclerData.getTitles() != null)
             tableSize = recyclerData.getTitles().size();
@@ -194,7 +195,6 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.setAdapter(adapter);
-        adapter.projectCreateTable = projectCreateTableActivity;
     }
 
     private void NewColumnCreator(){

@@ -1,7 +1,12 @@
 package com.example.bugtracker.activities;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +31,6 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private String projectName; //data is passed through intent
-    private ProjectTableCreate_RecyclerAdapter adapter;
 
     private ArrayList<Boolean> hasBeenCreated = new ArrayList<>();
 
@@ -62,13 +66,13 @@ public class ProjectCreateTable extends AppCompatActivity {
                 titles = StringToList.StringToList(parts[1 + (i * 3)], null);
                 imgIds = StringToList.StringToList(parts[2 + (i * 3)], 0);
 
-                recyclerDataArrayList.add(new RecyclerData(parts[i * 3], titles, imgIds, tag));
+                recyclerDataArrayList.add(new RecyclerData(parts[i * 3], titles, imgIds, String.valueOf(i), tag));
             }
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-        adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+        ProjectTableCreate_RecyclerAdapter adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
@@ -180,18 +184,6 @@ public class ProjectCreateTable extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void ClearTest(){
-        hasBeenCreated.clear();
-    }
-
-    public void ReplaceTestPositive(int position){
-        hasBeenCreated.set(position, true);
-    }
-
-    public void ReplaceTestNegative(){
-        hasBeenCreated.add(false);
     }
 
     public ArrayList<Boolean> GetTest(){
