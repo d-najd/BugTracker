@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@drawable/transparent"
-                android:src="@drawable/ic_baseline_more_vert_24"
+                android:src="@drawable/ic_more_vertical_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

@@ -36,5 +36,7 @@
     <string name="moveColumnLeft">Move column left</string>
     <string name="moveColumnRight">Move column right</string>
     <string name="deleteColumn">Delete column</string>
+    <string name="issue_type">Issue Type</string>
+    <string name="projectCreateTask">ProjectCreateTask</string>
 
 </resources>

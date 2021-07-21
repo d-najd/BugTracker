@@ -41,17 +41,16 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     private Context mcontext;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
-    private String tag;
     public RecyclerViewHolder holder;
     public ProjectCreateTable projectCreateTableActivity;
     public String projectName;
+    private String tag;
     public Intent intent;
 
 
     public ProjectTableCreate_RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
-        this.tag = DataArrayList.get(0).getTag();
     }
 
     @NonNull
@@ -68,6 +67,8 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);
+
+        tag = mcontext.getString(R.string.projectCreateTask);
 
         MoreVerticalCustomSpinner(position);
 

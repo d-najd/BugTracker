@@ -36,6 +36,7 @@ import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
+import com.example.bugtracker.activities.ProjectCreateTableEditTask;
 import com.example.bugtracker.dialogs.BasicDialogs;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
 import com.example.bugtracker.recyclerview.RecyclerData;
@@ -270,6 +271,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             else if (holder.title.getText().equals(mcontext.getString(R.string.repeat))){
                 holder.itemView.setVisibility(View.GONE);
             }
+        }
+
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectCreateTask))){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
+                    mcontext.startActivity(intent);
+                }
+            });
         }
 
         //TODO FIX THIS
