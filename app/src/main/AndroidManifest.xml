@@ -10,7 +10,7 @@
         android:label="@string/appName"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BugTracker">
+        android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:label="@string/appName">

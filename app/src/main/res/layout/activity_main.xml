@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
 
     <fragment
         android:id="@+id/navHostFragment"
@@ -17,7 +18,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <!--TODO find a way to make a outline/border/stroke for the menu_bottombar
+      or a way to make it elevated so it stands out from the background-->
+
     <include
+        android:elevation="8dp"
         android:id="@+id/include"
         layout="@layout/menu_bottombar"
         android:layout_width="match_parent"

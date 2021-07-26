@@ -1,9 +1,11 @@
 package com.example.bugtracker.dialogs;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,8 @@ public class BasicDialogs {
         //this is regular dialog
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
-        builder.setTitle(title)
+        builder
+                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
                 .setMessage(description)
                 .setNegativeButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
@@ -34,8 +37,10 @@ public class BasicDialogs {
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
 
+        //TODO FIND A WAY TO CHANGE THE COLOR OF THE TITLE TO WHITE
+
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
     }
 
     //TODO optimize these so that it checks the creation of the dialog doesnt need to be repeated
@@ -49,7 +54,7 @@ public class BasicDialogs {
         final EditText editText = new EditText(mcontext);
 
         builder.setView(editText)
-                .setTitle(title)
+                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
                 .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -87,6 +92,9 @@ public class BasicDialogs {
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
 
         alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
     }
 
     //TODO refreshing the data to fix problems doesnt seem to work out, need to fidn other way to
@@ -97,9 +105,11 @@ public class BasicDialogs {
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
+        editText.setTextColor(mcontext.getColor(R.color.white60));
+        editText.setHintTextColor(mcontext.getColor(R.color.white38));
 
         builder.setView(editText)
-                .setTitle(title)
+                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
                 .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -125,6 +135,8 @@ public class BasicDialogs {
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
 
         alertDialog.show();
-    }
 
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+    }
 }

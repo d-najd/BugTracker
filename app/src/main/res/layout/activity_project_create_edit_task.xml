@@ -16,18 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/titleTop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="EXAMPLE TEXT 12345"
-        android:textColor="@color/teal_700"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
-        app:layout_constraintStart_toEndOf="@+id/closeBtn"
-        app:layout_constraintTop_toTopOf="@+id/closeBtn" />
-
     <ImageButton
         android:id="@+id/imageButton"
         android:layout_width="wrap_content"
@@ -35,8 +23,9 @@
         android:background="@color/transparent"
         android:src="@drawable/ic_more_vertical_24dp"
         android:tint="@color/purple_500"
+        app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/closeBtn" />
 
     <ImageButton
         android:id="@+id/childIssues"
@@ -53,13 +42,13 @@
         android:id="@+id/titleMiddle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="80dp"
         android:text="EXAMPLE TEXT 12345"
-        android:textColor="@color/white"
+        android:textColor="@color/white87"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleTop" />
+        app:layout_constraintTop_toBottomOf="@+id/closeBtn" />
 
     <Button
         android:id="@+id/columnSelector"
@@ -67,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="LA PROGRESSO"
-        android:textColor="@color/white"
+        android:textColor="@color/white87"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/titleMiddle"
         app:layout_constraintTop_toBottomOf="@+id/titleMiddle" />
@@ -78,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/description"
-        android:textColor="@color/hintColor"
+        android:textColor="@color/white38"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/columnSelector"
         app:layout_constraintTop_toBottomOf="@+id/columnSelector" />
@@ -86,7 +75,7 @@
     <Button
         android:id="@+id/descriptionBtn"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="80dp"
         android:background="@color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/issue_type"
-        android:textColor="@color/hintColor"
+        android:textColor="@color/white38"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
         app:layout_constraintTop_toBottomOf="@+id/descriptionBtn" />
@@ -119,7 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:text="@string/task"
-        android:textColor="@color/white"
+        android:textColor="@color/white60"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/issueTypeImg"
         app:layout_constraintStart_toEndOf="@+id/issueTypeImg"

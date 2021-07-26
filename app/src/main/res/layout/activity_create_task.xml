@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/green"
+        android:elevation="4dp"
+        android:background="@color/purple_200"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -17,6 +19,7 @@
         android:id="@+id/cancelButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:elevation="4dp"
         android:layout_margin="13dp"
         android:background="@color/transparent"
         android:src="@drawable/ic_arrow_back_24dp"
@@ -30,6 +33,7 @@
         android:layout_marginTop="35dp"
         android:paddingTop="24dp"
         android:paddingEnd="200dp"
+        android:elevation="4dp"
         android:shadowColor="@color/black"
         android:text="Task Name"
         android:textColor="@color/white"
@@ -44,7 +48,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:elevation="4dp"
         android:hint="@string/letsGiveitaName"
+        android:textColor="@color/white87"
+        android:textColorHint="@color/white60"
         android:lines="1"
         android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
@@ -53,7 +60,6 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:tag="@string/createTask"
@@ -67,7 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:backgroundTint="@color/darkGreen"
+        app:tint="@color/white"
+        android:backgroundTint="@color/purple_200"
         android:src="@drawable/ic_add_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

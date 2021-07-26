@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Handler;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 public class RadioGroupDialog {
 
     @SuppressLint("RestrictedApi")
-    public void StartDialog(View v, Context mcontext, RecyclerAdapter adapter, ArrayList<String> titles, int selected, int color, String dialogName){
+    public void StartDialog(View v, Context mcontext, RecyclerAdapter adapter, ArrayList<String> titles, int selected, int color, String title){
         Handler h = new Handler() ;
         AppCompatRadioButton radioButton;
         int textSize = 16;
@@ -36,7 +37,7 @@ public class RadioGroupDialog {
 
         RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
         builder.setView(dialogView)
-                .setTitle(dialogName)
+                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
                 .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -76,7 +77,7 @@ public class RadioGroupDialog {
                     h.postDelayed(new Runnable() {
                         public void run() {
                             alertDialog.cancel();
-                            adapter.RadioButtonUpdateText(finalI, dialogName, titles.get(finalI));
+                            adapter.RadioButtonUpdateText(finalI, title, titles.get(finalI));
                         }
                     }, 350);
                 }
@@ -85,7 +86,7 @@ public class RadioGroupDialog {
         }
 
         if (selected != -1)
-            CheckIfCheckingNeeded(mcontext, adapter, dialogName, radioButtons, selected);
+            CheckIfCheckingNeeded(mcontext, adapter, title, radioButtons, selected);
 
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
