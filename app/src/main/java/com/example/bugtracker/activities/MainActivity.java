@@ -1,10 +1,10 @@
-package com.example.bugtracker;
+package com.example.bugtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.bugtracker.activities.ProjectCreateActivity;
+import com.example.bugtracker.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

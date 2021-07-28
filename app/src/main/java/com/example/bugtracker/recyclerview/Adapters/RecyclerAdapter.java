@@ -144,18 +144,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.wtf("HELLO", "HI");
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.wtf("HELLO, hello", "hi");
+
             }
 
             @Override
             public void afterTextChanged(Editable s)
             {
-                Log.wtf("HELLO, hi", "hi");
                 recyclerData.setDescription(s + "");
                 recyclerDataArrayList.get(position).setDescription(s + "");
             }

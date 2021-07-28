@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkGray">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/gray"
+        android:paddingStart="8dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/closeActivityBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_close_blue_24"
+            android:tint="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/topTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:alpha=".87"
+            android:text="@string/edit_description"
+            android:textColor="@color/purple_200"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/closeActivityBtn"
+            app:layout_constraintStart_toEndOf="@+id/closeActivityBtn"
+            app:layout_constraintTop_toTopOf="@+id/closeActivityBtn" />
+
+        <ImageButton
+            android:id="@+id/topUndo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:alpha=".87"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_arrow_left_curved_undo_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/topTitle"
+            app:layout_constraintStart_toEndOf="@+id/topTitle"
+            app:layout_constraintTop_toTopOf="@+id/topTitle" />
+
+        <ImageButton
+            android:id="@+id/topRedo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:alpha=".87"
+            android:background="@color/transparent"
+            android:scaleX="-1"
+            android:src="@drawable/ic_arrow_left_curved_undo_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/topUndo"
+            app:layout_constraintStart_toEndOf="@+id/topUndo"
+            app:layout_constraintTop_toTopOf="@+id/topUndo" />
+
+        <TextView
+            android:id="@+id/topSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:alpha=".87"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/topRedo"
+            app:layout_constraintStart_toEndOf="@+id/topRedo"
+            app:layout_constraintTop_toTopOf="@+id/topRedo" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <EditText
+        android:id="@+id/descriptionEdt"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="top"
+        android:hint="@string/type_to_edit_the_description"
+        android:textColor="@color/white60"
+        android:textColorHint="@color/white38"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

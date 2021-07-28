@@ -38,5 +38,8 @@
     <string name="deleteColumn">Delete column</string>
     <string name="issue_type">Issue Type</string>
     <string name="projectCreateTask">ProjectCreateTask</string>
+    <string name="edit_description">Edit Description</string>
+    <string name="save">SAVE</string>
+    <string name="type_to_edit_the_description">Type to edit the description</string>
 
 </resources>
