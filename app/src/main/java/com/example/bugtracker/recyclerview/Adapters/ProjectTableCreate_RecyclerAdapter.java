@@ -64,6 +64,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
+        Log.wtf("recyclerData", recyclerData.toString());
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);
@@ -92,38 +93,12 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO make a cardview that looks simular to the items and use that for adding new
-                // elements, setting editText bugs everything, also save the data after the item is
-                // created
                 recyclerDataArrayList.clear();
 
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-              //  ArrayList<String> titles = new ArrayList<>();
-               // ArrayList<Integer> imgIds = new ArrayList<>();
-
-               // if (curData.getTitles() != null) {
-               //     titles = curData.getTitles();
-               //     imgIds = curData.getImgIds();
-               // }
-
-
-                //curData.setTitles(titles);
-                //curData.setImgIds(imgIds);
-
                 BasicDialogs.EditTextDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity, intent);
-
-                //recyclerDataArrayList.add(new RecyclerData(R.drawable.ic_account_24dp, "Summary", true, tag));
-
-                //TODO replace this with insterted range,
-
-                //TODO try to get data from memory and pass it first before trying to find problem with
-                // the replacing of data while new item in the column is created, maybe get the data from
-                // memory? that may fix the problem with the editext as well but it should refresh the data
-                // thus refreshing the editext and making you not able to type but have to try first.
-                //curholder.recyclerView.getAdapter().notifyDataSetChanged();
-
             }
         });
     }

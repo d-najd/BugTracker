@@ -28,6 +28,7 @@ public class ProjectCreateTable extends AppCompatActivity {
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private String projectName; //data is passed through intent
+    private int amountOfPartsInData = 4; //
 
     private ArrayList<Boolean> hasBeenCreated = new ArrayList<>();
 
@@ -57,13 +58,13 @@ public class ProjectCreateTable extends AppCompatActivity {
         if (data == null){
             Log.wtf("DATA IS EMPTY", "the data is null there is problem");
         } else {
-            String[] parts = data.split("/");
+            String[] parts = data.split("::");
 
-            for (int i = 0; i < parts.length / 3; i++){
-                titles = StringToList.StringToList(parts[1 + (i * 3)], null);
-                imgIds = StringToList.StringToList(parts[2 + (i * 3)], 0);
+            for (int i = 0; i < parts.length / amountOfPartsInData; i++){
+                titles = StringToList.StringToList(parts[1 + (i * amountOfPartsInData)], null);
+                imgIds = StringToList.StringToList(parts[2 + (i * amountOfPartsInData)], 0);
 
-                recyclerDataArrayList.add(new RecyclerData(parts[i * 3], titles, imgIds, String.valueOf(i), tag));
+                recyclerDataArrayList.add(new RecyclerData(parts[i * amountOfPartsInData], titles, imgIds, String.valueOf(i), tag));
             }
         }
 
@@ -108,7 +109,8 @@ public class ProjectCreateTable extends AppCompatActivity {
     }
 
 
-    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds, String title, String projectName){
+    public void SaveData(ArrayList<String> titles, ArrayList<Integer> imgIds,
+                         ArrayList<String> descriptions, String title, String projectName){
         BufferedWriter writer = null;
         int id = 0;
 
@@ -117,11 +119,11 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         String dataOld = GetData(projectName);
         if (dataOld != null) {
-            String[] parts = dataOld.split("/");
-            id = parts.length / 3;
+            String[] parts = dataOld.split("::");
+            id = parts.length / amountOfPartsInData;
         }
 
-        String data = title + "/" + titles.toString() + "/" + imgIds + "/";
+        String data = title + "::" + titles.toString() + "::" + imgIds + "::" + descriptions + "::";
 
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
@@ -145,7 +147,7 @@ public class ProjectCreateTable extends AppCompatActivity {
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         String data = GetData(projectName);
-        String[] parts = data.split("/");
+        String[] parts = data.split("::");
 
         //this part is for splitting, ex if the id is 1, the startingStr will get data from
         //0 up until 1 and stop, and endstr will get data from 2 and on
@@ -154,13 +156,13 @@ public class ProjectCreateTable extends AppCompatActivity {
         String startStr = "";
 
         if (id != 0){
-            for (int i = 0; i < id * 3; i++){
-                startStr += parts[i] + "/";
+            for (int i = 0; i < id * amountOfPartsInData; i++){
+                startStr += parts[i] + "::";
             }
         }
 
-        for (int i = (id + 1) * 3; i < parts.length; i++){
-            endStr += parts[i] + "/";
+        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
+            endStr += parts[i] + "::";
         }
 
         data = startStr + endStr;
@@ -184,10 +186,6 @@ public class ProjectCreateTable extends AppCompatActivity {
         }
     }
 
-    public ArrayList<Boolean> GetTest(){
-        return hasBeenCreated;
-    }
-
     public void ReplaceData(String newItemTitle, String projectName, int id, boolean keepPreviousItems){
         BufferedWriter writer = null;
         String dataOld = GetData(projectName);
@@ -198,34 +196,38 @@ public class ProjectCreateTable extends AppCompatActivity {
             Message.message(this, "The data seems to be null, stop the activity");
         }
 
-        String[] parts = dataOld.split("/");
+        String[] parts = dataOld.split("::");
 
 
         File f = new File(this.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         //old title without the ] at the end
-        String title = parts[(id * 3) + 1].substring(0, parts[(id * 3) + 1].length() - 1);
-        String imgId = parts[(id * 3) + 2].substring(0, parts[(id * 3) + 2].length() - 1);
+        String title = parts[(id * amountOfPartsInData) + 1].substring(0, parts[(id * amountOfPartsInData) + 1].length() - 1);
+        String imgId = parts[(id * amountOfPartsInData) + 2].substring(0, parts[(id * amountOfPartsInData) + 2].length() - 1);
+        String description = parts[(id * amountOfPartsInData) + 3].substring(0, parts[(id * amountOfPartsInData) + 3].length() - 1);
 
         //adding the new data
-        //also this checks if the length is 1 because if the list is empty it will be left with [
+        // also this checks if the length of the string is 1 because if the list is empty it will be left with [
         // and if we add the ", " it will end up like [, data] which will cause some trouble down
         // the road
         if (title.length() != 1) {
             title += (", " + newItemTitle + "]");
             imgId += (", " + "2131165294" + "]"); // the number is for a drawable, can change later
+            description += (", " + "]");
         } else {
             title += (newItemTitle + "]");
             imgId += ("2131165294" + "]");
+            description += ("]");
         }
 
-        parts[(id * 3) + 1] = title;
-        parts[(id * 3) + 2] = imgId;
+        parts[(id * amountOfPartsInData) + 1] = title;
+        parts[(id * amountOfPartsInData) + 2] = imgId;
+        parts[(id * amountOfPartsInData) + 3] = description;
 
         if (keepPreviousItems) {
             for (int i = 0; i < parts.length; i++) {
-                data += (parts[i] + "/");
+                data += (parts[i] + "::");
             }
         } else
         {

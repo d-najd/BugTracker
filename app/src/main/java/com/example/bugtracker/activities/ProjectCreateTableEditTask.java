@@ -2,9 +2,8 @@ package com.example.bugtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,18 +11,21 @@ import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 
 public class ProjectCreateTableEditTask extends AppCompatActivity {
-    private Button editDescriptionBtn;
+    private TextView editDescriptionTxt;
     public String newData; //the data (string) for the description
+    //to get the correct descrition and stuff instead of carrying it for ages.
+    private String projectName;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_create_edit_task);
 
-        editDescriptionBtn = findViewById(R.id.descriptionBtn);
-        ProjectCreateTableEditDescription test = new ProjectCreateTableEditDescription();
+        String oldDescription = GetOldDescription(); //just the description
 
-        editDescriptionBtn.setOnClickListener(new View.OnClickListener() {
+        editDescriptionTxt = findViewById(R.id.descriptionTxt);
+        editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( ProjectCreateTableEditTask.this, ProjectCreateTableEditDescription.class);
@@ -42,5 +44,16 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 Message.message(getBaseContext(), newData);
             }
         }
+    }
+
+    private String GetOldDescription(){
+        Intent intent = getIntent();
+        projectName = intent.getExtras().getString("projectMame");
+        position = intent.getExtras().getInt("position");
+
+        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
+        String data = projectCreateTable.GetData(projectName);
+
+        //TODO finish this
     }
 }

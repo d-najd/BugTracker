@@ -63,23 +63,16 @@
 
     <TextView
         android:id="@+id/descriptionTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="80dp"
+        android:maxHeight="150dp"
         android:layout_marginTop="24dp"
         android:text="@string/description"
         android:textColor="@color/white38"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/columnSelector"
-        app:layout_constraintTop_toBottomOf="@+id/columnSelector" />
-
-    <Button
-        android:id="@+id/descriptionBtn"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/transparent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/descriptionTxt" />
+        app:layout_constraintTop_toBottomOf="@+id/columnSelector"
+        android:layout_height="0dp" />
 
     <TextView
         android:id="@+id/issueTypeTop"
@@ -90,7 +83,7 @@
         android:textColor="@color/white38"
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
 
     <ImageView
         android:id="@+id/issueTypeImg"
