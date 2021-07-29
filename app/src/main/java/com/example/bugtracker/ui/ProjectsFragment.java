@@ -113,6 +113,8 @@ public class ProjectsFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             myDbAdapter helper = new myDbAdapter(getContext());
 
+            //TODO get the project name and then use it to remove it from storage.
+
             //TODO FIXME
             helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 

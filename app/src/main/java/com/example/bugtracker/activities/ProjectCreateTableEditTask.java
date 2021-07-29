@@ -51,9 +51,10 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         projectName = intent.getExtras().getString("projectMame");
         position = intent.getExtras().getInt("position");
 
-        ProjectCreateTable projectCreateTable = new ProjectCreateTable();
-        String data = projectCreateTable.GetData(projectName);
+        //String data =
+        //String data = projectCreateTable.GetData(projectName);
 
         //TODO finish this
+        return null;
     }
 }

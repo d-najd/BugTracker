@@ -2,29 +2,22 @@ package com.example.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bugtracker.Message;
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.dialogs.BasicDialogs;
@@ -33,7 +26,6 @@ import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.Method;
 
 
 public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreate_RecyclerAdapter.RecyclerViewHolder> {
@@ -125,7 +117,13 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         switch (itemPosition){
             case 3:
-                projectCreateTableActivity.RemoveData(holderPosition, projectName);
+                ProjectCreateTableData.RemoveColumnData(holderPosition, projectName, mcontext);
+
+                //TODO fix this
+                projectCreateTableActivity.finish();
+                projectCreateTableActivity.overridePendingTransition(0, 0);
+                projectCreateTableActivity.startActivity(intent);
+                projectCreateTableActivity.overridePendingTransition(0, 0);
                 break;
         }
     }

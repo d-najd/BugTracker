@@ -1,19 +1,14 @@
 package com.example.bugtracker.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 
@@ -72,7 +67,7 @@ public class BasicDialogs {
                         //imgsEmptyArr.add(R.drawable.ic_account_24dp);
                         String title = editText.getText().toString();
 
-                        projectCreateTableActivity.SaveData(titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, title, projectName);
+                        ProjectCreateTableData.SaveNewColumn(titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, title, projectName, mcontext);
 
                         //TODO seems like refreshing the activity doesnt solve all problems,
                         // if the first element is empty while adding new element it sets the data
@@ -122,7 +117,7 @@ public class BasicDialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         String title = editText.getText().toString();
 
-                        projectCreateTableActivity.ReplaceData(title, projectName, position, true);
+                        ProjectCreateTableData.SaveNewItem(title, projectName, position, true, mcontext);
 
                         projectCreateTableActivity.finish();
                         projectCreateTableActivity.overridePendingTransition(0, 0);
