@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.bugtracker.Message;
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 
 public class ProjectCreateTableEditTask extends AppCompatActivity {
@@ -15,12 +16,17 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
     private String projectName;
-    private int position;
+    private int itemPos;
+    private int columnPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_create_edit_task);
+
+        projectName = getIntent().getExtras().getString("projectName");
+        columnPos = getIntent().getExtras().getInt("columnPos");
+        itemPos = getIntent().getExtras().getInt("itemPos");
 
         String oldDescription = GetOldDescription(); //just the description
 
@@ -40,19 +46,16 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 newData = data.getStringExtra("newData");
-                //TODO save the data.
+                ProjectCreateTableData.SaveDescription(projectName, newData, columnPos, itemPos, this);
                 Message.message(getBaseContext(), newData);
             }
         }
     }
 
     private String GetOldDescription(){
-        Intent intent = getIntent();
-        projectName = intent.getExtras().getString("projectMame");
-        position = intent.getExtras().getInt("position");
 
-        //String data =
-        //String data = projectCreateTable.GetData(projectName);
+
+        String data = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
 
         //TODO finish this
         return null;

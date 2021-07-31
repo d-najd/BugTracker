@@ -62,6 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private List<String> clockMinuteStrings = new ArrayList<String>();
 
     public ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
+    public int projectTableColumn; //in which column the item got pressed
 
     public int reminderSelected = -1;
     public int reminderTypeSelected = -1;
@@ -92,6 +93,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);
+        if (holderArrayList.size() > recyclerDataArrayList.size()){
+            holderArrayList.clear();
+            holderArrayList.add(holder);
+        }
         holder.itemView.setVisibility(View.VISIBLE);
 
         Log.wtf("the id is", recyclerData.getId());
@@ -249,7 +254,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTable.class);
-                    intent.putExtra("projectName", holder.title.getText().toString());
+                    int test = position;
+                    intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });
@@ -257,7 +263,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTable.class);
-                    intent.putExtra("projectName", holder.title.getText().toString());
+                    int test = position;
+                    intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });
@@ -277,8 +284,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
-                    intent.putExtra("projectMame", projectTableCreate_recyclerAdapter.projectName);
-                    intent.putExtra("position", position);
+                    String test = projectTableCreate_recyclerAdapter.projectName;
+                    intent.putExtra("projectName", projectTableCreate_recyclerAdapter.projectName);
+                    intent.putExtra("columnPos", projectTableColumn);
+                    intent.putExtra("itemPos", position);
                     mcontext.startActivity(intent);
                 }
             });

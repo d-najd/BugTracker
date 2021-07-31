@@ -1,5 +1,6 @@
 package com.example.bugtracker.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ProjectsFragment extends Fragment {
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private ArrayList<RecyclerData> recyclerDataArrayList;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -59,7 +61,6 @@ public class ProjectsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         RetrieveData();
-
     }
 
     public void RetrieveData()
@@ -90,7 +91,8 @@ public class ProjectsFragment extends Fragment {
 
             int fromPosition = viewHolder.getAdapterPosition();
             int endPosition = target.getAdapterPosition();
-
+            //TODO after coming back to the activity if the item was movied it will go back to the
+            // starting pos when the app was opened
             Collections.swap(recyclerDataArrayList, fromPosition, endPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition, endPosition);
@@ -113,8 +115,8 @@ public class ProjectsFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             myDbAdapter helper = new myDbAdapter(getContext());
 
-            //TODO get the project name and then use it to remove it from storage.
-
+            ProjectCreateTableData.RemoveFile(recyclerDataArrayList.get
+                    (viewHolder.getAdapterPosition()).getTitle(), getContext());
             //TODO FIXME
             helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 

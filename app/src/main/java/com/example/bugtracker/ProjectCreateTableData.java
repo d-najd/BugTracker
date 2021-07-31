@@ -40,9 +40,9 @@ public class ProjectCreateTableData {
         return data;
     }
 
-    public static String GetDescription(String projectName, int position, Context context){
+    public static String GetDescription(String projectName, int columnPos, int itemPos, Context context){
         String data = null;
-        String description = null;
+        String descriptions = null;
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
@@ -57,12 +57,15 @@ public class ProjectCreateTableData {
             data = buffer.toString();
             String[] parts = data.split(separator);
 
-            description = parts[(position * amountOfPartsInData) + 3].substring(0, parts[(position * amountOfPartsInData) + 3].length() - 1);
+            descriptions = parts[(columnPos * amountOfPartsInData) + 3].substring(0, parts[(columnPos * amountOfPartsInData) + 3].length() - 1);
 
+            parts = descriptions.split(", ");
+
+            data = parts[itemPos];
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return description;
+        return data;
     }
 
 
@@ -159,6 +162,58 @@ public class ProjectCreateTableData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void SaveDescription(String projectName, String newData, int columnPos, int itemPos, Context context){
+        //TODO FIXME
+        BufferedWriter writer = null;
+        String data = null;
+        String descriptions = null;
+        String parts1data = null;
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null){
+            Log.wtf("the data seems to be null", "Stop the activity");
+            Message.message(context, "The data seems to be null, stop the activity");
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(f);
+            int read = -1;
+            StringBuffer buffer = new StringBuffer();
+            while((read = fileInputStream.read())!= -1){
+                buffer.append((char)read);
+            }
+            data = buffer.toString();
+            String[] parts = data.split(separator);
+
+            descriptions = parts[(columnPos * amountOfPartsInData) + 3].substring(1, parts[(columnPos * amountOfPartsInData) + 3].length() - 1);
+
+            String[] parts1 = descriptions.split(", ");
+            parts1[itemPos] = newData;
+
+            for (int i = 0; i < parts1.length; i++) {
+                parts1data += (parts1[i] + ", ");
+            }
+
+            parts[(columnPos * amountOfPartsInData) + 3] = parts1data;
+
+            data = null;
+
+            for (int i = 0; i < parts.length; i++) {
+                data += (parts[i] + separator);
+            }
+
+            data = data;
+            //writer = new BufferedWriter(new FileWriter(f, false));
+            //writer.write(data);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

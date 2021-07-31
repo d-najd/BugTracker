@@ -163,6 +163,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
         ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
         adapter.projectTableCreate_recyclerAdapter = projectTableCreate_recyclerAdapter;
+        adapter.projectTableColumn = position;
     }
 
     private void NewColumnCreator(){
