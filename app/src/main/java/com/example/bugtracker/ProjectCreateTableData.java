@@ -54,18 +54,30 @@ public class ProjectCreateTableData {
             while((read = fileInputStream.read())!= -1){
                 buffer.append((char)read);
             }
+
             data = buffer.toString();
             String[] parts = data.split(separator);
+            descriptions = parts[(columnPos * amountOfPartsInData) + 3];
+            parts = descriptions.split(",");
 
-            descriptions = parts[(columnPos * amountOfPartsInData) + 3].substring(0, parts[(columnPos * amountOfPartsInData) + 3].length() - 1);
-
-            parts = descriptions.split(", ");
+            //removing the [ and ] from the strings
+            parts[0] = parts[0].substring(1);
+            parts[parts.length - 1] = parts[parts.length - 1].substring(0, parts[parts.length - 1].length() - 1);
 
             data = parts[itemPos];
+
+            data = data.trim();
+
+            if (data.length() <= 0 || data.equals("")) //no intelij its not always false
+                return null;
+
+            return data;
         } catch (Exception e) {
             e.printStackTrace();
+            Message.message(context, "Error, something went wrong with sending the old descriptionData back");
+            Log.wtf("Error", "something went wrong with sending the old descriptionData back");
+            return null;
         }
-        return data;
     }
 
 
@@ -165,15 +177,20 @@ public class ProjectCreateTableData {
         }
     }
 
-    public static void SaveDescription(String projectName, String newData, int columnPos, int itemPos, Context context){
-        //TODO FIXME
+    public static void SaveDescription(String projectName, String newData, int columnPos, int itemPos, Context context) {
         BufferedWriter writer = null;
-        String data = null;
-        String descriptions = null;
-        String parts1data = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String descriptionsString = ""; //the final descriptions data
         String dataOld = GetData(projectName, context);
 
-        if (dataOld == null){
+        if (newData == null) {
+            Log.wtf("Debug", "um the new description data probably shouldn't be null");
+            Message.message(context, "Debug, um the new description data probably shouldn't be null");
+            newData = "";
+        }
+
+        if (dataOld == null) {
             Log.wtf("the data seems to be null", "Stop the activity");
             Message.message(context, "The data seems to be null, stop the activity");
         }
@@ -181,39 +198,45 @@ public class ProjectCreateTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
+        String[] parts = dataOld.split(separator); //splitting the data
+        descriptions = parts[(columnPos * amountOfPartsInData) + 3];
+        String[] descriptionParts = descriptions.split(","); // a list of all the parts
+        descriptionParts[itemPos] = newData;
+
+        //removing unnecesary spaces or the description wont look soo good and it may cause problems with the arrays
+        for (int i = 0; i < descriptionParts.length; i++)
+            descriptionParts[i] = descriptionParts[i].trim();
+
+        //formatting the data, transforming it from list to string so it can be replaced it later
+        if (itemPos == 0)
+            descriptionsString += "[";
+        for (int i = 0; i < descriptionParts.length; i++) {
+            if (i != descriptionParts.length - 1)
+                descriptionsString += (descriptionParts[i] + ", ");
+            else
+                descriptionsString += descriptionParts[i];
+        }
+        if (itemPos == descriptionParts.length - 1)
+            descriptionsString += "]";
+
+        //remaking the data string
+        parts[(columnPos * amountOfPartsInData) + 3] = descriptionsString;
+        for (int i = 0; i < parts.length; i++) {
+            data += (parts[i] + separator);
+        }
+
         try {
-            FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
-            while((read = fileInputStream.read())!= -1){
-                buffer.append((char)read);
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            data = buffer.toString();
-            String[] parts = data.split(separator);
-
-            descriptions = parts[(columnPos * amountOfPartsInData) + 3].substring(1, parts[(columnPos * amountOfPartsInData) + 3].length() - 1);
-
-            String[] parts1 = descriptions.split(", ");
-            parts1[itemPos] = newData;
-
-            for (int i = 0; i < parts1.length; i++) {
-                parts1data += (parts1[i] + ", ");
-            }
-
-            parts[(columnPos * amountOfPartsInData) + 3] = parts1data;
-
-            data = null;
-
-            for (int i = 0; i < parts.length; i++) {
-                data += (parts[i] + separator);
-            }
-
-            data = data;
-            //writer = new BufferedWriter(new FileWriter(f, false));
-            //writer.write(data);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

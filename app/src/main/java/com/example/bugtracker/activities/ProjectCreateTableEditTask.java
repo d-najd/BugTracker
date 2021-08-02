@@ -28,9 +28,15 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         columnPos = getIntent().getExtras().getInt("columnPos");
         itemPos = getIntent().getExtras().getInt("itemPos");
 
-        String oldDescription = GetOldDescription(); //just the description
+        String oldDescription = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
+
+        Message.message(getBaseContext(), oldDescription);
 
         editDescriptionTxt = findViewById(R.id.descriptionTxt);
+
+        if (oldDescription != null)
+            editDescriptionTxt.setText(oldDescription);
+
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,14 +56,5 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 Message.message(getBaseContext(), newData);
             }
         }
-    }
-
-    private String GetOldDescription(){
-
-
-        String data = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
-
-        //TODO finish this
-        return null;
     }
 }
