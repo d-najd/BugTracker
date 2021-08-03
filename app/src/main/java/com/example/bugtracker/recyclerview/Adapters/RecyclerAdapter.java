@@ -7,22 +7,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +58,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private List<String> clockMinuteStrings = new ArrayList<String>();
 
     public ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
-    public int projectTableColumn; //in which column the item got pressed
+    public int projectTableColumnPos; //in which column the item got pressed
+    public String projectTableColumnName;
 
     public int reminderSelected = -1;
     public int reminderTypeSelected = -1;
@@ -146,6 +143,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private void Listeners(int position){
         RecyclerData recyclerData = recyclerDataArrayList.get(position);
 
+        //TODO there seems to be a problem with the listeners, also need to make sure which activity is used
+        // at the moment for example the imte due date is for setting date in project create but in
+        // projectcreatetable it wont be
+
+        String HELLOOMOTHERFUCEKR = holder.title.getText().toString();
+
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -165,7 +168,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
 
-        if (holder.title.getText().equals(mcontext.getString(R.string.highlight)))
+        if (holder.title.getText().toString().equals(mcontext.getString(R.string.highlight)))
         {
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -286,7 +289,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
                     String test = projectTableCreate_recyclerAdapter.projectName;
                     intent.putExtra("projectName", projectTableCreate_recyclerAdapter.projectName);
-                    intent.putExtra("columnPos", projectTableColumn);
+                    intent.putExtra("columnName", projectTableColumnName);
+                    intent.putExtra("columnPos", projectTableColumnPos);
+                    intent.putExtra("itemName", holderArrayList.get(position).title.getText().toString());
                     intent.putExtra("itemPos", position);
                     mcontext.startActivity(intent);
                 }

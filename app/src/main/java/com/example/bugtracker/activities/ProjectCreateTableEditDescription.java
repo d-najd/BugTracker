@@ -18,21 +18,24 @@ public class ProjectCreateTableEditDescription extends AppCompatActivity {
     private ImageButton closeActivityBtn;
     private TextView topSave;
     private String descriptionText;
+    private String oldDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_project_editdescription);
+        setContentView(R.layout.activity_project_create_editdescription);
 
+        oldDescription = getIntent().getExtras().getString("oldData");
         descriptionEdt = findViewById(R.id.descriptionEdt);
         closeActivityBtn = findViewById(R.id.closeActivityBtn);
         topSave = findViewById(R.id.topSave);
+
+        descriptionEdt.setText(oldDescription);
 
         Listeners();
     }
 
     private void Listeners(){
-        //TODO closeActBtn listener doesnt seem to be responding
         closeActivityBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

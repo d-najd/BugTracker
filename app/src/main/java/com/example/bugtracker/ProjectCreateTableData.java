@@ -17,8 +17,6 @@ public class ProjectCreateTableData {
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
 
-    //region Storage
-
     public static String GetData(String projectName, Context context){
         String data = null;
 
@@ -123,6 +121,7 @@ public class ProjectCreateTableData {
         if (dataOld == null){
             Log.wtf("the data seems to be null", "Stop the activity");
             Message.message(context, "The data seems to be null, stop the activity");
+            return;
         }
 
         String[] parts = dataOld.split(separator);
@@ -185,14 +184,14 @@ public class ProjectCreateTableData {
         String dataOld = GetData(projectName, context);
 
         if (newData == null) {
-            Log.wtf("Debug", "um the new description data probably shouldn't be null");
-            Message.message(context, "Debug, um the new description data probably shouldn't be null");
+            Log.d("Debug", "description data is null, making it empty string");
             newData = "";
         }
 
         if (dataOld == null) {
-            Log.wtf("the data seems to be null", "Stop the activity");
-            Message.message(context, "The data seems to be null, stop the activity");
+            Log.wtf("the data seems to be null", "Stopping the activity");
+            Message.message(context, "The data seems to be null, stopping the activity");
+            return;
         }
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"

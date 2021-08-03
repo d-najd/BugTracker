@@ -47,6 +47,8 @@ public class BasicDialogs {
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
+        editText.setTextColor(mcontext.getColor(R.color.white87));
+        editText.setHintTextColor(mcontext.getColor(R.color.white60));
 
         builder.setView(editText)
                 .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
@@ -101,8 +103,8 @@ public class BasicDialogs {
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
-        editText.setTextColor(mcontext.getColor(R.color.white60));
-        editText.setHintTextColor(mcontext.getColor(R.color.white38));
+        editText.setTextColor(mcontext.getColor(R.color.white87));
+        editText.setHintTextColor(mcontext.getColor(R.color.white60));
 
         builder.setView(editText)
                 .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
