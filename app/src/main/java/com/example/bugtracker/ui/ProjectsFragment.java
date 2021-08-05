@@ -37,11 +37,6 @@ public class ProjectsFragment extends Fragment {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
 
-        //for grid layout just switch this
-        //GridLayoutManager layoutManager = new GridLayoutManager(requireContext(), 1);
-        // setting grid layout manager to implement grid view.
-        // in this method '1' represents number of columns to be displayed in grid view.
-
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

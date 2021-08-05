@@ -1,18 +1,28 @@
 package com.example.bugtracker.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.RecyclerData;
+import com.github.javiersantos.bottomdialogs.BottomDialog;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class ProjectCreateTableEditTask extends AppCompatActivity {
     private TextView editDescriptionTxt;
@@ -21,8 +31,11 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
     private String projectName;
+    private String oldDescription;
     private int itemPos;
     private int columnPos;
+    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +52,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
 
-        String oldDescription = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
+        oldDescription = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
 
         columnSelector.setText(columnName);
         titleMiddle.setText(itemName);
@@ -53,6 +66,46 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
             editDescriptionTxt.setText(oldDescription);
             editDescriptionTxt.setTextColor(getColor(R.color.white60));
         }
+
+
+        Listeners();
+
+
+    }
+
+    private void Listeners(){
+        Context context = this;
+
+
+        columnSelector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_project_create_edittask_changecolumn, viewGroup, false);
+
+                //TODO finish this
+                new BottomDialog.Builder(context)
+                        .setTitle("Issue Type")
+                        .setContent("These are the issue types you can choose, based on the workflow of the current issue type.")
+                        .setCustomView(dialogView)
+                        .show();
+
+                //TODO change the tag
+                recyclerDataArrayList.clear();
+                recyclerDataArrayList.add(new RecyclerData("test", 2131165294, "null"));
+                recyclerDataArrayList.add(new RecyclerData("test1", 2131165294, "null"));
+
+
+                RecyclerView bottomRecyclerView = dialogView.findViewById(R.id.bottomDialogColumnSelectorRecyclerView);
+                RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+
+                // at last set adapter to recycler view.
+                bottomRecyclerView.setLayoutManager(layoutManager);
+                bottomRecyclerView.setAdapter(adapter);
+            }
+        });
 
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override

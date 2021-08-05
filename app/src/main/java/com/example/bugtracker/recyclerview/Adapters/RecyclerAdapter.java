@@ -147,8 +147,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         // at the moment for example the imte due date is for setting date in project create but in
         // projectcreatetable it wont be
 
-        String HELLOOMOTHERFUCEKR = holder.title.getText().toString();
-
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
