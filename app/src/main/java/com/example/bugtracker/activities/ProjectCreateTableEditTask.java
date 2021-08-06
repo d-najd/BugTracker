@@ -18,9 +18,7 @@ import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.github.javiersantos.bottomdialogs.BottomDialog;
-
-import org.w3c.dom.Text;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -66,11 +64,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
             editDescriptionTxt.setText(oldDescription);
             editDescriptionTxt.setTextColor(getColor(R.color.white60));
         }
-
-
         Listeners();
-
-
     }
 
     private void Listeners(){
@@ -81,29 +75,31 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ViewGroup viewGroup = v.findViewById(android.R.id.content);
-                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_project_create_edittask_changecolumn, viewGroup, false);
 
-                //TODO finish this
-                new BottomDialog.Builder(context)
-                        .setTitle("Issue Type")
-                        .setContent("These are the issue types you can choose, based on the workflow of the current issue type.")
-                        .setCustomView(dialogView)
-                        .show();
+                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_complex_recyclerview, viewGroup, false);
+                BottomSheetDialog bottomDialog = new BottomSheetDialog(context);
+                    bottomDialog.setTitle("Issue Type");
+                    bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
+                    bottomDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
+                    bottomDialog.setContentView(dialogView);
+
+                    //for changing the size
+                    //View bottomSheet = bottomDialog.findViewById(R.id.design_bottom_sheet);
+                    //bottomSheet.getLayoutParams().height = 500;
+
+                bottomDialog.show();
 
                 //TODO change the tag
                 recyclerDataArrayList.clear();
                 recyclerDataArrayList.add(new RecyclerData("test", 2131165294, "null"));
                 recyclerDataArrayList.add(new RecyclerData("test1", 2131165294, "null"));
 
-
-                RecyclerView bottomRecyclerView = dialogView.findViewById(R.id.bottomDialogColumnSelectorRecyclerView);
+                RecyclerView BottomDialog = dialogView.findViewById(R.id.dialog_recyclerview);
                 RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-
-                // at last set adapter to recycler view.
-                bottomRecyclerView.setLayoutManager(layoutManager);
-                bottomRecyclerView.setAdapter(adapter);
+                BottomDialog.setLayoutManager(layoutManager);
+                BottomDialog.setAdapter(adapter);
             }
         });
 

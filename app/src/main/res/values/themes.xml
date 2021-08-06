@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.BugTracker" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:statusBarColor">@color/black</item>
+        <item name="android:dialogTheme">@color/darkGray</item>
+        <item name="backgroundColor">@color/darkGray</item>
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorSecondary">@color/darkTurquoise</item>

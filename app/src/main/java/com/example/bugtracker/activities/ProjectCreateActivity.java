@@ -12,6 +12,8 @@ import java.util.Calendar;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.Message;
+import com.example.bugtracker.recyclerview.Adapters.CreateProjects_ReclyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.example.bugtracker.recyclerview.Adapters.myDbAdapter;
@@ -47,7 +49,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
 
         // added data from arraylist to adapter class.
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
+        CreateProjects_ReclyclerAdapter adapter = new CreateProjects_ReclyclerAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.

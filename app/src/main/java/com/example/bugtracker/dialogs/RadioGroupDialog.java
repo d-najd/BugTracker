@@ -16,6 +16,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatRadioButton;
 
 import com.example.bugtracker.R;
+import com.example.bugtracker.recyclerview.Adapters.CreateProjects_ReclyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
 import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 public class RadioGroupDialog {
 
     @SuppressLint("RestrictedApi")
-    public void StartDialog(View v, Context mcontext, RecyclerAdapter adapter, ArrayList<String> titles, int selected, int color, String title){
+    public void StartDialog(View v, Context mcontext, CreateProjects_ReclyclerAdapter adapter, ArrayList<String> titles, int selected, int color, String title){
         Handler h = new Handler() ;
         AppCompatRadioButton radioButton;
         int textSize = 16;
@@ -46,7 +48,7 @@ public class RadioGroupDialog {
                 });
 
         AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.dialogColor);
 
         for (int i = 0; i < titles.size(); i++) {
             radioButton = new AppCompatRadioButton(mcontext);
@@ -93,7 +95,7 @@ public class RadioGroupDialog {
 
     }
 
-    private void CheckIfCheckingNeeded(Context mcontext, RecyclerAdapter adapter, String dialogName, ArrayList<AppCompatRadioButton> radioButtons, int selected) {
+    private void CheckIfCheckingNeeded(Context mcontext, CreateProjects_ReclyclerAdapter adapter, String dialogName, ArrayList<AppCompatRadioButton> radioButtons, int selected) {
         if (dialogName.equals(mcontext.getString(R.string.reminder))) {
             if (adapter.reminderSelected == -1)
                 radioButtons.get(selected).setChecked(true);
