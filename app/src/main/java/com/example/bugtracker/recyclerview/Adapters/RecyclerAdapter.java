@@ -29,6 +29,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.AnimationHandler;
+import com.example.bugtracker.Message;
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
@@ -49,9 +51,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public RecyclerData recyclerData;
     List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
 
-    public ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
+    //region ProjectEditTask
+    public String projectName;
     public int projectTableColumnPos; //in which column the item got pressed
+    public int itemPos;
     public String projectTableColumnName;
+    //endregion
+
 
     public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
@@ -127,6 +133,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
 
+        Log.wtf("test", recyclerData.getTag());
+
+
         //TODO there seems to be a problem with the listeners, also need to make sure which activity is used
         // at the moment for example the imte due date is for setting date in project create but in
         // projectcreatetable it wont be
@@ -186,21 +195,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
-        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectCreateTask))){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
-                    String test = projectTableCreate_recyclerAdapter.projectName;
-                    intent.putExtra("projectName", projectTableCreate_recyclerAdapter.projectName);
-                    intent.putExtra("columnName", projectTableColumnName);
-                    intent.putExtra("columnPos", projectTableColumnPos);
-                    intent.putExtra("itemName", holderArrayList.get(position).title.getText().toString());
-                    intent.putExtra("itemPos", position);
-                    mcontext.startActivity(intent);
-                }
-            });
-        }
 
         //TODO FIX THIS
         else if (recyclerData.getTag().equals(R.string.createTask)){
@@ -225,16 +219,51 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
                  */
             }
+        }
 
-            if (holder.title.getText().equals(mcontext.getString(R.string.newTask))) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
-                        mcontext.startActivity(intent);
-                    }
-                });
-                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectCreateTask))) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
+                    intent.putExtra("projectName", projectName);
+                    intent.putExtra("columnName", projectTableColumnName);
+                    intent.putExtra("columnPos", projectTableColumnPos);
+                    intent.putExtra("itemName", holderArrayList.get(position).title.getText().toString());
+                    intent.putExtra("itemPos", position);
+                    mcontext.startActivity(intent);
+                }
+            });
+        }
+
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
+            //TODO finish this
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
+                            projectTableColumnPos, itemPos, mcontext);
+                }
+            });
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
+                            projectTableColumnPos, itemPos, mcontext);
+                }
+            });
+        }
+
+
+        if (holder.title.getText().equals(mcontext.getString(R.string.newTask))) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mcontext, CreateTaskActivity.class);
+                    mcontext.startActivity(intent);
+                }
+            });
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(mcontext, CreateTaskActivity.class);
@@ -242,15 +271,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     }
                 });
             }
+
+
         }
-    }
 
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail
     //also special pass wont hidebuttons bc both will be hidden once they are enabled by default
     //thus fucking everything up so they have to be manualy dissabled outside of here
 
     private void SelectBetweenTaskEpic(){
-        // Create an alert builder
         String [] test = new String[2];
         test[0] = "Text";
 

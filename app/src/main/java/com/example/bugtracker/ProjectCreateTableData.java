@@ -38,6 +38,36 @@ public class ProjectCreateTableData {
         return data;
     }
 
+    public static ArrayList<String> GetAllColumns(String projectName, Context context){
+        String data = null;
+        ArrayList<String> allColumns = new ArrayList<>();
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        try {
+            FileInputStream fileInputStream = new FileInputStream(f);
+            int read = -1;
+            StringBuffer buffer = new StringBuffer();
+            while((read = fileInputStream.read())!= -1){
+                buffer.append((char)read);
+            }
+
+            data = buffer.toString();
+            String[] parts = data.split(separator);
+
+            for (int i = 0; i < parts.length / amountOfPartsInData; i++)
+                allColumns.add(parts[i * amountOfPartsInData]);
+
+            return allColumns;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Message.message(context, "Error, something went wrong with sending the old descriptionData back");
+            Log.wtf("Error", "something went wrong with sending the old descriptionData back");
+            return null;
+        }
+    }
+
     public static String GetDescription(String projectName, int columnPos, int itemPos, Context context){
         String data = null;
         String descriptions = null;
@@ -77,7 +107,6 @@ public class ProjectCreateTableData {
             return null;
         }
     }
-
 
     //for creating new column with empty data mostly but can work for other stuff
     public static void SaveNewColumn(ArrayList<String> titles, ArrayList<Integer> imgIds,
@@ -294,6 +323,123 @@ public class ProjectCreateTableData {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void MoveItemToOtherColumn(String projectName, int newColumn, int oldColumn, int itemPos, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String dataRaw = ""; //the final descriptions data
+        String dataOld = GetData(projectName, context);
+
+        String items = ""; //refers to the items inside the titles for example, [title1, title2]
+
+        if (dataOld == null) {
+            Log.wtf("the data seems to be null", "Stopping the activity");
+            Message.message(context, "The data seems to be null, stopping the activity");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String[] parts = dataOld.split(separator); //splitting the data
+
+        for (int i = 1; i < amountOfPartsInData; i++){
+            //getting the data title for example
+            items = parts[(oldColumn * amountOfPartsInData) + i];
+            String[] itemParts = items.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
+            String newData = itemParts[itemPos];
+
+            //TODO add removing and adding of item
+            //removing the item ex [title1, title2] and tt
+
+            String newColumnItems = parts[(newColumn * amountOfPartsInData) + i];
+            String[] newItemParts = newColumnItems.split(",");
+
+            //removing unnecesary spaces or the description wont look soo good and it may cause problems with the arrays
+            for (int b = 0; b < newItemParts.length; b++)
+                newItemParts[b] = newItemParts[b].trim();
+
+            //formatting the data, transforming it from list to string so it can be replaced it later
+            int newItemPos = (newColumn * amountOfPartsInData) + i - 1;
+            //TODO the adding has to be here and the line above is useless, use itempos instead
+
+            if (itemPos == 0) {
+                dataRaw += "[";
+                dataRaw += newData;
+                dataRaw += ", ";
+            }
+            for (int b = 0; b < newItemParts.length; b++) {
+                if (b != newItemParts.length - 1)
+                    dataRaw += (newItemParts[b] + ", ");
+                else
+                    dataRaw += newItemParts[b];
+            }
+            if (itemPos == newItemParts.length - 1)
+                dataRaw += "]";
+
+            //remaking the data string
+            parts[(newColumn * amountOfPartsInData) + i] = dataRaw;
+
+            String testdata = "";
+
+            for (int b = 0; b < parts.length; b++) {
+                testdata += (parts[b] + separator);
+            }
+
+
+            testdata = testdata;
+
+        }
+
+
+        /*
+        descriptions = parts[(oldColumn * amountOfPartsInData) + 3];
+        String[] descriptionParts = descriptions.split(","); // a list of all the parts
+        descriptionParts[itemPos] = newData;
+
+        //removing unnecesary spaces or the description wont look soo good and it may cause problems with the arrays
+        for (int i = 0; i < descriptionParts.length; i++)
+            descriptionParts[i] = descriptionParts[i].trim();
+
+        //formatting the data, transforming it from list to string so it can be replaced it later
+        if (itemPos == 0)
+            descriptionsString += "[";
+        for (int i = 0; i < descriptionParts.length; i++) {
+            if (i != descriptionParts.length - 1)
+                descriptionsString += (descriptionParts[i] + ", ");
+            else
+                descriptionsString += descriptionParts[i];
+        }
+        if (itemPos == descriptionParts.length - 1)
+            descriptionsString += "]";
+
+        //remaking the data string
+        parts[(columnPos * amountOfPartsInData) + 3] = descriptionsString;
+        for (int i = 0; i < parts.length; i++) {
+            data += (parts[i] + separator);
+        }
+
+         */
+
+        /*
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+         */
+
     }
 
 

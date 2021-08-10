@@ -160,10 +160,10 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
         recyclerView.setAdapter(adapter);
 
-        ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
-        adapter.projectTableCreate_recyclerAdapter = projectTableCreate_recyclerAdapter;
+        adapter.projectName = projectName;
         adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
         adapter.projectTableColumnPos = position;
+        //This might break some stuff, need to be on the lookout
     }
 
     private void NewColumnCreator(){

@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,17 +29,19 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
     private Button columnSelector;
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
+    private String tag;
     private String projectName;
     private String oldDescription;
     private int itemPos;
     private int columnPos;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_create_edit_task);
+
+        tag = getString(R.string.projectEditTask);
 
         projectName = getIntent().getExtras().getString("projectName");
         columnPos = getIntent().getExtras().getInt("columnPos");
@@ -75,11 +78,12 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ViewGroup viewGroup = v.findViewById(android.R.id.content);
+                ArrayList<String> allColumnTitles = new ArrayList<>();
 
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_complex_recyclerview, viewGroup, false);
                 BottomSheetDialog bottomDialog = new BottomSheetDialog(context);
-                    bottomDialog.setTitle("Issue Type");
-                    bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
+                    //bottomDialog.setTitle("Issue Type");
+                    //bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
                     bottomDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
                     bottomDialog.setContentView(dialogView);
 
@@ -89,17 +93,32 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
 
                 bottomDialog.show();
 
-                //TODO change the tag
                 recyclerDataArrayList.clear();
-                recyclerDataArrayList.add(new RecyclerData("test", 2131165294, "null"));
-                recyclerDataArrayList.add(new RecyclerData("test1", 2131165294, "null"));
 
-                RecyclerView BottomDialog = dialogView.findViewById(R.id.dialog_recyclerview);
+                allColumnTitles = ProjectCreateTableData.GetAllColumns(projectName, context);
+
+                for (int i = 0; i < allColumnTitles.size(); i++)
+                    recyclerDataArrayList.add(new RecyclerData(allColumnTitles.get(i), 2131165294, tag));
+
+                RecyclerView BottomDialog = dialogView.findViewById(R.id.BtmDialogRecyclerview);
+                TextView title = dialogView.findViewById(R.id.BtmDialogTitle);
+
+                title.setVisibility(View.VISIBLE);
+                title.setText("Select a transition");
                 RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
                 BottomDialog.setLayoutManager(layoutManager);
+
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bottomDialog.getContext(),
+                        layoutManager.getOrientation());
+                dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.shape_seperator));
+                BottomDialog.addItemDecoration(dividerItemDecoration);
+
                 BottomDialog.setAdapter(adapter);
+                adapter.projectTableColumnPos = columnPos;
+                adapter.itemPos = itemPos;
+                adapter.projectName = projectName;
             }
         });
 
