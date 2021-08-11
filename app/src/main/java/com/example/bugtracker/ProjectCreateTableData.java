@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-
 public class ProjectCreateTableData {
 
     public static final int amountOfPartsInData = 4;
