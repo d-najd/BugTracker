@@ -140,7 +140,6 @@ public class ProjectCreateTableData {
         }
     }
 
-
     public static void SaveNewItem(String newItemTitle, String projectName,
                                    int id, boolean keepPreviousItems, Context context){
         BufferedWriter writer = null;
@@ -329,7 +328,6 @@ public class ProjectCreateTableData {
         BufferedWriter writer = null;
         String data = "";
         String descriptions; //the descriptions string before its edited
-        String dataRaw = ""; //the final descriptions data
         String dataOld = GetData(projectName, context);
 
         String items = ""; //refers to the items inside the titles for example, [title1, title2]
@@ -347,40 +345,40 @@ public class ProjectCreateTableData {
 
         for (int i = 1; i < amountOfPartsInData; i++){
             //getting the data title for example
-            items = parts[(oldColumn * amountOfPartsInData) + i];
-            String[] itemParts = items.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
-            String newData = itemParts[itemPos];
+            StringBuilder dataRaw = new StringBuilder(""); //the final descriptions data
 
-            //TODO add removing and adding of item
-            //removing the item ex [title1, title2] and tt
+            items = parts[(oldColumn * amountOfPartsInData) + i];
+            String[] oldItemParts = items.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
+            String newData = oldItemParts[itemPos];
 
             String newColumnItems = parts[(newColumn * amountOfPartsInData) + i];
             String[] newItemParts = newColumnItems.split(",");
+
+            int testlen = oldItemParts.length;
+            //removing unnecesary parts and adding formatting the part that needs to be added to the new column
+            if (itemPos == 0)
+                newData = newData.substring(1);
+            else if (itemPos == oldItemParts.length - 1)
+                newData = newData.substring(0, -1);
+            newData = newData.trim();
+            newData += ", ";
 
             //removing unnecesary spaces or the description wont look soo good and it may cause problems with the arrays
             for (int b = 0; b < newItemParts.length; b++)
                 newItemParts[b] = newItemParts[b].trim();
 
             //formatting the data, transforming it from list to string so it can be replaced it later
-            int newItemPos = (newColumn * amountOfPartsInData) + i - 1;
-            //TODO the adding has to be here and the line above is useless, use itempos instead
-
-            if (itemPos == 0) {
-                dataRaw += "[";
-                dataRaw += newData;
-                dataRaw += ", ";
-            }
             for (int b = 0; b < newItemParts.length; b++) {
                 if (b != newItemParts.length - 1)
-                    dataRaw += (newItemParts[b] + ", ");
+                    dataRaw.append(newItemParts[b] + ", ");
                 else
-                    dataRaw += newItemParts[b];
+                    dataRaw.append(newItemParts[b]);
+                if (b == 0)
+                    dataRaw.insert(1, newData);
             }
-            if (itemPos == newItemParts.length - 1)
-                dataRaw += "]";
 
-            //remaking the data string
-            parts[(newColumn * amountOfPartsInData) + i] = dataRaw;
+            //replacing the data
+            parts[(newColumn * amountOfPartsInData) + i] = dataRaw.toString();
 
             String testdata = "";
 
@@ -388,10 +386,33 @@ public class ProjectCreateTableData {
                 testdata += (parts[b] + separator);
             }
 
+            //removing the item ex [title1, title2] and we remove title1 for example so we will be left with [title2]
 
-            testdata = testdata;
+            //items = parts[(oldColumn * amountOfPartsInData) + i];
+            //String[] oldItemParts = items.split(","); //re
+            //parts[(newColumn * amountOfPartsInData) + i] = dataRaw.toString();
 
+            dataRaw = new StringBuilder("");
+
+            String test = oldItemParts[itemPos];
+            oldItemParts[itemPos] = "";
+
+            String test1 = "";
+
+            if (itemPos == 0)
+                dataRaw.append("[");
+            for (int b = 0; b < oldItemParts.length; b++) {
+                if (oldItemParts[b] == "")
+                    continue;
+                else if (b != oldItemParts.length - 1)
+                    dataRaw.append(oldItemParts[b] + ", ");
+                else
+                    dataRaw.append(oldItemParts[b]);
+            }
+            if (itemPos == oldItemParts.length - 1)
+                dataRaw.append("]");
         }
+
 
 
         /*
@@ -441,7 +462,6 @@ public class ProjectCreateTableData {
          */
 
     }
-
 
     public static void MakeFolders(Context context){
         //makes folders where the data is stored
