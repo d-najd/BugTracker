@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class StringToList {
     public static ArrayList<String> StringToList(String data, String string) {
         if (data.equals("[]")){
+            Log.d("Debug", "the data is inside StringToList is empty, returning null");
             return null;
         }
         ArrayList<String> list = new ArrayList<>();
@@ -26,6 +27,7 @@ public class StringToList {
         Log.wtf(data, data);
         if (data.equals("[]"))
         {
+            Log.d("Debug", "the data is inside StringToList is empty, returning null");
             return null;
         }
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArrayListToBytes {
-    public static byte[] ArrayListoBytes(ArrayList<String> list, String string) {
+    public static byte[] ArrayLisToBytes(ArrayList<String> list, String string) {
     // write to byte array
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);
@@ -45,7 +45,7 @@ public class ArrayListToBytes {
          */
     }
 
-    public static byte[] arrayListToBytes(ArrayList<Integer> list, Integer integer) {
+    public static byte[] ArrayLisToBytes(ArrayList<Integer> list, Integer integer) {
         // write to byte array
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(baos);

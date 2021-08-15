@@ -300,8 +300,13 @@ public class ProjectCreateTableData {
         String dataOld = GetData(projectName, context);
 
         if (dataOld == null) {
-            Log.wtf("the data seems to be null", "Stopping the activity");
-            Message.message(context, "The data seems to be null, stopping the activity");
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newColumn == oldColumn){
+            Log.d("Debug", "trying to move column 1 to colum 1 basicly replace the item inside the column, skipping this");
             return;
         }
 

@@ -227,7 +227,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
 
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
-            //TODO there seems to be some kind of problem with moving the item inside the editext multiple times, it breaks the data for some reason
+            //TODO, so for example if you move a item from column 1 to colmn 2 it doesnt update the
+            // data inside the columns so when you go back the item is column 1 and IT THINKS that it
+            // is in column 1 which can cause problems with the memory so need to update the
+            // recyclerviews (columns) when moving items from 1 column to other
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
