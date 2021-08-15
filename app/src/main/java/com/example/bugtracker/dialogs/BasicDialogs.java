@@ -32,8 +32,6 @@ public class BasicDialogs {
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
 
-        //TODO FIND A WAY TO CHANGE THE COLOR OF THE TITLE TO WHITE
-
         alertDialog.show();
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
     }

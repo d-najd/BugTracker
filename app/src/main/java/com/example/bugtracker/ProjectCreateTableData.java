@@ -19,7 +19,7 @@ public class ProjectCreateTableData {
     public static String GetData(String projectName, Context context){
         String data = null;
 
-        File f = new File( context.getFilesDir() + File.separator + "ProjectData"
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         try {
@@ -38,73 +38,46 @@ public class ProjectCreateTableData {
     }
 
     public static ArrayList<String> GetAllColumns(String projectName, Context context){
-        String data = null;
+        //set the column to -1 if you dont want to get any
         ArrayList<String> allColumns = new ArrayList<>();
 
-        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
 
-        try {
-            FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
-            while((read = fileInputStream.read())!= -1){
-                buffer.append((char)read);
-            }
+        for (int i = 0; i < parts.length / amountOfPartsInData; i++)
+            allColumns.add(parts[i * amountOfPartsInData]);
 
-            data = buffer.toString();
-            String[] parts = data.split(separator);
+        return allColumns;
+    }
 
-            for (int i = 0; i < parts.length / amountOfPartsInData; i++)
-                allColumns.add(parts[i * amountOfPartsInData]);
+    public static String GetColumn(String projectName, int columnPos, Context context){
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+        String columnStr = parts[(columnPos * amountOfPartsInData)];
 
-            return allColumns;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Message.message(context, "Error, something went wrong with sending the old descriptionData back");
-            Log.wtf("Error", "something went wrong with sending the old descriptionData back");
-            return null;
-        }
+        return columnStr;
     }
 
     public static String GetDescription(String projectName, int columnPos, int itemPos, Context context){
-        String data = null;
         String descriptions = null;
 
-        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+        descriptions = parts[(columnPos * amountOfPartsInData) + 3];
+        parts = descriptions.split(",");
 
-        try {
-            FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
-            while((read = fileInputStream.read())!= -1){
-                buffer.append((char)read);
-            }
+        //removing the [ and ] from the strings
+        parts[0] = parts[0].substring(1);
+        parts[parts.length - 1] = parts[parts.length - 1].substring(0, parts[parts.length - 1].length() - 1);
 
-            data = buffer.toString();
-            String[] parts = data.split(separator);
-            descriptions = parts[(columnPos * amountOfPartsInData) + 3];
-            parts = descriptions.split(",");
+        data = parts[itemPos];
 
-            //removing the [ and ] from the strings
-            parts[0] = parts[0].substring(1);
-            parts[parts.length - 1] = parts[parts.length - 1].substring(0, parts[parts.length - 1].length() - 1);
+        data = data.trim();
 
-            data = parts[itemPos];
-
-            data = data.trim();
-
-            if (data.length() <= 0 || data.equals("")) //no intelij its not always false
-                return null;
-
-            return data;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Message.message(context, "Error, something went wrong with sending the old descriptionData back");
-            Log.wtf("Error", "something went wrong with sending the old descriptionData back");
+        if (data.length() <= 0 || data.equals("")) //no intelij its not always false
             return null;
-        }
+
+        return data;
     }
 
     //for creating new column with empty data mostly but can work for other stuff
@@ -152,7 +125,6 @@ public class ProjectCreateTableData {
         }
 
         String[] parts = dataOld.split(separator);
-
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
@@ -216,8 +188,8 @@ public class ProjectCreateTableData {
         }
 
         if (dataOld == null) {
-            Log.wtf("the data seems to be null", "Stopping the activity");
-            Message.message(context, "The data seems to be null, stopping the activity");
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity");
+            Message.message(context, "Something went wrong");
             return;
         }
 
@@ -276,9 +248,7 @@ public class ProjectCreateTableData {
             Log.wtf("ERROR", "Something went wrong with removing the file with name "
                     + projectName + " at " + context.getFilesDir().toString() +
                     File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
-            Message.message(context, "Something went wrong with removing the file with name "
-                    + projectName + " at " + context.getFilesDir().toString() +
-                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
+            Message.message(context, "Something went wrong");
         }
     }
 
@@ -329,8 +299,6 @@ public class ProjectCreateTableData {
         String descriptions; //the descriptions string before its edited
         String dataOld = GetData(projectName, context);
 
-        String items = ""; //refers to the items inside the titles for example, [title1, title2]
-
         if (dataOld == null) {
             Log.wtf("the data seems to be null", "Stopping the activity");
             Message.message(context, "The data seems to be null, stopping the activity");
@@ -346,19 +314,19 @@ public class ProjectCreateTableData {
             //getting the data title for example
             StringBuilder dataRaw = new StringBuilder(""); //the final descriptions data
 
-            items = parts[(oldColumn * amountOfPartsInData) + i];
-            String[] oldItemParts = items.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
-            String newData = oldItemParts[itemPos];
+            String oldColumnItems = parts[(oldColumn * amountOfPartsInData) + i]; //refers to the items inside the titles for example, [title1, title2]
+            String[] oldItemParts = oldColumnItems.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
 
             String newColumnItems = parts[(newColumn * amountOfPartsInData) + i];
             String[] newItemParts = newColumnItems.split(",");
 
-            int testlen = oldItemParts.length;
+            String newData = oldItemParts[itemPos]; //the data that will be moved
+
             //removing unnecesary parts and adding formatting the part that needs to be added to the new column
             if (itemPos == 0)
                 newData = newData.substring(1);
             else if (itemPos == oldItemParts.length - 1)
-                newData = newData.substring(0, -1);
+                newData = newData.substring(0, newData.length() - 1);
             newData = newData.trim();
             newData += ", ";
 
@@ -366,7 +334,7 @@ public class ProjectCreateTableData {
             for (int b = 0; b < newItemParts.length; b++)
                 newItemParts[b] = newItemParts[b].trim();
 
-            //formatting the data, transforming it from list to string so it can be replaced it later
+            //formatting the data (transforming it to string) and also adding part that needs to be replaced (added in this case)
             for (int b = 0; b < newItemParts.length; b++) {
                 if (b != newItemParts.length - 1)
                     dataRaw.append(newItemParts[b] + ", ");
@@ -376,74 +344,42 @@ public class ProjectCreateTableData {
                     dataRaw.insert(1, newData);
             }
 
-            //replacing the data
+            //replacing the data (adding the new element to the data)
             parts[(newColumn * amountOfPartsInData) + i] = dataRaw.toString();
 
-            String testdata = "";
 
-            for (int b = 0; b < parts.length; b++) {
-                testdata += (parts[b] + separator);
-            }
-
+            //REMOVING PARTS OF THE DATA
             //removing the item ex [title1, title2] and we remove title1 for example so we will be left with [title2]
 
-            //items = parts[(oldColumn * amountOfPartsInData) + i];
-            //String[] oldItemParts = items.split(","); //re
-            //parts[(newColumn * amountOfPartsInData) + i] = dataRaw.toString();
-
             dataRaw = new StringBuilder("");
+            oldItemParts[itemPos] = ""; //I have no idea why but this line is needed
 
-            String test = oldItemParts[itemPos];
-            oldItemParts[itemPos] = "";
-
-            String test1 = "";
+            //removing unnecesary spaces
+            for (int b = 0; b < oldItemParts.length; b++)
+                oldItemParts[b] = oldItemParts[b].trim();
 
             if (itemPos == 0)
                 dataRaw.append("[");
             for (int b = 0; b < oldItemParts.length; b++) {
                 if (oldItemParts[b] == "")
                     continue;
-                else if (b != oldItemParts.length - 1)
+                //checks if addition of ", " is needed, the last part is for making sure that if the last element is changed then the ", " isnt added to second from last element because last is so we dont need the ", "
+                else if (b != oldItemParts.length - 1 && (itemPos != oldItemParts.length - 1 ||
+                        (itemPos == oldItemParts.length - 1 && b != oldItemParts.length - 2)))
                     dataRaw.append(oldItemParts[b] + ", ");
                 else
                     dataRaw.append(oldItemParts[b]);
             }
             if (itemPos == oldItemParts.length - 1)
                 dataRaw.append("]");
+
+            parts[(oldColumn * amountOfPartsInData) + i] = dataRaw.toString();
         }
 
-
-
-        /*
-        descriptions = parts[(oldColumn * amountOfPartsInData) + 3];
-        String[] descriptionParts = descriptions.split(","); // a list of all the parts
-        descriptionParts[itemPos] = newData;
-
-        //removing unnecesary spaces or the description wont look soo good and it may cause problems with the arrays
-        for (int i = 0; i < descriptionParts.length; i++)
-            descriptionParts[i] = descriptionParts[i].trim();
-
-        //formatting the data, transforming it from list to string so it can be replaced it later
-        if (itemPos == 0)
-            descriptionsString += "[";
-        for (int i = 0; i < descriptionParts.length; i++) {
-            if (i != descriptionParts.length - 1)
-                descriptionsString += (descriptionParts[i] + ", ");
-            else
-                descriptionsString += descriptionParts[i];
-        }
-        if (itemPos == descriptionParts.length - 1)
-            descriptionsString += "]";
-
-        //remaking the data string
-        parts[(columnPos * amountOfPartsInData) + 3] = descriptionsString;
         for (int i = 0; i < parts.length; i++) {
             data += (parts[i] + separator);
         }
 
-         */
-
-        /*
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
@@ -457,9 +393,6 @@ public class ProjectCreateTableData {
                 e.printStackTrace();
             }
         }
-
-         */
-
     }
 
     public static void MakeFolders(Context context){

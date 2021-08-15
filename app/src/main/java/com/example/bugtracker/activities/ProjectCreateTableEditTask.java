@@ -72,7 +72,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
 
     private void Listeners(){
         Context context = this;
-
+        ProjectCreateTableEditTask projectCreateTableEditTask = this;
 
         columnSelector.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +100,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 for (int i = 0; i < allColumnTitles.size(); i++)
                     recyclerDataArrayList.add(new RecyclerData(allColumnTitles.get(i), 2131165294, tag));
 
-                RecyclerView BottomDialog = dialogView.findViewById(R.id.BtmDialogRecyclerview);
+                RecyclerView bottomDialogRecyclerView = dialogView.findViewById(R.id.BtmDialogRecyclerview);
                 TextView title = dialogView.findViewById(R.id.BtmDialogTitle);
 
                 title.setVisibility(View.VISIBLE);
@@ -108,15 +108,17 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
 
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-                BottomDialog.setLayoutManager(layoutManager);
+                bottomDialogRecyclerView.setLayoutManager(layoutManager);
 
                 DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bottomDialog.getContext(),
                         layoutManager.getOrientation());
                 dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.shape_seperator));
-                BottomDialog.addItemDecoration(dividerItemDecoration);
+                bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
 
-                BottomDialog.setAdapter(adapter);
+                bottomDialogRecyclerView.setAdapter(adapter);
                 adapter.projectTableColumnPos = columnPos;
+                adapter.projectCreateEditTask_BottomDialog = bottomDialog;
+                adapter.projectCreateTableEditTask = projectCreateTableEditTask;
                 adapter.itemPos = itemPos;
                 adapter.projectName = projectName;
             }
@@ -130,6 +132,15 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
         });
+    }
+
+    public void UpdateColumn(int columnPos){
+        //for when you use the button to change the column.
+        this.columnPos = columnPos;
+        itemPos = 0;
+
+        String columnName = ProjectCreateTableData.GetColumn(projectName, columnPos, this);
+        columnSelector.setText(columnName);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

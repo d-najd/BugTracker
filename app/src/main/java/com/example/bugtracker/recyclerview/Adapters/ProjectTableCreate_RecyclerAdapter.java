@@ -52,6 +52,9 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         return new RecyclerViewHolder(view);
     }
 
+    //TODO use singleton to fix the problems with the items when pressing editext? also not sure if
+    // it needs to be added in here or in RecycelerAdapter
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
@@ -115,6 +118,12 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         switch (itemPosition){
+            case 1:
+
+                //holder.title.setEnabled(true);
+                //holder.title.requestFocus();
+                break;
+
             case 3:
                 ProjectCreateTableData.RemoveColumnData(holderPosition, projectName, mcontext);
 

@@ -1,46 +1,36 @@
 package com.example.bugtracker.recyclerview.Adapters;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.activities.ProjectCreateTableEditTask;
-import com.example.bugtracker.dialogs.BasicDialogs;
-import com.example.bugtracker.dialogs.RadioGroupDialog;
 import com.example.bugtracker.recyclerview.RecyclerData;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
@@ -56,6 +46,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int projectTableColumnPos; //in which column the item got pressed
     public int itemPos;
     public String projectTableColumnName;
+    public BottomSheetDialog projectCreateEditTask_BottomDialog;
+    public ProjectCreateTableEditTask projectCreateTableEditTask;
     //endregion
 
 
@@ -195,8 +187,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             });
         }
 
-
-        //TODO FIX THIS
         else if (recyclerData.getTag().equals(R.string.createTask)){
 
             if (position == 0){ //TODO this should be changed with the way of updatedatetime because its more reliable
@@ -237,12 +227,23 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
 
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
-            //TODO finish this
+            //TODO there seems to be some kind of problem with moving the item inside the editext multiple times, it breaks the data for some reason
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
                             projectTableColumnPos, itemPos, mcontext);
+                    try
+                    {
+                        projectCreateEditTask_BottomDialog.dismiss();
+                        projectCreateTableEditTask.UpdateColumn(position);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.wtf("ERROR", "bottomdialog doesnt exist even tho its pressed or projectCreateTableEditTask is null, the exception is " + e);
+                        Message.message(mcontext,"Something went wrong");
+                    }
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
@@ -250,6 +251,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 public void onClick(View v) {
                     ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
                             projectTableColumnPos, itemPos, mcontext);
+                    try
+                    {
+                        projectCreateEditTask_BottomDialog.dismiss();
+                        projectCreateTableEditTask.UpdateColumn(position);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.wtf("ERROR", "bottomdialog doesnt exist even tho its pressed or projectCreateTableEditTask is null, the exception is " + e);
+                        Message.message(mcontext,"Something went wrong");
+                    }
                 }
             });
         }
