@@ -4,13 +4,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
+import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
+import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.RecyclerData;
+import com.github.javiersantos.bottomdialogs.BottomDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
@@ -134,5 +146,43 @@ public class BasicDialogs {
 
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+    }
+
+    public static Pair<RecyclerAdapter, BottomSheetDialog> CustomBottomDialog(Context context, View v, ViewGroup viewGroup, String titleTxt, String description, ArrayList<String> titles, ArrayList<Integer> images, String tag) {
+        ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+
+        for (int i = 0; i < titles.size(); i++)
+            recyclerDataArrayList.add(new RecyclerData(titles.get(i), images.get(i), tag));
+
+        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_complex_recyclerview, viewGroup, false);
+        BottomSheetDialog bottomDialog = new BottomSheetDialog(context);
+        //bottomDialog.setTitle("Issue Type");
+        //bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
+        bottomDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
+        bottomDialog.setContentView(dialogView);
+
+        //for changing the size
+        //View bottomSheet = bottomDialog.findViewById(R.id.design_bottom_sheet);
+        //bottomSheet.getLayoutParams().height = 500;
+
+        bottomDialog.show();
+
+        RecyclerView bottomDialogRecyclerView = dialogView.findViewById(R.id.BtmDialogRecyclerview);
+        TextView titleTextView = dialogView.findViewById(R.id.BtmDialogTitle);
+
+        titleTextView.setVisibility(View.VISIBLE);
+        titleTextView.setText(titleTxt);
+        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        bottomDialogRecyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bottomDialog.getContext(),
+                layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.shape_seperator));
+        bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
+        bottomDialogRecyclerView.setAdapter(adapter);
+
+        return new Pair<RecyclerAdapter, BottomSheetDialog>(adapter, bottomDialog);
     }
 }

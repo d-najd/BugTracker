@@ -96,7 +96,11 @@
         app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
         app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
 
-    <ImageView
+    <ImageButton
+        android:background="@color/transparent"
+        android:paddingStart="0dp"
+        android:padding="4dp"
+        android:paddingEnd="8dp"
         android:id="@+id/issueTypeImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,14 +111,16 @@
         app:layout_constraintTop_toBottomOf="@+id/issueTypeTop" />
 
     <TextView
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
         android:id="@+id/issueTypeMainTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
         android:text="@string/task"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/issueTypeImg"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/issueTypeImg"
         app:layout_constraintTop_toTopOf="@+id/issueTypeImg" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,7 +38,6 @@ public class ProjectCreateTableData {
     }
 
     public static ArrayList<String> GetAllColumns(String projectName, Context context){
-        //set the column to -1 if you dont want to get any
         ArrayList<String> allColumns = new ArrayList<>();
 
         String data = GetData(projectName, context);
@@ -375,6 +374,8 @@ public class ProjectCreateTableData {
                 else
                     dataRaw.append(oldItemParts[b]);
             }
+
+            //TODO FIXME this doesnt work when there is ONLY 1 item in each column, it adds the "]" FOR NO FUCKING REASON
             if (itemPos == oldItemParts.length - 1)
                 dataRaw.append("]");
 
