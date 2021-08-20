@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.highlight), "Make the project stand out from the rest", R.drawable.ic_empty_star_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.created), Calendar.getInstance().getTime().toString(), R.drawable.ic_calendar_24dp, tag));
 
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, this);
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
         recyclerView.setLayoutManager(layoutManager);

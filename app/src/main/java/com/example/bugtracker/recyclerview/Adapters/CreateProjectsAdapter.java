@@ -35,7 +35,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class CreateProjects_ReclyclerAdapter extends  RecyclerAdapter{
+public class CreateProjectsAdapter extends MainRecyclerAdapter {
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -54,7 +54,7 @@ public class CreateProjects_ReclyclerAdapter extends  RecyclerAdapter{
     public int reminderTypeSelected = -1;
     public int repeatSelected = -1;
 
-    public CreateProjects_ReclyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public CreateProjectsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         super(recyclerDataArrayList, mcontext);
     }
 
@@ -196,6 +196,7 @@ public class CreateProjects_ReclyclerAdapter extends  RecyclerAdapter{
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
 
         CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
+        //calendarView.
         TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
         TextView yearTxt = dialogView.findViewById(R.id.year);
         calendarView.getDate();
@@ -510,7 +511,7 @@ public class CreateProjects_ReclyclerAdapter extends  RecyclerAdapter{
     }
 
     private void UpdateDateTime(String curDate, String curTime) {
-        CreateProjects_ReclyclerAdapter adapter = this;
+        CreateProjectsAdapter adapter = this;
         RadioGroupDialog radioGroupDialog = new RadioGroupDialog();
 
         int reminderPos = 0;

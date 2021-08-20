@@ -1,6 +1,5 @@
 package com.example.bugtracker.recyclerview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -11,12 +10,9 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.ProjectCreateTable;
-import com.example.bugtracker.recyclerview.Adapters.CustomSpinnerRecyclerAdapter;
-import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.CustomSpinnerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateRecyclerAdapter;
 
 import java.util.List;
 
@@ -26,10 +22,10 @@ public class CustomSpinnerCreator<T> {
     private View v;
     private int holderPosition;
     private String[] popUpContents;
-    private ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter;
+    private ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter;
 
     public CustomSpinnerCreator(Context mcontext, List<String> data, int holderPosition,
-                                     ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter,
+                                     ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter,
                                      View v, int xoff, int yoff){
         this.mcontext = mcontext;
         this.data = data;
@@ -53,7 +49,7 @@ public class CustomSpinnerCreator<T> {
         listView.setAdapter(Adapter(popUpContents));
 
         // set the item click listener
-        listView.setOnItemClickListener(new CustomSpinnerRecyclerAdapter(this, popupWindow));
+        listView.setOnItemClickListener(new CustomSpinnerAdapter(this, popupWindow));
 
         // some other visual settings
         popupWindow.setFocusable(true);

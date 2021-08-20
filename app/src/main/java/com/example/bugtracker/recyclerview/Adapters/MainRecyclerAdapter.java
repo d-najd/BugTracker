@@ -29,11 +29,10 @@ import com.example.bugtracker.activities.ProjectCreateTableEditTask;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.RecyclerViewHolder>{
 
     public ArrayList<RecyclerData> recyclerDataArrayList;
     public Context mcontext;
@@ -51,7 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     //endregion
 
 
-    public RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public MainRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }

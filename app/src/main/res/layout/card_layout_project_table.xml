@@ -31,10 +31,12 @@
                 android:text="EXAMPLE TITLE 12345"
                 android:textSize="16sp"
                 android:textColor="@color/white87"
+                android:enabled="false"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:enabled="false"
                 android:backgroundTint="@color/transparent"
+                android:maxLines="1"
+                android:maxLength="15"
                 />
 
             <TextView

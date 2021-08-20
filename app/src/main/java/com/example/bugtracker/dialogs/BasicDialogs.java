@@ -19,9 +19,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
-import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.github.javiersantos.bottomdialogs.BottomDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -52,8 +51,15 @@ public class BasicDialogs {
     // 100 times, make a switch and pass the data from onswitch and check... and put the other stuff
     // inside a function
 
+
+    public static void RenameColumnDialog(){
+
+    }
+
     //for adding new column
-    public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt, String projectName, ProjectCreateTable projectCreateTableActivity, Intent intent){
+    public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt,
+                                      String negativeButtonTxt, String projectName,
+                                      ProjectCreateTable projectCreateTableActivity, Intent intent){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
@@ -148,7 +154,7 @@ public class BasicDialogs {
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
     }
 
-    public static Pair<RecyclerAdapter, BottomSheetDialog> CustomBottomDialog(Context context, View v, ViewGroup viewGroup, String titleTxt, String description, ArrayList<String> titles, ArrayList<Integer> images, String tag) {
+    public static Pair<MainRecyclerAdapter, BottomSheetDialog> CustomBottomDialog(Context context, View v, ViewGroup viewGroup, String titleTxt, String description, ArrayList<String> titles, ArrayList<Integer> images, String tag) {
         ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
 
         for (int i = 0; i < titles.size(); i++)
@@ -172,7 +178,7 @@ public class BasicDialogs {
 
         titleTextView.setVisibility(View.VISIBLE);
         titleTextView.setText(titleTxt);
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, context);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         bottomDialogRecyclerView.setLayoutManager(layoutManager);
@@ -183,6 +189,6 @@ public class BasicDialogs {
         bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
         bottomDialogRecyclerView.setAdapter(adapter);
 
-        return new Pair<RecyclerAdapter, BottomSheetDialog>(adapter, bottomDialog);
+        return new Pair<MainRecyclerAdapter, BottomSheetDialog>(adapter, bottomDialog);
     }
 }

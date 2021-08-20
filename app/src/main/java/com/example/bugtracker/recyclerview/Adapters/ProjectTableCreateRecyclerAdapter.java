@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreate_RecyclerAdapter.RecyclerViewHolder> {
+public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreateRecyclerAdapter.RecyclerViewHolder> {
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
     private String tag;
     public Intent intent;
 
-    public ProjectTableCreate_RecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public ProjectTableCreateRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -106,7 +106,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         columnSpinnerData.add(mcontext.getString(R.string.deleteColumn));
 
 
-        ProjectTableCreate_RecyclerAdapter projectTableCreate_recyclerAdapter = this;
+        ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter = this;
 
         holder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,8 +120,9 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         switch (itemPosition){
             case 1:
 
-                //holder.title.setEnabled(true);
-                //holder.title.requestFocus();
+                //TODO finish this
+                //BasicDialogs.EditTextDialog(mcontext, "Rename Column", "Column name",
+                //        "CANCEL", "RENAME", );
                 break;
 
             case 3:
@@ -150,7 +151,7 @@ public class ProjectTableCreate_RecyclerAdapter extends RecyclerView.Adapter<Pro
         }
 
 
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, mcontext);
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
                 LinearLayoutManager.VERTICAL, false);

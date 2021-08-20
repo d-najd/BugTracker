@@ -329,7 +329,7 @@ public class ProjectCreateTableData {
             //removing unnecesary parts and adding formatting the part that needs to be added to the new column
             if (itemPos == 0)
                 newData = newData.substring(1);
-            else if (itemPos == oldItemParts.length - 1)
+            if (itemPos == oldItemParts.length - 1)
                 newData = newData.substring(0, newData.length() - 1);
             newData = newData.trim();
             newData += ", ";
@@ -374,7 +374,6 @@ public class ProjectCreateTableData {
                 else
                     dataRaw.append(oldItemParts[b]);
             }
-
             //TODO FIXME this doesnt work when there is ONLY 1 item in each column, it adds the "]" FOR NO FUCKING REASON
             if (itemPos == oldItemParts.length - 1)
                 dataRaw.append("]");
@@ -385,7 +384,6 @@ public class ProjectCreateTableData {
         for (int i = 0; i < parts.length; i++) {
             data += (parts[i] + separator);
         }
-
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);

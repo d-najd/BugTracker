@@ -1,4 +1,4 @@
-package com.example.bugtracker.recyclerview.Adapters;
+package com.example.bugtracker.databases;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -10,36 +10,37 @@ import android.util.Log;
 import com.example.bugtracker.Message;
 
 
-public class myDbAdapter {
-    myDbHelper myhelper;
-    public myDbAdapter(Context context)
+public class ProjectsDatabase {
+    MyDbHelper myhelper;
+    public ProjectsDatabase(Context context)
     {
-        myhelper = new myDbHelper(context);
+        myhelper = new MyDbHelper(context);
     }
 
     public long InsertData(String name, String pass)
     {
         SQLiteDatabase dbb = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.title, name);
-        contentValues.put(myDbHelper.description, pass);
-        long id = dbb.insert(myDbHelper.TABLE_NAME, null , contentValues);
+        contentValues.put(MyDbHelper.title, name);
+        contentValues.put(MyDbHelper.description, pass);
+        contentValues.put(MyDbHelper.title, name);
+        contentValues.put(MyDbHelper.date, "");
+        long id = dbb.insert(MyDbHelper.TABLE_NAME, null , contentValues);
         return id;
     }
 
     public String GetData()
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
-        String[] columns = {myDbHelper.id,myDbHelper.title,myDbHelper.description};
-        Cursor cursor = db.query(myDbHelper.TABLE_NAME,columns,null,null,null,null,null);
+        String[] columns = {MyDbHelper.id, MyDbHelper.title, MyDbHelper.description};
+        Cursor cursor = db.query(MyDbHelper.TABLE_NAME,columns,null,null,null,null,null);
         StringBuffer buffer = new StringBuffer();
         while (cursor.moveToNext())
         {
-            int cid = cursor.getInt(cursor.getColumnIndex(myDbHelper.id));
-            String name = cursor.getString(cursor.getColumnIndex(myDbHelper.title));
-            String password = cursor.getString(cursor.getColumnIndex(myDbHelper.description));
-            buffer.append(name + "/" + password + "/" + cid + "/");
-            //buffer.append(cid + "/" + name + "/" + password +"/");
+            int cid = cursor.getInt(cursor.getColumnIndex(MyDbHelper.id));
+            String title = cursor.getString(cursor.getColumnIndex(MyDbHelper.title));
+            String description = cursor.getString(cursor.getColumnIndex(MyDbHelper.description));
+            buffer.append(title + "/" + description + "/" + cid + "/");
         }
         return buffer.toString();
     }
@@ -49,34 +50,38 @@ public class myDbAdapter {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         String[] whereArgs ={id};
         Log.wtf("removing", id);
-        int count =db.delete(myDbHelper.TABLE_NAME ,myDbHelper.id + " = ?",whereArgs);
+        int count =db.delete(MyDbHelper.TABLE_NAME , MyDbHelper.id + " = ?",whereArgs);
         return count;
     }
 
-    public int UpdateName(String oldName , String newName)
+    public int UpdateName(String oldName, String newName)
     {
         SQLiteDatabase db = myhelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(myDbHelper.title,newName);
+        contentValues.put(MyDbHelper.title,newName);
         String[] whereArgs= {oldName};
-        int count = db.update(myDbHelper.TABLE_NAME,contentValues, myDbHelper.title +" = ?",whereArgs );
+        int count = db.update(MyDbHelper.TABLE_NAME,contentValues, MyDbHelper.title + " = ?",whereArgs );
         return count;
     }
 
-    static class myDbHelper extends SQLiteOpenHelper
+    static class MyDbHelper extends SQLiteOpenHelper
     {
         private static final String DATABASE_NAME = "ProjectCreateTable";    // Database Name
         private static final String TABLE_NAME = "myTable";   // Table Name
-        private static final int DATABASE_Version = 1;    // Database Version
+        private static final int DATABASE_Version = 6;    // Database Version
         private static final String id = "_id";     // Column I (Primary Key)
         private static final String title = "Name";    //Column II
-        private static final String description = "Password";    // Column III
+        private static final String description = "Description";    // Column III
+        private static final String date = "Date";    // Column IV
         private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME +
-                " ("+ id +" INTEGER PRIMARY KEY AUTOINCREMENT, " + title + " VARCHAR(255) ," + description + " VARCHAR(225));";
-        private static final String DROP_TABLE ="DROP TABLE IF EXISTS " + TABLE_NAME;
+                " (" + id + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + title + " TEXT,"
+                + description + " TEXT,"
+                + date + " TEXT)";
+        private static final String DROP_TABLE =" DROP TABLE IF EXISTS " + TABLE_NAME;
         private Context context;
 
-        public myDbHelper(Context context) {
+        public MyDbHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_Version);
             this.context = context;
         }
@@ -91,6 +96,16 @@ public class myDbAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            //for adding new string column
+            //db.execSQL("ALTER TABLE myTable ADD COLUMN test1 TEXT");
+
+            //delete database
+            //context.deleteDatabase(DATABASE_NAME);
+
+            if (newVersion > oldVersion) {
+                context.deleteDatabase(DATABASE_NAME);
+            }
+
             try {
                 Message.message(context,"OnUpgrade");
                 db.execSQL(DROP_TABLE);

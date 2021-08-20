@@ -14,12 +14,12 @@ import android.widget.TextView;
 import com.example.bugtracker.Message;
 import com.example.bugtracker.recyclerview.CustomSpinnerCreator;
 
-public class CustomSpinnerRecyclerAdapter implements OnItemClickListener {
+public class CustomSpinnerAdapter implements OnItemClickListener {
 
     private final CustomSpinnerCreator customSpinnerCreator;
     private final PopupWindow popupWindow;
 
-    public CustomSpinnerRecyclerAdapter(CustomSpinnerCreator customSpinnerCreator, PopupWindow popupWindow) {
+    public CustomSpinnerAdapter(CustomSpinnerCreator customSpinnerCreator, PopupWindow popupWindow) {
         this.customSpinnerCreator = customSpinnerCreator;
         this.popupWindow = popupWindow;
     }

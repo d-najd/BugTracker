@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,20 +11,16 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.dialogs.BasicDialogs;
-import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProjectCreateTableEditTask extends AppCompatActivity {
     private TextView editDescriptionTxt;
@@ -95,8 +90,8 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                     allColumnImages.add(2131165294);
                 }
 
-                Pair<RecyclerAdapter, BottomSheetDialog> data = BasicDialogs.CustomBottomDialog(context, v, viewGroup, "Select a transition", null, allColumnTitles, allColumnImages, tag);
-                RecyclerAdapter adapter = data.first;
+                Pair<MainRecyclerAdapter, BottomSheetDialog> data = BasicDialogs.CustomBottomDialog(context, v, viewGroup, "Select a transition", null, allColumnTitles, allColumnImages, tag);
+                MainRecyclerAdapter adapter = data.first;
                 BottomSheetDialog bottomDialog = data.second;
 
                 adapter.projectTableColumnPos = columnPos;

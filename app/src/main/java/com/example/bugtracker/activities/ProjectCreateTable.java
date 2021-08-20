@@ -2,24 +2,17 @@ package com.example.bugtracker.activities;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
-import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProjectCreateTable extends AppCompatActivity {
@@ -72,7 +65,7 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-        ProjectTableCreate_RecyclerAdapter adapter = new ProjectTableCreate_RecyclerAdapter(recyclerDataArrayList, this);
+        ProjectTableCreateRecyclerAdapter adapter = new ProjectTableCreateRecyclerAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.

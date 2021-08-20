@@ -1,6 +1,5 @@
 package com.example.bugtracker.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
-import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.example.bugtracker.recyclerview.Adapters.myDbAdapter;
+import com.example.bugtracker.databases.ProjectsDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +32,7 @@ public class ProjectsFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
 
         // added data from arraylist to adapter class.
-        RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, requireContext());
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, requireContext());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
 
@@ -63,7 +62,7 @@ public class ProjectsFragment extends Fragment {
         recyclerView.getAdapter().notifyItemRangeRemoved(0, recyclerDataArrayList.size());
         recyclerDataArrayList.clear();
         String tag = recyclerView.getTag().toString();
-        myDbAdapter helper = new myDbAdapter(getContext());
+        ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
         String [] parts = data.split("/");
@@ -108,7 +107,7 @@ public class ProjectsFragment extends Fragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-            myDbAdapter helper = new myDbAdapter(getContext());
+            ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
             ProjectCreateTableData.RemoveFile(recyclerDataArrayList.get
                     (viewHolder.getAdapterPosition()).getTitle(), getContext());

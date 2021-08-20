@@ -12,11 +12,9 @@ import java.util.Calendar;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.Message;
-import com.example.bugtracker.recyclerview.Adapters.CreateProjects_ReclyclerAdapter;
-import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreate_RecyclerAdapter;
-import com.example.bugtracker.recyclerview.Adapters.RecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
-import com.example.bugtracker.recyclerview.Adapters.myDbAdapter;
+import com.example.bugtracker.databases.ProjectsDatabase;
 
 import java.util.ArrayList;
 
@@ -49,7 +47,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
 
         // added data from arraylist to adapter class.
-        CreateProjects_ReclyclerAdapter adapter = new CreateProjects_ReclyclerAdapter(recyclerDataArrayList, this);
+        CreateProjectsAdapter adapter = new CreateProjectsAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
@@ -84,7 +82,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
     public void AddUser(View view)
     {
-        myDbAdapter helper = new myDbAdapter(this);
+        ProjectsDatabase helper = new ProjectsDatabase(this);
         EditText Name = (EditText) findViewById(R.id.edtCreateProject);
         String Pass = recyclerDataArrayList.get(0).getDescription();
 
@@ -106,7 +104,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
     public void ViewData()
     {
-        myDbAdapter helper = new myDbAdapter(this);
+        ProjectsDatabase helper = new ProjectsDatabase(this);
 
         String data = helper.GetData();
         Message.message(this,data);
