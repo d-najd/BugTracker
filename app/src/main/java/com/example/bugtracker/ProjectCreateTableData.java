@@ -171,6 +171,8 @@ public class ProjectCreateTableData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            Log.wtf("test", "test2");
+            Message.message(context, "test2");
         }
     }
 

@@ -55,6 +55,9 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
     //TODO use singleton to fix the problems with the items when pressing editext? also not sure if
     // it needs to be added in here or in RecycelerAdapter
 
+    //TODO FIXME if there are tooo many colums when you swipe from left to right it will increase the
+    // gaps between the items more and more
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
@@ -92,7 +95,8 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                BasicDialogs.EditTextDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity, intent);
+                BasicDialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity);
+
             }
         });
     }
@@ -119,7 +123,7 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         switch (itemPosition){
             case 1:
-
+                BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", "CANCEL","RENAME", holderPosition, projectCreateTableActivity);
                 //TODO finish this
                 //BasicDialogs.EditTextDialog(mcontext, "Rename Column", "Column name",
                 //        "CANCEL", "RENAME", );
@@ -189,7 +193,7 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.EditTextDialog(mcontext, "Add column", "ADD",
+                BasicDialogs.NewColumnDialog(mcontext, "Add column", "ADD",
                         "Cancel", projectName, projectCreateTableActivity, intent);
             }
         });

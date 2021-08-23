@@ -1,12 +1,18 @@
 package com.example.bugtracker.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.GlobalValues;
+import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
@@ -80,6 +86,34 @@ public class ProjectCreateTable extends AppCompatActivity {
         adapter.intent = getIntent();
         recyclerView.setRecycledViewPool(viewPool);
 
+    }
+
+    public void RefreshActivity(){
+        //TODO this is gonna break in the future, need to check if the items are saved before doing this instead of waiting
+        Handler h = new Handler() ;
+        h.postDelayed(new Runnable() {
+            public void run() {
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
+            }
+        }, 250);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //stupid fix but hey it works
+        boolean reloadedActivity = GlobalValues.reloadedActivity;
+        if (!reloadedActivity) {
+            GlobalValues.reloadedActivity = true;
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+        } else
+            GlobalValues.reloadedActivity = false;
     }
 
     //endregion

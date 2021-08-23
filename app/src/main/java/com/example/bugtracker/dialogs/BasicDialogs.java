@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Html;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
@@ -26,55 +28,66 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.util.ArrayList;
 
 public class BasicDialogs {
-    public static void BasicDialog(Context mcontext, String title, String description, String positiveButtonTxt){
-        //this is regular dialog
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
-        builder
-                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
-                .setMessage(description)
-                .setNegativeButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        // Create the AlertDialog object and return it
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+    public static void BasicDialog(Context mcontext, String title, String description, String negativeButtonTxt){
+        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, description, negativeButtonTxt, false);
+        AlertDialog.Builder builder = data.first;
+        
+        DialogBuilder(mcontext, builder);
     }
 
-    //TODO optimize these so that it checks the creation of the dialog doesnt need to be repeated
-    // 100 times, make a switch and pass the data from onswitch and check... and put the other stuff
-    // inside a function
+    public static void RenameColumnDialog(Context mcontext, String title, String negativeButtonTxt,
+                                          String positiveButtonTxt, int holderPos, ProjectCreateTable projectCreateTableActivity){
+        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+        AlertDialog.Builder builder = data.first;
 
+        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
-    public static void RenameColumnDialog(){
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
+        builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO maybe somehow optimize the code so that when you press a button it does smtn and you dont have to
+                        // repeat the rest of the code, smtn like a builder
+                    }
+                });
+
+        DialogBuilder(mcontext, builder);
     }
 
     //for adding new column
-    public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt,
-                                      String negativeButtonTxt, String projectName,
-                                      ProjectCreateTable projectCreateTableActivity, Intent intent){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+    public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
+                                       String negativeButtonTxt, String projectName,
+                                       ProjectCreateTable projectCreateTableActivity, Intent intent){
+        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+        AlertDialog.Builder builder = data.first;
+        EditText editText = data.second;
 
-        final EditText editText = new EditText(mcontext);
-        editText.setTextColor(mcontext.getColor(R.color.white87));
-        editText.setHintTextColor(mcontext.getColor(R.color.white60));
+        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
-        builder.setView(editText)
-                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
-                .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
+
+        builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> titlesEmptyArr = new ArrayList<>();
@@ -94,64 +107,49 @@ public class BasicDialogs {
                         //the data from the recyclerviews gets removed for some reason when editText
                         //is pressed, refreshing the activity is the only way that I can think of,
                         //notifying the adapters that the data is changed in any way doesn't work
-                        projectCreateTableActivity.finish();
-                        projectCreateTableActivity.overridePendingTransition(0, 0);
-                        projectCreateTableActivity.startActivity(intent);
-                        projectCreateTableActivity.overridePendingTransition(0, 0);
+                        projectCreateTableActivity.RefreshActivity();
                     }
 
                 });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+        DialogBuilder(mcontext, builder);
     }
 
     //TODO refreshing the data to fix problems doesnt seem to work out, need to fidn other way to
     // refresh the activity
 
     //for adding new item inside the column
-    public static void EditTextDialog(Context mcontext, String title, String positiveButtonTxt, String negativeButtonTxt, int position, String projectName, ProjectCreateTable projectCreateTableActivity, Intent intent){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+    public static void NewColumnItemDialog(Context mcontext, String title, String positiveButtonTxt,
+                                           String negativeButtonTxt, int position, String projectName,
+                                           ProjectCreateTable projectCreateTableActivity){
+        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+        AlertDialog.Builder builder = data.first;
+        EditText editText = data.second;
 
-        final EditText editText = new EditText(mcontext);
-        editText.setTextColor(mcontext.getColor(R.color.white87));
-        editText.setHintTextColor(mcontext.getColor(R.color.white60));
+        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
-        builder.setView(editText)
-                .setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"))
-                .setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String title = editText.getText().toString();
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
-                        ProjectCreateTableData.SaveNewItem(title, projectName, position, true, mcontext);
+        builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String title = editText.getText().toString();
 
-                        projectCreateTableActivity.finish();
-                        projectCreateTableActivity.overridePendingTransition(0, 0);
-                        projectCreateTableActivity.startActivity(intent);
-                        projectCreateTableActivity.overridePendingTransition(0, 0);
-                    }
+                ProjectCreateTableData.SaveNewItem(title, projectName, position, true, mcontext);
+                projectCreateTableActivity.RefreshActivity();
+            }
+        });
 
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+       DialogBuilder(mcontext, builder);
     }
 
     public static Pair<MainRecyclerAdapter, BottomSheetDialog> CustomBottomDialog(Context context, View v, ViewGroup viewGroup, String titleTxt, String description, ArrayList<String> titles, ArrayList<Integer> images, String tag) {
@@ -189,6 +187,58 @@ public class BasicDialogs {
         bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
         bottomDialogRecyclerView.setAdapter(adapter);
 
-        return new Pair<MainRecyclerAdapter, BottomSheetDialog>(adapter, bottomDialog);
+        return new Pair<>(adapter, bottomDialog);
     }
+
+    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title,
+                                                                              String description,
+                                                                              String negativeButtonTxt,
+                                                                              boolean isEditTextDialog){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+
+        final EditText editText = new EditText(mcontext);
+        if (isEditTextDialog) {
+            editText.setTextColor(mcontext.getColor(R.color.white87));
+            editText.setHintTextColor(mcontext.getColor(R.color.white60));
+            builder.setView(editText);
+        }
+
+        if (title != null)
+            builder.setTitle( Html.fromHtml("<font color='#FFFFFF'>"  + title + "</font>"));
+        else
+            Log.wtf("Debug", "there is no title for creating dialog, there might be a problem");
+
+        if (description != null)
+            builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"  + description + "</font>"));
+
+        if (negativeButtonTxt != null)
+            builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+        return new Pair<>(builder, editText);
+    }
+
+    private static void DialogBuilder(Context mcontext, AlertDialog.Builder builder){
+        AlertDialog alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
+
+        alertDialog.show();
+
+        try{
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try{
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(mcontext.getColor(R.color.purple_200));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
