@@ -36,6 +36,10 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
     private int itemPos;
     private int columnPos;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+    //used for the bottomdialogs
+    private ArrayList<String> allColumnTitles = new ArrayList<>();
+    private ArrayList<Integer> allColumnImages = new ArrayList<>();
+    private ArrayList<String> allColumnDescriptions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +85,8 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ViewGroup viewGroup = v.findViewById(android.R.id.content);
-                ArrayList<String> allColumnTitles = new ArrayList<>();
-                ArrayList<Integer> allColumnImages = new ArrayList<>();
+                allColumnTitles.clear();
+                allColumnImages.clear();
 
                 allColumnTitles = ProjectCreateTableData.GetAllColumns(projectName, context);
 
@@ -90,7 +94,8 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                     allColumnImages.add(2131165294);
                 }
 
-                Pair<MainRecyclerAdapter, BottomSheetDialog> data = BasicDialogs.CustomBottomDialog(context, v, viewGroup, "Select a transition", null, allColumnTitles, allColumnImages, tag);
+                Pair<MainRecyclerAdapter, BottomSheetDialog> data = BasicDialogs.BottomDialogCreator(
+                        context, v, viewGroup, "Select a transition", null, allColumnTitles, null, allColumnImages, tag);
                 MainRecyclerAdapter adapter = data.first;
                 BottomSheetDialog bottomDialog = data.second;
 
@@ -114,60 +119,18 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         issueTypeMainTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO finish this
-                /*
                 ViewGroup viewGroup = v.findViewById(android.R.id.content);
-                ArrayList<String> titles = new ArrayList<>();
-                ArrayList<Integer> images = new ArrayList<>();
 
-                View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_complex_recyclerview, viewGroup, false);
-                BottomSheetDialog bottomDialog = new BottomSheetDialog(context);
-                //bottomDialog.setTitle("Issue Type");
-                //bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
-                bottomDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-                bottomDialog.setContentView(dialogView);
+                allColumnTitles.clear();
+                allColumnImages.clear();
+                allColumnDescriptions.clear();
 
-                //for changing the size
-                //View bottomSheet = bottomDialog.findViewById(R.id.design_bottom_sheet);
-                //bottomSheet.getLayoutParams().height = 500;
+                allColumnTitles.add("Task");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("A small, distinct piece of work");
 
-                bottomDialog.show();
-
-                recyclerDataArrayList.clear();
-
-                titles.add("Task");
-                titles.add("Epic");
-
-                images.add(2131165294);
-                images.add(2131165294);
-
-                for (int i = 0; i < titles.size(); i++)
-                    recyclerDataArrayList.add(new RecyclerData(titles.get(i), images.get(i), tag));
-
-                RecyclerView bottomDialogRecyclerView = dialogView.findViewById(R.id.BtmDialogRecyclerview);
-                TextView title = dialogView.findViewById(R.id.BtmDialogTitle);
-
-                title.setVisibility(View.VISIBLE);
-                title.setText("Select a transition");
-                RecyclerAdapter adapter = new RecyclerAdapter(recyclerDataArrayList, context);
-
-                LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-                bottomDialogRecyclerView.setLayoutManager(layoutManager);
-
-                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bottomDialog.getContext(),
-                        layoutManager.getOrientation());
-                dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.shape_seperator));
-                bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
-
-                bottomDialogRecyclerView.setAdapter(adapter);
-                adapter.projectTableColumnPos = columnPos;
-                adapter.projectCreateEditTask_BottomDialog = bottomDialog;
-                adapter.projectCreateTableEditTask = projectCreateTableEditTask;
-                adapter.itemPos = itemPos;
-                adapter.projectName = projectName;
-
-                 */
+                BasicDialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                        allColumnTitles, allColumnDescriptions, allColumnImages, tag);
             }
         });
 

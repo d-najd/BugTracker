@@ -152,16 +152,24 @@ public class BasicDialogs {
        DialogBuilder(mcontext, builder);
     }
 
-    public static Pair<MainRecyclerAdapter, BottomSheetDialog> CustomBottomDialog(Context context, View v, ViewGroup viewGroup, String titleTxt, String description, ArrayList<String> titles, ArrayList<Integer> images, String tag) {
+    public static Pair<MainRecyclerAdapter, BottomSheetDialog> BottomDialogCreator(Context context, View v, ViewGroup viewGroup, String titleTxt, String descriptionTxt, ArrayList<String> titles, ArrayList<String> descriptions, ArrayList<Integer> images, String tag) {
         ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
 
-        for (int i = 0; i < titles.size(); i++)
-            recyclerDataArrayList.add(new RecyclerData(titles.get(i), images.get(i), tag));
+        //for making a recyclerDataList of all the items
+        if (titles != null && images != null && descriptions != null){
+            for (int i = 0; i < titles.size(); i++)
+                recyclerDataArrayList.add(new RecyclerData(titles.get(i), descriptions.get(i), images.get(i), tag));
+        } else if (titles != null && images != null) {
+            for (int i = 0; i < titles.size(); i++)
+                recyclerDataArrayList.add(new RecyclerData(titles.get(i), images.get(i), tag));
+        } else {
+            Message.message(context, "titles, images or both haven't been set while creating a bottomdialog, the dialog will not be created");
+            Log.wtf("Debug", "titles, images or both haven't been set while creating a bottomdialog, the dialog will not be created");
+            return new Pair<>(null, null);
+        }
 
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.bottomdialog_complex_recyclerview, viewGroup, false);
         BottomSheetDialog bottomDialog = new BottomSheetDialog(context);
-        //bottomDialog.setTitle("Issue Type");
-        //bottomDialog.setTitle("These are the issue types you can choose, based on the workflow of the current issue type.");
         bottomDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
         bottomDialog.setContentView(dialogView);
 
@@ -173,9 +181,21 @@ public class BasicDialogs {
 
         RecyclerView bottomDialogRecyclerView = dialogView.findViewById(R.id.BtmDialogRecyclerview);
         TextView titleTextView = dialogView.findViewById(R.id.BtmDialogTitle);
+        TextView descriptionTextView = dialogView.findViewById(R.id.BtmDialogDescription);
 
-        titleTextView.setVisibility(View.VISIBLE);
-        titleTextView.setText(titleTxt);
+        if (titleTextView != null){
+            titleTextView.setVisibility(View.VISIBLE);
+            titleTextView.setText(titleTxt);
+        }
+        if (descriptionTxt != null && titleTextView != null){
+            descriptionTextView.setVisibility(View.VISIBLE);
+            descriptionTextView.setText(descriptionTxt);
+        } else if (descriptionTextView != null){
+            Message.message(context, "title for the bottomtext should be set before setting a description, the bottomdialog wont be created");
+            Log.wtf("Debug", "title for the bottomtext much be set before the description is set");
+            return new Pair<>(null, null);
+        }
+
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, context);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
@@ -190,10 +210,7 @@ public class BasicDialogs {
         return new Pair<>(adapter, bottomDialog);
     }
 
-    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title,
-                                                                              String description,
-                                                                              String negativeButtonTxt,
-                                                                              boolean isEditTextDialog){
+    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title, String description, String negativeButtonTxt, boolean isEditTextDialog){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
@@ -238,7 +255,5 @@ public class BasicDialogs {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }
