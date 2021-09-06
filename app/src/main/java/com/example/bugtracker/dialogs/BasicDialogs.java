@@ -35,9 +35,9 @@ public class BasicDialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    public static void RenameColumnDialog(Context mcontext, String title, String negativeButtonTxt,
+    public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
                                           String positiveButtonTxt, int holderPos, ProjectCreateTable projectCreateTableActivity){
-        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
@@ -57,8 +57,8 @@ public class BasicDialogs {
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO maybe somehow optimize the code so that when you press a button it does smtn and you dont have to
-                        // repeat the rest of the code, smtn like a builder
+
+                        projectCreateTableActivity.RefreshActivity();
                     }
                 });
 
@@ -190,7 +190,7 @@ public class BasicDialogs {
         if (descriptionTxt != null && titleTextView != null){
             descriptionTextView.setVisibility(View.VISIBLE);
             descriptionTextView.setText(descriptionTxt);
-        } else if (descriptionTextView != null){
+        } else if (descriptionTxt != null){
             Message.message(context, "title for the bottomtext should be set before setting a description, the bottomdialog wont be created");
             Log.wtf("Debug", "title for the bottomtext much be set before the description is set");
             return new Pair<>(null, null);
@@ -200,11 +200,6 @@ public class BasicDialogs {
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         bottomDialogRecyclerView.setLayoutManager(layoutManager);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(bottomDialog.getContext(),
-                layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(context.getDrawable(R.drawable.shape_seperator));
-        bottomDialogRecyclerView.addItemDecoration(dividerItemDecoration);
         bottomDialogRecyclerView.setAdapter(adapter);
 
         return new Pair<>(adapter, bottomDialog);
@@ -225,8 +220,11 @@ public class BasicDialogs {
         else
             Log.wtf("Debug", "there is no title for creating dialog, there might be a problem");
 
-        if (description != null)
+        if (description != null && !isEditTextDialog)
             builder.setMessage(Html.fromHtml("<font color='#FFFFFF'>"  + description + "</font>"));
+        else if (description != null && isEditTextDialog){
+            editText.setText(description);
+        }
 
         if (negativeButtonTxt != null)
             builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
@@ -235,7 +233,6 @@ public class BasicDialogs {
                     dialog.cancel();
                 }
             });
-
         return new Pair<>(builder, editText);
     }
 

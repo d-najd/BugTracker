@@ -37,7 +37,7 @@ public class ProjectCreateTableData {
         return data;
     }
 
-    public static ArrayList<String> GetAllColumns(String projectName, Context context){
+    public static ArrayList<String> GetAllColumnTitles(String projectName, Context context){
         ArrayList<String> allColumns = new ArrayList<>();
 
         String data = GetData(projectName, context);
@@ -49,7 +49,7 @@ public class ProjectCreateTableData {
         return allColumns;
     }
 
-    public static String GetColumn(String projectName, int columnPos, Context context){
+    public static String GetColumnTitle(String projectName, int columnPos, Context context){
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
         String columnStr = parts[(columnPos * amountOfPartsInData)];
@@ -254,7 +254,7 @@ public class ProjectCreateTableData {
     }
 
     //remove selected column
-    public static void RemoveColumnData(int id, String projectName, Context context){
+    public static void RemoveColumnData(String projectName, int id, Context context){
         BufferedWriter writer = null;
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");

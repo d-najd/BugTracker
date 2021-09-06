@@ -122,15 +122,13 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         switch (itemPosition){
-            case 1:
-                BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", "CANCEL","RENAME", holderPosition, projectCreateTableActivity);
-                //TODO finish this
-                //BasicDialogs.EditTextDialog(mcontext, "Rename Column", "Column name",
-                //        "CANCEL", "RENAME", );
+            case 0:
+                String description = ProjectCreateTableData.GetColumnTitle(projectName, holderPosition, mcontext);
+                BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity);
                 break;
 
             case 3:
-                ProjectCreateTableData.RemoveColumnData(holderPosition, projectName, mcontext);
+                ProjectCreateTableData.RemoveColumnData(projectName, holderPosition, mcontext);
 
                 //TODO fix this
                 projectCreateTableActivity.finish();
@@ -165,12 +163,6 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
 
         RecyclerView recyclerView = holder.recyclerView;
         recyclerView.setLayoutManager(layoutManager);
-
-        //this is the seperator, the thing between the items the empty space
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation());
-        dividerItemDecoration.setDrawable(mcontext.getDrawable(R.drawable.shape_seperator));
-        recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.setAdapter(adapter);
 

@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.CreateTaskActivity;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.activities.ProjectCreateTableEditTask;
 import com.example.bugtracker.recyclerview.RecyclerData;
@@ -225,12 +224,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             });
         }
 
-        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
-            //TODO, so for example if you move a item from column 1 to colmn 2 it doesnt update the
-            // data inside the columns so when you go back the item is column 1 and IT THINKS that it
-            // is in column 1 which can cause problems with the memory so need to update the
-            // recyclerviews (columns) when moving items from 1 column to other
-
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask0))){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -265,9 +259,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     }
                 }
             });
+        } else {
+            Log.wtf("Debug", "there is no activity for the current tag, there might be something wrong");
         }
 
-
+        /* TODO this seems like a dumb way to do it, dont you think?
         if (holder.title.getText().equals(mcontext.getString(R.string.newTask))) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -284,6 +280,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     }
                 });
             }
+
+         */
 
 
         }

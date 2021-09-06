@@ -25,12 +25,10 @@ import java.util.ArrayList;
 public class ProjectCreateTableEditTask extends AppCompatActivity {
     private TextView editDescriptionTxt;
     private TextView titleMiddle;
-    private TextView issueTypeMainTxt;
     private Button columnSelector;
-    private ImageButton issueTypeImg;
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
-    private String tag;
+    private String tag; //there are multiple tags for this activity bc of the bottomdialogs
     private String projectName;
     private String oldDescription;
     private int itemPos;
@@ -46,7 +44,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_project_create_edit_task);
 
-        tag = getString(R.string.projectEditTask);
+        tag = getString(R.string.projectEditTask0);
 
         projectName = getIntent().getExtras().getString("projectName");
         columnPos = getIntent().getExtras().getInt("columnPos");
@@ -57,8 +55,6 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         editDescriptionTxt = findViewById(R.id.descriptionTxt);
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
-        issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
-        issueTypeImg = findViewById(R.id.issueTypeImg);
 
         oldDescription = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
 
@@ -81,6 +77,10 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         Context context = this;
         ProjectCreateTableEditTask projectCreateTableEditTask = this;
 
+        TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
+        ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
+        ImageButton closeBtn = findViewById(R.id.closeBtn);
+
         columnSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,12 +88,11 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
                 allColumnTitles.clear();
                 allColumnImages.clear();
 
-                allColumnTitles = ProjectCreateTableData.GetAllColumns(projectName, context);
+                allColumnTitles = ProjectCreateTableData.GetAllColumnTitles(projectName, context);
 
                 for (int i = 0; i < allColumnTitles.size(); i++){
                     allColumnImages.add(2131165294);
                 }
-
                 Pair<MainRecyclerAdapter, BottomSheetDialog> data = BasicDialogs.BottomDialogCreator(
                         context, v, viewGroup, "Select a transition", null, allColumnTitles, null, allColumnImages, tag);
                 MainRecyclerAdapter adapter = data.first;
@@ -119,37 +118,52 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         issueTypeMainTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewGroup viewGroup = v.findViewById(android.R.id.content);
-
-                allColumnTitles.clear();
-                allColumnImages.clear();
-                allColumnDescriptions.clear();
-
-                allColumnTitles.add("Task");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A small, distinct piece of work");
-
-                BasicDialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                        allColumnTitles, allColumnDescriptions, allColumnImages, tag);
+                issueTypeOnClick(v, context);
             }
         });
 
         issueTypeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                issueTypeOnClick(v, context);
+            }
+        });
 
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
+
 
     public void UpdateColumn(int columnPos){
         //for when you use the button to change the column.
         this.columnPos = columnPos;
         itemPos = 0;
 
-        String columnName = ProjectCreateTableData.GetColumn(projectName, columnPos, this);
+        String columnName = ProjectCreateTableData.GetColumnTitle(projectName, columnPos, this);
         columnSelector.setText(columnName);
     }
+
+    private void issueTypeOnClick(View v, Context context){
+        ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+        allColumnTitles.clear();
+        allColumnImages.clear();
+        allColumnDescriptions.clear();
+
+        allColumnTitles.add("Task");
+        allColumnImages.add(2131165294);
+        allColumnDescriptions.add("A small, distinct piece of work");
+
+        tag = getString(R.string.projectEditTask1);
+        BasicDialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                allColumnTitles, allColumnDescriptions, allColumnImages, tag);
+        tag = getString(R.string.projectEditTask0);
+    }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //for getting data back from the second activity
