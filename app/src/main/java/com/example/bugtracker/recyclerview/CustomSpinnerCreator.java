@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.example.bugtracker.R;
 import com.example.bugtracker.recyclerview.Adapters.CustomSpinnerAdapter;
-import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateRecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ public class CustomSpinnerCreator<T> {
     private View v;
     private int holderPosition;
     private String[] popUpContents;
-    private ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter;
+    private ProjectTableCreateAdapter projectTableCreate_recyclerAdapter;
 
     public CustomSpinnerCreator(Context mcontext, List<String> data, int holderPosition,
-                                     ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter,
+                                     ProjectTableCreateAdapter projectTableCreate_recyclerAdapter,
                                      View v, int xoff, int yoff){
         this.mcontext = mcontext;
         this.data = data;

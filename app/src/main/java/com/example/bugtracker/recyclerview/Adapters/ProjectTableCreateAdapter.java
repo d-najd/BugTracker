@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<ProjectTableCreateRecyclerAdapter.RecyclerViewHolder> {
+public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTableCreateAdapter.RecyclerViewHolder> {
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
@@ -39,7 +38,7 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
     private String tag;
     public Intent intent;
 
-    public ProjectTableCreateRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public ProjectTableCreateAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -86,6 +85,11 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
         TableData(recyclerData, position);
     }
 
+    public void RenameTitle(int pos, String newTitle){
+        holderArrayList.get(pos).title.setText(newTitle);
+        ProjectCreateTableData.RenameColumn(projectName, pos, newTitle, mcontext);
+    }
+
     private void Listeners(int position){
         holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,12 +109,18 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
         List<String> columnSpinnerData = new ArrayList<String>();
 
         columnSpinnerData.add(mcontext.getString(R.string.renameColumn));
-        columnSpinnerData.add(mcontext.getString(R.string.moveColumnLeft));
-        columnSpinnerData.add(mcontext.getString(R.string.moveColumnRight));
+
+        if (position != 0){
+            columnSpinnerData.add(mcontext.getString(R.string.moveColumnLeft));
+        }
+        if (position != DataArrayList.size() - 2)
+        {
+            columnSpinnerData.add(mcontext.getString(R.string.moveColumnRight));
+        }
+
         columnSpinnerData.add(mcontext.getString(R.string.deleteColumn));
 
-
-        ProjectTableCreateRecyclerAdapter projectTableCreate_recyclerAdapter = this;
+        ProjectTableCreateAdapter projectTableCreate_recyclerAdapter = this;
 
         holder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,21 +131,19 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
     }
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
-        switch (itemPosition){
-            case 0:
-                String description = ProjectCreateTableData.GetColumnTitle(projectName, holderPosition, mcontext);
-                BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity);
-                break;
 
-            case 3:
-                ProjectCreateTableData.RemoveColumnData(projectName, holderPosition, mcontext);
+        if (itemText == mcontext.getString(R.string.renameColumn)){
+            String description = ProjectCreateTableData.GetColumnTitle(projectName, holderPosition, mcontext);
+            BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
+        } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
 
-                //TODO fix this
-                projectCreateTableActivity.finish();
-                projectCreateTableActivity.overridePendingTransition(0, 0);
-                projectCreateTableActivity.startActivity(intent);
-                projectCreateTableActivity.overridePendingTransition(0, 0);
-                break;
+        } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
+
+        } else if (itemText == mcontext.getString(R.string.deleteColumn)){
+            ProjectCreateTableData.RemoveColumnData(projectName, holderPosition, mcontext);
+
+            //TODO fix this
+            RefreshActivity();
         }
     }
 
@@ -194,6 +202,13 @@ public class ProjectTableCreateRecyclerAdapter extends RecyclerView.Adapter<Proj
     @Override
     public int getItemCount() {
         return DataArrayList.size();
+    }
+
+    private void RefreshActivity(){
+        projectCreateTableActivity.finish();
+        projectCreateTableActivity.overridePendingTransition(0, 0);
+        projectCreateTableActivity.startActivity(intent);
+        projectCreateTableActivity.overridePendingTransition(0, 0);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {

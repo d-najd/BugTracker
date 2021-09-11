@@ -2,21 +2,17 @@ package com.example.bugtracker.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.GlobalValues;
-import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.StringToList;
-import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateRecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
@@ -71,7 +67,7 @@ public class ProjectCreateTable extends AppCompatActivity {
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-        ProjectTableCreateRecyclerAdapter adapter = new ProjectTableCreateRecyclerAdapter(recyclerDataArrayList, this);
+        ProjectTableCreateAdapter adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, this);
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
@@ -100,6 +96,7 @@ public class ProjectCreateTable extends AppCompatActivity {
             }
         }, 250);
     }
+
 
     @Override
     protected void onResume() {

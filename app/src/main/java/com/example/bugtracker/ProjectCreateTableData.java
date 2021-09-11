@@ -239,53 +239,40 @@ public class ProjectCreateTableData {
         }
     }
 
-    public static void RemoveFile(String projectName, Context context){
-        File file = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
-        boolean deleted = file.delete();
-
-        if (!deleted){
-            Log.wtf("ERROR", "Something went wrong with removing the file with name "
-                    + projectName + " at " + context.getFilesDir().toString() +
-                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
-            Message.message(context, "Something went wrong");
-        }
-    }
-
-    //remove selected column
-    public static void RemoveColumnData(String projectName, int id, Context context){
+    public static void RenameColumn(String projectName, int columnPos, String newTitle, Context context){
         BufferedWriter writer = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newTitle == null || newTitle == ""){
+            Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
+            return;
+        }
+
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
+        String[] parts = dataOld.split(separator); //splitting the data
 
-        //this part is for splitting, ex if the id is 1, the startingStr will get data from
-        //0 up until 1 and stop, and endstr will get data from 2 and on
+        parts[(columnPos * amountOfPartsInData)] = newTitle;
 
-        String endStr = "";
-        String startStr = "";
-
-        if (id != 0){
-            for (int i = 0; i < id * amountOfPartsInData; i++){
-                startStr += parts[i] + separator;
-            }
-        }
-
-        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
-            endStr += parts[i] + separator;
-        }
-
-        data = startStr + endStr;
+        for (int i = 0; i < parts.length; i++)
+            data += (parts[i] + separator);
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
         } catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 writer.close();
             } catch (IOException e) {
@@ -369,7 +356,7 @@ public class ProjectCreateTableData {
             for (int b = 0; b < oldItemParts.length; b++) {
                 if (oldItemParts[b] == "")
                     continue;
-                //checks if addition of ", " is needed, the last part is for making sure that if the last element is changed then the ", " isnt added to second from last element because last is so we dont need the ", "
+                    //checks if addition of ", " is needed, the last part is for making sure that if the last element is changed then the ", " isnt added to second from last element because last is so we dont need the ", "
                 else if (b != oldItemParts.length - 1 && (itemPos != oldItemParts.length - 1 ||
                         (itemPos == oldItemParts.length - 1 && b != oldItemParts.length - 2)))
                     dataRaw.append(oldItemParts[b] + ", ");
@@ -393,6 +380,61 @@ public class ProjectCreateTableData {
             ex.printStackTrace();
         }
         finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void RemoveFile(String projectName, Context context){
+        File file = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        boolean deleted = file.delete();
+
+        if (!deleted){
+            Log.wtf("ERROR", "Something went wrong with removing the file with name "
+                    + projectName + " at " + context.getFilesDir().toString() +
+                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
+            Message.message(context, "Something went wrong");
+        }
+    }
+
+    //remove selected column
+    public static void RemoveColumnData(String projectName, int id, Context context){
+        BufferedWriter writer = null;
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+
+        //this part is for splitting, ex if the id is 1, the startingStr will get data from
+        //0 up until 1 and stop, and endstr will get data from 2 and on
+
+        String endStr = "";
+        String startStr = "";
+
+        if (id != 0){
+            for (int i = 0; i < id * amountOfPartsInData; i++){
+                startStr += parts[i] + separator;
+            }
+        }
+
+        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
+            endStr += parts[i] + separator;
+        }
+
+        data = startStr + endStr;
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
             try {
                 writer.close();
             } catch (IOException e) {

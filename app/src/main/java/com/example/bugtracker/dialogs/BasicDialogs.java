@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +21,7 @@ import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTable;
 import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
+import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -36,7 +36,8 @@ public class BasicDialogs {
     }
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
-                                          String positiveButtonTxt, int holderPos, ProjectCreateTable projectCreateTableActivity){
+                                          String positiveButtonTxt, int holderPos, ProjectCreateTable projectCreateTableActivity,
+                                            ProjectTableCreateAdapter projectTableCreateAdapter) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
 
@@ -55,12 +56,14 @@ public class BasicDialogs {
         });
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newTitle = data.second.getText().toString();
 
-                        projectCreateTableActivity.RefreshActivity();
-                    }
-                });
+                projectCreateTableActivity.RefreshActivity();
+                projectTableCreateAdapter.RenameTitle(holderPos, newTitle);
+            }
+        });
 
         DialogBuilder(mcontext, builder);
     }
@@ -152,7 +155,9 @@ public class BasicDialogs {
        DialogBuilder(mcontext, builder);
     }
 
-    public static Pair<MainRecyclerAdapter, BottomSheetDialog> BottomDialogCreator(Context context, View v, ViewGroup viewGroup, String titleTxt, String descriptionTxt, ArrayList<String> titles, ArrayList<String> descriptions, ArrayList<Integer> images, String tag) {
+    public static Pair<MainRecyclerAdapter, BottomSheetDialog> BottomDialogCreator(Context context, View v, ViewGroup viewGroup,
+                                                                                   String titleTxt, String descriptionTxt, ArrayList<String> titles,
+                                                                                   ArrayList<String> descriptions, ArrayList<Integer> images, String tag) {
         ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
 
         //for making a recyclerDataList of all the items
@@ -205,7 +210,8 @@ public class BasicDialogs {
         return new Pair<>(adapter, bottomDialog);
     }
 
-    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title, String description, String negativeButtonTxt, boolean isEditTextDialog){
+    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title, String description,
+                                                                              String negativeButtonTxt, boolean isEditTextDialog){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
