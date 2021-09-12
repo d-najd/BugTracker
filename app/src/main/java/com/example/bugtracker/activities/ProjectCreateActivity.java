@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 
+import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.Message;
 import com.example.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
@@ -74,13 +75,12 @@ public class ProjectCreateActivity extends AppCompatActivity {
         mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddUser(v);
-                //viewdata();
+                AddProject(v);
             }
         });
     }
 
-    public void AddUser(View view)
+    public void AddProject(View view)
     {
         ProjectsDatabase helper = new ProjectsDatabase(this);
         EditText Name = (EditText) findViewById(R.id.edtCreateProject);
@@ -90,11 +90,12 @@ public class ProjectCreateActivity extends AppCompatActivity {
         String t2 = Pass;
         if(t1.isEmpty() || t2.isEmpty())
         {
-            Message.message(this,"Enter Both Name and Password");
+            Message.message(this,"Enter Both Project Name and Description");
         }
         else
         {
             long id = helper.InsertData(t1,t2);
+            ProjectCreateTableData.CreatingNewProject(t1, this);
             if(id<=0)
             {
                 Message.message(this,"Insertion Unsuccessful");

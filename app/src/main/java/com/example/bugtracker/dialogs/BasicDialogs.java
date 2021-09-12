@@ -94,14 +94,15 @@ public class BasicDialogs {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ArrayList<String> titlesEmptyArr = new ArrayList<>();
-                        ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
                         ArrayList<String> descriptionsEmptyArr = new ArrayList<>();
+                        ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
+
 
                         //titlesEmptyArr.add("HOHOHO");
                         //imgsEmptyArr.add(R.drawable.ic_account_24dp);
                         String title = editText.getText().toString();
 
-                        ProjectCreateTableData.SaveNewColumn(titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, title, projectName, mcontext);
+                        ProjectCreateTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
 
                         //TODO seems like refreshing the activity doesnt solve all problems,
                         // if the first element is empty while adding new element it sets the data

@@ -9,12 +9,36 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ProjectCreateTableData {
 
     public static final int amountOfPartsInData = 4;
+    //epics will be sored in ProjectData/ProjectBoard/Epics
+    //format for epics
+    // title:columnposes::itemposes::extras
+    //extras for epics
+    //isflagged, created, startdate, duedate
+
+    //tasks will be sored in ProjectData/ProjectBoard/Tasks
+    //current format
+    // title::taskstitles::tasksimgsids::tasksdescriptions
+    //planned
+    // title::taskstitles::tasksimgids::tasksdescriptions::subtaskslist::extras
+    //extras for task
+    //isflagged, parent, created
+    //subtasklist will be with list of ids (numbers)
+
+    //subtasts will be stored in ProjectData/ProjectBoard/Subtasks
+    //format for subtasks
+    //id::extras
+    //extras for subtask
+    //title, description, creationdate
+
     private static final String separator = "::"; //the type of separator used for saving the data
+
+    //region getters
 
     public static String GetData(String projectName, Context context){
         String data = null;
@@ -79,9 +103,23 @@ public class ProjectCreateTableData {
         return data;
     }
 
+    //endregion
+
+    //region setters
+
+    public static void CreatingNewProject(String projectName, Context context){
+        ArrayList<String> titlesEmptyArr = new ArrayList<>();
+        ArrayList<String> descriptionsEmptyArr = new ArrayList<>();
+        ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
+
+        SaveNewColumn(projectName, "TO DO", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+        SaveNewColumn(projectName, "IN PROGRESS", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+        SaveNewColumn(projectName, "DONE", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+    }
+
     //for creating new column with empty data mostly but can work for other stuff
-    public static void SaveNewColumn(ArrayList<String> titles, ArrayList<Integer> imgIds,
-                                     ArrayList<String> descriptions, String title, String projectName, Context context){
+    public static void SaveNewColumn(String projectName, String title, ArrayList<String> titles, ArrayList<Integer> imgIds,
+                                     ArrayList<String> descriptions, Context context){
         BufferedWriter writer = null;
         int id = 0;
 
@@ -239,6 +277,9 @@ public class ProjectCreateTableData {
         }
     }
 
+    //endregion
+
+    //region modifiers
     public static void RenameColumn(String projectName, int columnPos, String newTitle, Context context){
         BufferedWriter writer = null;
         String data = "";
@@ -265,6 +306,62 @@ public class ProjectCreateTableData {
 
         for (int i = 0; i < parts.length; i++)
             data += (parts[i] + separator);
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //swap columns
+    public static void MoveColumnToOtherColumn(String projectName, int oldColumnPos, int newColumnPos, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newColumnPos == oldColumnPos){
+            Log.d("Debug", "you cant move the new column in the place of the old column");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        ArrayList<String> parts = new ArrayList<String>(Arrays.asList(dataOld.split(separator)));
+
+        ArrayList<String> oldColumnParts = new ArrayList<>();
+        ArrayList<String> newColumnParts = new ArrayList<>();
+
+
+        for (int i = 0; i < amountOfPartsInData; i++){
+            oldColumnParts.add(parts.get((oldColumnPos * amountOfPartsInData) + i));
+            newColumnParts.add(parts.get((newColumnPos * amountOfPartsInData) + i));
+        }
+
+        for (int i = 0; i < amountOfPartsInData; i++){
+            parts.set((newColumnPos * amountOfPartsInData) + i, oldColumnParts.get(i));
+            parts.set((oldColumnPos * amountOfPartsInData) + i, newColumnParts.get(i));
+        }
+
+
+        for (int i = 0; i < parts.size(); i++)
+            data += (parts.get(i) + separator);
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
@@ -388,6 +485,10 @@ public class ProjectCreateTableData {
         }
     }
 
+    //endregion
+
+    //region removers
+
     public static void RemoveFile(String projectName, Context context){
         File file = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
@@ -442,6 +543,8 @@ public class ProjectCreateTableData {
             }
         }
     }
+
+    //endregion
 
     public static void MakeFolders(Context context){
         //makes folders where the data is stored

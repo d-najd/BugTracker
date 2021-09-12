@@ -131,14 +131,15 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     }
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
-
         if (itemText == mcontext.getString(R.string.renameColumn)){
             String description = ProjectCreateTableData.GetColumnTitle(projectName, holderPosition, mcontext);
             BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
-
+            ProjectCreateTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
+            RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
-
+            ProjectCreateTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition + 1, mcontext);
+            RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ProjectCreateTableData.RemoveColumnData(projectName, holderPosition, mcontext);
 
@@ -159,7 +160,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                         recyclerData.getImgIds().get(i), tag));
             }
         }
-
 
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, mcontext);
 

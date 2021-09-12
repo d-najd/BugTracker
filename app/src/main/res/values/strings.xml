@@ -1,7 +1,7 @@
 <resources>
     <string name="appName">BugTracker</string>
     <string name="titleProjects">Projects</string>
-    <string name="titleDashboard">Dashboard</string>
+    <string name="titleRoadmap">Roadmap</string>
     <string name="titleNotifications">Notifications</string>
     <string name="titleAccount">Account</string>
     <string name="projectName">Project Name</string>

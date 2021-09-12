@@ -170,6 +170,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectCreateTable.class);
                     int test = position;
+
+                    //TODO fixme there is a bug when you create new item it doesnt get added to the list or smtn and you cant open it without the app crashing
+                    // but it gets fixed if activity is refreshed.
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
