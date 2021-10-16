@@ -63,6 +63,7 @@ public class RecyclerData {
         this.tag = tag;
         this.secondImgId = secondImgId;
     }
+
     public RecyclerData(String title, ArrayList<String> titles, ArrayList<Integer> imgIds, String id, String tag)
     {
         this.title = title;
@@ -76,6 +77,13 @@ public class RecyclerData {
         this.title = title;
         this.tag = tag;
     }
+
+    public RecyclerData(String title, String description, String tag) {
+        this.title = title;
+        this.description = description;
+        this.tag = tag;
+    }
+
 
     public ArrayList<String> getTitles(){
         return titles;

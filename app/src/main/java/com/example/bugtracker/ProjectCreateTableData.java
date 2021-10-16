@@ -15,19 +15,21 @@ import java.util.Arrays;
 public class ProjectCreateTableData {
 
     public static final int amountOfPartsInData = 4;
-    //epics will be sored in ProjectData/ProjectBoard/Epics
+    //epics will be stored in ProjectData/ProjectBoard/Epics
     //format for epics
     // title:columnposes::itemposes::extras
     //extras for epics
     //isflagged, created, startdate, duedate
 
-    //tasks will be sored in ProjectData/ProjectBoard/Tasks
+    //the extras might need a bit rework
+
+    //tasks will be stored in ProjectData/ProjectBoard/Tasks
     //current format
     // title::taskstitles::tasksimgsids::tasksdescriptions
     //planned
-    // title::taskstitles::tasksimgids::tasksdescriptions::subtaskslist::extras
+    // title::taskstitles::tasksimgids::areflagged::subtaskslist::extras
     //extras for task
-    //isflagged, parent, created
+    //taskdescriptions, parents, createdList
     //subtasklist will be with list of ids (numbers)
 
     //subtasts will be stored in ProjectData/ProjectBoard/Subtasks
@@ -35,6 +37,9 @@ public class ProjectCreateTableData {
     //id::extras
     //extras for subtask
     //title, description, creationdate
+
+    //NOTE img ids might not be needed because the different task types will be stored in different
+    // folders
 
     private static final String separator = "::"; //the type of separator used for saving the data
 

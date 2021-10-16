@@ -59,12 +59,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Inflate Layout
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_layout_checklist, parent, false);
+                .inflate(R.layout.cardlayout_checklist, parent, false);
         return new RecyclerViewHolder(view);
     }
 
     @Override
-    public  void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         recyclerData = recyclerDataArrayList.get(position);
 
         String layout = recyclerData.getTag();

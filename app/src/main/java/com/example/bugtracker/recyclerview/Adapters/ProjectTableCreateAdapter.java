@@ -47,7 +47,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.card_layout_project_table, parent, false);
+                .inflate(R.layout.cardlayout_project_table, parent, false);
         return new RecyclerViewHolder(view);
     }
 

@@ -218,6 +218,20 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 String dayStr;
                 String monthStr;
 
+                //TODO optimize this, the switch case can be removed if the correct format of getting
+                // the date is used example
+
+                /*
+                    Date date = Calendar.getInstance().getTime();
+
+                    DateFormat formatter = new SimpleDateFormat("E");
+                    String today = formatter.format(date);
+                    Message.message(getContext(), today + "");
+
+
+                    NOTE IT MAY NOT WORK
+                 */
+
                 switch (dayOfWeek){
                     case 1:
                         dayStr = "Sunday, ";
@@ -348,7 +362,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                         }
 
                         if (!hour.equals("null") && !minutes.equals("null")){
-                            if (am_txt.getCurrentTextColor() != mcontext.getColor(R.color.lightGray))
+                            if (am_txt.getCurrentTextColor() != mcontext.getColor(R.color.darkerWhite))
                                 curTime = hour + ":" + minutes + "am";
                             else
                                 curTime = hour + ":" + minutes + "pm";
@@ -421,16 +435,16 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
         if (!am_pm_Selected)
         {
             pm_txt.setTextColor(mcontext.getColor(R.color.white));
-            am_txt.setTextColor(mcontext.getColor(R.color.lightGray));
+            am_txt.setTextColor(mcontext.getColor(R.color.darkerWhite));
         }
 
         hours_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.lightGray)) {
+                if (hours_txt.getCurrentTextColor() == mcontext.getColor(R.color.darkerWhite)) {
                     hourSelected = true;
                     hours_txt.setTextColor(mcontext.getColor(R.color.white));
-                    minutes_txt.setTextColor(mcontext.getColor(R.color.lightGray));
+                    minutes_txt.setTextColor(mcontext.getColor(R.color.darkerWhite));
 
                     animationHandler.DateTimeHours();
                     animationHandler.PulseAnim(hours_txt);
@@ -444,10 +458,10 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
         minutes_txt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (minutes_txt.getCurrentTextColor() == mcontext.getColor(R.color.lightGray)){
+                if (minutes_txt.getCurrentTextColor() == mcontext.getColor(R.color.darkerWhite)){
                     hourSelected = false;
                     minutes_txt.setTextColor(mcontext.getColor(R.color.white));
-                    hours_txt.setTextColor(mcontext.getColor(R.color.lightGray));
+                    hours_txt.setTextColor(mcontext.getColor(R.color.darkerWhite));
 
                     animationHandler.DateTimeMinutes();
                     animationHandler.PulseAnim(minutes_txt);
@@ -464,7 +478,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 if (!am_pm_Selected){
                     am_pm_Selected = true;
                     am_txt.setTextColor(mcontext.getColor(R.color.white));
-                    pm_txt.setTextColor(mcontext.getColor(R.color.lightGray));
+                    pm_txt.setTextColor(mcontext.getColor(R.color.darkerWhite));
                 }
             }
         });
@@ -475,7 +489,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 if (am_pm_Selected){
                     am_pm_Selected = false;
                     pm_txt.setTextColor(mcontext.getColor(R.color.white));
-                    am_txt.setTextColor(mcontext.getColor(R.color.lightGray));
+                    am_txt.setTextColor(mcontext.getColor(R.color.darkerWhite));
                 }
             }
         });

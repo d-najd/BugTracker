@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.bugtracker.ui.DashboardFragment"
+        android:name="com.example.bugtracker.ui.RoadmapFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_dashboard" />
 
