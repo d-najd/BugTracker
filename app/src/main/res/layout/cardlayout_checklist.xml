@@ -33,7 +33,7 @@
             tools:ignore="ContentDescription" />
 
         <TextView
-            android:id="@+id/adapterMainText"
+            android:id="@+id/adapterMainTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="52dp"
@@ -85,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/adapterFavoriteBtn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adapterMainText" />
+            app:layout_constraintTop_toBottomOf="@id/adapterMainTxt" />
 
         <ImageButton
             android:id="@+id/adapterFavoriteBtn"

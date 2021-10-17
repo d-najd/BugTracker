@@ -1,5 +1,6 @@
 package com.example.bugtracker.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
+import com.example.bugtracker.activities.MainActivity;
+import com.example.bugtracker.activities.ProjectCreateActivity;
 import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.example.bugtracker.databases.ProjectsDatabase;
@@ -27,6 +30,8 @@ public class ProjectsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
+
+        Listeners();
 
         recyclerDataArrayList = new ArrayList<>();
         recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
@@ -49,6 +54,10 @@ public class ProjectsFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return root;
+    }
+
+    private void Listeners(){
+        ((MainActivity)getActivity()).Listeners(0);
     }
 
     @Override

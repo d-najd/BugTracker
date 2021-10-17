@@ -20,10 +20,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="6dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create"
+        android:textSize="16dp"
         android:textColor="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,8 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="30dp"
-        android:text="item name"
+        android:layout_marginTop="36dp"
+        android:text="Project Name"
         android:alpha=".87"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -45,8 +46,8 @@
 
     <ImageButton
         android:id="@+id/imageButton2"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:src="@drawable/ic_null_background"
         app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
@@ -58,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:alpha=".87"
+        android:textSize="18sp"
         android:text="@string/epic"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
@@ -68,8 +70,9 @@
         android:id="@+id/editText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="12dp"
+
         android:hint="Summary"
         android:maxLines="3"
         android:textColor="@color/white87"
@@ -83,7 +86,7 @@
         android:id="@+id/editText3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         android:hint="@string/description"
         android:maxLines="5"
@@ -98,7 +101,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="4dp"
         android:alpha=".60"
         android:text="@string/start_date"
         android:textColor="@color/white"
@@ -114,14 +118,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:layout_marginTop="32dp"/>
-
-
+        android:layout_marginTop="46dp"/>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".60"/>
+        app:layout_constraintGuide_percent=".55"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -324,7 +324,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.adapterMainText);
+            title = itemView.findViewById(R.id.adapterMainTxt);
             description = itemView.findViewById(R.id.adapterSecondaryTxt);
             editText = itemView.findViewById(R.id.adapterEditTxt);
             mainBtn = itemView.findViewById(R.id.adapterMainBtn);

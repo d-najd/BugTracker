@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.example.bugtracker.Message;
 import com.example.bugtracker.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -14,6 +15,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
+
+    public int fragmentSelected = 0; //0,3 from left to right
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,20 +35,28 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.navHostFragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-        Listeners();
-
     }
 
-    private void Listeners(){
+    public void Listeners(int fragmentSelected){ //NOTE this is called from the fragments
         View mainBtn = findViewById(R.id.mainBtn);
 
-        mainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent( MainActivity.this, ProjectCreateActivity.class);
-                startActivity(intent);
-            }
-        });
+        if (fragmentSelected == 0 || fragmentSelected == 2 || fragmentSelected == 3) {
+            mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, ProjectCreateActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+        else if (fragmentSelected == 1) {
+            mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, RoadmapCreateEpicActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
     }
 }
