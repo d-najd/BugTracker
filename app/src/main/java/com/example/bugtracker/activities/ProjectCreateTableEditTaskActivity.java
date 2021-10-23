@@ -22,7 +22,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
-public class ProjectCreateTableEditTask extends AppCompatActivity {
+public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
     private TextView editDescriptionTxt;
     private TextView titleMiddle;
     private Button columnSelector;
@@ -75,7 +75,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
 
     private void Listeners(){
         Context context = this;
-        ProjectCreateTableEditTask projectCreateTableEditTask = this;
+        ProjectCreateTableEditTaskActivity projectCreateTableEditTask = this;
 
         TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
         ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
@@ -109,7 +109,7 @@ public class ProjectCreateTableEditTask extends AppCompatActivity {
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent( ProjectCreateTableEditTask.this, ProjectCreateTableEditDescription.class);
+                Intent intent = new Intent( ProjectCreateTableEditTaskActivity.this, ProjectCreateTableEditDescriptionActivity.class);
                 intent.putExtra("oldData", oldDescription);
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }

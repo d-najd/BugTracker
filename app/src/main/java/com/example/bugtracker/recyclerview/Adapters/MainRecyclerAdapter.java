@@ -23,8 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.ProjectCreateTable;
-import com.example.bugtracker.activities.ProjectCreateTableEditTask;
+import com.example.bugtracker.activities.ProjectCreateTableActivity;
+import com.example.bugtracker.activities.ProjectCreateTableEditTaskActivity;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -45,7 +45,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int itemPos;
     public String projectTableColumnName;
     public BottomSheetDialog projectCreateEditTask_BottomDialog;
-    public ProjectCreateTableEditTask projectCreateTableEditTask;
+    public ProjectCreateTableEditTaskActivity projectCreateTableEditTask;
     //endregion
 
 
@@ -168,7 +168,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
                     int test = position;
 
                     //TODO fixme there is a bug when you create new item it doesnt get added to the list or smtn and you cant open it without the app crashing
@@ -180,7 +180,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
@@ -216,7 +216,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTask.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTaskActivity.class);
                     intent.putExtra("projectName", projectName);
                     intent.putExtra("columnName", projectTableColumnName);
                     intent.putExtra("columnPos", projectTableColumnPos);

@@ -44,6 +44,8 @@ public class BasicAdapter extends RecyclerView.Adapter<BasicAdapter.RecyclerView
         holder.title.setText(recyclerData.getTitle());
     }
 
+    
+
     @Override
     public int getItemCount() {
         return recyclerDataArrayList.size();

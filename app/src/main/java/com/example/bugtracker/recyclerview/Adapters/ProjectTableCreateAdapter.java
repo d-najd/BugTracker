@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.ProjectCreateTable;
+import com.example.bugtracker.activities.ProjectCreateTableActivity;
 import com.example.bugtracker.dialogs.BasicDialogs;
 import com.example.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.example.bugtracker.recyclerview.RecyclerData;
@@ -33,7 +33,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     public RecyclerViewHolder holder;
-    public ProjectCreateTable projectCreateTableActivity;
+    public ProjectCreateTableActivity projectCreateTableActivity;
     public String projectName;
     private String tag;
     public Intent intent;

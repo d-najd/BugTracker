@@ -17,7 +17,7 @@ import com.example.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 
-public class ProjectCreateTable extends AppCompatActivity {
+public class ProjectCreateTableActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<RecyclerData> recyclerDataArrayList;
     private ArrayList<String> titles = new ArrayList<>();

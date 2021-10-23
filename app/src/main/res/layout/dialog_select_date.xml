@@ -9,11 +9,10 @@
         android:id="@+id/imageView3"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:background="@color/green"
+        android:background="@color/purple_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/calendarView"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <TextView
         android:id="@+id/year"
@@ -22,8 +21,8 @@
         android:paddingStart="12dp"
         android:paddingTop="16dp"
         android:paddingEnd="8dp"
-        android:text="1234"
-        android:textColor="@color/gray"
+        android:text="2077"
+        android:textColor="@color/white60"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +35,7 @@
         android:paddingEnd="8dp"
         android:text="Abc, 00 Abc"
         android:textColor="@color/white"
+        android:alpha=".87"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/year" />

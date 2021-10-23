@@ -23,7 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
-import com.example.bugtracker.activities.ProjectCreateTable;
+import com.example.bugtracker.activities.ProjectCreateTableActivity;
 import com.example.bugtracker.dialogs.BasicDialogs;
 import com.example.bugtracker.dialogs.RadioGroupDialog;
 import com.example.bugtracker.recyclerview.RecyclerData;
@@ -162,7 +162,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
@@ -171,7 +171,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTable.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);

@@ -20,9 +20,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ProjectCreateActivity"/>
-        <activity android:name=".activities.ProjectCreateTable"/>
-        <activity android:name=".activities.ProjectCreateTableEditTask"/>
-        <activity android:name=".activities.ProjectCreateTableEditDescription"/>
+        <activity android:name=".activities.ProjectCreateTableActivity"/>
+        <activity android:name=".activities.ProjectCreateTableEditTaskActivity"/>
+        <activity android:name=".activities.ProjectCreateTableEditDescriptionActivity"/>
         <activity android:name=".activities.RoadmapCreateEpicActivity"/>
         <activity android:name=".activities.CreateTaskActivity"/>
     </application>

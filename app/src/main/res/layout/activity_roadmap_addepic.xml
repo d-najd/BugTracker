@@ -8,24 +8,24 @@
     android:padding="8dp">
 
     <ImageButton
-        android:layout_marginTop="4dp"
         android:id="@+id/closeBtn"
-        android:layout_marginStart="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="4dp"
         android:background="@color/transparent"
-        android:tint="@color/purple_200"
         android:src="@drawable/ic_arrow_back_24dp"
+        android:tint="@color/purple_200"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_marginEnd="6dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
         android:text="@string/create"
-        android:textSize="16dp"
         android:textColor="@color/purple_500"
+        android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/closeBtn" />
@@ -36,8 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="36dp"
-        android:text="Project Name"
         android:alpha=".87"
+        android:text="Project Name"
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,9 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:alpha=".87"
-        android:textSize="18sp"
         android:text="@string/epic"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
         app:layout_constraintTop_toTopOf="@+id/titleMiddle" />
@@ -71,59 +71,78 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="12dp"
-
+        android:layout_marginStart="12dp"
         android:hint="Summary"
         android:maxLines="3"
         android:textColor="@color/white87"
-        android:textColorHint="@color/white38"
+        android:textColorHint="@color/white60"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/titleMiddle"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleMiddle" />
 
     <EditText
         android:id="@+id/editText3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="12dp"
         android:hint="@string/description"
         android:maxLines="5"
-        android:textSize="12sp"
         android:textColor="@color/white87"
         android:textColorHint="@color/white38"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/editText2"
         app:layout_constraintTop_toBottomOf="@+id/editText2" />
 
+    <Button
+        android:id="@+id/startDateButton"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="24dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/editText3"
+        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/startDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="26dp"
         android:alpha=".60"
         android:text="@string/start_date"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@+id/editText3"
         app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
+
+    <Button
+        android:id="@+id/dueDateButton"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_marginTop="52dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/startDateText"
+        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+
     <TextView
-        android:id="@+id/textView3"
-        android:text="Due date"
-        android:textColor="@color/white"
-        android:alpha=".60"
+        android:id="@+id/dueDateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        android:layout_marginTop="46dp"/>
+        android:layout_marginTop="56dp"
+        android:alpha=".60"
+        android:text="@string/dueDate"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/startDateText"
+        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent=".55"/>
+        app:layout_constraintGuide_percent=".55" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

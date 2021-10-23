@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -34,15 +35,19 @@ public class RoadmapFragment extends Fragment {
 
         mcontext = getContext();
 
-        Listeners();
+
+        ((MainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
         WeeksBarRecycler();
         EpicsRecycler();
 
+        ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
+        //NOTE the length needs to be changed to something more dynamic
+        scrollViewLength.width = (int) (10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width));
 
         return root;
     }
 
-    private void WeeksBarRecycler(){
+    private RecyclerView WeeksBarRecycler(){
         ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
         RecyclerView recyclerView = root.findViewById(R.id.recyclerView);
         String tag = recyclerView.getTag().toString();
@@ -61,7 +66,9 @@ public class RoadmapFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        return recyclerView;
     }
+
 
     private void EpicsRecycler(){
         ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
@@ -77,9 +84,6 @@ public class RoadmapFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-    }
 
-    private void Listeners(){
-        ((MainActivity)getActivity()).Listeners(1);
     }
 }
