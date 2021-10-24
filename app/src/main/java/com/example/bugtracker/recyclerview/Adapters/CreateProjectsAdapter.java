@@ -11,15 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.bugtracker.AnimationHandler;
 import com.example.bugtracker.R;
@@ -30,8 +27,10 @@ import com.example.bugtracker.recyclerview.RecyclerData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -106,16 +105,17 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
 
         else if (holder.title.getText().equals(mcontext.getString(R.string.dueDate)))
         {
+            CreateProjectsAdapter createProjectsAdapter = this;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DateTime1(v);
+                    BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DateTime1(v);
+                    BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
                 }
             });
         }
@@ -189,152 +189,8 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private void DateTime1(View v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
-        ViewGroup viewGroup = v.findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
 
-        CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
-        //calendarView.
-        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
-        TextView yearTxt = dialogView.findViewById(R.id.year);
-        calendarView.getDate();
-
-        String curTimeRaw = Calendar.getInstance().getTime().toString();
-        String[] cutTimeSplitted = curTimeRaw.split("\\s+", 4);
-        String curDate = cutTimeSplitted[0] + ", " + cutTimeSplitted[1] + " " + cutTimeSplitted[2];
-
-        yearTxt.setText(Calendar.getInstance().getWeekYear() + "");
-        dayMonthTxt.setText(curDate);
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth);
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                String dayStr;
-                String monthStr;
-
-                //TODO optimize this, the switch case can be removed if the correct format of getting
-                // the date is used example
-
-                /*
-                    Date date = Calendar.getInstance().getTime();
-
-                    DateFormat formatter = new SimpleDateFormat("E");
-                    String today = formatter.format(date);
-                    Message.message(getContext(), today + "");
-
-
-                    NOTE IT MAY NOT WORK
-                 */
-
-                switch (dayOfWeek){
-                    case 1:
-                        dayStr = "Sunday, ";
-                        break;
-                    case 2:
-                        dayStr = "Monday, ";
-                        break;
-                    case 3:
-                        dayStr = "Tuesday, ";
-                        break;
-                    case 4:
-                        dayStr = "Wednesday, ";
-                        break;
-                    case 5:
-                        dayStr = "Thursday, ";
-                        break;
-                    case 6:
-                        dayStr = "Friday, ";
-                        break;
-                    case 7:
-                        dayStr = "Saturday, ";
-                        break;
-
-                    default:
-                        Toast.makeText(mcontext, "HOW THE FUCK DID YOU MANAGE TO BREAK THIS?", Toast.LENGTH_SHORT).show();
-                        throw new IllegalStateException("Unexpected value: " + dayOfWeek);
-                }
-
-                switch (month){
-                    case 0:
-                        monthStr = "Jan ";
-                        break;
-                    case 1:
-                        monthStr = "Feb ";
-                        break;
-                    case 2:
-                        monthStr = "Mar ";
-                        break;
-                    case 3:
-                        monthStr = "Apr ";
-                        break;
-                    case 4:
-                        monthStr = "May ";
-                        break;
-                    case 5:
-                        monthStr = "Jun ";
-                        break;
-                    case 6:
-                        monthStr = "Jul ";
-                        break;
-                    case 7:
-                        monthStr = "Aug ";
-                        break;
-                    case 8:
-                        monthStr = "Sep ";
-                        break;
-                    case 9:
-                        monthStr = "Oct ";
-                        break;
-                    case 10:
-                        monthStr = "Nov ";
-                        break;
-                    case 11:
-                        monthStr = "Dec ";
-                        break;
-                    default:
-                        Toast.makeText(mcontext, "HOW THE FUCK DID YOU MANAGE TO BREAK THIS?", Toast.LENGTH_SHORT).show();
-                        throw new IllegalStateException("Unexpected value: " + month);
-                }
-
-                yearTxt.setText(year + "");
-                dayMonthTxt.setText(dayStr + monthStr + dayOfMonth);
-            }
-        });
-
-        builder.setView(dialogView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        UpdateDateTime(curDate, "null");
-                        DateTime2(v, curDate);
-                    }
-                })
-
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-
-        Window window = alertDialog.getWindow();
-        window.setLayout(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW);
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
-    }
-
-    private void DateTime2(View v, String curDate){
+    public void DateTime2(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
         AnimationHandler animationHandler = new AnimationHandler();
@@ -344,6 +200,10 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
         TextView minutes_txt = dialogView.findViewById(R.id.minutes);
         TextView am_txt = dialogView.findViewById(R.id.am);
         TextView pm_txt = dialogView.findViewById(R.id.pm);
+
+        Calendar c = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+        String curDate = df.format(c.getTime());
 
         hourSelected = true;
 
@@ -371,7 +231,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                             Toast.makeText(mcontext, "something went wrong with setting getting" +
                                     "the hours_txt or minutes_txt", Toast.LENGTH_SHORT).show();
 
-                        UpdateDateTime(curDate, curTime);
+                        AllowReminders(curTime);
                     }
                 })
 
@@ -524,9 +384,14 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
         //endregion
     }
 
-    private void UpdateDateTime(String curDate, String curTime) {
+    //UPDATES THE REST OF THE RECYCLERVIEW ITEMS, FOR EXAMPLE MAKING YOU ABLE TO SELECT A REMINDER
+    public void AllowReminders(String curTime) {
         CreateProjectsAdapter adapter = this;
         RadioGroupDialog radioGroupDialog = new RadioGroupDialog();
+
+        Calendar c = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+        String curDate = df.format(c.getTime());
 
         int reminderPos = 0;
 

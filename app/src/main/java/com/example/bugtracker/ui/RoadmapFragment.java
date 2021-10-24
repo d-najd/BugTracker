@@ -35,7 +35,6 @@ public class RoadmapFragment extends Fragment {
 
         mcontext = getContext();
 
-
         ((MainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
         WeeksBarRecycler();
         EpicsRecycler();

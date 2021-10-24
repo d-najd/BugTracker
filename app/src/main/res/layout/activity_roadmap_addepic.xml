@@ -36,9 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="36dp"
-        android:alpha=".87"
         android:text="Project Name"
-        android:textColor="@color/white"
+        android:textColor="@color/white87"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/closeBtn" />
@@ -58,9 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:alpha=".87"
         android:text="@string/epic"
-        android:textColor="@color/white"
+        android:textColor="@color/white87"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
         app:layout_constraintStart_toEndOf="@+id/imageButton2"
@@ -70,8 +68,8 @@
         android:id="@+id/editText2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="28dp"
         android:hint="Summary"
         android:maxLines="3"
         android:textColor="@color/white87"
@@ -99,9 +97,9 @@
     <Button
         android:id="@+id/startDateButton"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="76dp"
         android:layout_marginTop="24dp"
-        android:visibility="invisible"
+        android:background="@color/transparent"
         app:layout_constraintStart_toStartOf="@+id/editText3"
         app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
@@ -111,19 +109,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="26dp"
-        android:alpha=".60"
         android:text="@string/start_date"
-        android:textColor="@color/white"
+        android:textColor="@color/white60"
         app:layout_constraintStart_toStartOf="@+id/editText3"
         app:layout_constraintTop_toBottomOf="@+id/editText3" />
 
+    <TextView
+        android:id="@+id/startDateDescriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="0000-00-00"
+        android:textColor="@color/white87"
+        android:textSize="17sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/startDateText"
+        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
 
     <Button
         android:id="@+id/dueDateButton"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="76dp"
         android:layout_marginTop="52dp"
-        android:visibility="invisible"
+        android:background="@color/transparent"
         app:layout_constraintStart_toStartOf="@+id/startDateText"
         app:layout_constraintTop_toBottomOf="@+id/startDateText" />
 
@@ -132,11 +140,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
-        android:alpha=".60"
         android:text="@string/dueDate"
-        android:textColor="@color/white"
+        android:textColor="@color/white60"
         app:layout_constraintStart_toStartOf="@+id/startDateText"
         app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+
+    <TextView
+        android:id="@+id/dueDateDescriptionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0000-00-00"
+        android:textColor="@color/white87"
+        android:textSize="17sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@+id/dueDateText"
+        app:layout_constraintTop_toBottomOf="@+id/dueDateText" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

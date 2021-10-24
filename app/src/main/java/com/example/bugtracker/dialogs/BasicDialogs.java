@@ -4,22 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,17 +23,23 @@ import com.example.bugtracker.Message;
 import com.example.bugtracker.ProjectCreateTableData;
 import com.example.bugtracker.R;
 import com.example.bugtracker.activities.ProjectCreateTableActivity;
+import com.example.bugtracker.activities.RoadmapCreateEpicActivity;
+import com.example.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.example.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.example.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.example.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
+import kotlin.Triple;
 
 public class BasicDialogs {
     public static void BasicDialog(Context mcontext, String title, String description, String negativeButtonTxt){
-        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, description, negativeButtonTxt, false);
+        Pair<AlertDialog.Builder, EditText> data = BasicEdittextDialogConstructor(mcontext, title, description, negativeButtonTxt, false);
         AlertDialog.Builder builder = data.first;
         
         DialogBuilder(mcontext, builder);
@@ -45,8 +47,8 @@ public class BasicDialogs {
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
                                           String positiveButtonTxt, int holderPos, ProjectCreateTableActivity projectCreateTableActivity,
-                                            ProjectTableCreateAdapter projectTableCreateAdapter) {
-        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, description, negativeButtonTxt, true);
+                                            ProjectTableCreateAdapter activity) {
+        Pair<AlertDialog.Builder, EditText> data = BasicEdittextDialogConstructor(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
@@ -69,7 +71,7 @@ public class BasicDialogs {
                 String newTitle = data.second.getText().toString();
 
                 projectCreateTableActivity.RefreshActivity();
-                projectTableCreateAdapter.RenameTitle(holderPos, newTitle);
+                activity.RenameTitle(holderPos, newTitle);
             }
         });
 
@@ -79,22 +81,22 @@ public class BasicDialogs {
     //for adding new column
     public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
                                        String negativeButtonTxt, String projectName,
-                                       ProjectCreateTableActivity projectCreateTableActivity, Intent intent){
-        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+                                       ProjectCreateTableActivity activity, Intent intent){
+        Pair<AlertDialog.Builder, EditText> data = BasicEdittextDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
@@ -119,7 +121,7 @@ public class BasicDialogs {
                         //the data from the recyclerviews gets removed for some reason when editText
                         //is pressed, refreshing the activity is the only way that I can think of,
                         //notifying the adapters that the data is changed in any way doesn't work
-                        projectCreateTableActivity.RefreshActivity();
+                        activity.RefreshActivity();
                     }
 
                 });
@@ -132,22 +134,22 @@ public class BasicDialogs {
     //for adding new item inside the column
     public static void NewColumnItemDialog(Context mcontext, String title, String positiveButtonTxt,
                                            String negativeButtonTxt, int position, String projectName,
-                                           ProjectCreateTableActivity projectCreateTableActivity){
-        Pair<AlertDialog.Builder, EditText> data = BasicDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
+                                           ProjectCreateTableActivity activity){
+        Pair<AlertDialog.Builder, EditText> data = BasicEdittextDialogConstructor(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
@@ -157,12 +159,111 @@ public class BasicDialogs {
                 String title = editText.getText().toString();
 
                 ProjectCreateTableData.SaveNewItem(title, projectName, position, true, mcontext);
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
        DialogBuilder(mcontext, builder);
     }
+
+
+    public static void CalendarDateSetterDialog(Context mcontext, View v, CreateProjectsAdapter activity){
+        Triple<AlertDialog.Builder, CalendarView, View> data = BasicCalendarDialogConstructor(mcontext, v);
+        AlertDialog.Builder builder = data.getFirst();
+        CalendarView calendarView = data.getSecond();
+        View dialogView = data.getThird();
+
+        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
+        TextView yearTxt = dialogView.findViewById(R.id.year);
+
+        final Calendar[] calendarSelectedDate = {GregorianCalendar.getInstance()};
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                calendarSelectedDate[0] = GregorianCalendar.getInstance();
+                calendarSelectedDate[0].set(year, month, dayOfMonth);
+                SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+                String curDate = df.format(calendarSelectedDate[0].getTime());
+
+                yearTxt.setText(year + "");
+                dayMonthTxt.setText(curDate);
+            }
+        });
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //use calendarSelectedDate[0] to pass calendar data
+                        activity.AllowReminders("null");
+                        activity.DateTime2(v);
+                    }
+                })
+
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        DialogBuilder(mcontext, builder);
+    }
+
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapCreateEpicActivity activity, boolean startDate){
+        //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
+        // you want to remove it and return it to default (empty)
+        //true for startDate, false for dueDate
+
+        Triple<AlertDialog.Builder, CalendarView, View> data = BasicCalendarDialogConstructor(mcontext, v);
+        AlertDialog.Builder builder = data.getFirst();
+        CalendarView calendarView = data.getSecond();
+        View dialogView = data.getThird();
+
+        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
+        TextView yearTxt = dialogView.findViewById(R.id.year);
+
+        final Calendar[] calendarSelectedDate = {GregorianCalendar.getInstance()};
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                calendarSelectedDate[0] = GregorianCalendar.getInstance();
+                calendarSelectedDate[0].set(year, month, dayOfMonth);
+                SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+                String curDate = df.format(calendarSelectedDate[0].getTime());
+
+                yearTxt.setText(year + "");
+                dayMonthTxt.setText(curDate);
+            }
+        });
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (startDate) {
+                            activity.UpdateStartDateDescription(calendarSelectedDate[0]);
+                        }
+                        else
+                            activity.UpdateDueDateDescription(calendarSelectedDate[0]);
+                    }
+                })
+
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        DialogBuilder(mcontext, builder);
+    }
+
+
+
+
+
+
 
     public static Pair<MainRecyclerAdapter, BottomSheetDialog> BottomDialogCreator(Context context, View v, ViewGroup viewGroup,
                                                                                    String titleTxt, String descriptionTxt, ArrayList<String> titles,
@@ -219,8 +320,8 @@ public class BasicDialogs {
         return new Pair<>(adapter, bottomDialog);
     }
 
-    private static Pair<AlertDialog.Builder, EditText> BasicDialogConstructor(Context mcontext, String title, String description,
-                                                                              String negativeButtonTxt, boolean isEditTextDialog){
+    private static Pair<AlertDialog.Builder, EditText> BasicEdittextDialogConstructor(Context mcontext, String title, String description,
+                                                                                      String negativeButtonTxt, boolean isEditTextDialog){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
 
         final EditText editText = new EditText(mcontext);
@@ -251,6 +352,30 @@ public class BasicDialogs {
         return new Pair<>(builder, editText);
     }
 
+    @SuppressLint("SetTextI18n")
+    private static Triple<AlertDialog.Builder, CalendarView, View> BasicCalendarDialogConstructor(Context mcontext, View v){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+        ViewGroup viewGroup = v.findViewById(android.R.id.content);
+        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
+
+        CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
+        //calendarView.
+        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
+        TextView yearTxt = dialogView.findViewById(R.id.year);
+        calendarView.getDate();
+
+        Calendar c = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+        String curDate = df.format(c.getTime());
+
+        yearTxt.setText(Calendar.getInstance().getWeekYear() + "");
+        dayMonthTxt.setText(curDate);
+
+        return new Triple<>(builder, calendarView, dialogView);
+    }
+
+
     private static void DialogBuilder(Context mcontext, AlertDialog.Builder builder){
         AlertDialog alertDialog = builder.create();
         alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
@@ -269,139 +394,8 @@ public class BasicDialogs {
         }
     }
 
-    /*NOTE check RoadmapCreateEpicActivity for more info
 
-    @SuppressLint("SetTextI18n")
-    private void DateSetterBuilder(View v){
-        AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
-        ViewGroup viewGroup = v.findViewById(android.R.id.content);
-        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
-
-        CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
-        //calendarView.
-        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
-        TextView yearTxt = dialogView.findViewById(R.id.year);
-        calendarView.getDate();
-
-        String curTimeRaw = Calendar.getInstance().getTime().toString();
-        String[] cutTimeSplitted = curTimeRaw.split("\\s+", 4);
-        String curDate = cutTimeSplitted[0] + ", " + cutTimeSplitted[1] + " " + cutTimeSplitted[2];
-
-        yearTxt.setText(Calendar.getInstance().getWeekYear() + "");
-        dayMonthTxt.setText(curDate);
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, dayOfMonth);
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                String dayStr;
-                String monthStr;
-
-                switch (dayOfWeek){
-                    case 1:
-                        dayStr = "Sunday, ";
-                        break;
-                    case 2:
-                        dayStr = "Monday, ";
-                        break;
-                    case 3:
-                        dayStr = "Tuesday, ";
-                        break;
-                    case 4:
-                        dayStr = "Wednesday, ";
-                        break;
-                    case 5:
-                        dayStr = "Thursday, ";
-                        break;
-                    case 6:
-                        dayStr = "Friday, ";
-                        break;
-                    case 7:
-                        dayStr = "Saturday, ";
-                        break;
-
-                    default:
-                        Toast.makeText(mcontext, "HOW THE FUCK DID YOU MANAGE TO BREAK THIS?", Toast.LENGTH_SHORT).show();
-                        throw new IllegalStateException("Unexpected value: " + dayOfWeek);
-                }
-
-                switch (month){
-                    case 0:
-                        monthStr = "Jan ";
-                        break;
-                    case 1:
-                        monthStr = "Feb ";
-                        break;
-                    case 2:
-                        monthStr = "Mar ";
-                        break;
-                    case 3:
-                        monthStr = "Apr ";
-                        break;
-                    case 4:
-                        monthStr = "May ";
-                        break;
-                    case 5:
-                        monthStr = "Jun ";
-                        break;
-                    case 6:
-                        monthStr = "Jul ";
-                        break;
-                    case 7:
-                        monthStr = "Aug ";
-                        break;
-                    case 8:
-                        monthStr = "Sep ";
-                        break;
-                    case 9:
-                        monthStr = "Oct ";
-                        break;
-                    case 10:
-                        monthStr = "Nov ";
-                        break;
-                    case 11:
-                        monthStr = "Dec ";
-                        break;
-                    default:
-                        Toast.makeText(mcontext, "HOW THE FUCK DID YOU MANAGE TO BREAK THIS?", Toast.LENGTH_SHORT).show();
-                        throw new IllegalStateException("Unexpected value: " + month);
-                }
-
-                yearTxt.setText(year + "");
-                dayMonthTxt.setText(dayStr + monthStr + dayOfMonth);
-            }
-        });
-
-        builder.setView(dialogView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        UpdateDateTime(curDate, "null");
-                        DateTime2(v, curDate);
-                    }
-                })
-
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(R.color.darkGray);
-
-        alertDialog.show();
-
-        Window window = alertDialog.getWindow();
-        window.setLayout(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT);
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.YELLOW);
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.YELLOW);
-    }
-
+/*
      private void HourSetter(View v, String curDate){
         AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
@@ -591,5 +585,5 @@ public class BasicDialogs {
 
         //endregion
     }
-    */
+ */
 }

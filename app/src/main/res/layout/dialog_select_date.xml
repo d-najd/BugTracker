@@ -34,8 +34,7 @@
         android:paddingStart="12dp"
         android:paddingEnd="8dp"
         android:text="Abc, 00 Abc"
-        android:textColor="@color/white"
-        android:alpha=".87"
+        android:textColor="@color/white87"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/year" />
