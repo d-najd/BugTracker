@@ -52,26 +52,40 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         holder.title.setText(recyclerData.getTitle());
         holder.description.setText(recyclerData.getDescription());
 
-        Calendar calendarStartDate = recyclerData.getCalendarStartDate();
         Calendar calendarWeeksStartDate = GregorianCalendar.getInstance();
+        Calendar calendarStartDate = recyclerData.getCalendarStartDate();
+        Calendar calendarEndDate = recyclerData.getCalendarEndDate();
 
-        Date date = calendarStartDate.getTime();
-        Date date1 = calendarWeeksStartDate.getTime();
+        Date weeksStartDateTime = calendarWeeksStartDate.getTime();
+        Date startDateTime = calendarStartDate.getTime();
+        Date endDateTime = calendarEndDate.getTime();
 
-        long difference = Math.abs(date.getTime() - date1.getTime());
-        long daysDifference = difference / (24 * 60 * 60 * 1000); //convert to days difference
+        //region startDateTime
+            long timeDifference = Math.abs(startDateTime.getTime() - weeksStartDateTime.getTime()); //value is milliseconds
+            long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
 
-        if (daysDifference <= 0){
-            Message.message(mcontext, "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
-                    "the start date should be smaller than the end date");
-            Log.wtf("ERROR", "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
-                    "the start date should be smaller than the end date");
-        }
+            RelativeLayout.LayoutParams marginStart = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
+            marginStart.setMarginStart((int) ((holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width) / 7) * daysDifference));
+        //endregion
+        //region endDateTime
+            timeDifference = Math.abs(endDateTime.getTime() - startDateTime.getTime());
+            daysDifference = timeDifference / (24 * 60 * 60 * 1000);
 
-        RelativeLayout.LayoutParams marginStart = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
-        marginStart.setMarginStart((int) ((holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width) / 7) * daysDifference));
+            RelativeLayout.LayoutParams cardViewWidth = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
+            cardViewWidth.width = (int) ((holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width) / 7) * daysDifference);
+        //endregion
 
         /*
+                //TODO make it to check if endDateTime is bigger than startDateTime (the projects
+                //TODO to end before it has even started which doesn't make sense)
+                if (daysDifference <= 0){
+                Message.message(mcontext, "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
+                        "the start date should be smaller than the end date");
+                Log.wtf("ERROR", "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
+                        "the start date should be smaller than the end date");
+            }
+
+
         Calendar calendarSelectedDate = GregorianCalendar.getInstance();
         calendarSelectedDate.set(year, month, dayOfMonth);
         SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");

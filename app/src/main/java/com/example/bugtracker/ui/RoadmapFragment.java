@@ -77,8 +77,8 @@ public class RoadmapFragment extends Fragment {
         //TODO 2 different dates cant be set for some reason
         Calendar calendarStartDate = GregorianCalendar.getInstance(); Calendar calendarEndDate = GregorianCalendar.getInstance();
         calendarStartDate.add(Calendar.DATE, 7);
+        calendarEndDate.add(Calendar.DATE, 21);
         recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
-        calendarStartDate.add(Calendar.DATE, 7);
         recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
 
         RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(recyclerDataArrayList, mcontext);

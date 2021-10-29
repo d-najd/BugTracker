@@ -15,22 +15,19 @@ import java.util.Arrays;
 public class ProjectCreateTableData {
 
     public static final int amountOfPartsInData = 4;
-    //epics will be stored in ProjectData/ProjectBoard/Epics
+    //epics will be stored in ProjectData/Roadmap/Epics
     //format for epics
-    // title:columnposes::itemposes::extras
+    //titles::startdates::dueDates::areflagged::extras
     //extras for epics
-    //isflagged, created, startdate, duedate
-
-    //the extras might need a bit rework
+    //descriptions::dateCreated::taskTitles(the column title)::tasks(the task inside the column)::ids(id for the epic)
 
     //tasks will be stored in ProjectData/ProjectBoard/Tasks
     //current format
-    // title::taskstitles::tasksimgsids::tasksdescriptions
+    //titles::taskstitles::tasksimgsids::tasksdescriptions
     //planned
-    // title::taskstitles::tasksimgids::areflagged::subtaskslist::extras
+    //title::taskstitles::subTaskIdList::areflagged::extras
     //extras for task
-    //taskdescriptions, parents, createdList
-    //subtasklist will be with list of ids (numbers)
+    //taskdescriptions, parentids, dateCreatedList
 
     //subtasts will be stored in ProjectData/ProjectBoard/Subtasks
     //format for subtasks
@@ -553,16 +550,9 @@ public class ProjectCreateTableData {
 
     public static void MakeFolders(Context context){
         //makes folders where the data is stored
-        //TODO add function which checks if premissions for writing data are allowed
+        //TODO add function which checks if permissions for writing data are allowed
 
-        File folder = new File(context.getFilesDir(), "ProjectData");
-
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-
-        folder = new File(context.getFilesDir() + File.separator + "ProjectData",
-                "ProjectBoard");
+        File folder = new File(context.getFilesDir() + File.separator + "ProjectData/ProjectBoard");
         if (!folder.exists()) {
             folder.mkdirs();
         }
