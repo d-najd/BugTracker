@@ -51,12 +51,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         return new RecyclerViewHolder(view);
     }
 
-    //TODO use singleton to fix the problems with the items when pressing editext? also not sure if
-    // it needs to be added in here or in RecycelerAdapter
-
-    //TODO FIXME if there are tooo many colums when you swipe from left to right it will increase the
-    // gaps between the items more and more
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);

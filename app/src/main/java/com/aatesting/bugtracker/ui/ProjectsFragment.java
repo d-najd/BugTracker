@@ -118,7 +118,6 @@ public class ProjectsFragment extends Fragment {
 
             ProjectCreateTableData.RemoveFile(recyclerDataArrayList.get
                     (viewHolder.getAdapterPosition()).getTitle(), getContext());
-            //TODO FIXME
             helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 
             recyclerDataArrayList.remove(viewHolder.getAdapterPosition());

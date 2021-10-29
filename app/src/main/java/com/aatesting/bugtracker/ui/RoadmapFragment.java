@@ -74,7 +74,7 @@ public class RoadmapFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerView1);
         String tag = recyclerView.getTag().toString();
 
-        //TODO 2 different dates cant be set for some reason
+        //TODO FIXME 2 different dates cant be set for some reason
         Calendar calendarStartDate = GregorianCalendar.getInstance(); Calendar calendarEndDate = GregorianCalendar.getInstance();
         calendarStartDate.add(Calendar.DATE, 7);
         calendarEndDate.add(Calendar.DATE, 21);

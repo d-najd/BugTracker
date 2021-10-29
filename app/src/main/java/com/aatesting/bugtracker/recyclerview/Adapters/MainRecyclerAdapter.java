@@ -122,14 +122,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @SuppressLint("ClickableViewAccessibility")
     private void Listeners(int position){
-
-        Log.wtf("test", recyclerData.getTag());
-
-
-        //TODO there seems to be a problem with the listeners, also need to make sure which activity is used
-        // at the moment for example the imte due date is for setting date in project create but in
-        // projectcreatetable it wont be
-
         holder.editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
