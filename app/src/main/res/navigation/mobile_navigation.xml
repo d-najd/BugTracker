@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_projects"
-        android:name="com.example.bugtracker.ui.ProjectsFragment"
+        android:name="com.aatesting.bugtracker.ui.ProjectsFragment"
         android:label="@string/titleProjects"
         tools:layout="@layout/fragment_projects" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.bugtracker.ui.RoadmapFragment"
+        android:name="com.aatesting.bugtracker.ui.RoadmapFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_roadmap" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.bugtracker.ui.NotificationsFragment"
+        android:name="com.aatesting.bugtracker.ui.NotificationsFragment"
         android:label="@string/titleNotifications"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_account"
-        android:name="com.example.bugtracker.ui.AccountFragment"
+        android:name="com.aatesting.bugtracker.ui.AccountFragment"
         android:label="@string/titleAccount"
         tools:layout="@layout/fragment_account" />
 </navigation>
