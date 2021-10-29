@@ -15,6 +15,8 @@ import java.util.Arrays;
 public class ProjectCreateTableData {
 
     public static final int amountOfPartsInData = 4;
+    private static final String separator = "::"; //the type of separator used for saving the data
+
     //epics will be stored in ProjectData/Roadmap/Epics
     //format for epics
     //titles::startdates::dueDates::areflagged::extras
@@ -35,33 +37,7 @@ public class ProjectCreateTableData {
     //extras for subtask
     //title, description, creationdate
 
-    //NOTE img ids might not be needed because the different task types will be stored in different
-    // folders
-
-    private static final String separator = "::"; //the type of separator used for saving the data
-
     //region getters
-
-    public static String GetData(String projectName, Context context){
-        String data = null;
-
-        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
-        try {
-            FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
-            while((read = fileInputStream.read())!= -1){
-                buffer.append((char)read);
-            }
-            data = buffer.toString();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
 
     public static ArrayList<String> GetAllColumnTitles(String projectName, Context context){
         ArrayList<String> allColumns = new ArrayList<>();
@@ -211,8 +187,6 @@ public class ProjectCreateTableData {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Log.wtf("test", "test2");
-            Message.message(context, "test2");
         }
     }
 
@@ -462,7 +436,6 @@ public class ProjectCreateTableData {
                 else
                     dataRaw.append(oldItemParts[b]);
             }
-            //TODO FIXME this doesnt work when there is ONLY 1 item in each column, it adds the "]" FOR NO FUCKING REASON
             if (itemPos == oldItemParts.length - 1)
                 dataRaw.append("]");
 
@@ -548,11 +521,30 @@ public class ProjectCreateTableData {
 
     //endregion
 
+    public static String GetData(String projectName, Context context){
+        String data = null;
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+        try {
+            FileInputStream fileInputStream = new FileInputStream(f);
+            int read = -1;
+            StringBuffer buffer = new StringBuffer();
+            while((read = fileInputStream.read())!= -1){
+                buffer.append((char)read);
+            }
+            data = buffer.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
     public static void MakeFolders(Context context){
-        //makes folders where the data is stored
         //TODO add function which checks if permissions for writing data are allowed
 
-        File folder = new File(context.getFilesDir() + File.separator + "ProjectData/ProjectBoard");
+        File folder = new File(context.getFilesDir() + File.separator + "ProjectData" + File.separator + "ProjectBoard");
         if (!folder.exists()) {
             folder.mkdirs();
         }
