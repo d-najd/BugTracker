@@ -17,10 +17,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="Test"
+        android:text="Example"
         android:elevation="4dp"
         android:layout_marginTop="4dp"
         android:textSize="17sp"
+        android:layout_alignStart="@+id/cardView"
         android:id="@+id/adapterMainTxt"
         android:textColor="@color/white87"/>
 
@@ -28,9 +29,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-
         android:id="@+id/adapterSecondaryTxt"
         android:textColor="@color/white87"
+        android:layout_alignStart="@+id/cardView"
         android:textSize="12sp"
         android:elevation="4dp"
         android:text="00 Nul - 00 Nul"

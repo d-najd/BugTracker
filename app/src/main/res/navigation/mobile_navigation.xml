@@ -15,7 +15,7 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.bugtracker.ui.RoadmapFragment"
         android:label="@string/titleRoadmap"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_roadmap" />
 
     <fragment
         android:id="@+id/navigation_notifications"

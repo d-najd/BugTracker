@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,7 +30,7 @@ public class RoadmapFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        root = inflater.inflate(R.layout.fragment_roadmap, container, false);
 
         mcontext = getContext();
 
@@ -40,7 +39,7 @@ public class RoadmapFragment extends Fragment {
         EpicsRecycler();
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
-        //NOTE the length needs to be changed to something more dynamic
+        //TODO NOTE the length needs to be changed to something more dynamic
         scrollViewLength.width = (int) (10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width));
 
         return root;
@@ -57,6 +56,7 @@ public class RoadmapFragment extends Fragment {
             DateFormat df = new SimpleDateFormat("'w'ww");
             String startDate = df.format(c.getTime());
             recyclerDataArrayList.add(new RecyclerData(startDate, tag));
+
         }
 
         BasicAdapter adapter = new BasicAdapter(recyclerDataArrayList, mcontext);
@@ -74,8 +74,12 @@ public class RoadmapFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerView1);
         String tag = recyclerView.getTag().toString();
 
-        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", tag));
-        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", tag));
+        //TODO 2 different dates cant be set for some reason
+        Calendar calendarStartDate = GregorianCalendar.getInstance(); Calendar calendarEndDate = GregorianCalendar.getInstance();
+        calendarStartDate.add(Calendar.DATE, 7);
+        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
+        calendarStartDate.add(Calendar.DATE, 7);
+        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
 
         RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(recyclerDataArrayList, mcontext);
 

@@ -128,7 +128,7 @@ public class BasicDialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    //TODO refreshing the data to fix problems doesnt seem to work out, need to fidn other way to
+    //TODO refreshing the data to fix problems doesnt seem to work out, need to fiND other way to
     // refresh the activity
 
     //for adding new item inside the column
@@ -259,12 +259,6 @@ public class BasicDialogs {
         DialogBuilder(mcontext, builder);
     }
 
-
-
-
-
-
-
     public static Pair<MainRecyclerAdapter, BottomSheetDialog> BottomDialogCreator(Context context, View v, ViewGroup viewGroup,
                                                                                    String titleTxt, String descriptionTxt, ArrayList<String> titles,
                                                                                    ArrayList<String> descriptions, ArrayList<Integer> images, String tag) {
@@ -319,6 +313,12 @@ public class BasicDialogs {
 
         return new Pair<>(adapter, bottomDialog);
     }
+
+
+
+
+
+
 
     private static Pair<AlertDialog.Builder, EditText> BasicEdittextDialogConstructor(Context mcontext, String title, String description,
                                                                                       String negativeButtonTxt, boolean isEditTextDialog){

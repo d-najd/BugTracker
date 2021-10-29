@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class RecyclerData {
 
@@ -19,6 +20,9 @@ public class RecyclerData {
     private ArrayList<Integer> imgIds;
     private Boolean favorite = false;
     private Boolean editTextEnable = false;
+
+    private Calendar calendarStartDate;
+    private Calendar calendarEndDate;
 
     public RecyclerData(String title, String description, int imgId, boolean editTextEnable, String tag){
         this.title = title;
@@ -81,6 +85,15 @@ public class RecyclerData {
     public RecyclerData(String title, String description, String tag) {
         this.title = title;
         this.description = description;
+        this.tag = tag;
+    }
+
+    //for epics
+    public RecyclerData(String title, String description, Calendar calendarStartDate, Calendar calendarEndDate, String tag) {
+        this.title = title;
+        this.description = description;
+        this.calendarStartDate = calendarStartDate;
+        this.calendarEndDate = calendarEndDate;
         this.tag = tag;
     }
 
@@ -157,4 +170,20 @@ public class RecyclerData {
     }
 
     public String getTag(){ return tag;}
+
+    public void setCalendarStartDate(Calendar calendarStartDate) {
+        this.calendarStartDate = calendarStartDate;
+    }
+
+    public Calendar getCalendarStartDate(){
+        return calendarStartDate;
+    }
+
+    public void setCalendarEndDate(Calendar calendarEndDate) {
+        this.calendarEndDate = calendarEndDate;
+    }
+
+    public Calendar getCalendarEndDate(){
+        return calendarEndDate;
+    }
 }
