@@ -66,17 +66,22 @@ public class RoadmapFragment extends Fragment {
         Date earliestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
         Date latestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, false);
 
+        Calendar calendarEarliestDate = GregorianCalendar.getInstance();
+        calendarEarliestDate.setTime(earliestDate);
+        calendarEarliestDate.set(Calendar.WEEK_OF_YEAR, calendarEarliestDate.get(Calendar.WEEK_OF_YEAR) - 1);
+        earliestDate = calendarEarliestDate.getTime();
+
         calendarCurDate = GregorianCalendar.getInstance(); //calendar that is used for knowing which week is next to be added and which is current
         calendarCurDate.setTime(earliestDate);
 
         for (int i = 0; i < 10; i++){
+            calendarCurDate.add(Calendar.WEEK_OF_YEAR, 1);
             DateFormat df = new SimpleDateFormat("'w'ww");
             String startDate = df.format(calendarCurDate.getTime());
             weeksRecyclerDataArrayList.add(new RecyclerData(startDate, tag));
-            calendarCurDate.add(Calendar.WEEK_OF_YEAR, i);
         }
 
-        AddMoreWeeks(earliestDate, latestDate, tag);
+        AddMoreWeeks(calendarCurDate.getTime(), latestDate, tag);
 
         BasicAdapter adapter = new BasicAdapter(weeksRecyclerDataArrayList, mcontext);
 
@@ -105,20 +110,26 @@ public class RoadmapFragment extends Fragment {
                 weeksDifference = weeksDifference / 7;
 
             for (int i = 0; i < weeksDifference; i++){
+                calendarCurDate.add(Calendar.WEEK_OF_YEAR, 1);
                 DateFormat df = new SimpleDateFormat("'w'ww");
                 String startDate = df.format(calendarCurDate.getTime());
                 weeksRecyclerDataArrayList.add(new RecyclerData(startDate, tag));
-                calendarCurDate.add(Calendar.WEEK_OF_YEAR, i);
             }
         }
     }
 
     private void EpicsRecycler(){
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
+        Date earliestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
+
+        Calendar calendarEarliestDate = GregorianCalendar.getInstance();
+        calendarEarliestDate.setTime(earliestDate);
+        calendarEarliestDate.set(Calendar.WEEK_OF_YEAR, calendarEarliestDate.get(Calendar.WEEK_OF_YEAR) - 1);
+        earliestDate = calendarEarliestDate.getTime();
 
         //GetEpicsFromStorage puts the data in recyclerDataArrayList
         GetEpicsFromStorage();
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, calendarCurDate.getTime(), mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, earliestDate, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 

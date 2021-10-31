@@ -53,13 +53,16 @@ public class RoadmapCreateEpicData {
 
         String[] parts = data.split("::");
         for (int i = 0; i < parts.length / amountOfPartsInData; i++) {
-            String curDateStr = parts[1 + (i * amountOfPartsInData)];
+            String earliestDateStr = parts[1 + (i * amountOfPartsInData)];
+            String latestDateStr = parts[2 + (i * amountOfPartsInData)];
             try {
-                Date curDataDate = df.parse(curDateStr);
+                Date curDataDate;
                 long timeDifference;//value is milliseconds
                 if (getEarliest) {
+                    curDataDate = df.parse(earliestDateStr);
                     timeDifference = returnDate.getTime() - curDataDate.getTime();
                 } else {
+                    curDataDate = df.parse(latestDateStr);
                     timeDifference = curDataDate.getTime() - returnDate.getTime();
                 }
                 if (timeDifference <= 0)
@@ -91,13 +94,13 @@ public class RoadmapCreateEpicData {
         if (endDate.isEmpty() && startDate.isEmpty()){
             startDate = df.format(calendarDate.getTime());
 
-            calendarDate.add(Calendar.WEEK_OF_YEAR, 1);
+            calendarDate.add(Calendar.WEEK_OF_YEAR, 2);
             endDate = df.format(calendarDate.getTime());
         } else if (endDate.isEmpty()) {
             try {
                 Date date = df.parse(startDate);
                 calendarDate.setTime(date);
-                calendarDate.add(Calendar.WEEK_OF_YEAR, 1);
+                calendarDate.add(Calendar.WEEK_OF_YEAR, 2);
                 endDate = df.format(calendarDate.getTime());
             } catch (ParseException e) {
                 e.printStackTrace();

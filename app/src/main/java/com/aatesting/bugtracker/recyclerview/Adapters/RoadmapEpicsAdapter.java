@@ -54,12 +54,6 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
         holder.title.setText(recyclerData.getTitle());
 
-        Calendar calendarWeeksStartDateTime = GregorianCalendar.getInstance();
-        calendarWeeksStartDateTime.set(Calendar.MILLISECOND, 0);
-        calendarWeeksStartDateTime.set(Calendar.SECOND, 0);
-        calendarWeeksStartDateTime.set(Calendar.MINUTE, 0);
-        calendarWeeksStartDateTime.set(Calendar.HOUR_OF_DAY, 0);
-        weeksStartDateTime = calendarWeeksStartDateTime.getTime();
 
         startDateTime = recyclerData.getCalendarStartDate().getTime();
         endDateTime = recyclerData.getCalendarEndDate().getTime();
