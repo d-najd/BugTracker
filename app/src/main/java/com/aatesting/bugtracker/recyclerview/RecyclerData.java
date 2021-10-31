@@ -84,9 +84,8 @@ public class RecyclerData {
     }
 
     //for epics
-    public RecyclerData(String title, String description, Calendar calendarStartDate, Calendar calendarEndDate, String tag) {
+    public RecyclerData(String title, Calendar calendarStartDate, Calendar calendarEndDate, String tag) {
         this.title = title;
-        this.description = description;
         this.calendarStartDate = calendarStartDate;
         this.calendarEndDate = calendarEndDate;
         this.tag = tag;

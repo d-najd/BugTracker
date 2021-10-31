@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;

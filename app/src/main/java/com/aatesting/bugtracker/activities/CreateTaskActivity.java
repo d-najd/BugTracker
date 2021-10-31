@@ -22,7 +22,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
         recyclerDataArrayList = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
         //types are epic for lot of tasks and task.

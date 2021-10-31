@@ -20,6 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/createTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
@@ -65,7 +66,7 @@
         app:layout_constraintTop_toTopOf="@+id/titleMiddle" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/titleEdt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -80,7 +81,7 @@
         app:layout_constraintTop_toBottomOf="@+id/titleMiddle" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/descriptionEdt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -91,8 +92,8 @@
         android:textColorHint="@color/white38"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintStart_toStartOf="@+id/titleEdt"
+        app:layout_constraintTop_toBottomOf="@+id/titleEdt" />
 
     <Button
         android:id="@+id/startDateButton"
@@ -100,31 +101,31 @@
         android:layout_height="76dp"
         android:layout_marginTop="24dp"
         android:background="@color/transparent"
-        app:layout_constraintStart_toStartOf="@+id/editText3"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintStart_toStartOf="@+id/descriptionEdt"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionEdt" />
 
     <TextView
-        android:id="@+id/startDateText"
+        android:id="@+id/startDateTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginTop="26dp"
         android:text="@string/start_date"
         android:textColor="@color/white60"
-        app:layout_constraintStart_toStartOf="@+id/editText3"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintStart_toStartOf="@+id/descriptionEdt"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionEdt" />
 
     <TextView
-        android:id="@+id/startDateDescriptionText"
+        android:id="@+id/startDateDescriptionTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
-        android:text="0000-00-00"
+        android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/startDateText"
-        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+        app:layout_constraintStart_toStartOf="@+id/startDateTxt"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
     <Button
         android:id="@+id/dueDateButton"
@@ -132,29 +133,29 @@
         android:layout_height="76dp"
         android:layout_marginTop="52dp"
         android:background="@color/transparent"
-        app:layout_constraintStart_toStartOf="@+id/startDateText"
-        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+        app:layout_constraintStart_toStartOf="@+id/startDateTxt"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
     <TextView
-        android:id="@+id/dueDateText"
+        android:id="@+id/dueDateTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
         android:text="@string/dueDate"
         android:textColor="@color/white60"
-        app:layout_constraintStart_toStartOf="@+id/startDateText"
-        app:layout_constraintTop_toBottomOf="@+id/startDateText" />
+        app:layout_constraintStart_toStartOf="@+id/startDateTxt"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
     <TextView
-        android:id="@+id/dueDateDescriptionText"
+        android:id="@+id/dueDateDescriptionTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0000-00-00"
+        android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/dueDateText"
-        app:layout_constraintTop_toBottomOf="@+id/dueDateText" />
+        app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
+        app:layout_constraintTop_toBottomOf="@+id/dueDateTxt" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

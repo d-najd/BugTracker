@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,27 +13,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.data.RoadmapCreateEpicData;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.BasicAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RoadmapFragment extends Fragment {
 
     Context mcontext;
     View root;
+    ArrayList<RecyclerData> epicsRecyclerDataArrayList = new ArrayList<>();;
+    ArrayList<RecyclerData> weeksRecyclerDataArrayList = new ArrayList<>();;
+    String tag;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
-
         mcontext = getContext();
+
+        RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
+        tag = recyclerView.getTag().toString();
 
         ((MainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
         WeeksBarRecycler();
@@ -46,8 +55,11 @@ public class RoadmapFragment extends Fragment {
     }
 
     private RecyclerView WeeksBarRecycler(){
-        ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
-        RecyclerView recyclerView = root.findViewById(R.id.recyclerView);
+        //TODO the element with the biggest and smallest X (horizontal) value can be used to
+        // determine how many weeks there should be, if that does not the dates can be used but it
+        // will be much slower so it should be avoided
+
+        RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
         for (int i = 0; i < 10; i++){
@@ -55,11 +67,10 @@ public class RoadmapFragment extends Fragment {
             c.add(Calendar.WEEK_OF_YEAR, i);
             DateFormat df = new SimpleDateFormat("'w'ww");
             String startDate = df.format(c.getTime());
-            recyclerDataArrayList.add(new RecyclerData(startDate, tag));
-
+            weeksRecyclerDataArrayList.add(new RecyclerData(startDate, tag));
         }
 
-        BasicAdapter adapter = new BasicAdapter(recyclerDataArrayList, mcontext);
+        BasicAdapter adapter = new BasicAdapter(weeksRecyclerDataArrayList, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, RecyclerView.HORIZONTAL, false);
 
@@ -70,23 +81,48 @@ public class RoadmapFragment extends Fragment {
 
 
     private void EpicsRecycler(){
-        ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
-        RecyclerView recyclerView = root.findViewById(R.id.recyclerView1);
-        String tag = recyclerView.getTag().toString();
+        RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
 
-        //TODO FIXME 2 different dates cant be set for some reason
-        Calendar calendarStartDate = GregorianCalendar.getInstance(); Calendar calendarEndDate = GregorianCalendar.getInstance();
-        calendarStartDate.add(Calendar.DATE, 7);
-        calendarEndDate.add(Calendar.DATE, 21);
-        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
-        recyclerDataArrayList.add(new RecyclerData("Hello World", "00 Nul - 00 Nul", calendarStartDate, calendarEndDate, tag));
+        //GetEpicsFromStorage puts the data in recyclerDataArrayList
+        GetEpicsFromStorage();
 
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(recyclerDataArrayList, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
 
+    private void GetEpicsFromStorage(){
+        String data = RoadmapCreateEpicData.GetData("Testing", mcontext);
+        int amountOfPartsInData = RoadmapCreateEpicData.amountOfPartsInData;
+
+        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+
+        if (data == null){
+            Log.wtf("Note", "there arent any epics in data");
+        } else {
+            String[] parts = data.split("::");
+
+            for (int i = 0; i < parts.length / amountOfPartsInData; i++){
+                String title =  parts[(i * amountOfPartsInData)];
+                String startDateStr = parts[1 + (i * amountOfPartsInData)];
+                String endDateStr = parts[2 + (i * amountOfPartsInData)];
+                try {
+                    Date startDate = df.parse(startDateStr);
+                    Date dueDate = df.parse(endDateStr);
+
+                    Calendar calendarDueDate = GregorianCalendar.getInstance(), calendarStartDate = GregorianCalendar.getInstance();
+
+                    calendarStartDate.setTime(startDate);
+                    calendarDueDate.setTime(dueDate);
+                    epicsRecyclerDataArrayList.add(new RecyclerData(title, calendarStartDate, calendarDueDate, tag));
+                } catch (ParseException e) {
+                    Log.wtf("Error", "there is problem with getting the epic data");
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

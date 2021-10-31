@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.StringToList;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;

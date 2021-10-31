@@ -2,7 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--CHANGE THE ELEVATION AFTER-->
 
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:id="@+id/adapterSecondaryTxt"
+        android:tag="00-Nul-21 00-Nul-21"
         android:textColor="@color/white87"
         android:layout_alignStart="@+id/cardView"
         android:textSize="12sp"

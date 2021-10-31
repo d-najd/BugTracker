@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.databases;
+package com.aatesting.bugtracker.data;
 
 import android.content.ContentValues;
 import android.content.Context;

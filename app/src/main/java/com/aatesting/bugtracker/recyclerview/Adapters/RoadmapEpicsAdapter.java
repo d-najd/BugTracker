@@ -16,6 +16,7 @@ import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +28,10 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
     public Context mcontext;
     public RecyclerViewHolder holder;
     public RecyclerData recyclerData;
+
+    private Date weeksStartDateTime;
+    private Date startDateTime;
+    private Date endDateTime;
 
     public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
@@ -47,34 +52,14 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         this.holder = holder;
 
         holder.title.setText(recyclerData.getTitle());
-        holder.description.setText(recyclerData.getDescription());
 
-        Calendar calendarWeeksStartDate = GregorianCalendar.getInstance();
-        Calendar calendarStartDate = recyclerData.getCalendarStartDate();
-        Calendar calendarEndDate = recyclerData.getCalendarEndDate();
+        weeksStartDateTime = GregorianCalendar.getInstance().getTime();
+        startDateTime = recyclerData.getCalendarStartDate().getTime();
+        endDateTime = recyclerData.getCalendarEndDate().getTime();
 
-        Date weeksStartDateTime = calendarWeeksStartDate.getTime();
-        Date startDateTime = calendarStartDate.getTime();
-        Date endDateTime = calendarEndDate.getTime();
-
-        //region startDateTime
-            long timeDifference = Math.abs(startDateTime.getTime() - weeksStartDateTime.getTime()); //value is milliseconds
-            long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
-
-            RelativeLayout.LayoutParams marginStart = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
-            marginStart.setMarginStart((int) ((holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width) / 7) * daysDifference));
-        //endregion
-        //region endDateTime
-            timeDifference = Math.abs(endDateTime.getTime() - startDateTime.getTime());
-            daysDifference = timeDifference / (24 * 60 * 60 * 1000);
-
-            RelativeLayout.LayoutParams cardViewWidth = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
-            cardViewWidth.width = (int) ((holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width) / 7) * daysDifference);
-        //endregion
-
+        SetEpicDimensions();
+        SetEpicDescription();
         /*
-                //TODO make it to check if endDateTime is bigger than startDateTime (the projects
-                //TODO to end before it has even started which doesn't make sense)
                 if (daysDifference <= 0){
                 Message.message(mcontext, "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
                         "the start date should be smaller than the end date");
@@ -89,6 +74,39 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         String curDate = df.format(calendarSelectedDate.getTime());
 
      */
+    }
+
+    private void SetEpicDimensions(){
+        //starting pos (the margin)
+        long timeDifference = Math.abs(startDateTime.getTime() - weeksStartDateTime.getTime()); //value is milliseconds
+        long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
+
+        float weeksLen = holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width);
+
+        RelativeLayout.LayoutParams marginStart = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
+        marginStart.setMarginStart((int) (((weeksLen / 7) * daysDifference) - (weeksLen / 7)));
+
+        //ending pos (the width)
+        timeDifference = Math.abs(endDateTime.getTime() - startDateTime.getTime());
+        daysDifference = timeDifference / (24 * 60 * 60 * 1000);
+
+        RelativeLayout.LayoutParams cardViewWidth = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();
+        cardViewWidth.width = (int) ((weeksLen / 7) * daysDifference);
+    }
+
+    private void SetEpicDescription(){
+        SimpleDateFormat df = new SimpleDateFormat("dd' 'MMM");
+        String startDateStr = df.format(startDateTime.getTime());
+        String endDateStr = df.format(endDateTime.getTime());
+
+        holder.description.setText(startDateStr + " - " + endDateStr);
+
+        //setting the tag because the description does not hold the year
+        df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        startDateStr = df.format(startDateTime.getTime());
+        endDateStr = df.format(endDateTime.getTime());
+
+        holder.description.setTag(startDateStr + endDateStr);
     }
 
     @Override

@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
-import com.aatesting.bugtracker.databases.ProjectsDatabase;
+import com.aatesting.bugtracker.data.ProjectsDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;

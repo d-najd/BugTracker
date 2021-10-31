@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.BasicDialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;

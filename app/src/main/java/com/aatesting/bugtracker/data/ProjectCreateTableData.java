@@ -1,7 +1,9 @@
-package com.aatesting.bugtracker;
+package com.aatesting.bugtracker.data;
 
 import android.content.Context;
 import android.util.Log;
+
+import com.aatesting.bugtracker.Message;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,15 +21,15 @@ public class ProjectCreateTableData {
 
     //epics will be stored in ProjectData/Roadmap/Epics
     //format for epics
-    //titles::startdates::dueDates::areflagged::extras
+    //title::startdate::dueDate::extras
     //extras for epics
-    //descriptions::dateCreated::taskTitles(the column title)::tasks(the task inside the column)::ids(id for the epic)
+    //description::dateCreated::taskTitles(the column title)::tasks(the task inside the column)
 
     //tasks will be stored in ProjectData/ProjectBoard/Tasks
     //current format
     //titles::taskstitles::tasksimgsids::tasksdescriptions
     //planned
-    //title::taskstitles::subTaskIdList::areflagged::extras
+    //title::taskstitles::subTaskIdList::extras
     //extras for task
     //taskdescriptions, parentids, dateCreatedList
 

@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker;
+package com.aatesting.bugtracker.data;
 
 import android.content.Context;
 import android.util.Log;
@@ -8,34 +8,59 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class RoadmapCreateEpicData {
 
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
+    private static final String extrasSeparator = "$$";
 
-    /* TODO work in progress, finish this
-    public static void SaveNewEpic(String projectName, String title, ArrayList<String> titles, ArrayList<Integer> imgIds,
-                                     ArrayList<String> descriptions, Context context){
+    public static void SaveNewEpic(String projectName, String title, String description,
+                                   String startDate, String endDate, Context context){
         BufferedWriter writer = null;
-        int id = 0;
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "Roadmap", projectName + ".txt");
 
-        String dataOld = GetData(projectName, context);
-        if (dataOld != null) {
-            String[] parts = dataOld.split(separator);
-            id = parts.length / amountOfPartsInData;
+        if (title.isEmpty()){
+            title = "Example";
         }
 
-        String data = title + separator + titles.toString() + separator + imgIds + separator + descriptions + separator;
+        Calendar calendarDate = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+
+        if (endDate.isEmpty() && startDate.isEmpty()){
+            startDate = df.format(calendarDate.getTime());
+
+            calendarDate.add(Calendar.WEEK_OF_YEAR, 1);
+            endDate = df.format(calendarDate.getTime());
+        } else if (endDate.isEmpty()) {
+            try {
+                Date date = df.parse(startDate);
+                calendarDate.setTime(date);
+                calendarDate.add(Calendar.WEEK_OF_YEAR, 1);
+                endDate = df.format(calendarDate.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (startDate.isEmpty()){
+            startDate = df.format(calendarDate.getTime());
+        }
+
+        String extras = description + extrasSeparator + "" + extrasSeparator + "[]" + extrasSeparator + "[]";
+        String data = title + separator + startDate + separator + endDate + separator + extras + separator;
 
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
             writer.write(data);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -46,9 +71,6 @@ public class RoadmapCreateEpicData {
             }
         }
     }
-
-     */
-
 
     public static String GetData(String projectName, Context context){
         String data = null;

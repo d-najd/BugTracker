@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.dialogs.BasicDialogs;
@@ -220,7 +220,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             title = itemView.findViewById(R.id.title);
             numberOfItems = itemView.findViewById(R.id.numberOfItems);
             moreVertical = itemView.findViewById(R.id.moreVertical);
-            recyclerView = itemView.findViewById(R.id.recyclerView);
+            recyclerView = itemView.findViewById(R.id.weeksRecyclerView);
             createImg = itemView.findViewById(R.id.createImg);
             createTxt = itemView.findViewById(R.id.createTxt);
             addColumnTxt = itemView.findViewById(R.id.addColumn);

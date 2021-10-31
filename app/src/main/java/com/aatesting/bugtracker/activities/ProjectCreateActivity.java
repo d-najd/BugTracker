@@ -10,12 +10,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 
-import com.aatesting.bugtracker.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectCreateTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
-import com.aatesting.bugtracker.databases.ProjectsDatabase;
+import com.aatesting.bugtracker.data.ProjectsDatabase;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_project);
 
         recyclerDataArrayList = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
         //will prob nee to find another way to difference between layouts
