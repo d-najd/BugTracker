@@ -19,12 +19,6 @@ public class ProjectCreateTableData {
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
 
-    //epics will be stored in ProjectData/Roadmap/Epics
-    //format for epics
-    //title::startdate::dueDate::extras
-    //extras for epics
-    //description::dateCreated::taskTitles(the column title)::tasks(the task inside the column)
-
     //tasks will be stored in ProjectData/ProjectBoard/Tasks
     //current format
     //titles::taskstitles::tasksimgsids::tasksdescriptions

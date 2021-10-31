@@ -33,7 +33,8 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
     private Date startDateTime;
     private Date endDateTime;
 
-    public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Date weeksStartDateTime, Context mcontext) {
+        this.weeksStartDateTime = weeksStartDateTime;
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -53,7 +54,13 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
         holder.title.setText(recyclerData.getTitle());
 
-        weeksStartDateTime = GregorianCalendar.getInstance().getTime();
+        Calendar calendarWeeksStartDateTime = GregorianCalendar.getInstance();
+        calendarWeeksStartDateTime.set(Calendar.MILLISECOND, 0);
+        calendarWeeksStartDateTime.set(Calendar.SECOND, 0);
+        calendarWeeksStartDateTime.set(Calendar.MINUTE, 0);
+        calendarWeeksStartDateTime.set(Calendar.HOUR_OF_DAY, 0);
+        weeksStartDateTime = calendarWeeksStartDateTime.getTime();
+
         startDateTime = recyclerData.getCalendarStartDate().getTime();
         endDateTime = recyclerData.getCalendarEndDate().getTime();
 
@@ -78,7 +85,8 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
     private void SetEpicDimensions(){
         //starting pos (the margin)
-        long timeDifference = Math.abs(startDateTime.getTime() - weeksStartDateTime.getTime()); //value is milliseconds
+
+        long timeDifference = startDateTime.getTime() - weeksStartDateTime.getTime(); //value is milliseconds
         long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
 
         float weeksLen = holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width);
@@ -87,7 +95,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         marginStart.setMarginStart((int) (((weeksLen / 7) * daysDifference) - (weeksLen / 7)));
 
         //ending pos (the width)
-        timeDifference = Math.abs(endDateTime.getTime() - startDateTime.getTime());
+        timeDifference = endDateTime.getTime() - startDateTime.getTime();
         daysDifference = timeDifference / (24 * 60 * 60 * 1000);
 
         RelativeLayout.LayoutParams cardViewWidth = (RelativeLayout.LayoutParams) holder.cardView.getLayoutParams();

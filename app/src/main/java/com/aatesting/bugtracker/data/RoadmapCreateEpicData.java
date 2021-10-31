@@ -3,6 +3,8 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.aatesting.bugtracker.recyclerview.RecyclerData;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +22,57 @@ public class RoadmapCreateEpicData {
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
     private static final String extrasSeparator = "$$";
+
+    /*
+        epics are stored in ProjectData/Roadmap/Epics
+        format for epics
+        title::startDate::dueDate::extras
+        extras for epics
+        description::dateCreated::taskTitles(the column title)::tasks(the task inside the column)
+     */
+
+    public static Date GetEarliestOrLatestDate(String projectName, Context context, boolean getEarliest) {
+        String data = GetData(projectName, context);
+
+        //setting the time like its 00:00 so it does not cause problems cuz other dates are stored
+        // in that format and if this one is 00:01 it might screw up the calculation and say its
+        // the next day or vice versa
+        Calendar calendarEarliestDate = GregorianCalendar.getInstance();
+        calendarEarliestDate.set(Calendar.MILLISECOND, 0);
+        calendarEarliestDate.set(Calendar.SECOND, 0);
+        calendarEarliestDate.set(Calendar.MINUTE, 0);
+        calendarEarliestDate.set(Calendar.HOUR_OF_DAY, 0);
+
+        Date returnDate = GregorianCalendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+
+        if (data == null) {
+            Log.wtf("Note", "there arent any epics in data");
+            return returnDate;
+        }
+
+        String[] parts = data.split("::");
+        for (int i = 0; i < parts.length / amountOfPartsInData; i++) {
+            String curDateStr = parts[1 + (i * amountOfPartsInData)];
+            try {
+                Date curDataDate = df.parse(curDateStr);
+                long timeDifference;//value is milliseconds
+                if (getEarliest) {
+                    timeDifference = returnDate.getTime() - curDataDate.getTime();
+                } else {
+                    timeDifference = curDataDate.getTime() - returnDate.getTime();
+                }
+                if (timeDifference <= 0)
+                    continue;
+                returnDate = curDataDate;
+
+            } catch (ParseException e) {
+                Log.wtf("ERROR", "there is problem with getting the epic data");
+                e.printStackTrace();
+            }
+        }
+        return returnDate;
+    }
 
     public static void SaveNewEpic(String projectName, String title, String description,
                                    String startDate, String endDate, Context context){

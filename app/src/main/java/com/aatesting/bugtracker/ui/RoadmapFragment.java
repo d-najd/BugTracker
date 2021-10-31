@@ -29,11 +29,12 @@ import java.util.GregorianCalendar;
 
 public class RoadmapFragment extends Fragment {
 
-    Context mcontext;
-    View root;
-    ArrayList<RecyclerData> epicsRecyclerDataArrayList = new ArrayList<>();;
-    ArrayList<RecyclerData> weeksRecyclerDataArrayList = new ArrayList<>();;
-    String tag;
+    private Context mcontext;
+    private View root;
+    private ArrayList<RecyclerData> epicsRecyclerDataArrayList = new ArrayList<>();;
+    private ArrayList<RecyclerData> weeksRecyclerDataArrayList = new ArrayList<>();;
+    private String tag;
+    private Calendar calendarCurDate;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -62,13 +63,20 @@ public class RoadmapFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
+        Date earliestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
+        Date latestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, false);
+
+        calendarCurDate = GregorianCalendar.getInstance(); //calendar that is used for knowing which week is next to be added and which is current
+        calendarCurDate.setTime(earliestDate);
+
         for (int i = 0; i < 10; i++){
-            Calendar c = GregorianCalendar.getInstance();
-            c.add(Calendar.WEEK_OF_YEAR, i);
             DateFormat df = new SimpleDateFormat("'w'ww");
-            String startDate = df.format(c.getTime());
+            String startDate = df.format(calendarCurDate.getTime());
             weeksRecyclerDataArrayList.add(new RecyclerData(startDate, tag));
+            calendarCurDate.add(Calendar.WEEK_OF_YEAR, i);
         }
+
+        AddMoreWeeks(earliestDate, latestDate, tag);
 
         BasicAdapter adapter = new BasicAdapter(weeksRecyclerDataArrayList, mcontext);
 
@@ -79,14 +87,38 @@ public class RoadmapFragment extends Fragment {
         return recyclerView;
     }
 
+    private void AddMoreWeeks(Date earliestDate, Date latestDate, String tag) {
+        //if there are more weeks needed in the weeksRecycler, the minimum is 10 if it passed that
+        // then the code below will add as much as needed to the first 10
+        //if there are more weeks needed
+
+        long timeDifference;
+        timeDifference = latestDate.getTime() - earliestDate.getTime();
+
+        if (timeDifference > 0)
+        {
+            long weeksDifference = timeDifference / (24 * 60 * 60 * 1000);
+
+            if (weeksDifference % 7 != 0)
+                weeksDifference = weeksDifference / 7 + 1;
+            else
+                weeksDifference = weeksDifference / 7;
+
+            for (int i = 0; i < weeksDifference; i++){
+                DateFormat df = new SimpleDateFormat("'w'ww");
+                String startDate = df.format(calendarCurDate.getTime());
+                weeksRecyclerDataArrayList.add(new RecyclerData(startDate, tag));
+                calendarCurDate.add(Calendar.WEEK_OF_YEAR, i);
+            }
+        }
+    }
 
     private void EpicsRecycler(){
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
 
         //GetEpicsFromStorage puts the data in recyclerDataArrayList
         GetEpicsFromStorage();
-
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, calendarCurDate.getTime(), mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
