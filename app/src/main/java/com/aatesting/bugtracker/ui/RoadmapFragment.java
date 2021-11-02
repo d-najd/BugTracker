@@ -12,10 +12,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.data.RoadmapCreateEpicData;
 import com.aatesting.bugtracker.activities.MainActivity;
-import com.aatesting.bugtracker.recyclerview.Adapters.BasicAdapter;
+import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
@@ -83,12 +84,14 @@ public class RoadmapFragment extends Fragment {
 
         AddMoreWeeks(calendarCurDate.getTime(), latestDate, tag);
 
-        BasicAdapter adapter = new BasicAdapter(weeksRecyclerDataArrayList, mcontext);
-
+        RoadmapWeeksAdapter adapter = new RoadmapWeeksAdapter(weeksRecyclerDataArrayList, mcontext);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext, RecyclerView.HORIZONTAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        GlobalValues.weeksRoadmapLen = weeksRecyclerDataArrayList.size();
+
         return recyclerView;
     }
 

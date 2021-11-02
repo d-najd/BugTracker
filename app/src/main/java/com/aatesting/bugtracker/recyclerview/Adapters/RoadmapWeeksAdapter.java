@@ -16,14 +16,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class BasicAdapter extends RecyclerView.Adapter<BasicAdapter.RecyclerViewHolder> {
+public class RoadmapWeeksAdapter extends RecyclerView.Adapter<RoadmapWeeksAdapter.RecyclerViewHolder> {
 
     public ArrayList<RecyclerData> recyclerDataArrayList;
     public Context mcontext;
     public RecyclerViewHolder holder;
     public RecyclerData recyclerData;
 
-    public BasicAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
+    public RoadmapWeeksAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }

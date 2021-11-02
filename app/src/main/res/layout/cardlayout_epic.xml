@@ -1,41 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="60dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!--CHANGE THE ELEVATION AFTER-->
 
+    <ImageButton
+        android:id="@+id/epicBtn"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/transparent"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cardView" />
+
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="100dp"
         android:layout_height="52dp"
         app:cardBackgroundColor="@color/blue"
+        android:visibility="visible"
         app:cardCornerRadius="6dp"
-        android:id="@+id/cardView"/>
+        android:foreground="?attr/selectableItemBackground"
+        android:stateListAnimator="@animator/lift_on_touch"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="Example"
-        android:elevation="4dp"
-        android:layout_marginTop="4dp"
-        android:textSize="17sp"
-        android:layout_alignStart="@+id/cardView"
         android:id="@+id/adapterMainTxt"
-        android:textColor="@color/white87"/>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:id="@+id/adapterSecondaryTxt"
-        android:tag="00-Nul-21 00-Nul-21"
-        android:textColor="@color/white87"
         android:layout_alignStart="@+id/cardView"
-        android:textSize="12sp"
-        android:elevation="4dp"
-        android:text="00 Nul - 00 Nul"
-        android:layout_below="@+id/adapterMainTxt"/>
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        android:elevation="8dp"
+        android:text="Example"
+        android:textColor="@color/white87"
+        android:textSize="17sp"
+        app:layout_constraintStart_toStartOf="@id/cardView"
+        app:layout_constraintTop_toTopOf="@+id/cardView" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/adapterSecondaryTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/adapterMainTxt"
+        android:layout_alignStart="@+id/cardView"
+        android:elevation="8dp"
+        android:layout_marginStart="4dp"
+        android:tag="00-Nul-21 00-Nul-21"
+        android:text="00 Nul - 00 Nul"
+        android:textColor="@color/white87"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/adapterMainTxt" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -81,8 +81,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Listeners(position);
 
         holder.title.setText(recyclerData.getTitle());
-        holder.mainBtn.setImageResource(recyclerData.getImgId());
 
+        if (holder.mainBtn != null)
+            holder.mainBtn.setImageResource(recyclerData.getImgId());
         if (recyclerData.getEditTextEnable()) {
             holder.editText.setVisibility(View.VISIBLE);
             holder.editText.setHint(recyclerData.getDescription());

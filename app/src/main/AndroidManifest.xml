@@ -25,6 +25,7 @@
         <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateTableEditDescriptionActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.CreateTaskActivity"/>
+        <activity android:name=".activities.RoadmapEditEpicActivity"/>
     </application>
 
 </manifest>

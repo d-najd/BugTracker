@@ -8,79 +8,68 @@
     android:padding="8dp">
 
     <ImageButton
+        android:layout_marginTop="4dp"
         android:id="@+id/closeBtn"
+        android:layout_marginStart="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_arrow_back_24dp"
-        android:tint="@color/purple_200"
+        android:tint="@color/purple_500"
+        android:src="@drawable/ic_close_28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/createTxt"
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:minWidth="32dp"
+        android:layout_marginEnd="4dp"
+        android:minHeight="32dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:text="@string/create"
-        android:textColor="@color/purple_500"
-        android:textSize="16dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_more_vertical_28"
+        android:tint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/closeBtn" />
+
+    <ImageButton
+        android:id="@+id/childIssues"
+        android:minWidth="32dp"
+        android:minHeight="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_account_circle_28"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="@+id/imageButton" />
 
     <TextView
         android:id="@+id/titleMiddle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
-        android:text="Project Name"
+        android:layout_marginTop="40dp"
+        android:text="item name"
         android:textColor="@color/white87"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/closeBtn" />
 
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@drawable/ic_null_background"
-        app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
-        app:layout_constraintStart_toStartOf="@+id/guideline2"
-        app:layout_constraintTop_toTopOf="@+id/titleMiddle" />
-
-    <TextView
-        android:id="@+id/textView2"
+    <Button
+        android:id="@+id/columnSelector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/epic"
+        android:layout_marginTop="24dp"
+        android:text="In progress"
         android:textColor="@color/white87"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
-        app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        app:layout_constraintTop_toTopOf="@+id/titleMiddle" />
-
-    <EditText
-        android:id="@+id/titleEdt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="28dp"
-        android:hint="Summary"
-        android:maxLines="3"
-        android:textColor="@color/white87"
-        android:textColorHint="@color/white60"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/titleMiddle"
         app:layout_constraintTop_toBottomOf="@+id/titleMiddle" />
 
-
+    <!--no idea how else to set the marginStart to match the midTitle margin-->
     <TextView
         android:layout_marginStart="12dp"
         android:id="@+id/descriptionTxt"
@@ -93,8 +82,47 @@
         android:text="@string/description"
         android:textColor="@color/white38"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/titleEdt"
-        app:layout_constraintTop_toBottomOf="@+id/titleEdt" />
+        app:layout_constraintStart_toStartOf="@+id/columnSelector"
+        app:layout_constraintTop_toBottomOf="@+id/columnSelector" />
+
+    <TextView
+        android:id="@+id/issueTypeTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/issue_type"
+        android:textColor="@color/white38"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
+
+    <ImageButton
+        android:id="@+id/issueTypeImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/transparent"
+        android:padding="4dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="8dp"
+        android:src="@drawable/ic_account_24dp"
+        app:layout_constraintStart_toStartOf="@+id/issueTypeTop"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeTop" />
+
+    <TextView
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:id="@+id/issueTypeMainTxt"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:text="@string/epic"
+        android:textColor="@color/white60"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/issueTypeImg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/issueTypeImg"
+        app:layout_constraintTop_toTopOf="@+id/issueTypeImg" />
 
     <Button
         android:id="@+id/startDateButton"
@@ -102,19 +130,18 @@
         android:layout_height="76dp"
         android:layout_marginTop="24dp"
         android:background="@color/transparent"
-        app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
+        app:layout_constraintStart_toStartOf="@+id/issueTypeImg"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeImg" />
 
     <TextView
         android:id="@+id/startDateTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="26dp"
         android:text="@string/start_date"
         android:textColor="@color/white60"
-        app:layout_constraintStart_toStartOf="@+id/descriptionTxt"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
+        app:layout_constraintStart_toStartOf="@+id/issueTypeImg"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeImg" />
 
     <TextView
         android:id="@+id/startDateDescriptionTxt"
@@ -124,7 +151,7 @@
         android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/startDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
@@ -154,15 +181,7 @@
         android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/dueDateTxt" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent=".55" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

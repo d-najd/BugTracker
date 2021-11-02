@@ -514,7 +514,6 @@ public class ProjectCreateTableData {
             }
         }
     }
-
     //endregion
 
     public static String GetData(String projectName, Context context){
@@ -530,7 +529,6 @@ public class ProjectCreateTableData {
                 buffer.append((char)read);
             }
             data = buffer.toString();
-
         } catch (Exception e) {
             e.printStackTrace();
         }

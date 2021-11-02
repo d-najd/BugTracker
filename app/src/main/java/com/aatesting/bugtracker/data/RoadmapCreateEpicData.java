@@ -22,7 +22,6 @@ public class RoadmapCreateEpicData {
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
     private static final String extrasSeparator = "$$";
-
     /*
         epics are stored in ProjectData/Roadmap/Epics
         format for epics
@@ -75,6 +74,14 @@ public class RoadmapCreateEpicData {
             }
         }
         return returnDate;
+    }
+
+    public static String GetSpecificEpicData(String projectName, int id, int itemPos, Context context){
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+        String epicStr = parts[(id * amountOfPartsInData) + itemPos];
+
+        return epicStr;
     }
 
     public static void SaveNewEpic(String projectName, String title, String description,
