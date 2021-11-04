@@ -195,7 +195,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
                 Message.message(getBaseContext(), newData);
 
                 //updating the description
-                if (newData == null) {
+                if (newData != null) {
                     editDescriptionTxt.setText(newData);
                 }
             }

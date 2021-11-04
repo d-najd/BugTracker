@@ -70,9 +70,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mcontext, ProjectCreateTableEditDescriptionActivity.class);
-                //f (editDescriptionTxt.getHintTextColors())
 
-                //TODO make it so it doesnt pass description if its empty
                 intent.putExtra("oldData", editDescriptionTxt.getText().toString());
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
