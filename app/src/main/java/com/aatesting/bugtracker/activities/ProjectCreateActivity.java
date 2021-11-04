@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
@@ -95,7 +95,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
         else
         {
             long id = helper.InsertData(t1,t2);
-            ProjectCreateTableData.CreatingNewProject(t1, this);
+            ProjectTableData.CreatingNewProject(t1, this);
             if(id<=0)
             {
                 Message.message(this,"Insertion Unsuccessful");

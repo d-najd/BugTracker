@@ -3,6 +3,8 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import java.io.BufferedWriter;
@@ -17,11 +19,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class RoadmapCreateEpicData {
+public class RoadmapEpicData {
 
     public static final int amountOfPartsInData = 4;
+    private static final int amountOfPartsInExtras = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
-    private static final String extrasSeparator = "$$";
+    private static final String extrasSeparator = ">>"; //why cant I use $$ ?
     /*
         epics are stored in ProjectData/Roadmap/Epics
         format for epics
@@ -76,13 +79,22 @@ public class RoadmapCreateEpicData {
         return returnDate;
     }
 
-    public static String GetSpecificEpicData(String projectName, int id, int itemPos, Context context){
+    public static String GetSpecificEpicData(String projectName, int id, int fieldId, Context context){
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
-        String epicStr = parts[(id * amountOfPartsInData) + itemPos];
 
-        return epicStr;
+        return parts[(id * amountOfPartsInData) + fieldId];
     }
+
+    public static String GetSpecificExtrasEpicData(String projectName, int id, int fieldId, Context context) {
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+        String extrasStr = parts[(id * amountOfPartsInData) + amountOfPartsInData - 1];
+        String[] extras = extrasStr.split(extrasSeparator); //splitting the extras
+
+        return extras[fieldId];
+    }
+
 
     public static void SaveNewEpic(String projectName, String title, String description,
                                    String startDate, String endDate, Context context){
@@ -135,6 +147,100 @@ public class RoadmapCreateEpicData {
         }
     }
 
+    public static void EditEpic(String projectName, int id, int fieldId, String newData, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newData == null || newData == ""){
+            Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "Roadmap", projectName + ".txt");
+
+        String[] parts = dataOld.split(separator); //splitting the data
+
+        parts[(id * amountOfPartsInData) + fieldId] = newData;
+
+        for (int i = 0; i < parts.length; i++)
+            data += (parts[i] + separator);
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void EditEpicExtras(String projectName, int id, int fieldId, String newData, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String extrasData = "";
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newData == null || newData == ""){
+            Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "Roadmap", projectName + ".txt");
+
+        String[] parts = dataOld.split(separator); //splitting the data
+        String extrasStr = parts[(id * amountOfPartsInData) + amountOfPartsInData - 1];
+        String[] extras = extrasStr.split(extrasSeparator); //splitting the extras
+
+        extras[fieldId] = newData;
+
+        for (int i = 0; i < extras.length; i++){
+            extrasData += (extras[i]);
+            if (i != extras.length - 1)
+                extrasData += extrasSeparator;
+        }
+
+        parts[(id * amountOfPartsInData) + amountOfPartsInData - 1] = extrasData;
+
+        for (int i = 0; i < parts.length; i++)
+            data += (parts[i] + separator);
+
+        data = data;
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static String GetData(String projectName, Context context){
         String data = null;
 
@@ -164,4 +270,6 @@ public class RoadmapCreateEpicData {
             folder.mkdirs();
         }
     }
+
+
 }

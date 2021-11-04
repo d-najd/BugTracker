@@ -3,17 +3,26 @@ package com.aatesting.bugtracker.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.data.RoadmapCreateEpicData;
+import com.aatesting.bugtracker.data.RoadmapEpicData;
+import com.aatesting.bugtracker.dialogs.BasicDialogs;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class RoadmapEditEpicActivity extends AppCompatActivity {
-
+    private RoadmapEditEpicActivity activity = this;
     private String projectName;
     private int epicId;
     private Context mcontext;
@@ -32,20 +41,28 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     }
 
     private void SetupActivityValues(){
-        String title = RoadmapCreateEpicData.GetSpecificEpicData(projectName, epicId, 0, this);
-        String startDateStr = RoadmapCreateEpicData.GetSpecificEpicData(projectName, epicId, 1, this);
-        String dueDateStr = RoadmapCreateEpicData.GetSpecificEpicData(projectName, epicId, 2, this);
+        String title = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 0, this);
+        String description = RoadmapEpicData.GetSpecificExtrasEpicData(projectName, epicId, 0, this);
+        String startDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 1, this);
+        String dueDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 2, this);
 
         TextView titleMid = findViewById(R.id.titleMiddle);
+        TextView descriptionTxt = findViewById(R.id.descriptionTxt);
         TextView startDateDescriptionTxt = findViewById(R.id.startDateDescriptionTxt);
         TextView dueDateDescriptionTxt = findViewById(R.id.dueDateDescriptionTxt);
 
         titleMid.setText(title);
+        descriptionTxt.setText(description);
         startDateDescriptionTxt.setText(startDateStr);
         dueDateDescriptionTxt.setText(dueDateStr);
     }
 
     private void Listeners(){
+        Button startDateBtn = findViewById(R.id.startDateBtn);
+        Button dueDateBtn = findViewById(R.id.dueDateBtn);
+        Button deleteBtn = findViewById(R.id.deleteBtn);
+        ImageButton closeBtn = findViewById(R.id.closeBtn);
+        EditText titleMiddle = findViewById(R.id.titleMiddle);
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
 
 
@@ -53,11 +70,81 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mcontext, ProjectCreateTableEditDescriptionActivity.class);
+                //f (editDescriptionTxt.getHintTextColors())
+
                 //TODO make it so it doesnt pass description if its empty
                 intent.putExtra("oldData", editDescriptionTxt.getText().toString());
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
         });
+
+        closeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        startDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, true);
+            }
+        });
+
+        dueDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, false);
+            }
+        });
+
+        titleMiddle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                RoadmapEpicData.EditEpic("Testing", epicId, 0, s.toString(),  mcontext);
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Message.message(mcontext, "add ability to remove task");
+            }
+        });
+    }
+
+
+    public void UpdateStartDateDescription(Calendar calendar) {
+        TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        String curDate = df.format(calendar.getTime());
+        startDateDescriptionText.setText(curDate);
+        startDateDescriptionText.setVisibility(View.VISIBLE);
+
+        RoadmapEpicData.EditEpic("Testing", epicId, 1, curDate, mcontext);
+    }
+
+    public void UpdateDueDateDescription(Calendar calendar){
+        TextView dueDateDescriptionText = findViewById(R.id.dueDateDescriptionTxt);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        String curDate = df.format(calendar.getTime());
+        dueDateDescriptionText.setText(curDate);
+        dueDateDescriptionText.setVisibility(View.VISIBLE);
+
+        RoadmapEpicData.EditEpic("Testing", epicId, 2, curDate, mcontext);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -70,13 +157,9 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
                 TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
 
                 //updating the description
-                if (newData == null) {
-                    editDescriptionTxt.setText(getString(R.string.description));
-                    editDescriptionTxt.setTextColor(getColor(R.color.white38));
-                }
-                else {
+                if (newData != null) {
                     editDescriptionTxt.setText(newData);
-                    editDescriptionTxt.setTextColor(getColor(R.color.white60));
+                    RoadmapEpicData.EditEpicExtras("Testing", epicId, 0, newData, mcontext);
                 }
             }
         }

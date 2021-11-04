@@ -21,7 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.activities.ProjectCreateTableEditTaskActivity;
@@ -223,7 +223,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
+                    ProjectTableData.MoveItemToOtherColumn(projectName, position,
                             projectTableColumnPos, itemPos, mcontext);
                     try
                     {
@@ -240,7 +240,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProjectCreateTableData.MoveItemToOtherColumn(projectName, position,
+                    ProjectTableData.MoveItemToOtherColumn(projectName, position,
                             projectTableColumnPos, itemPos, mcontext);
                     try
                     {

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.StringToList;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
@@ -37,7 +37,7 @@ public class ProjectCreateTableActivity extends AppCompatActivity {
         String tag = recyclerView.getTag().toString();
         projectName = getIntent().getExtras().getString("projectName");
 
-        ProjectCreateTableData.MakeFolders(this);
+        ProjectTableData.MakeFolders(this);
 
         //titles.add("TEST");
         //titles.add("TEST");
@@ -48,8 +48,8 @@ public class ProjectCreateTableActivity extends AppCompatActivity {
 
         //removeData(2, projectName);
 
-        String data = ProjectCreateTableData.GetData(projectName, this);
-        amountOfPartsInData = ProjectCreateTableData.amountOfPartsInData;
+        String data = ProjectTableData.GetData(projectName, this);
+        amountOfPartsInData = ProjectTableData.amountOfPartsInData;
 
         //for getting the data nad putting it in arrayList so it can be used by the adapter
         if (data == null){

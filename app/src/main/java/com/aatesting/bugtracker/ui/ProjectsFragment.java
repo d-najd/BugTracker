@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -116,7 +116,7 @@ public class ProjectsFragment extends Fragment {
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
             ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
-            ProjectCreateTableData.RemoveFile(recyclerDataArrayList.get
+            ProjectTableData.RemoveFile(recyclerDataArrayList.get
                     (viewHolder.getAdapterPosition()).getTitle(), getContext());
             helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
 

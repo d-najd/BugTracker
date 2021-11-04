@@ -19,40 +19,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:minWidth="32dp"
-        android:layout_marginEnd="4dp"
-        android:minHeight="32dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_more_vertical_28"
-        android:tint="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="@+id/closeBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/closeBtn" />
-
-    <ImageButton
-        android:id="@+id/childIssues"
-        android:minWidth="32dp"
-        android:minHeight="32dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_account_circle_28"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton" />
-
-    <TextView
+    <EditText
         android:id="@+id/titleMiddle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="40dp"
         android:text="item name"
+        android:maxLines="2"
+        android:maxLength="30"
         android:textColor="@color/white87"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,8 +54,9 @@
         android:layout_marginEnd="12dp"
         android:maxHeight="150dp"
         android:minHeight="80dp"
-        android:text="@string/description"
-        android:textColor="@color/white38"
+        android:hint="@string/description"
+        android:textColorHint="@color/white38"
+        android:textColor="@color/white60"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/columnSelector"
         app:layout_constraintTop_toBottomOf="@+id/columnSelector" />
@@ -125,7 +101,7 @@
         app:layout_constraintTop_toTopOf="@+id/issueTypeImg" />
 
     <Button
-        android:id="@+id/startDateButton"
+        android:id="@+id/startDateBtn"
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:layout_marginTop="24dp"
@@ -156,7 +132,7 @@
         app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
     <Button
-        android:id="@+id/dueDateButton"
+        android:id="@+id/dueDateBtn"
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:layout_marginTop="52dp"
@@ -184,4 +160,26 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/dueDateTxt" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Delete Epic"
+        android:textColor="@color/white60"
+        app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
+        app:layout_constraintTop_toBottomOf="@+id/dueDateBtn" />
+
+    <Button
+        android:id="@+id/deleteBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/dark_red"
+        android:layout_marginTop="4dp"
+        android:text="@string/delete"
+        android:textColor="@color/white87"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

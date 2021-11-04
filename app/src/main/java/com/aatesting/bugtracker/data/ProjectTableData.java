@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class ProjectCreateTableData {
+public class ProjectTableData {
 
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
@@ -252,7 +252,7 @@ public class ProjectCreateTableData {
     //endregion
 
     //region modifiers
-    public static void RenameColumn(String projectName, int columnPos, String newTitle, Context context){
+    public static void EditData(String projectName, int id, int fieldId, String newData, Context context){
         BufferedWriter writer = null;
         String data = "";
         String descriptions; //the descriptions string before its edited
@@ -264,7 +264,7 @@ public class ProjectCreateTableData {
             return;
         }
 
-        if (newTitle == null || newTitle == ""){
+        if (newData == null || newData == ""){
             Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
             return;
         }
@@ -274,7 +274,7 @@ public class ProjectCreateTableData {
 
         String[] parts = dataOld.split(separator); //splitting the data
 
-        parts[(columnPos * amountOfPartsInData)] = newTitle;
+        parts[(id * amountOfPartsInData)] = newData;
 
         for (int i = 0; i < parts.length; i++)
             data += (parts[i] + separator);
@@ -292,6 +292,51 @@ public class ProjectCreateTableData {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void EditListData(String projectName, int id, int fieldId, int itemId, String newData, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        if (newData == null || newData == ""){
+            Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String[] parts = dataOld.split(separator); //splitting the data
+
+        parts[(id * amountOfPartsInData)] = newData;
+
+        for (int i = 0; i < parts.length; i++)
+            data += (parts[i] + separator);
+
+        /*
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+         */
     }
 
     //swap columns

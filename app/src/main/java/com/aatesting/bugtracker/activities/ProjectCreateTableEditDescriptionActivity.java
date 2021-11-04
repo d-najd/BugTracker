@@ -23,7 +23,7 @@ public class ProjectCreateTableEditDescriptionActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_create_editdescription);
+        setContentView(R.layout.activity_projectcreate_editdescription);
 
         oldDescription = getIntent().getExtras().getString("oldData");
         descriptionEdt = findViewById(R.id.descriptionEdt);

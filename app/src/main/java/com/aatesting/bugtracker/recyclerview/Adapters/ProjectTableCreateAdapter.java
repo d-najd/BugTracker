@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.dialogs.BasicDialogs;
@@ -81,7 +81,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void RenameTitle(int pos, String newTitle){
         holderArrayList.get(pos).title.setText(newTitle);
-        ProjectCreateTableData.RenameColumn(projectName, pos, newTitle, mcontext);
+        ProjectTableData.EditData(projectName, pos, 0, newTitle, mcontext);
     }
 
     private void Listeners(int position){
@@ -126,16 +126,16 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
-            String description = ProjectCreateTableData.GetColumnTitle(projectName, holderPosition, mcontext);
+            String description = ProjectTableData.GetColumnTitle(projectName, holderPosition, mcontext);
             BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
-            ProjectCreateTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
+            ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
-            ProjectCreateTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition + 1, mcontext);
+            ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition + 1, mcontext);
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
-            ProjectCreateTableData.RemoveColumnData(projectName, holderPosition, mcontext);
+            ProjectTableData.RemoveColumnData(projectName, holderPosition, mcontext);
 
             //TODO fix this
             RefreshActivity();

@@ -3,17 +3,20 @@ package com.aatesting.bugtracker.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.BasicDialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 
 public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
     private TextView editDescriptionTxt;
-    private TextView titleMiddle;
+    private EditText titleMiddle;
     private Button columnSelector;
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
@@ -42,7 +45,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_project_create_edit_task);
+        setContentView(R.layout.activity_projectcreate_edittask);
 
         tag = getString(R.string.projectEditTask0);
 
@@ -56,7 +59,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
 
-        oldDescription = ProjectCreateTableData.GetDescription(projectName, columnPos, itemPos,this);
+        oldDescription = ProjectTableData.GetDescription(projectName, columnPos, itemPos,this);
 
         columnSelector.setText(columnName);
         titleMiddle.setText(itemName);
@@ -81,6 +84,23 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
 
+        titleMiddle.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Message.message(context, "change title in code");
+            }
+        });
+
         columnSelector.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +108,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
                 allColumnTitles.clear();
                 allColumnImages.clear();
 
-                allColumnTitles = ProjectCreateTableData.GetAllColumnTitles(projectName, context);
+                allColumnTitles = ProjectTableData.GetAllColumnTitles(projectName, context);
 
                 for (int i = 0; i < allColumnTitles.size(); i++){
                     allColumnImages.add(2131165294);
@@ -143,7 +163,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         this.columnPos = columnPos;
         itemPos = 0;
 
-        String columnName = ProjectCreateTableData.GetColumnTitle(projectName, columnPos, this);
+        String columnName = ProjectTableData.GetColumnTitle(projectName, columnPos, this);
         columnSelector.setText(columnName);
     }
 
@@ -171,17 +191,12 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 newData = data.getStringExtra("newData");
-                ProjectCreateTableData.SaveDescription(projectName, newData, columnPos, itemPos, this);
+                ProjectTableData.SaveDescription(projectName, newData, columnPos, itemPos, this);
                 Message.message(getBaseContext(), newData);
 
                 //updating the description
                 if (newData == null) {
-                    editDescriptionTxt.setText(getString(R.string.description));
-                    editDescriptionTxt.setTextColor(getColor(R.color.white38));
-                }
-                else {
                     editDescriptionTxt.setText(newData);
-                    editDescriptionTxt.setTextColor(getColor(R.color.white60));
                 }
             }
         }

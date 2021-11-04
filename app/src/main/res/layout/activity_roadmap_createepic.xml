@@ -72,7 +72,8 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="28dp"
         android:hint="Summary"
-        android:maxLines="3"
+        android:maxLines="2"
+        android:maxLength="30"
         android:textColor="@color/white87"
         android:textColorHint="@color/white60"
         android:textSize="20sp"
@@ -90,14 +91,15 @@
         android:layout_marginEnd="12dp"
         android:maxHeight="150dp"
         android:minHeight="80dp"
-        android:text="@string/description"
-        android:textColor="@color/white38"
+        android:hint="@string/description"
+        android:textColorHint="@color/white38"
+        android:textColor="@color/white60"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/titleEdt"
         app:layout_constraintTop_toBottomOf="@+id/titleEdt" />
 
     <Button
-        android:id="@+id/startDateButton"
+        android:id="@+id/startDateBtn"
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:layout_marginTop="24dp"
@@ -129,7 +131,7 @@
         app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
     <Button
-        android:id="@+id/dueDateButton"
+        android:id="@+id/dueDateBtn"
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:layout_marginTop="52dp"

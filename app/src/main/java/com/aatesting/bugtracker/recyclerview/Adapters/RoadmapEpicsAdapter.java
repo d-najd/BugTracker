@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,22 +14,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.MainActivity;
-import com.aatesting.bugtracker.activities.ProjectCreateTableEditTaskActivity;
-import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
-import com.aatesting.bugtracker.data.RoadmapCreateEpicData;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapter.RecyclerViewHolder> {
 

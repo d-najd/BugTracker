@@ -20,7 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.ProjectCreateTableData;
+import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
@@ -112,7 +113,7 @@ public class BasicDialogs {
                         //imgsEmptyArr.add(R.drawable.ic_account_24dp);
                         String title = editText.getText().toString();
 
-                        ProjectCreateTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
+                        ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
 
                         //TODO seems like refreshing the activity doesnt solve all problems,
                         // if the first element is empty while adding new element it sets the data
@@ -158,7 +159,7 @@ public class BasicDialogs {
             public void onClick(DialogInterface dialog, int which) {
                 String title = editText.getText().toString();
 
-                ProjectCreateTableData.SaveNewItem(title, projectName, position, true, mcontext);
+                ProjectTableData.SaveNewItem(title, projectName, position, true, mcontext);
                 activity.RefreshActivity();
             }
         });
@@ -198,6 +199,55 @@ public class BasicDialogs {
                         //use calendarSelectedDate[0] to pass calendar data
                         activity.AllowReminders("null");
                         activity.DateTime2(v);
+                    }
+                })
+
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        DialogBuilder(mcontext, builder);
+    }
+
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapEditEpicActivity activity, boolean startDate){
+        //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
+        // you want to remove it and return it to default (empty)
+        //true for startDate, false for dueDate
+
+        Triple<AlertDialog.Builder, CalendarView, View> data = BasicCalendarDialogConstructor(mcontext, v);
+        AlertDialog.Builder builder = data.getFirst();
+        CalendarView calendarView = data.getSecond();
+        View dialogView = data.getThird();
+
+        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
+        TextView yearTxt = dialogView.findViewById(R.id.year);
+
+        final Calendar[] calendarSelectedDate = {GregorianCalendar.getInstance()};
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                calendarSelectedDate[0] = GregorianCalendar.getInstance();
+                calendarSelectedDate[0].set(year, month, dayOfMonth);
+                SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
+                String curDate = df.format(calendarSelectedDate[0].getTime());
+
+                yearTxt.setText(year + "");
+                dayMonthTxt.setText(curDate);
+            }
+        });
+
+        builder.setView(dialogView)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (startDate) {
+                            activity.UpdateStartDateDescription(calendarSelectedDate[0]);
+                        }
+                        else
+                            activity.UpdateDueDateDescription(calendarSelectedDate[0]);
                     }
                 })
 
@@ -313,7 +363,6 @@ public class BasicDialogs {
 
         return new Pair<>(adapter, bottomDialog);
     }
-
 
 
 

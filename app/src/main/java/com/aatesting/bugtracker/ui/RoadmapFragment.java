@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.data.RoadmapCreateEpicData;
+import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
@@ -64,8 +64,8 @@ public class RoadmapFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
-        Date earliestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
-        Date latestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, false);
+        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
+        Date latestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, false);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -123,7 +123,7 @@ public class RoadmapFragment extends Fragment {
 
     private void EpicsRecycler(){
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
-        Date earliestDate = RoadmapCreateEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
+        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -141,8 +141,8 @@ public class RoadmapFragment extends Fragment {
     }
 
     private void GetEpicsFromStorage(){
-        String data = RoadmapCreateEpicData.GetData("Testing", mcontext);
-        int amountOfPartsInData = RoadmapCreateEpicData.amountOfPartsInData;
+        String data = RoadmapEpicData.GetData("Testing", mcontext);
+        int amountOfPartsInData = RoadmapEpicData.amountOfPartsInData;
 
         SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
 
