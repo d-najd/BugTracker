@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.ui;
+package com.aatesting.bugtracker.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -50,7 +50,6 @@ public class RoadmapFragment extends Fragment {
         EpicsRecycler();
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
-        //TODO NOTE the length needs to be changed to something more dynamic
         scrollViewLength.width = (int) (10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width));
 
         return root;

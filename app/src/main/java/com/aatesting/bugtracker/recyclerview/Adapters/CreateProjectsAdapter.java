@@ -20,7 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.aatesting.bugtracker.AnimationHandler;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
+import com.aatesting.bugtracker.fragments.ProjectCreateTableFragment;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -162,7 +162,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableFragment.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
@@ -171,7 +171,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
+                    Intent intent = new Intent(mcontext, ProjectCreateTableFragment.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);

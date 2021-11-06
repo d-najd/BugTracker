@@ -13,12 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.activities.ProjectMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
+import com.aatesting.bugtracker.fragments.ProjectCreateTableFragment;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -28,12 +30,13 @@ import java.util.List;
 
 
 public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTableCreateAdapter.RecyclerViewHolder> {
+    public ProjectMainActivity ProjectMainActivity;
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     public RecyclerViewHolder holder;
-    public ProjectCreateTableActivity projectCreateTableActivity;
+    public ProjectMainActivity projectCreateTableActivity;
     public String projectName;
     private String tag;
     public Intent intent;

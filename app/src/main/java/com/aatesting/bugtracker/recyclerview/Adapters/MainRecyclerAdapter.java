@@ -21,9 +21,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.activities.ProjectMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
+import com.aatesting.bugtracker.fragments.ProjectCreateTableFragment;
 import com.aatesting.bugtracker.activities.ProjectCreateTableEditTaskActivity;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -160,7 +161,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
+                    Intent intent = new Intent(mcontext, ProjectMainActivity.class);
                     int test = position;
 
                     //TODO fixme there is a bug when you create new item it doesnt get added to the list or smtn and you cant open it without the app crashing
@@ -172,7 +173,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableActivity.class);
+                    Intent intent = new Intent(mcontext, ProjectMainActivity.class);
                     int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);

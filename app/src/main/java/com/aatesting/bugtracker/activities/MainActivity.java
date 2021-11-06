@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public void Listeners(int fragmentSelected){ //NOTE this is called from the fragments
         View mainBtn = findViewById(R.id.mainBtn);
 
-        if (fragmentSelected == 0 || fragmentSelected == 2 || fragmentSelected == 3) {
+        if (fragmentSelected == 0) {
             mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

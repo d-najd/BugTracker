@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.ui;
+package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

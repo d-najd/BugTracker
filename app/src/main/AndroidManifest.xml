@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateActivity"/>
-        <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateTableActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.ProjectMainActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateTableEditTaskActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateTableEditDescriptionActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity"/>

@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.ui;
+package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.activities.ProjectMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
