@@ -8,8 +8,7 @@
     android:background="@color/darkGray">
 
     <fragment
-        android:tag="main"
-        android:id="@+id/navHostFragment"
+        android:id="@+id/navFragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"

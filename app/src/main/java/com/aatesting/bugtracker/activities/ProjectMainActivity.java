@@ -29,6 +29,7 @@ public class ProjectMainActivity extends AppCompatActivity {
 
         projectName = getIntent().getExtras().getString("projectName");
 
+        /*
 
         View bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
@@ -42,6 +43,8 @@ public class ProjectMainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
 
+
+         */
 
     }
 

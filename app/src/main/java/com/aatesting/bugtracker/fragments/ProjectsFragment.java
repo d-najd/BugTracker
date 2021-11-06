@@ -56,7 +56,7 @@ public class ProjectsFragment extends Fragment {
     }
 
     private void Listeners(){
-        ((MainActivity)getActivity()).Listeners(0);
+        //((MainActivity)getActivity()).Listeners(0);
     }
 
     @Override
