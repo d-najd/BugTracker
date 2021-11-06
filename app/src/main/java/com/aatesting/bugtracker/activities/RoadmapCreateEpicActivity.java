@@ -41,7 +41,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         EditText titleEdt = findViewById(R.id.titleEdt);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
 
-
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,14 +55,14 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, true);
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateDescriptionTxt.getText().toString(),true);
             }
         });
 
         dueDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, false);
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateDescriptionTxt.getText().toString(), false);
             }
         });
 
@@ -94,7 +93,9 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     public void UpdateStartDateDescription(Calendar calendar) {
         TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+
+        //TODO this might be broken
+        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         String curDate = df.format(calendar.getTime());
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
@@ -103,7 +104,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     public void UpdateDueDateDescription(Calendar calendar){
         TextView dueDateDescriptionText = findViewById(R.id.dueDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         String curDate = df.format(calendar.getTime());
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);

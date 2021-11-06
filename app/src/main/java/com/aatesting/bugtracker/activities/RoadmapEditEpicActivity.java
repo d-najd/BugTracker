@@ -27,6 +27,9 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     private int epicId;
     private Context mcontext;
 
+    private String startDateStr;
+    private String dueDateStr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +46,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     private void SetupActivityValues(){
         String title = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 0, this);
         String description = RoadmapEpicData.GetSpecificExtrasEpicData(projectName, epicId, 0, this);
-        String startDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 1, this);
-        String dueDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 2, this);
+        startDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 1, this);
+        dueDateStr = RoadmapEpicData.GetSpecificEpicData(projectName, epicId, 2, this);
 
         TextView titleMid = findViewById(R.id.titleMiddle);
         TextView descriptionTxt = findViewById(R.id.descriptionTxt);
@@ -86,14 +89,14 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, true);
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateStr, true);
             }
         });
 
         dueDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, false);
+                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateStr, false);
             }
         });
 
@@ -126,7 +129,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     public void UpdateStartDateDescription(Calendar calendar) {
         TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         String curDate = df.format(calendar.getTime());
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
@@ -137,7 +140,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     public void UpdateDueDateDescription(Calendar calendar){
         TextView dueDateDescriptionText = findViewById(R.id.dueDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         String curDate = df.format(calendar.getTime());
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);

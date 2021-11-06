@@ -109,13 +109,13 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
+                    //BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
+                    //BasicDialogs.CalendarDateSetterDialog(mcontext, v, createProjectsAdapter);
                 }
             });
         }

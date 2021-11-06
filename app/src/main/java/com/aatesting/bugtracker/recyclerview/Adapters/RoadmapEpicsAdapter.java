@@ -143,7 +143,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         holder.description.setText(startDateStr + " - " + endDateStr);
 
         //setting the tag because the description does not hold the year
-        df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         startDateStr = df.format(startDateTime.getTime());
         endDateStr = df.format(endDateTime.getTime());
 

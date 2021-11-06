@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
@@ -34,6 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import kotlin.Triple;
@@ -211,7 +213,7 @@ public class BasicDialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapEditEpicActivity activity, boolean startDate){
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapEditEpicActivity activity, String date, boolean startDate){
         //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
         // you want to remove it and return it to default (empty)
         //true for startDate, false for dueDate
@@ -220,6 +222,11 @@ public class BasicDialogs {
         AlertDialog.Builder builder = data.getFirst();
         CalendarView calendarView = data.getSecond();
         View dialogView = data.getThird();
+
+        if (date != null) {
+            long millis = CalendarTransforms.getMillis(date, mcontext);
+            calendarView.setDate(millis);
+        }
 
         TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
         TextView yearTxt = dialogView.findViewById(R.id.year);
@@ -260,15 +267,19 @@ public class BasicDialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapCreateEpicActivity activity, boolean startDate){
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapCreateEpicActivity activity, String date, boolean startDate){
         //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
         // you want to remove it and return it to default (empty)
         //true for startDate, false for dueDate
-
         Triple<AlertDialog.Builder, CalendarView, View> data = BasicCalendarDialogConstructor(mcontext, v);
         AlertDialog.Builder builder = data.getFirst();
         CalendarView calendarView = data.getSecond();
         View dialogView = data.getThird();
+
+        if (date != null) {
+            long millis = CalendarTransforms.getMillis(date, mcontext);
+            calendarView.setDate(millis);
+        }
 
         TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
         TextView yearTxt = dialogView.findViewById(R.id.year);

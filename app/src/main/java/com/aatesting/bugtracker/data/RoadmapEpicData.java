@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
@@ -46,7 +47,7 @@ public class RoadmapEpicData {
         calendarEarliestDate.set(Calendar.HOUR_OF_DAY, 0);
 
         Date returnDate = GregorianCalendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(context.getString(R.string.storageDateFormat));
 
         if (data == null) {
             Log.wtf("Note", "there arent any epics in data");
@@ -89,6 +90,7 @@ public class RoadmapEpicData {
     public static String GetSpecificExtrasEpicData(String projectName, int id, int fieldId, Context context) {
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
+
         String extrasStr = parts[(id * amountOfPartsInData) + amountOfPartsInData - 1];
         String[] extras = extrasStr.split(extrasSeparator); //splitting the extras
 
@@ -108,7 +110,7 @@ public class RoadmapEpicData {
         }
 
         Calendar calendarDate = GregorianCalendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(context.getString(R.string.storageDateFormat));
 
         if (endDate.isEmpty() && startDate.isEmpty()){
             startDate = df.format(calendarDate.getTime());

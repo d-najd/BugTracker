@@ -144,7 +144,7 @@ public class RoadmapFragment extends Fragment {
         String data = RoadmapEpicData.GetData("Testing", mcontext);
         int amountOfPartsInData = RoadmapEpicData.amountOfPartsInData;
 
-        SimpleDateFormat df = new SimpleDateFormat("dd'-'MM'-'yyyy");
+        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
 
         if (data == null){
             Log.wtf("Note", "there arent any epics in data");
