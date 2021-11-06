@@ -243,6 +243,45 @@ public class RoadmapEpicData {
         }
     }
 
+    public static void RemoveEpic(String projectName, int id, Context context){
+    BufferedWriter writer = null;
+    File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+            + File.separator + "Roadmap", projectName + ".txt");
+
+    String data = GetData(projectName, context);
+    String[] parts = data.split(separator);
+
+    //this part is for splitting, ex if the id is 1, the startingStr will get data from
+    //0 up until 1 and stop, and endstr will get data from 2 and on
+
+    String endStr = "";
+    String startStr = "";
+
+    if (id != 0){
+        for (int i = 0; i < id * amountOfPartsInData; i++){
+            startStr += parts[i] + separator;
+        }
+    }
+
+        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
+            endStr += parts[i] + separator;
+    }
+
+    data = startStr + endStr;
+        try {
+        writer = new BufferedWriter(new FileWriter(f, false));
+        writer.write(data);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
     public static String GetData(String projectName, Context context){
         String data = null;
 

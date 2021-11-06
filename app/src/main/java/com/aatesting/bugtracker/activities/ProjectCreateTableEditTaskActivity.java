@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.dialogs.BasicDialogs;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -113,7 +113,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
                 for (int i = 0; i < allColumnTitles.size(); i++){
                     allColumnImages.add(2131165294);
                 }
-                Pair<MainRecyclerAdapter, BottomSheetDialog> data = BasicDialogs.BottomDialogCreator(
+                Pair<MainRecyclerAdapter, BottomSheetDialog> data = Dialogs.BottomDialogCreator(
                         context, v, viewGroup, "Select a transition", null, allColumnTitles, null, allColumnImages, tag);
                 MainRecyclerAdapter adapter = data.first;
                 BottomSheetDialog bottomDialog = data.second;
@@ -179,7 +179,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         allColumnDescriptions.add("A small, distinct piece of work");
 
         tag = getString(R.string.projectEditTask1);
-        BasicDialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
+        Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
                 allColumnTitles, allColumnDescriptions, allColumnImages, tag);
         tag = getString(R.string.projectEditTask0);
     }

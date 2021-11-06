@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/descriptionTxt" />
 
     <ImageButton
-        android:id="@+id/issueTypeImg"
+        android:id="@+id/issueTypeImb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -95,10 +95,10 @@
         android:text="@string/epic"
         android:textColor="@color/white60"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/issueTypeImg"
+        app:layout_constraintBottom_toBottomOf="@+id/issueTypeImb"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/issueTypeImg"
-        app:layout_constraintTop_toTopOf="@+id/issueTypeImg" />
+        app:layout_constraintStart_toEndOf="@+id/issueTypeImb"
+        app:layout_constraintTop_toTopOf="@+id/issueTypeImb" />
 
     <Button
         android:id="@+id/startDateBtn"
@@ -106,8 +106,8 @@
         android:layout_height="76dp"
         android:layout_marginTop="24dp"
         android:background="@color/transparent"
-        app:layout_constraintStart_toStartOf="@+id/issueTypeImg"
-        app:layout_constraintTop_toBottomOf="@+id/issueTypeImg" />
+        app:layout_constraintStart_toStartOf="@+id/issueTypeImb"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeImb" />
 
     <TextView
         android:id="@+id/startDateTxt"
@@ -116,8 +116,8 @@
         android:layout_marginTop="26dp"
         android:text="@string/start_date"
         android:textColor="@color/white60"
-        app:layout_constraintStart_toStartOf="@+id/issueTypeImg"
-        app:layout_constraintTop_toBottomOf="@+id/issueTypeImg" />
+        app:layout_constraintStart_toStartOf="@+id/issueTypeImb"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeImb" />
 
     <TextView
         android:id="@+id/startDateDescriptionTxt"

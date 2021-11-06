@@ -21,7 +21,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.aatesting.bugtracker.AnimationHandler;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
-import com.aatesting.bugtracker.dialogs.BasicDialogs;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
@@ -126,7 +126,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 @Override
                 public void onClick(View v) {
                     if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
-                        BasicDialogs.BasicDialog(mcontext, "Reminder Warning",
+                        Dialogs.BasicDialog(mcontext, "Reminder Warning",
                                 "Tell me when. Set a date and time first", "OK, GOT IT");
                     }
                 }
@@ -136,7 +136,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 @Override
                 public void onClick(View v) {
                     if (holderArrayList.get(position).description.getText().equals("Tap to add reminder")){
-                        BasicDialogs.BasicDialog(mcontext, "Reminder Warning",
+                        Dialogs.BasicDialog(mcontext, "Reminder Warning",
                                 "Tell me when. Set a date and time first", "OK, GOT IT");
                     }
                 }

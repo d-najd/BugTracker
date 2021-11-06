@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
-import com.aatesting.bugtracker.dialogs.BasicDialogs;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
@@ -93,7 +93,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                BasicDialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity);
+                Dialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity);
 
             }
         });
@@ -127,7 +127,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
             String description = ProjectTableData.GetColumnTitle(projectName, holderPosition, mcontext);
-            BasicDialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
+            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
             ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
             RefreshActivity();
@@ -187,7 +187,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.NewColumnDialog(mcontext, "Add column", "ADD",
+                Dialogs.NewColumnDialog(mcontext, "Add column", "ADD",
                         "Cancel", projectName, projectCreateTableActivity, intent);
             }
         });

@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import kotlin.Triple;
+
 public class CalendarTransforms {
     //NOTE FOR ALL THE DATA IN HERE MAKE SURE TO USE FORMAT "dd'-'MM'-'yyyy" IN OTHER WORDS
     // STORAGEDATEFORMAT
@@ -25,19 +27,34 @@ public class CalendarTransforms {
     }
 
     public static long getMillis(String dateStr, Context mcontext){
+        try {
+            String parts[] = dateStr.split("-");
+
+            int day = Integer.parseInt(parts[0]);
+            int month = Integer.parseInt(parts[1]) - 1; //doing this is such a bad idea
+            int year = Integer.parseInt(parts[2]);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+
+            long milliTime = calendar.getTimeInMillis();
+
+            return milliTime;
+        } catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static Triple<Integer, Integer, Integer> getAllCalendarData(String dateStr, Context mcontext){
         String parts[] = dateStr.split("-");
 
         int day = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]);
+        int month = Integer.parseInt(parts[1]) - 1; //doing this is such a bad idea
         int year = Integer.parseInt(parts[2]);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
-
-        long milliTime = calendar.getTimeInMillis();
-
-        return milliTime;
+        return new Triple<>(day, month, year);
     }
 }

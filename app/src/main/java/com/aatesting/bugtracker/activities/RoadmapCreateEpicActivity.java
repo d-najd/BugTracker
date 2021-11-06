@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
-import com.aatesting.bugtracker.dialogs.BasicDialogs;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,14 +55,14 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateDescriptionTxt.getText().toString(),true);
+                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateDescriptionTxt.getText().toString(),true);
             }
         });
 
         dueDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateDescriptionTxt.getText().toString(), false);
+                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateDescriptionTxt.getText().toString(), false);
             }
         });
 

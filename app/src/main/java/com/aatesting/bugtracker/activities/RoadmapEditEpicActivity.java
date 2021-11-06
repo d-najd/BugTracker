@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,9 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
-import com.aatesting.bugtracker.dialogs.BasicDialogs;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class RoadmapEditEpicActivity extends AppCompatActivity {
@@ -65,8 +67,10 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         Button dueDateBtn = findViewById(R.id.dueDateBtn);
         Button deleteBtn = findViewById(R.id.deleteBtn);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
+        ImageButton issueTypeImb = findViewById(R.id.issueTypeImb);
         EditText titleMiddle = findViewById(R.id.titleMiddle);
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
+        TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
 
 
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
@@ -89,14 +93,14 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateStr, true);
+                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateStr, true);
             }
         });
 
         dueDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BasicDialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateStr, false);
+                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateStr, false);
             }
         });
 
@@ -120,7 +124,35 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message.message(mcontext, "add ability to remove task");
+                Dialogs.DeleteTaskDialog(mcontext, "Delete this issue?", "deleting this " +
+                        "issue permanently erases the issue, including all subtasks", "CANCEL", "DELETE", activity);
+            }
+        });
+
+        issueTypeMainTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+                ArrayList<String> allColumnTitles = new ArrayList<>();
+                ArrayList<String> allColumnDescriptions = new ArrayList<>();
+                ArrayList<Integer> allColumnImages = new ArrayList<>();
+
+                allColumnTitles.add("Epic");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("A big, complex set of problems");
+
+                allColumnTitles.add("Hybrid epic");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("An epic which acts like a column in the board of the project");
+
+                allColumnTitles.add("Task");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("A small, distinct piece of work, or not");
+
+                Dialogs.BottomDialogCreator(mcontext, v, viewGroup, "Issue Type",
+                        "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                        allColumnTitles, allColumnDescriptions, allColumnImages, "exampletag");
             }
         });
     }
@@ -164,5 +196,11 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void DeleteEpic(){
+        RoadmapEpicData.RemoveEpic(projectName, epicId, mcontext);
+        Message.message(mcontext, "Epic succesfully removed");
+        finish();
     }
 }
