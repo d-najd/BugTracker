@@ -1,23 +1,26 @@
-package com.aatesting.bugtracker.activities;
+package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.StringToList;
+import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import java.util.ArrayList;
 
-public class ProjectCreateTableActivity extends AppCompatActivity {
+public class DashboardFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArrayList<RecyclerData> recyclerDataArrayList;
     private ArrayList<String> titles = new ArrayList<>();
@@ -26,18 +29,20 @@ public class ProjectCreateTableActivity extends AppCompatActivity {
     private String projectName; //data is passed through intent
     private int amountOfPartsInData;
 
-    private ArrayList<Boolean> hasBeenCreated = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_projects_board);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+        ((ProjectsMainActivity)getActivity()).Listeners(0);
+
+
         recyclerDataArrayList = new ArrayList<>();
-        recyclerView = findViewById(R.id.mainRecyclerView);
+        recyclerView = root.findViewById(R.id.mainRecyclerView);
         String tag = recyclerView.getTag().toString();
-        projectName = getIntent().getExtras().getString("projectName");
+        projectName = getActivity().getIntent().getExtras().getString("projectName");
 
-        ProjectTableData.MakeFolders(this);
+        ProjectTableData.MakeFolders(getContext());
 
         //titles.add("TEST");
         //titles.add("TEST");
@@ -48,7 +53,7 @@ public class ProjectCreateTableActivity extends AppCompatActivity {
 
         //removeData(2, projectName);
 
-        String data = ProjectTableData.GetData(projectName, this);
+        String data = ProjectTableData.GetData(projectName, getContext());
         amountOfPartsInData = ProjectTableData.amountOfPartsInData;
 
         //for getting the data nad putting it in arrayList so it can be used by the adapter
@@ -67,51 +72,21 @@ public class ProjectCreateTableActivity extends AppCompatActivity {
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-        ProjectTableCreateAdapter adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, this);
+        ProjectTableCreateAdapter adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, getContext());
 
         // setting grid layout manager to implement grid view.
         // in this method '1' represents number of columns to be displayed in grid view.
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
         // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        adapter.projectCreateTableActivity = this;
+        adapter.ProjectMainActivity = (ProjectsMainActivity) getActivity();
         adapter.projectName = projectName;
-        adapter.intent = getIntent();
+        adapter.intent = getActivity().getIntent();
         recyclerView.setRecycledViewPool(viewPool);
 
+        return root;
     }
-
-    public void RefreshActivity(){
-        //TODO this is gonna break in the future, need to check if the items are saved before doing this instead of waiting
-        Handler h = new Handler() ;
-        h.postDelayed(new Runnable() {
-            public void run() {
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
-            }
-        }, 250);
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //stupid fix but hey it works
-        boolean reloadedActivity = GlobalValues.reloadedActivity;
-        if (!reloadedActivity) {
-            GlobalValues.reloadedActivity = true;
-            finish();
-            overridePendingTransition(0, 0);
-            startActivity(getIntent());
-            overridePendingTransition(0, 0);
-        } else
-            GlobalValues.reloadedActivity = false;
-    }
-
-    //endregion
 }

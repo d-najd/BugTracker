@@ -2,8 +2,7 @@
     <string name="appName">BugTracker</string>
     <string name="titleProjects">Projects</string>
     <string name="titleRoadmap">Roadmap</string>
-    <string name="titleNotifications">Notifications</string>
-    <string name="titleAccount">Account</string>
+    <string name="titleDashboard">Dashboard</string>
     <string name="projectName">Project Name</string>
     <string name="dueDate">Due Date</string>
     <string name="task">Task</string>

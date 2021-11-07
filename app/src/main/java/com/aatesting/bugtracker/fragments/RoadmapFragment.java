@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.ui;
+package com.aatesting.bugtracker.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
-import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -39,13 +39,16 @@ public class RoadmapFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        //TODO seems to be acting funny, press the button to create smtn and then go back, instead of
+        // going back to roadmapFragment it goes back to dashboard
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
         mcontext = getContext();
 
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
 
-        ((MainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
+        ((ProjectsMainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
         WeeksBarRecycler();
         EpicsRecycler();
 

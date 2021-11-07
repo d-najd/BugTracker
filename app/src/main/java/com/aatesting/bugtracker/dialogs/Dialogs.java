@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -63,22 +63,22 @@ public class Dialogs {
     }
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
-                                          String positiveButtonTxt, int holderPos, ProjectCreateTableActivity projectCreateTableActivity,
-                                            ProjectTableCreateAdapter activity) {
+                                          String positiveButtonTxt, int holderPos, ProjectsMainActivity activity,
+                                            ProjectTableCreateAdapter adapter) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                projectCreateTableActivity.RefreshActivity();
+                activity.RefreshActivity();
             }
         });
 
@@ -87,8 +87,8 @@ public class Dialogs {
             public void onClick(DialogInterface dialog, int which) {
                 String newTitle = data.second.getText().toString();
 
-                projectCreateTableActivity.RefreshActivity();
-                activity.RenameTitle(holderPos, newTitle);
+                activity.RefreshActivity();
+                adapter.RenameTitle(holderPos, newTitle);
             }
         });
 
@@ -98,7 +98,7 @@ public class Dialogs {
     //for adding new column
     public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
                                        String negativeButtonTxt, String projectName,
-                                       ProjectCreateTableActivity activity, Intent intent){
+                                       ProjectsMainActivity activity, Intent intent){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -151,7 +151,7 @@ public class Dialogs {
     //for adding new item inside the column
     public static void NewColumnItemDialog(Context mcontext, String title, String positiveButtonTxt,
                                            String negativeButtonTxt, int position, String projectName,
-                                           ProjectCreateTableActivity activity){
+                                           ProjectsMainActivity activity){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;

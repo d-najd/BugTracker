@@ -16,9 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -33,7 +33,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     public RecyclerViewHolder holder;
-    public ProjectCreateTableActivity projectCreateTableActivity;
+    public ProjectsMainActivity ProjectMainActivity;
     public String projectName;
     private String tag;
     public Intent intent;
@@ -93,7 +93,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                Dialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, projectCreateTableActivity);
+                Dialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, ProjectMainActivity);
 
             }
         });
@@ -127,7 +127,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
             String description = ProjectTableData.GetColumnTitle(projectName, holderPosition, mcontext);
-            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, projectCreateTableActivity, this);
+            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, ProjectMainActivity, this);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
             ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
             RefreshActivity();
@@ -188,7 +188,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             @Override
             public void onClick(View v) {
                 Dialogs.NewColumnDialog(mcontext, "Add column", "ADD",
-                        "Cancel", projectName, projectCreateTableActivity, intent);
+                        "Cancel", projectName, ProjectMainActivity, intent);
             }
         });
     }
@@ -199,10 +199,10 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     }
 
     private void RefreshActivity(){
-        projectCreateTableActivity.finish();
-        projectCreateTableActivity.overridePendingTransition(0, 0);
-        projectCreateTableActivity.startActivity(intent);
-        projectCreateTableActivity.overridePendingTransition(0, 0);
+        ProjectMainActivity.finish();
+        ProjectMainActivity.overridePendingTransition(0, 0);
+        ProjectMainActivity.startActivity(intent);
+        ProjectMainActivity.overridePendingTransition(0, 0);
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {

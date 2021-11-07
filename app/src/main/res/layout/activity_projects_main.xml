@@ -22,7 +22,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/navigation_main" />
+        app:navGraph="@navigation/navigation_projects" />
 
     <!--TODO find a way to make a outline/border/stroke for the menu_bottombar
       or a way to make it elevated so it stands out from the background-->
@@ -30,7 +30,7 @@
     <include
         android:elevation="8dp"
         android:id="@+id/include"
-        layout="@layout/menu_bottombar_main"
+        layout="@layout/menu_bottombar_projects"
         android:layout_width="match_parent"
         android:layout_height="89dp"
         app:layout_constraintBottom_toBottomOf="parent" />

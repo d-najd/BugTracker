@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.ui;
+package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -29,7 +29,8 @@ public class ProjectsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
 
-        Listeners();
+        ((MainActivity)getActivity()).Listeners(0);
+
 
         recyclerDataArrayList = new ArrayList<>();
         recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
@@ -52,10 +53,6 @@ public class ProjectsFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return root;
-    }
-
-    private void Listeners(){
-        ((MainActivity)getActivity()).Listeners(0);
     }
 
     @Override

@@ -26,7 +26,7 @@
             android:outlineSpotShadowColor="@color/transparent"
             android:outlineAmbientShadowColor="@color/transparent"
             android:background="@color/transparent"
-            app:menu="@menu/bottom_nav_menu" />
+            app:menu="@menu/bottommenu_main" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
 
