@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
@@ -63,6 +65,8 @@ public class RoadmapFragment extends Fragment {
         //TODO the element with the biggest and smallest X (horizontal) value can be used to
         // determine how many weeks there should be, if that does not the dates can be used but it
         // will be much slower so it should be avoided
+
+        weeksRecyclerDataArrayList = new ArrayList<>();
 
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
@@ -125,6 +129,8 @@ public class RoadmapFragment extends Fragment {
     }
 
     private void EpicsRecycler(){
+        epicsRecyclerDataArrayList = new ArrayList<>();;
+
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
 
@@ -173,5 +179,13 @@ public class RoadmapFragment extends Fragment {
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        WeeksBarRecycler();
+        EpicsRecycler();
     }
 }

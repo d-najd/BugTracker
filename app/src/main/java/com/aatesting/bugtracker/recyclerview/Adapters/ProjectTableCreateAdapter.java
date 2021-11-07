@@ -126,16 +126,16 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
-            String description = ProjectTableData.GetColumnTitle(projectName, holderPosition, mcontext);
+            String description = ProjectTableData.GetColumnData(projectName, holderPosition, 0, mcontext);
             Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, ProjectMainActivity, this);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
-            ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition - 1, mcontext);
+            ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition - 1, mcontext);
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
-            ProjectTableData.MoveColumnToOtherColumn(projectName, holderPosition, holderPosition + 1, mcontext);
+            ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition + 1, mcontext);
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
-            ProjectTableData.RemoveColumnData(projectName, holderPosition, mcontext);
+            ProjectTableData.RemoveColumn(projectName, holderPosition, mcontext);
 
             //TODO fix this
             RefreshActivity();

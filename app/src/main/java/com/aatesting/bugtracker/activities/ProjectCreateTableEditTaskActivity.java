@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
@@ -59,7 +60,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
 
-        oldDescription = ProjectTableData.GetDescription(projectName, columnPos, itemPos,this);
+        oldDescription = ProjectTableData.GetItemListData(projectName, columnPos, itemPos, 3,this);
 
         columnSelector.setText(columnName);
         titleMiddle.setText(itemName);
@@ -83,6 +84,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
         ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
+        Button deleteBtn = findViewById(R.id.deleteBtn);
 
         titleMiddle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,7 +110,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
                 allColumnTitles.clear();
                 allColumnImages.clear();
 
-                allColumnTitles = ProjectTableData.GetAllColumnTitles(projectName, context);
+                allColumnTitles = ProjectTableData.GetAllItemData(projectName, 0, context);
 
                 for (int i = 0; i < allColumnTitles.size(); i++){
                     allColumnImages.add(2131165294);
@@ -149,12 +151,22 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
             }
         });
 
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ProjectTableData.RemoveTask(projectName, columnPos, itemPos, context);
+            }
+        });
+
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GlobalValues.reloadedActivity = true;
                 finish();
             }
         });
+
+
     }
 
 
@@ -163,7 +175,7 @@ public class ProjectCreateTableEditTaskActivity extends AppCompatActivity {
         this.columnPos = columnPos;
         itemPos = 0;
 
-        String columnName = ProjectTableData.GetColumnTitle(projectName, columnPos, this);
+        String columnName = ProjectTableData.GetColumnData(projectName, columnPos, 0, this);
         columnSelector.setText(columnName);
     }
 

@@ -27,6 +27,7 @@ public class DashboardFragment extends Fragment {
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private String projectName; //data is passed through intent
+    private String tag;
     private int amountOfPartsInData;
 
 
@@ -36,10 +37,8 @@ public class DashboardFragment extends Fragment {
 
         ((ProjectsMainActivity)getActivity()).Listeners(0);
 
-
-        recyclerDataArrayList = new ArrayList<>();
         recyclerView = root.findViewById(R.id.mainRecyclerView);
-        String tag = recyclerView.getTag().toString();
+        tag = recyclerView.getTag().toString();
         projectName = getActivity().getIntent().getExtras().getString("projectName");
 
         ProjectTableData.MakeFolders(getContext());
@@ -52,6 +51,14 @@ public class DashboardFragment extends Fragment {
         //saveData(titles, imgIds, "TO DO", projectName);
 
         //removeData(2, projectName);
+
+        GetData();
+
+        return root;
+    }
+
+    private void GetData(){
+        recyclerDataArrayList = new ArrayList<>();
 
         String data = ProjectTableData.GetData(projectName, getContext());
         amountOfPartsInData = ProjectTableData.amountOfPartsInData;
@@ -86,7 +93,12 @@ public class DashboardFragment extends Fragment {
         adapter.projectName = projectName;
         adapter.intent = getActivity().getIntent();
         recyclerView.setRecycledViewPool(viewPool);
+    }
 
-        return root;
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        GetData();
     }
 }

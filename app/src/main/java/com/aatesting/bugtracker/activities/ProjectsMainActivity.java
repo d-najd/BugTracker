@@ -7,11 +7,19 @@ import android.os.Handler;
 import android.view.View;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.fragments.DashboardFragment;
+import com.aatesting.bugtracker.fragments.ProjectsFragment;
+import com.aatesting.bugtracker.fragments.RoadmapFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,10 +27,12 @@ import androidx.navigation.ui.NavigationUI;
 
 public class ProjectsMainActivity extends AppCompatActivity {
 
-    public int fragmentSelected = 0; //0,3 from left to right
     private String projectName;
     private ProjectsMainActivity projectsMainActivity;
     private Context context;
+    private final Fragment firstFragment = new DialogFragment();
+    private final Fragment secondFragment = new RoadmapFragment();
+    private int fragmentSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +57,8 @@ public class ProjectsMainActivity extends AppCompatActivity {
     public void Listeners(int fragmentSelected){ //NOTE this is called from the fragments
         View mainBtn = findViewById(R.id.mainBtn);
 
+        this.fragmentSelected = fragmentSelected;
+
         if (fragmentSelected == 0) {
             mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -69,6 +81,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
     public void RefreshActivity(){
         //TODO this is gonna break in the future, need to check if the items are saved before doing this instead of waiting
+        Message.message(this, "activity refreshed but it shouldnt");
         Handler h = new Handler() ;
         h.postDelayed(new Runnable() {
             public void run() {
@@ -80,19 +93,13 @@ public class ProjectsMainActivity extends AppCompatActivity {
         }, 250);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        //stupid fix but hey it works
-        boolean reloadedActivity = GlobalValues.reloadedActivity;
-        if (!reloadedActivity) {
-            GlobalValues.reloadedActivity = true;
-            finish();
-            overridePendingTransition(0, 0);
-            startActivity(getIntent());
-            overridePendingTransition(0, 0);
-        } else
+        //this is a dumb way of fixing the problem
+        if (GlobalValues.reloadedActivity){
             GlobalValues.reloadedActivity = false;
+            RefreshActivity();
+        }
     }
 }

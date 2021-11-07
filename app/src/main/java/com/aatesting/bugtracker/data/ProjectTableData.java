@@ -6,12 +6,14 @@ import android.util.Log;
 import com.aatesting.bugtracker.Message;
 
 import java.io.BufferedWriter;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class ProjectTableData {
@@ -35,33 +37,34 @@ public class ProjectTableData {
 
     //region getters
 
-    public static ArrayList<String> GetAllColumnTitles(String projectName, Context context){
-        ArrayList<String> allColumns = new ArrayList<>();
+    public static ArrayList<String> GetAllItemData(String projectName, int fieldId, Context context){
+        //gets specific part of all items, for example get all item titles
+        ArrayList<String> returnData = new ArrayList<>();
 
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
 
         for (int i = 0; i < parts.length / amountOfPartsInData; i++)
-            allColumns.add(parts[i * amountOfPartsInData]);
+            returnData.add(parts[i * amountOfPartsInData] + fieldId);
 
-        return allColumns;
+        return returnData;
     }
 
-    public static String GetColumnTitle(String projectName, int columnPos, Context context){
+    public static String GetColumnData(String projectName, int columnPos, int fieldId, Context context){
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
-        String columnStr = parts[(columnPos * amountOfPartsInData)];
+        String returnData = parts[(columnPos * amountOfPartsInData) + fieldId];
 
-        return columnStr;
+        return returnData;
     }
 
-    public static String GetDescription(String projectName, int columnPos, int itemPos, Context context){
-        String descriptions = null;
+    public static String GetItemListData(String projectName, int columnPos, int itemPos, int fieldId, Context context){
+        String listData = null;
 
         String data = GetData(projectName, context);
         String[] parts = data.split(separator);
-        descriptions = parts[(columnPos * amountOfPartsInData) + 3];
-        parts = descriptions.split(",");
+        listData = parts[(columnPos * amountOfPartsInData) + fieldId];
+        parts = listData.split(",");
 
         //removing the [ and ] from the strings
         parts[0] = parts[0].substring(1);
@@ -251,6 +254,127 @@ public class ProjectTableData {
 
     //endregion
 
+    //region removers
+
+    public static void RemoveFile(String projectName, Context context){
+        File file = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        boolean deleted = file.delete();
+
+        if (!deleted){
+            Log.wtf("ERROR", "Something went wrong with removing the file with name "
+                    + projectName + " at " + context.getFilesDir().toString() +
+                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
+            Message.message(context, "Something went wrong");
+        }
+    }
+
+    //remove selected column
+    public static void RemoveColumn(String projectName, int id, Context context){
+        BufferedWriter writer = null;
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        String data = GetData(projectName, context);
+        String[] parts = data.split(separator);
+
+        //this part is for splitting, ex if the id is 1, the startingStr will get data from
+        //0 up until 1 and stop, and endstr will get data from 2 and on
+
+        String endStr = "";
+        String startStr = "";
+
+        if (id != 0){
+            for (int i = 0; i < id * amountOfPartsInData; i++){
+                startStr += parts[i] + separator;
+            }
+        }
+
+        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
+            endStr += parts[i] + separator;
+        }
+
+        data = startStr + endStr;
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void RemoveTask(String projectName, int id, int fieldId, Context context){
+        BufferedWriter writer = null;
+        String data = "";
+        String descriptions; //the descriptions string before its edited
+        String dataOld = GetData(projectName, context);
+
+        if (dataOld == null) {
+            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
+            Message.message(context, "Something went wrong");
+            return;
+        }
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "ProjectBoard", projectName + ".txt");
+
+        List<String> parts = Arrays.asList(dataOld.split(separator));
+        String tempData;
+
+        StringBuilder dataRaw = null;
+        for (int i = 1; i < amountOfPartsInData; i++) {
+            //getting the left and right side and combining them
+            tempData = "";
+            ArrayList<String> itemParts = new ArrayList<String>(Arrays.asList(parts.get(i).split(",")));
+            if (fieldId != 0) {
+                for (int b = 0; b < itemParts.subList(0, fieldId).size(); b++){
+                    tempData += itemParts.get(b).trim() + ", ";
+                }
+            }
+            else
+                tempData += "[";
+            if (fieldId != itemParts.size() - 1) {
+                for (int b = fieldId + 1; b < itemParts.size(); b++) {
+                    if (fieldId != itemParts.size() - 2)
+                        tempData += itemParts.get(b).trim() + ", ";
+                    else
+                        tempData += itemParts.get(b).trim();
+                }
+            }
+            else
+                tempData += "]";
+            //TODO FINISH THIS,
+
+        }
+
+
+        /*
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+         */
+    }
+    //endregion
+
     //region modifiers
     public static void EditData(String projectName, int id, int fieldId, String newData, Context context){
         BufferedWriter writer = null;
@@ -294,53 +418,9 @@ public class ProjectTableData {
         }
     }
 
-    public static void EditListData(String projectName, int id, int fieldId, int itemId, String newData, Context context){
-        BufferedWriter writer = null;
-        String data = "";
-        String descriptions; //the descriptions string before its edited
-        String dataOld = GetData(projectName, context);
-
-        if (dataOld == null) {
-            Log.wtf("ERROR", "the data seems to be null, Stopping the activity oh and THIS SHOULDNT BE POSSIBLE");
-            Message.message(context, "Something went wrong");
-            return;
-        }
-
-        if (newData == null || newData == ""){
-            Log.wtf("Debug", "cannot set column title to null value or empty string, quiting");
-            return;
-        }
-
-        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
-        String[] parts = dataOld.split(separator); //splitting the data
-
-        parts[(id * amountOfPartsInData)] = newData;
-
-        for (int i = 0; i < parts.length; i++)
-            data += (parts[i] + separator);
-
-        /*
-        try {
-            writer = new BufferedWriter(new FileWriter(f, false));
-            writer.write(data);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-         */
-    }
 
     //swap columns
-    public static void MoveColumnToOtherColumn(String projectName, int oldColumnPos, int newColumnPos, Context context){
+    public static void SwapColumns(String projectName, int oldColumnPos, int newColumnPos, Context context){
         BufferedWriter writer = null;
         String data = "";
         String descriptions; //the descriptions string before its edited
@@ -501,64 +581,6 @@ public class ProjectTableData {
         }
     }
 
-    //endregion
-
-    //region removers
-
-    public static void RemoveFile(String projectName, Context context){
-        File file = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
-        boolean deleted = file.delete();
-
-        if (!deleted){
-            Log.wtf("ERROR", "Something went wrong with removing the file with name "
-                    + projectName + " at " + context.getFilesDir().toString() +
-                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
-            Message.message(context, "Something went wrong");
-        }
-    }
-
-    //remove selected column
-    public static void RemoveColumnData(String projectName, int id, Context context){
-        BufferedWriter writer = null;
-        File f = new File(context.getFilesDir() + File.separator + "ProjectData"
-                + File.separator + "ProjectBoard", projectName + ".txt");
-
-        String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
-
-        //this part is for splitting, ex if the id is 1, the startingStr will get data from
-        //0 up until 1 and stop, and endstr will get data from 2 and on
-
-        String endStr = "";
-        String startStr = "";
-
-        if (id != 0){
-            for (int i = 0; i < id * amountOfPartsInData; i++){
-                startStr += parts[i] + separator;
-            }
-        }
-
-        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
-            endStr += parts[i] + separator;
-        }
-
-        data = startStr + endStr;
-
-        try {
-            writer = new BufferedWriter(new FileWriter(f, false));
-            writer.write(data);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     //endregion
 
     public static String GetData(String projectName, Context context){
