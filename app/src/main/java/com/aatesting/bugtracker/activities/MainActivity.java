@@ -1,10 +1,15 @@
 package com.aatesting.bugtracker.activities;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.data.ProjectTableData;
+import com.aatesting.bugtracker.data.ProjectsDatabase;
+import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +20,19 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 
-    public int fragmentSelected = 0; //0,3 from left to right
+    public int fragmentSelected = 0; //0-1 from left to right
+    public ProjectsFragment projectsFragment;
+    private MainActivity mainActivity;
+    private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mainActivity = this;
+        context = this;
 
         View bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
@@ -47,8 +59,10 @@ public class MainActivity extends AppCompatActivity {
             mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MainActivity.this, ProjectCreateActivity.class);
-                    startActivity(intent);
+                    Dialogs.NewProjectDialog(context, "Create Project",
+                            "CREATE", "CANCEL", mainActivity);
+                    //Intent intent = new Intent(MainActivity.this, ProjectCreateActivity.class);
+                    //startActivity(intent);
                 }
             });
         }
@@ -60,6 +74,26 @@ public class MainActivity extends AppCompatActivity {
                     //startActivity(intent);
                 }
             });
+        }
+    }
+
+    public void AddProject(String title)
+    {
+        ProjectsDatabase helper = new ProjectsDatabase(this);
+        String description = "NULL";
+        if(title.isEmpty())
+        {
+            Message.message(this,"Enter Both Project Name and Description");
+        }
+        else
+        {
+            long id = helper.InsertData(title, description);
+            ProjectTableData.CreatingNewProject(title, this);
+            projectsFragment.NotifyItemAdded();
+            if(id<=0)
+            {
+                Message.message(this,"Insertion Unsuccessful");
+            }
         }
     }
 }

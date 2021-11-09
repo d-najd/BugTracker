@@ -13,7 +13,7 @@
         android:layout_height="match_parent">
         <View
             android:id="@+id/scrollViewLength"
-            android:layout_width="2000dp"
+            android:layout_width="500dp"
             android:layout_height="match_parent"
             android:text="IF YOU VALUE YOUR SANITY DON'T TOUCH THIS, this is how the length is set"
             android:visibility="invisible"/>
@@ -33,7 +33,7 @@
             android:tag="exampletag"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="36dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

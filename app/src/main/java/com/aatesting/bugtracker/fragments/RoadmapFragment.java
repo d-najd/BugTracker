@@ -37,15 +37,17 @@ public class RoadmapFragment extends Fragment {
     private ArrayList<RecyclerData> epicsRecyclerDataArrayList = new ArrayList<>();;
     private ArrayList<RecyclerData> weeksRecyclerDataArrayList = new ArrayList<>();;
     private String tag;
+    private String projectName; //data is passed through intent
     private Calendar calendarCurDate;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        //TODO seems to be acting funny, press the button to create smtn and then go back, instead of
-        // going back to roadmapFragment it goes back to dashboard
+
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
         mcontext = getContext();
+        projectName = getActivity().getIntent().getExtras().getString("projectName");
+
 
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
@@ -55,24 +57,26 @@ public class RoadmapFragment extends Fragment {
         EpicsRecycler();
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
-        //TODO NOTE the length needs to be changed to something more dynamic
+
+        //TODO if you add a date which is months or years ahead its not gonna place it in the correct
+        // position and extra length seems to be added, probably point precision (because as far as
+        // I remember you cant set float's for length from code) also when project is removed the
+        // roadmap data isnt removed along with it
+
+
         scrollViewLength.width = (int) (10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width));
 
         return root;
     }
 
     private RecyclerView WeeksBarRecycler(){
-        //TODO the element with the biggest and smallest X (horizontal) value can be used to
-        // determine how many weeks there should be, if that does not the dates can be used but it
-        // will be much slower so it should be avoided
-
         weeksRecyclerDataArrayList = new ArrayList<>();
 
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
-        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
-        Date latestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, false);
+        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate(projectName, mcontext, true);
+        Date latestDate = RoadmapEpicData.GetEarliestOrLatestDate(projectName, mcontext, false);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -132,7 +136,7 @@ public class RoadmapFragment extends Fragment {
         epicsRecyclerDataArrayList = new ArrayList<>();;
 
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
-        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate("Testing", mcontext, true);
+        Date earliestDate = RoadmapEpicData.GetEarliestOrLatestDate(projectName, mcontext, true);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -150,7 +154,7 @@ public class RoadmapFragment extends Fragment {
     }
 
     private void GetEpicsFromStorage(){
-        String data = RoadmapEpicData.GetData("Testing", mcontext);
+        String data = RoadmapEpicData.GetData(projectName, mcontext);
         int amountOfPartsInData = RoadmapEpicData.amountOfPartsInData;
 
         SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));

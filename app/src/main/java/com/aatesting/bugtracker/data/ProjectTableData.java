@@ -20,20 +20,29 @@ public class ProjectTableData {
 
     public static final int amountOfPartsInData = 4;
     private static final String separator = "::"; //the type of separator used for saving the data
+    /* TODO replace with getting the parts with constants instead of needing to specify a number,
+        because the format of which the data is stored ex titles::tasktitles may change to
+        tasktitles::titles and every single reference in the entire projects where titles are called
+        with the number 0 will need to be changed with 1 instead making a constant and changing the
+        value in here
+        !!!!!same goes forRoadmapEpicData!!!!!
+     *//*
 
-    //tasks will be stored in ProjectData/ProjectBoard/Tasks
-    //current format
-    //titles::taskstitles::tasksimgsids::tasksdescriptions
-    //planned
-    //title::taskstitles::subTaskIdList::extras
-    //extras for task
-    //taskdescriptions, parentids, dateCreatedList
+    tasks will be stored in ProjectData/ProjectBoard/Tasks
+    current format
+    titles::taskstitles::tasksimgsids::tasksdescriptions
+    planned
+    title::taskstitles::subTaskIdList::extras
+    extras for task
+    taskdescriptions, parentids, dateCreatedList
 
-    //subtasts will be stored in ProjectData/ProjectBoard/Subtasks
-    //format for subtasks
-    //id::extras
-    //extras for subtask
-    //title, description, creationdate
+    subtasts will be stored in ProjectData/ProjectBoard/Subtasks
+    format for subtasks
+    id::extras
+    extras for subtask
+    title, description, creationdate
+
+     */
 
     //region getters
 
@@ -311,6 +320,7 @@ public class ProjectTableData {
         }
     }
 
+    //for removing a singular task
     public static void RemoveTask(String projectName, int id, int fieldId, Context context){
         BufferedWriter writer = null;
         String data = "";
@@ -333,30 +343,36 @@ public class ProjectTableData {
         for (int i = 1; i < amountOfPartsInData; i++) {
             //getting the left and right side and combining them
             tempData = "";
-            ArrayList<String> itemParts = new ArrayList<String>(Arrays.asList(parts.get(i).split(",")));
+            ArrayList<String> itemParts = new ArrayList<String>(Arrays.asList
+                    (parts.get((amountOfPartsInData * id) + i).split(",")));
             if (fieldId != 0) {
-                for (int b = 0; b < itemParts.subList(0, fieldId).size(); b++){
-                    tempData += itemParts.get(b).trim() + ", ";
+                for (int curField = 0; curField < itemParts.subList(0, fieldId).size(); curField++){
+                    if (curField != itemParts.size() - 2)
+                        tempData += itemParts.get(curField).trim() + ", ";
+                    else
+                        tempData += itemParts.get(curField).trim();
                 }
             }
             else
                 tempData += "[";
             if (fieldId != itemParts.size() - 1) {
-                for (int b = fieldId + 1; b < itemParts.size(); b++) {
-                    if (fieldId != itemParts.size() - 2)
-                        tempData += itemParts.get(b).trim() + ", ";
+                for (int curField = fieldId + 1; curField < itemParts.size(); curField++) {
+                    if (curField != itemParts.size() - 1)
+                        tempData += itemParts.get(curField).trim() + ", ";
                     else
-                        tempData += itemParts.get(b).trim();
+                        tempData += itemParts.get(curField).trim();
                 }
             }
             else
                 tempData += "]";
-            //TODO FINISH THIS,
-
+            parts.set((amountOfPartsInData * id) + i, tempData);
         }
 
+        for (int i = 0; i < parts.size(); i++)
+            data += (parts.get(i) + separator);
 
-        /*
+        data = data;
+
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
             writer.write(data);
@@ -370,8 +386,6 @@ public class ProjectTableData {
                 e.printStackTrace();
             }
         }
-
-         */
     }
     //endregion
 
@@ -603,7 +617,8 @@ public class ProjectTableData {
     }
 
     public static void MakeFolders(Context context){
-        //TODO add function which checks if permissions for writing data are allowed
+        //TODO add function which checks if permissions for writing data are allowed, same goes for
+        // RoadmapEpicData
 
         File folder = new File(context.getFilesDir() + File.separator + "ProjectData" + File.separator + "ProjectBoard");
         if (!folder.exists()) {

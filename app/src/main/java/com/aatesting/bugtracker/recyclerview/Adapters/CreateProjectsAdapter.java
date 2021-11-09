@@ -473,7 +473,7 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
                 values.add("Weekly");
                 values.add("Monthly");
                 values.add("Yearly");
-                values.add("Specific days of week"); //TODO ADD THE ACTIVITIES FOR THESE 2 AND SWITCH COLOR WHEN PRESSING ANYTHING WHICH ISNT Does not repeat
+                values.add("Specific days of week");
                 values.add("Advanced");
 
                 curHolder.itemView.setOnClickListener(new View.OnClickListener() {

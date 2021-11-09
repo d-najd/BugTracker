@@ -303,8 +303,6 @@ public class RoadmapEpicData {
     }
 
     public static void MakeFolders(Context context){
-        //TODO add function which checks if permissions for writing data are allowed
-
         File folder = new File(context.getFilesDir() + File.separator + "ProjectData" + File.separator + "Roadmap");
 
         if (!folder.exists()) {

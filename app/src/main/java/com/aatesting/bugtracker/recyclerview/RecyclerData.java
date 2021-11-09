@@ -50,6 +50,13 @@ public class RecyclerData {
         this.id = id;
     }
 
+    public RecyclerData(String title, int imgId, String tag, String id) {
+        this.title = title;
+        this.imgId = imgId;
+        this.tag = tag;
+        this.id = id;
+    }
+
     public RecyclerData(String title, int imgId, String tag){
         this.title = title;
         this.imgId = imgId;
@@ -90,6 +97,8 @@ public class RecyclerData {
         this.calendarEndDate = calendarEndDate;
         this.tag = tag;
     }
+
+
 
 
     public ArrayList<String> getTitles(){

@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.R;
 
-public class ProjectCreateTableEditDescriptionActivity extends AppCompatActivity {
+public class ProjectTableEditDescriptionActivity extends AppCompatActivity {
     private EditText descriptionEdt;
     private ImageButton closeActivityBtn;
     private TextView topSave;

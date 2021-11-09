@@ -30,7 +30,7 @@ public class ProjectsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         ((MainActivity)getActivity()).Listeners(0);
-
+        ((MainActivity)getActivity()).projectsFragment = this;
 
         recyclerDataArrayList = new ArrayList<>();
         recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
@@ -44,6 +44,8 @@ public class ProjectsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
+        RetrieveData();
+
         ItemTouchHelper itemTouchHelper;
 
         itemTouchHelper = new ItemTouchHelper(ItemMoved);
@@ -53,12 +55,6 @@ public class ProjectsFragment extends Fragment {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return root;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        RetrieveData();
     }
 
     public void RetrieveData()
@@ -71,9 +67,10 @@ public class ProjectsFragment extends Fragment {
         String data = helper.GetData();
         String [] parts = data.split("/");
 
+
         for (int i = 0; i < parts.length - 1; i++){
             if (i % 3 == 0) {
-                recyclerDataArrayList.add(new RecyclerData(parts[i], parts[i + 1], R.drawable.ic_launcher_background, tag, parts[i + 2]));
+                recyclerDataArrayList.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
                 recyclerView.getAdapter().notifyItemInserted(i/3);
             }
         }
@@ -89,8 +86,7 @@ public class ProjectsFragment extends Fragment {
 
             int fromPosition = viewHolder.getAdapterPosition();
             int endPosition = target.getAdapterPosition();
-            //TODO after coming back to the activity if the item was movied it will go back to the
-            // starting pos when the app was opened
+            //TODO update item swap in data, so it does not just swap place visually
             Collections.swap(recyclerDataArrayList, fromPosition, endPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition, endPosition);
@@ -121,4 +117,14 @@ public class ProjectsFragment extends Fragment {
             recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
         }
     };
+
+    public void NotifyItemAdded(){
+        String tag = recyclerView.getTag().toString();
+        ProjectsDatabase helper = new ProjectsDatabase(getContext());
+
+        String data = helper.GetData();
+        String [] parts = data.split("/");
+        recyclerDataArrayList.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
+        recyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
+    }
 }

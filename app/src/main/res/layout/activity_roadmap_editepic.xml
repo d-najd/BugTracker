@@ -166,7 +166,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Delete Epic"
+        android:text="Delete epic"
         android:textColor="@color/white60"
         app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/dueDateBtn" />

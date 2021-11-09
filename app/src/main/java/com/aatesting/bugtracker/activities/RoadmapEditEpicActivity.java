@@ -28,7 +28,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     private String projectName;
     private int epicId;
     private Context mcontext;
-
     private String startDateStr;
     private String dueDateStr;
 
@@ -76,7 +75,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mcontext, ProjectCreateTableEditDescriptionActivity.class);
+                Intent intent = new Intent(mcontext, ProjectTableEditDescriptionActivity.class);
 
                 intent.putExtra("oldData", editDescriptionTxt.getText().toString());
                 startActivityForResult(intent, 1); //for getting data back from the second activity
@@ -117,7 +116,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                RoadmapEpicData.EditEpic("Testing", epicId, 0, s.toString(),  mcontext);
+                RoadmapEpicData.EditEpic(projectName, epicId, 0, s.toString(),  mcontext);
             }
         });
 
@@ -166,7 +165,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
 
-        RoadmapEpicData.EditEpic("Testing", epicId, 1, curDate, mcontext);
+        RoadmapEpicData.EditEpic(projectName, epicId, 1, curDate, mcontext);
     }
 
     public void UpdateDueDateDescription(Calendar calendar){
@@ -177,7 +176,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);
 
-        RoadmapEpicData.EditEpic("Testing", epicId, 2, curDate, mcontext);
+        RoadmapEpicData.EditEpic(projectName, epicId, 2, curDate, mcontext);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -192,7 +191,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
                 //updating the description
                 if (newData != null) {
                     editDescriptionTxt.setText(newData);
-                    RoadmapEpicData.EditEpicExtras("Testing", epicId, 0, newData, mcontext);
+                    RoadmapEpicData.EditEpicExtras(projectName, epicId, 0, newData, mcontext);
                 }
             }
         }
@@ -200,7 +199,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
     public void DeleteEpic(){
         RoadmapEpicData.RemoveEpic(projectName, epicId, mcontext);
-        Message.message(mcontext, "Epic succesfully removed");
+        Message.message(mcontext, "Epic removed successfully");
         finish();
     }
 }

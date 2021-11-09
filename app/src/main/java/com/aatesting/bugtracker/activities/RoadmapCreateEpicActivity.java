@@ -20,13 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class RoadmapCreateEpicActivity extends AppCompatActivity {
-    RoadmapCreateEpicActivity activity = this;
-    Context mcontext = this;
+    private RoadmapCreateEpicActivity activity = this;
+    private Context mcontext = this;
+    private String projectName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roadmap_createepic);
+
+        projectName = getIntent().getExtras().getString("projectName");
 
         Listeners();
     }
@@ -44,8 +47,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mcontext, ProjectCreateTableEditDescriptionActivity.class);
-                //TODO make it so it doesnt pass description if its empty
+                Intent intent = new Intent(mcontext, ProjectTableEditDescriptionActivity.class);
                 intent.putExtra("oldData", editDescriptionTxt.getText().toString());
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
@@ -76,7 +78,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 String dueDate = dueDateDescriptionTxt.getText().toString();
 
                 RoadmapEpicData.MakeFolders(mcontext);
-                RoadmapEpicData.SaveNewEpic("Testing", title, description, startDate,
+                RoadmapEpicData.SaveNewEpic(projectName, title, description, startDate,
                         dueDate, mcontext);
                 finish();
             }
@@ -93,8 +95,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     public void UpdateStartDateDescription(Calendar calendar) {
         TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
 
-
-        //TODO this might be broken
         SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
         String curDate = df.format(calendar.getTime());
         startDateDescriptionText.setText(curDate);

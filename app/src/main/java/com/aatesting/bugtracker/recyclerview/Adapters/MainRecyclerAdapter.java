@@ -24,7 +24,7 @@ import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectCreateTableEditTaskActivity;
+import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -45,7 +45,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int itemPos;
     public String projectTableColumnName;
     public BottomSheetDialog projectCreateEditTask_BottomDialog;
-    public ProjectCreateTableEditTaskActivity projectCreateTableEditTask;
+    public ProjectTableEditTaskActivity projectCreateTableEditTask;
     //endregion
 
     public MainRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
@@ -93,8 +93,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 holder.editText.setTextSize(14);
 
                 //for removing the margins and making it more centered
-                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) holder.editText.getLayoutParams();
-                p.setMargins(0, 10, 0, 10);
                 holder.editText.requestLayout();
 
                 if (recyclerData.getDescription() != null)
@@ -161,10 +159,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
-                    int test = position;
-
-                    //TODO fixme there is a bug when you create new item it doesnt get added to the list or smtn and you cant open it without the app crashing
-                    // but it gets fixed if activity is refreshed.
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
@@ -180,35 +174,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             });
         }
 
-        else if (recyclerData.getTag().equals(R.string.createTask)){
-
-            if (position == 0){ //TODO this should be changed with the way of updatedatetime because its more reliable
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SelectBetweenTaskEpic();
-                        Toast.makeText(mcontext, "test", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                /* TODO CHECK IF THIS NEEDS TO STAY HERE
-                holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        SelectBetweenTaskEpic();
-                        Toast.makeText(mcontext, "test", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-                 */
-            }
-        }
-
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectCreateTask))) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectCreateTableEditTaskActivity.class);
+                    Intent intent = new Intent(mcontext, ProjectTableEditTaskActivity.class);
                     intent.putExtra("projectName", projectName);
                     intent.putExtra("columnName", projectTableColumnName);
                     intent.putExtra("columnPos", projectTableColumnPos);
@@ -258,28 +228,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             Log.wtf("Debug", "there is no activity for the current tag, there might be something wrong");
         }
 
-        /* TODO this seems like a dumb way to do it, dont you think?
-        if (holder.title.getText().equals(mcontext.getString(R.string.newTask))) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, CreateTaskActivity.class);
-                    mcontext.startActivity(intent);
-                }
-            });
-            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mcontext, CreateTaskActivity.class);
-                        mcontext.startActivity(intent);
-                    }
-                });
-            }
-
-         */
-
-
-        }
+    }
 
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail
     //also special pass wont hidebuttons bc both will be hidden once they are enabled by default

@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_projects_24dp"
+        android:icon="@drawable/ic_table_chart_24"
         android:title="@string/titleDashboard" />
 
     <item
@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/navigation_roadmap"
-        android:icon="@drawable/ic_account_24dp"
+        android:icon="@drawable/ic_roadmap_24"
         android:title="@string/titleRoadmap" />
 
 </menu>

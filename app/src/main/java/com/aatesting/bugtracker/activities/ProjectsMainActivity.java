@@ -30,9 +30,6 @@ public class ProjectsMainActivity extends AppCompatActivity {
     private String projectName;
     private ProjectsMainActivity projectsMainActivity;
     private Context context;
-    private final Fragment firstFragment = new DialogFragment();
-    private final Fragment secondFragment = new RoadmapFragment();
-    private int fragmentSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,6 @@ public class ProjectsMainActivity extends AppCompatActivity {
     public void Listeners(int fragmentSelected){ //NOTE this is called from the fragments
         View mainBtn = findViewById(R.id.mainBtn);
 
-        this.fragmentSelected = fragmentSelected;
-
         if (fragmentSelected == 0) {
             mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -73,6 +68,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ProjectsMainActivity.this, RoadmapCreateEpicActivity.class);
+                    intent.putExtra("projectName", projectName);
                     startActivity(intent);
                 }
             });
@@ -80,17 +76,21 @@ public class ProjectsMainActivity extends AppCompatActivity {
     }
 
     public void RefreshActivity(){
-        //TODO this is gonna break in the future, need to check if the items are saved before doing this instead of waiting
-        Message.message(this, "activity refreshed but it shouldnt");
-        Handler h = new Handler() ;
-        h.postDelayed(new Runnable() {
-            public void run() {
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
-            }
-        }, 250);
+        //TODO this is gonna break in the future, need to check if the items are loaded
+        // before doing this instead of waiting
+        if (GlobalValues.reloadedActivity) {
+            GlobalValues.reloadedActivity = false;
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                public void run() {
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                }
+            }, 250);
+        } else
+            GlobalValues.reloadedActivity = true;
     }
 
     @Override
@@ -99,7 +99,10 @@ public class ProjectsMainActivity extends AppCompatActivity {
         //this is a dumb way of fixing the problem
         if (GlobalValues.reloadedActivity){
             GlobalValues.reloadedActivity = false;
-            RefreshActivity();
+            finish();
+            overridePendingTransition(0, 0);
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
         }
     }
 }

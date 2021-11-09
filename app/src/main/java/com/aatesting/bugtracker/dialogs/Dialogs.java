@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
@@ -62,11 +63,41 @@ public class Dialogs {
         DialogBuilder(mcontext, builder);
     }
 
+    public static void NewProjectDialog(Context mcontext, String title, String positiveButtonTxt,
+                                       String negativeButtonTxt, MainActivity activity){
+        Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
+        AlertDialog.Builder builder = data.first;
+        EditText editText = data.second;
+
+        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+
+            }
+        });
+
+        builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.AddProject(editText.getText().toString());
+            }
+        });
+        DialogBuilder(mcontext, builder);
+        AddMargins(editText);
+    }
+
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
                                           String positiveButtonTxt, int holderPos, ProjectsMainActivity activity,
                                             ProjectTableCreateAdapter adapter) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
+        EditText editText = data.second;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
@@ -93,6 +124,7 @@ public class Dialogs {
         });
 
         DialogBuilder(mcontext, builder);
+        AddMargins(editText);
     }
 
     //for adding new column
@@ -131,22 +163,14 @@ public class Dialogs {
 
                         ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
 
-                        //TODO seems like refreshing the activity doesnt solve all problems,
-                        // if the first element is empty while adding new element it sets the data
-                        // to the first instead of last or some other problems
 
-                        //the data from the recyclerviews gets removed for some reason when editText
-                        //is pressed, refreshing the activity is the only way that I can think of,
-                        //notifying the adapters that the data is changed in any way doesn't work
                         activity.RefreshActivity();
                     }
 
                 });
         DialogBuilder(mcontext, builder);
+        AddMargins(editText);
     }
-
-    //TODO refreshing the data to fix problems doesnt seem to work out, need to fiND other way to
-    // refresh the activity
 
     //for adding new item inside the column
     public static void NewColumnItemDialog(Context mcontext, String title, String positiveButtonTxt,
@@ -181,6 +205,7 @@ public class Dialogs {
         });
 
        DialogBuilder(mcontext, builder);
+       AddMargins(editText);
     }
 
 
@@ -491,6 +516,13 @@ public class Dialogs {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void AddMargins(EditText editText)
+    {
+        ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) editText.getLayoutParams();
+        p.setMargins(50, 0, 0, 0);
+        editText.requestLayout();
     }
 
 /*

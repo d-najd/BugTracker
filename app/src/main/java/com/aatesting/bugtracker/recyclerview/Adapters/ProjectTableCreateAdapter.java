@@ -136,8 +136,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ProjectTableData.RemoveColumn(projectName, holderPosition, mcontext);
-
-            //TODO fix this
             RefreshActivity();
         }
     }
@@ -213,7 +211,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         private ImageView createImg;
         private TextView createTxt;
         private TextView addColumnTxt;
-        private Button addColumnBtn;
+        private ImageButton addColumnBtn;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);

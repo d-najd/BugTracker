@@ -49,6 +49,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/ic_null_background"
+        android:backgroundTint="@color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/titleMiddle"
         app:layout_constraintStart_toStartOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="@+id/titleMiddle" />
@@ -69,7 +70,7 @@
         android:id="@+id/titleEdt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="28dp"
         android:hint="Summary"
         android:maxLines="2"
@@ -83,7 +84,7 @@
 
 
     <TextView
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="14dp"
         android:id="@+id/descriptionTxt"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -111,7 +112,6 @@
         android:id="@+id/startDateTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="26dp"
         android:text="@string/start_date"
         android:textColor="@color/white60"

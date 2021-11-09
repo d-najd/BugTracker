@@ -44,6 +44,10 @@
     <string name="type_to_edit_the_description">Type to edit the description</string>
     <string name="epic">Epic</string>
     <string name="start_date">Start Date</string>
-    <string name="storageDateFormat">"dd'-'MM'-'yyyy"</string> <!--dont change the value or it will break stuff-->
+    <string name="storageDateFormat">"dd'-'MM'-'yyyy"</string>
+    <string name="titleBoard">Board</string>
+    <string name="titleAccount">Account</string>
+    <string name="recentlyViewed">Recently viewed</string>
+    <string name="allProjects">All projects</string> <!--dont change the value or it will break stuff-->
 
 </resources>
