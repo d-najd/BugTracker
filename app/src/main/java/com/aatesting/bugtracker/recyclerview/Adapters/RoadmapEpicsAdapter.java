@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,23 +23,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapter.RecyclerViewHolder> {
 
-    public ArrayList<RecyclerData> recyclerDataArrayList;
-    public Context mcontext;
-    public RecyclerViewHolder holder;
-    public RecyclerData recyclerData;
+    private ArrayList<RecyclerData> recyclerDataArrayList;
+    private Context mcontext;
+    private RecyclerViewHolder holder;
+    private RecyclerData recyclerData;
 
+    private String projectName;
     private Date weeksStartDateTime;
     private Date startDateTime;
     private Date endDateTime;
 
-    public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Date weeksStartDateTime, Context mcontext) {
+    public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Date weeksStartDateTime, String projectName, Context mcontext) {
         this.weeksStartDateTime = weeksStartDateTime;
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
+        this.projectName = projectName;
     }
 
     @NonNull
@@ -55,6 +61,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         recyclerData = recyclerDataArrayList.get(position);
         this.holder = holder;
 
+
         holder.title.setText(recyclerData.getTitle());
 
         startDateTime = recyclerData.getCalendarStartDate().getTime();
@@ -62,6 +69,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
         SetEpicDimensions();
         SetEpicDescription();
+        SetEpicBackgroundColor(position);
         Listeners(position);
 
         /*
@@ -99,7 +107,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
     private void EpicPressed(int position){
         Intent intent = new Intent(mcontext, RoadmapEditEpicActivity.class);
-        intent.putExtra("projectName", "Testing");
+        intent.putExtra("projectName", projectName);
         intent.putExtra("epicId", position);
         mcontext.startActivity(intent);
 
@@ -112,27 +120,42 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         long timeDifference = startDateTime.getTime() - weeksStartDateTime.getTime(); //value is milliseconds
         long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
 
-        float weeksLen = holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width);
 
-        ConstraintLayout.LayoutParams marginStart = (ConstraintLayout.LayoutParams) holder.cardView.getLayoutParams();
-        marginStart.setMarginStart((int) (((weeksLen / 7) * daysDifference) - (weeksLen / 7)));
+        /*NOTE this may break in the future because dpi on every device is different which means the
+         density of pixels (dpi) in every device should be different and if that's true then
+         because there is no way to set the length in float or double the int might not be
+         accurate enough
+         */
+
+        /*TODO fix the bug with epics where no matter if you set the first epic to be monday-today
+           ex if today is friday, if I set the date on first epic to friday it will set the epic to
+           the spot where monday should be, also changing the date in settings might be helpful
+           visual indicator if the bug has been fixed
+         */
+
+        double weekLen = holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width);
 
         //ending pos (the width)
+
+        ConstraintLayout.LayoutParams cardViewLayoutParams = (ConstraintLayout.LayoutParams) holder.cardView.getLayoutParams();
+        cardViewLayoutParams.setMarginStart((int)Math.round(((weekLen / 7) * daysDifference) - weekLen));
+
         timeDifference = endDateTime.getTime() - startDateTime.getTime();
         daysDifference = timeDifference / (24 * 60 * 60 * 1000);
 
-        ConstraintLayout.LayoutParams cardViewWidth = (ConstraintLayout.LayoutParams) holder.cardView.getLayoutParams();
-        cardViewWidth.width = (int) ((weeksLen / 7) * daysDifference);
+        cardViewLayoutParams.width = ((int)Math.round((weekLen / 7) * daysDifference));
         //endregion
 
         //region ButtonListener
         //if the cardview is pressed or the position left and right of it
 
-        ConstraintLayout.LayoutParams epicWidth = (ConstraintLayout.LayoutParams) holder.epicBtn.getLayoutParams();
-        epicWidth.width = (int) (weeksLen * GlobalValues.weeksRoadmapLen - 12);
+        ConstraintLayout.LayoutParams epicBtnLayoutParams = (ConstraintLayout.LayoutParams) holder.epicBtn.getLayoutParams();
+        epicBtnLayoutParams.width = (int) (weekLen * GlobalValues.weeksRoadmapLen - 12);
+
+        ConstraintLayout.LayoutParams epicBtnBackgroundLayoutParams = (ConstraintLayout.LayoutParams) holder.epicBtnBackground.getLayoutParams();
+        epicBtnBackgroundLayoutParams.width = (int) (weekLen * GlobalValues.weeksRoadmapLen - 12);
 
         //endregion
-
     }
 
     private void SetEpicDescription(){
@@ -150,6 +173,17 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         holder.description.setTag(startDateStr + endDateStr);
     }
 
+    private void SetEpicBackgroundColor(int position){
+        /*NOTE every second epic starting from the second one gets background color which is nearly
+        transparent but not quite, its purpose is to know where the epic should be, so you do not
+        have to scroll all the way and press the button but instead press the background
+         */
+
+        if (position % 2 == 1){
+            holder.epicBtnBackground.setVisibility(View.VISIBLE);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return recyclerDataArrayList.size();
@@ -160,6 +194,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         public TextView description;
         public CardView cardView;
         public ImageButton epicBtn;
+        public ImageView epicBtnBackground;
 
         public RecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +202,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
             description = itemView.findViewById(R.id.adapterSecondaryTxt);
             cardView = itemView.findViewById(R.id.cardView);
             epicBtn = itemView.findViewById(R.id.epicBtn);
+            epicBtnBackground = itemView.findViewById(R.id.epicBtnBackground);
         }
     }
 }

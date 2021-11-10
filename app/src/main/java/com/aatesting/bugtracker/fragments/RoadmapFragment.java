@@ -58,13 +58,7 @@ public class RoadmapFragment extends Fragment {
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
 
-        //TODO if you add a date which is months or years ahead its not gonna place it in the correct
-        // position and extra length seems to be added, probably point precision (because as far as
-        // I remember you cant set float's for length from code) also when project is removed the
-        // roadmap data isnt removed along with it
-
-
-        scrollViewLength.width = (int) (10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width));
+        scrollViewLength.width = (int) (Math.round(10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width)));
 
         return root;
     }
@@ -145,7 +139,7 @@ public class RoadmapFragment extends Fragment {
 
         //GetEpicsFromStorage puts the data in recyclerDataArrayList
         GetEpicsFromStorage();
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, earliestDate, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, earliestDate, projectName, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 

@@ -43,6 +43,9 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
         EditText titleEdt = findViewById(R.id.titleEdt);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
+        TextView titleMid = findViewById(R.id.titleMiddle);
+
+        titleMid.setText(projectName);
 
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,6 +7,7 @@ import android.util.Log;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import kotlin.Triple;
 
@@ -34,7 +35,7 @@ public class CalendarTransforms {
             int month = Integer.parseInt(parts[1]) - 1; //doing this is such a bad idea
             int year = Integer.parseInt(parts[2]);
 
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = GregorianCalendar.getInstance();
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, day);

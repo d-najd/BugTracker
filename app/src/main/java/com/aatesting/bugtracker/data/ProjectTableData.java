@@ -274,8 +274,7 @@ public class ProjectTableData {
         if (!deleted){
             Log.wtf("ERROR", "Something went wrong with removing the file with name "
                     + projectName + " at " + context.getFilesDir().toString() +
-                    File.separator.toString() + "ProjectData" + File.separator.toString() + "ProjectBoard");
-            Message.message(context, "Something went wrong");
+                    File.separator + "ProjectData" + File.separator + "ProjectBoard");
         }
     }
 

@@ -27,6 +27,7 @@ import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
+import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
@@ -90,6 +91,35 @@ public class Dialogs {
         });
         DialogBuilder(mcontext, builder);
         AddMargins(editText);
+    }
+
+    public static void DeleteProjectDialog(Context mcontext, String title, String description,
+                                           RecyclerView.ViewHolder viewHolder, String positiveButtonTxt,
+                                           String negativeButtonTxt, ProjectsFragment fragment) {
+        Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, false);
+        AlertDialog.Builder builder = data.first;
+
+        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fragment.NotifyProjectNotRemoved();
+            }
+        });
+
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                fragment.NotifyProjectNotRemoved();
+            }
+        });
+
+        builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fragment.RemoveProject(viewHolder);
+            }
+        });
+        DialogBuilder(mcontext, builder);
     }
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,

@@ -37,7 +37,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public Context mcontext;
     public RecyclerViewHolder holder;
     public RecyclerData recyclerData;
-    List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
+    public List<RecyclerViewHolder> holderArrayList = new ArrayList<RecyclerViewHolder>();
 
     //region ProjectEditTask
     public String projectName;

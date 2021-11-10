@@ -4,7 +4,7 @@
     <item
         android:id="@+id/navigation_dashboard"
         android:icon="@drawable/ic_table_chart_24"
-        android:title="@string/titleDashboard" />
+        android:title="@string/titleBoard" />
 
     <item
         android:id="@+id/placeholder"

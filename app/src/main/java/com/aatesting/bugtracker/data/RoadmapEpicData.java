@@ -243,6 +243,19 @@ public class RoadmapEpicData {
         }
     }
 
+    public static void RemoveFile(String projectName, Context context){
+        File file = new File(context.getFilesDir() + File.separator + "ProjectData"
+                + File.separator + "Roadmap", projectName + ".txt");
+
+        boolean deleted = file.delete();
+
+        if (!deleted){
+            Log.wtf("ERROR", "Something went wrong with removing the file with name "
+                    + projectName + " at " + context.getFilesDir().toString() +
+                    File.separator + "ProjectData" + File.separator + "ProjectBoard");
+        }
+    }
+
     public static void RemoveEpic(String projectName, int id, Context context){
     BufferedWriter writer = null;
     File f = new File(context.getFilesDir() + File.separator + "ProjectData"

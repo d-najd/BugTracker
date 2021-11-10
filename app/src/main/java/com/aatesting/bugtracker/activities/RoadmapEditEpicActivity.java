@@ -66,7 +66,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         Button dueDateBtn = findViewById(R.id.dueDateBtn);
         Button deleteBtn = findViewById(R.id.deleteBtn);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
-        ImageButton issueTypeImb = findViewById(R.id.issueTypeImb);
         EditText titleMiddle = findViewById(R.id.titleMiddle);
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
         TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);

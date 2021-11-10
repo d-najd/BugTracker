@@ -10,6 +10,7 @@
     <color name="white87">#DEFFFFFF</color>
     <color name="white60">#99FFFFFF</color>
     <color name="white38">#61FFFFFF</color>
+    <color name="dark38">#61000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="blue">#2196F3</color>
     <color name="red">#F44336</color>
