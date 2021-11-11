@@ -3,6 +3,7 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
@@ -40,13 +41,21 @@ public class RoadmapEpicData {
         //setting the time like its 00:00 so it does not cause problems cuz other dates are stored
         // in that format and if this one is 00:01 it might screw up the calculation and say its
         // the next day or vice versa
-        Calendar calendarEarliestDate = GregorianCalendar.getInstance();
-        calendarEarliestDate.set(Calendar.MILLISECOND, 0);
-        calendarEarliestDate.set(Calendar.SECOND, 0);
-        calendarEarliestDate.set(Calendar.MINUTE, 0);
-        calendarEarliestDate.set(Calendar.HOUR_OF_DAY, 0);
+
 
         Date returnDate = GregorianCalendar.getInstance().getTime();
+
+        //this part is used because we are getting the current date and then checking if the date is
+        // smaller or bigger, but it also gets the hours/minutes.... and dividing it later so if we
+        // leave that it might get a date smaller or bigger by 1 day
+        Calendar normalizeDate = GregorianCalendar.getInstance();
+        normalizeDate.setTime(returnDate);
+        normalizeDate.set(Calendar.MILLISECOND, 0);
+        normalizeDate.set(Calendar.SECOND, 0);
+        normalizeDate.set(Calendar.MINUTE, 0);
+        normalizeDate.set(Calendar.HOUR_OF_DAY, 0);
+        returnDate = normalizeDate.getTime();
+
         SimpleDateFormat df = new SimpleDateFormat(context.getString(R.string.storageDateFormat));
 
         if (data == null) {
@@ -77,6 +86,7 @@ public class RoadmapEpicData {
                 e.printStackTrace();
             }
         }
+        //this below here is used to normalize the date so
         return returnDate;
     }
 

@@ -61,7 +61,6 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         recyclerData = recyclerDataArrayList.get(position);
         this.holder = holder;
 
-
         holder.title.setText(recyclerData.getTitle());
 
         startDateTime = recyclerData.getCalendarStartDate().getTime();
@@ -117,6 +116,7 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
     private void SetEpicDimensions(){
         //region CardView
         //starting pos (the margin)
+
         long timeDifference = startDateTime.getTime() - weeksStartDateTime.getTime(); //value is milliseconds
         long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
 
@@ -127,10 +127,8 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
          accurate enough
          */
 
-        /*TODO fix the bug with epics where no matter if you set the first epic to be monday-today
-           ex if today is friday, if I set the date on first epic to friday it will set the epic to
-           the spot where monday should be, also changing the date in settings might be helpful
-           visual indicator if the bug has been fixed
+        /*TODO sometimes breaks and sets the date by 1 day or 1 week apart from what it should
+           be, try 11th nov 21 with 11th apr 22.
          */
 
         double weekLen = holder.itemView.getContext().getResources().getDimension(R.dimen.activity_roadmap_weeks_width);

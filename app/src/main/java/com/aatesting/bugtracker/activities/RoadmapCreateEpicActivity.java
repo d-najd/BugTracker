@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -17,6 +18,7 @@ import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class RoadmapCreateEpicActivity extends AppCompatActivity {
@@ -37,15 +39,43 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     private void Listeners(){
         Button startDateBtn = findViewById(R.id.startDateBtn);
         Button dueDateBtn = findViewById(R.id.dueDateBtn);
+        Button epicTypeBtn = findViewById(R.id.epicTypeBtn);
+        TextView titleMid = findViewById(R.id.titleMiddle);
         TextView createTxt = findViewById(R.id.createTxt);
         TextView startDateDescriptionTxt = findViewById(R.id.startDateDescriptionTxt);
         TextView dueDateDescriptionTxt = findViewById(R.id.dueDateDescriptionTxt);
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
         EditText titleEdt = findViewById(R.id.titleEdt);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
-        TextView titleMid = findViewById(R.id.titleMiddle);
 
         titleMid.setText(projectName);
+
+        epicTypeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+                ArrayList<String> allColumnTitles = new ArrayList<>();
+                ArrayList<String> allColumnDescriptions = new ArrayList<>();
+                ArrayList<Integer> allColumnImages = new ArrayList<>();
+
+                allColumnTitles.add("Epic");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("A big, complex set of problems");
+
+                allColumnTitles.add("Hybrid epic");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("An epic which acts like a column in the board of the project");
+
+                allColumnTitles.add("Task");
+                allColumnImages.add(2131165294);
+                allColumnDescriptions.add("A small, distinct piece of work, or not");
+
+                Dialogs.BottomDialogCreator(mcontext, v, viewGroup, "Issue Type",
+                        "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                        allColumnTitles, allColumnDescriptions, allColumnImages, "exampletag");
+            }
+        });
 
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override

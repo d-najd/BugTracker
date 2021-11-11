@@ -514,7 +514,6 @@ public class Dialogs {
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_date, viewGroup, false);
 
         CalendarView calendarView = dialogView.findViewById(R.id.calendarView);
-        //calendarView.
         TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
         TextView yearTxt = dialogView.findViewById(R.id.year);
         calendarView.getDate();
@@ -523,7 +522,7 @@ public class Dialogs {
         SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
         String curDate = df.format(c.getTime());
 
-        yearTxt.setText(Calendar.getInstance().getWeekYear() + "");
+        yearTxt.setText(GregorianCalendar.getInstance().getWeekYear() + "");
         dayMonthTxt.setText(curDate);
 
         return new Triple<>(builder, calendarView, dialogView);

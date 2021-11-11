@@ -42,12 +42,9 @@ public class RoadmapFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
         mcontext = getContext();
         projectName = getActivity().getIntent().getExtras().getString("projectName");
-
 
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
@@ -135,11 +132,15 @@ public class RoadmapFragment extends Fragment {
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
         calendarEarliestDate.set(Calendar.WEEK_OF_YEAR, calendarEarliestDate.get(Calendar.WEEK_OF_YEAR) - 1);
-        earliestDate = calendarEarliestDate.getTime();
+        //do not ask how this line works or why it works, but if you remove it the roadmap adapter will
+        //think that starting monday-today that the earliest epic is monday.
+        calendarEarliestDate.set(Calendar.DAY_OF_YEAR, calendarEarliestDate.get(Calendar.DAY_OF_YEAR)
+                - calendarEarliestDate.get(Calendar.DAY_OF_WEEK) + 2);
+        Date weeksStartDate = calendarEarliestDate.getTime();
 
         //GetEpicsFromStorage puts the data in recyclerDataArrayList
         GetEpicsFromStorage();
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, earliestDate, projectName, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(epicsRecyclerDataArrayList, weeksStartDate, projectName, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
