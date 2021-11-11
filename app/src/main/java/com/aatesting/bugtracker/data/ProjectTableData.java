@@ -198,7 +198,7 @@ public class ProjectTableData {
         }
     }
 
-    public static void SaveDescription(String projectName, String newData, int columnPos, int itemPos, Context context) {
+    public static void EditListData(String projectName, String newData, int columnPos, int itemPos, int fieldId, Context context) {
         BufferedWriter writer = null;
         String data = "";
         String descriptions; //the descriptions string before its edited
@@ -220,7 +220,7 @@ public class ProjectTableData {
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         String[] parts = dataOld.split(separator); //splitting the data
-        descriptions = parts[(columnPos * amountOfPartsInData) + 3];
+        descriptions = parts[(columnPos * amountOfPartsInData) + fieldId];
         String[] descriptionParts = descriptions.split(","); // a list of all the parts
         descriptionParts[itemPos] = newData;
 
@@ -241,7 +241,7 @@ public class ProjectTableData {
             descriptionsString += "]";
 
         //remaking the data string
-        parts[(columnPos * amountOfPartsInData) + 3] = descriptionsString;
+        parts[(columnPos * amountOfPartsInData) + fieldId] = descriptionsString;
         for (int i = 0; i < parts.length; i++) {
             data += (parts[i] + separator);
         }

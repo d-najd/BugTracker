@@ -99,10 +99,15 @@ public class ProjectsMainActivity extends AppCompatActivity {
         //this is a dumb way of fixing the problem
         if (GlobalValues.reloadedActivity){
             GlobalValues.reloadedActivity = false;
-            finish();
-            overridePendingTransition(0, 0);
-            startActivity(getIntent());
-            overridePendingTransition(0, 0);
+            Handler h = new Handler();
+            h.postDelayed(new Runnable() {
+                public void run() {
+                    finish();
+                    overridePendingTransition(0, 0);
+                    startActivity(getIntent());
+                    overridePendingTransition(0, 0);
+                }
+            }, 250);
         }
     }
 }

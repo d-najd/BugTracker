@@ -99,7 +99,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                Message.message(context, "change title in code");
+                ProjectTableData.EditListData(projectName, s.toString(), columnPos, itemPos, 1, context);
             }
         });
 
@@ -166,8 +166,6 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
 
@@ -204,7 +202,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 newData = data.getStringExtra("newData");
-                ProjectTableData.SaveDescription(projectName, newData, columnPos, itemPos, this);
+                ProjectTableData.EditListData(projectName, newData, columnPos, itemPos, 3, this);
                 Message.message(getBaseContext(), newData);
 
                 //updating the description
