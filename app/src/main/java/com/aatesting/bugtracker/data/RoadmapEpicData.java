@@ -3,11 +3,8 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Log;
 
-import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
-import com.aatesting.bugtracker.recyclerview.RecyclerData;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -16,17 +13,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RoadmapEpicData {
 
-    public static final int amountOfPartsInData = 4;
-    private static final int amountOfPartsInExtras = 4;
-    private static final String separator = "::"; //the type of separator used for saving the data
-    private static final String extrasSeparator = ">>"; //why cant I use $$ ?
+    public static final int AMOUNT_OF_PARTS_IN_DATA = 4;
+    private static final int AMOUNT_OF_PARTS_IN_EXTRAS = 4;
+    private static final String SEPARATOR = "::"; //the type of separator used for saving the data
+    private static final String EXTRAS_SEPARATOR = ">>"; //why cant I use $$?
     /*
         epics are stored in ProjectData/Roadmap/Epics
         format for epics
@@ -64,9 +60,9 @@ public class RoadmapEpicData {
         }
 
         String[] parts = data.split("::");
-        for (int i = 0; i < parts.length / amountOfPartsInData; i++) {
-            String earliestDateStr = parts[1 + (i * amountOfPartsInData)];
-            String latestDateStr = parts[2 + (i * amountOfPartsInData)];
+        for (int i = 0; i < parts.length / AMOUNT_OF_PARTS_IN_DATA; i++) {
+            String earliestDateStr = parts[1 + (i * AMOUNT_OF_PARTS_IN_DATA)];
+            String latestDateStr = parts[2 + (i * AMOUNT_OF_PARTS_IN_DATA)];
             try {
                 Date curDataDate;
                 long timeDifference;//value is milliseconds
@@ -92,17 +88,17 @@ public class RoadmapEpicData {
 
     public static String GetSpecificEpicData(String projectName, int id, int fieldId, Context context){
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
+        String[] parts = data.split(SEPARATOR);
 
-        return parts[(id * amountOfPartsInData) + fieldId];
+        return parts[(id * AMOUNT_OF_PARTS_IN_DATA) + fieldId];
     }
 
     public static String GetSpecificExtrasEpicData(String projectName, int id, int fieldId, Context context) {
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
+        String[] parts = data.split(SEPARATOR);
 
-        String extrasStr = parts[(id * amountOfPartsInData) + amountOfPartsInData - 1];
-        String[] extras = extrasStr.split(extrasSeparator); //splitting the extras
+        String extrasStr = parts[(id * AMOUNT_OF_PARTS_IN_DATA) + AMOUNT_OF_PARTS_IN_DATA - 1];
+        String[] extras = extrasStr.split(EXTRAS_SEPARATOR); //splitting the extras
 
         return extras[fieldId];
     }
@@ -142,8 +138,8 @@ public class RoadmapEpicData {
             startDate = df.format(calendarDate.getTime());
         }
 
-        String extras = description + extrasSeparator + "" + extrasSeparator + "[]" + extrasSeparator + "[]";
-        String data = title + separator + startDate + separator + endDate + separator + extras + separator;
+        String extras = description + EXTRAS_SEPARATOR + "" + EXTRAS_SEPARATOR + "[]" + EXTRAS_SEPARATOR + "[]";
+        String data = title + SEPARATOR + startDate + SEPARATOR + endDate + SEPARATOR + extras + SEPARATOR;
 
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
@@ -178,12 +174,12 @@ public class RoadmapEpicData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "Roadmap", projectName + ".txt");
 
-        String[] parts = dataOld.split(separator); //splitting the data
+        String[] parts = dataOld.split(SEPARATOR); //splitting the data
 
-        parts[(id * amountOfPartsInData) + fieldId] = newData;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA) + fieldId] = newData;
 
         for (int i = 0; i < parts.length; i++)
-            data += (parts[i] + separator);
+            data += (parts[i] + SEPARATOR);
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
@@ -220,22 +216,22 @@ public class RoadmapEpicData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "Roadmap", projectName + ".txt");
 
-        String[] parts = dataOld.split(separator); //splitting the data
-        String extrasStr = parts[(id * amountOfPartsInData) + amountOfPartsInData - 1];
-        String[] extras = extrasStr.split(extrasSeparator); //splitting the extras
+        String[] parts = dataOld.split(SEPARATOR); //splitting the data
+        String extrasStr = parts[(id * AMOUNT_OF_PARTS_IN_DATA) + AMOUNT_OF_PARTS_IN_DATA - 1];
+        String[] extras = extrasStr.split(EXTRAS_SEPARATOR); //splitting the extras
 
         extras[fieldId] = newData;
 
         for (int i = 0; i < extras.length; i++){
             extrasData += (extras[i]);
             if (i != extras.length - 1)
-                extrasData += extrasSeparator;
+                extrasData += EXTRAS_SEPARATOR;
         }
 
-        parts[(id * amountOfPartsInData) + amountOfPartsInData - 1] = extrasData;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA) + AMOUNT_OF_PARTS_IN_DATA - 1] = extrasData;
 
         for (int i = 0; i < parts.length; i++)
-            data += (parts[i] + separator);
+            data += (parts[i] + SEPARATOR);
 
         data = data;
         try {
@@ -272,7 +268,7 @@ public class RoadmapEpicData {
             + File.separator + "Roadmap", projectName + ".txt");
 
     String data = GetData(projectName, context);
-    String[] parts = data.split(separator);
+    String[] parts = data.split(SEPARATOR);
 
     //this part is for splitting, ex if the id is 1, the startingStr will get data from
     //0 up until 1 and stop, and endstr will get data from 2 and on
@@ -281,13 +277,13 @@ public class RoadmapEpicData {
     String startStr = "";
 
     if (id != 0){
-        for (int i = 0; i < id * amountOfPartsInData; i++){
-            startStr += parts[i] + separator;
+        for (int i = 0; i < id * AMOUNT_OF_PARTS_IN_DATA; i++){
+            startStr += parts[i] + SEPARATOR;
         }
     }
 
-        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
-            endStr += parts[i] + separator;
+        for (int i = (id + 1) * AMOUNT_OF_PARTS_IN_DATA; i < parts.length; i++){
+            endStr += parts[i] + SEPARATOR;
     }
 
     data = startStr + endStr;

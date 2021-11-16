@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.ProjectsFragment"
-    android:paddingTop="12dp">
+    android:paddingTop="12dp"
+    android:orientation="vertical">
 
     <TextView
         android:layout_marginStart="12dp"
@@ -14,48 +15,60 @@
         android:layout_height="wrap_content"
         android:text="@string/titleProjects"
         android:textColor="@color/white60"
-
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--TODO add starred projects
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="title" />
+
+
     <TextView
         android:id="@+id/starred"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/starred"
         android:textColor="@color/white60"
+        android:visibility="gone"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title"
         android:layout_marginTop="36dp"/>
 
 
-
-
-
-        the margin for items under recently viewed
-        is 36dp
-        -->
-
-
     <TextView
         android:layout_marginStart="12dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:id="@+id/recentlyViewed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="52dp"
         android:text="@string/recentlyViewed"
         android:textColor="@color/white60"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewFraProjectsRecentlyViewed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        android:tag="@string/titleProjects"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/allProjects" />
+
     <TextView
         android:id="@+id/allProjects"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -69,7 +82,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFraProjects"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="4dp"
@@ -79,4 +93,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/allProjects" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

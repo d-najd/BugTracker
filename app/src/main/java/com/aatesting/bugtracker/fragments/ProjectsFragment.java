@@ -76,7 +76,6 @@ public class ProjectsFragment extends Fragment {
         String data = helper.GetData();
         String [] parts = data.split("/");
 
-
         for (int i = 0; i < parts.length - 1; i++){
             if (i % 3 == 0) {
                 recyclerDataArrayList.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));

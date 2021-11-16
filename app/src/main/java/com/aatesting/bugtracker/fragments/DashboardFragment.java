@@ -61,7 +61,7 @@ public class DashboardFragment extends Fragment {
         recyclerDataArrayList = new ArrayList<>();
 
         String data = ProjectTableData.GetData(projectName, getContext());
-        amountOfPartsInData = ProjectTableData.amountOfPartsInData;
+        amountOfPartsInData = ProjectTableData.AMOUNT_OF_PARTS_IN_DATA;
 
         //for getting the data nad putting it in arrayList so it can be used by the adapter
         if (data == null){

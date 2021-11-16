@@ -6,7 +6,6 @@ import android.util.Log;
 import com.aatesting.bugtracker.Message;
 
 import java.io.BufferedWriter;
-import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -18,8 +17,8 @@ import java.util.List;
 
 public class ProjectTableData {
 
-    public static final int amountOfPartsInData = 4;
-    private static final String separator = "::"; //the type of separator used for saving the data
+    public static final int AMOUNT_OF_PARTS_IN_DATA = 4;
+    private static final String SEPARATOR = "::"; //the type of separator used for saving the data
     /* TODO replace with getting the parts with constants instead of needing to specify a number,
         because the format of which the data is stored ex titles::tasktitles may change to
         tasktitles::titles and every single reference in the entire projects where titles are called
@@ -51,18 +50,18 @@ public class ProjectTableData {
         ArrayList<String> returnData = new ArrayList<>();
 
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
+        String[] parts = data.split(SEPARATOR);
 
-        for (int i = 0; i < parts.length / amountOfPartsInData; i++)
-            returnData.add(parts[i * amountOfPartsInData] + fieldId);
+        for (int i = 0; i < parts.length / AMOUNT_OF_PARTS_IN_DATA; i++)
+            returnData.add(parts[i * AMOUNT_OF_PARTS_IN_DATA] + fieldId);
 
         return returnData;
     }
 
     public static String GetColumnData(String projectName, int columnPos, int fieldId, Context context){
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
-        String returnData = parts[(columnPos * amountOfPartsInData) + fieldId];
+        String[] parts = data.split(SEPARATOR);
+        String returnData = parts[(columnPos * AMOUNT_OF_PARTS_IN_DATA) + fieldId];
 
         return returnData;
     }
@@ -71,8 +70,8 @@ public class ProjectTableData {
         String listData = null;
 
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
-        listData = parts[(columnPos * amountOfPartsInData) + fieldId];
+        String[] parts = data.split(SEPARATOR);
+        listData = parts[(columnPos * AMOUNT_OF_PARTS_IN_DATA) + fieldId];
         parts = listData.split(",");
 
         //removing the [ and ] from the strings
@@ -114,11 +113,11 @@ public class ProjectTableData {
 
         String dataOld = GetData(projectName, context);
         if (dataOld != null) {
-            String[] parts = dataOld.split(separator);
-            id = parts.length / amountOfPartsInData;
+            String[] parts = dataOld.split(SEPARATOR);
+            id = parts.length / AMOUNT_OF_PARTS_IN_DATA;
         }
 
-        String data = title + separator + titles.toString() + separator + imgIds + separator + descriptions + separator;
+        String data = title + SEPARATOR + titles.toString() + SEPARATOR + imgIds + SEPARATOR + descriptions + SEPARATOR;
 
         try {
             writer = new BufferedWriter(new FileWriter(f, true));
@@ -147,15 +146,15 @@ public class ProjectTableData {
             return;
         }
 
-        String[] parts = dataOld.split(separator);
+        String[] parts = dataOld.split(SEPARATOR);
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         //old title without the ] at the end
-        String title = parts[(id * amountOfPartsInData) + 1].substring(0, parts[(id * amountOfPartsInData) + 1].length() - 1);
-        String imgId = parts[(id * amountOfPartsInData) + 2].substring(0, parts[(id * amountOfPartsInData) + 2].length() - 1);
-        String description = parts[(id * amountOfPartsInData) + 3].substring(0, parts[(id * amountOfPartsInData) + 3].length() - 1);
+        String title = parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 1].substring(0, parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 1].length() - 1);
+        String imgId = parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 2].substring(0, parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 2].length() - 1);
+        String description = parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 3].substring(0, parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 3].length() - 1);
 
         //adding the new data
         // also this checks if the length of the string is 1 because if the list is empty it will be left with [
@@ -171,13 +170,13 @@ public class ProjectTableData {
             description += ("]");
         }
 
-        parts[(id * amountOfPartsInData) + 1] = title;
-        parts[(id * amountOfPartsInData) + 2] = imgId;
-        parts[(id * amountOfPartsInData) + 3] = description;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 1] = title;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 2] = imgId;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA) + 3] = description;
 
         if (keepPreviousItems) {
             for (int i = 0; i < parts.length; i++) {
-                data += (parts[i] + separator);
+                data += (parts[i] + SEPARATOR);
             }
         } else
         {
@@ -219,8 +218,8 @@ public class ProjectTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String[] parts = dataOld.split(separator); //splitting the data
-        descriptions = parts[(columnPos * amountOfPartsInData) + fieldId];
+        String[] parts = dataOld.split(SEPARATOR); //splitting the data
+        descriptions = parts[(columnPos * AMOUNT_OF_PARTS_IN_DATA) + fieldId];
         String[] descriptionParts = descriptions.split(","); // a list of all the parts
         descriptionParts[itemPos] = newData;
 
@@ -241,9 +240,9 @@ public class ProjectTableData {
             descriptionsString += "]";
 
         //remaking the data string
-        parts[(columnPos * amountOfPartsInData) + fieldId] = descriptionsString;
+        parts[(columnPos * AMOUNT_OF_PARTS_IN_DATA) + fieldId] = descriptionsString;
         for (int i = 0; i < parts.length; i++) {
-            data += (parts[i] + separator);
+            data += (parts[i] + SEPARATOR);
         }
 
         try {
@@ -285,7 +284,7 @@ public class ProjectTableData {
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
         String data = GetData(projectName, context);
-        String[] parts = data.split(separator);
+        String[] parts = data.split(SEPARATOR);
 
         //this part is for splitting, ex if the id is 1, the startingStr will get data from
         //0 up until 1 and stop, and endstr will get data from 2 and on
@@ -294,13 +293,13 @@ public class ProjectTableData {
         String startStr = "";
 
         if (id != 0){
-            for (int i = 0; i < id * amountOfPartsInData; i++){
-                startStr += parts[i] + separator;
+            for (int i = 0; i < id * AMOUNT_OF_PARTS_IN_DATA; i++){
+                startStr += parts[i] + SEPARATOR;
             }
         }
 
-        for (int i = (id + 1) * amountOfPartsInData; i < parts.length; i++){
-            endStr += parts[i] + separator;
+        for (int i = (id + 1) * AMOUNT_OF_PARTS_IN_DATA; i < parts.length; i++){
+            endStr += parts[i] + SEPARATOR;
         }
 
         data = startStr + endStr;
@@ -335,15 +334,15 @@ public class ProjectTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        List<String> parts = Arrays.asList(dataOld.split(separator));
+        List<String> parts = Arrays.asList(dataOld.split(SEPARATOR));
         String tempData;
 
         StringBuilder dataRaw = null;
-        for (int i = 1; i < amountOfPartsInData; i++) {
+        for (int i = 1; i < AMOUNT_OF_PARTS_IN_DATA; i++) {
             //getting the left and right side and combining them
             tempData = "";
             ArrayList<String> itemParts = new ArrayList<String>(Arrays.asList
-                    (parts.get((amountOfPartsInData * id) + i).split(",")));
+                    (parts.get((AMOUNT_OF_PARTS_IN_DATA * id) + i).split(",")));
             if (fieldId != 0) {
                 for (int curField = 0; curField < itemParts.subList(0, fieldId).size(); curField++){
                     if (curField != itemParts.size() - 2)
@@ -364,11 +363,11 @@ public class ProjectTableData {
             }
             else
                 tempData += "]";
-            parts.set((amountOfPartsInData * id) + i, tempData);
+            parts.set((AMOUNT_OF_PARTS_IN_DATA * id) + i, tempData);
         }
 
         for (int i = 0; i < parts.size(); i++)
-            data += (parts.get(i) + separator);
+            data += (parts.get(i) + SEPARATOR);
 
         data = data;
 
@@ -409,12 +408,12 @@ public class ProjectTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String[] parts = dataOld.split(separator); //splitting the data
+        String[] parts = dataOld.split(SEPARATOR); //splitting the data
 
-        parts[(id * amountOfPartsInData)] = newData;
+        parts[(id * AMOUNT_OF_PARTS_IN_DATA)] = newData;
 
         for (int i = 0; i < parts.length; i++)
-            data += (parts[i] + separator);
+            data += (parts[i] + SEPARATOR);
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
@@ -453,25 +452,25 @@ public class ProjectTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        ArrayList<String> parts = new ArrayList<String>(Arrays.asList(dataOld.split(separator)));
+        ArrayList<String> parts = new ArrayList<String>(Arrays.asList(dataOld.split(SEPARATOR)));
 
         ArrayList<String> oldColumnParts = new ArrayList<>();
         ArrayList<String> newColumnParts = new ArrayList<>();
 
 
-        for (int i = 0; i < amountOfPartsInData; i++){
-            oldColumnParts.add(parts.get((oldColumnPos * amountOfPartsInData) + i));
-            newColumnParts.add(parts.get((newColumnPos * amountOfPartsInData) + i));
+        for (int i = 0; i < AMOUNT_OF_PARTS_IN_DATA; i++){
+            oldColumnParts.add(parts.get((oldColumnPos * AMOUNT_OF_PARTS_IN_DATA) + i));
+            newColumnParts.add(parts.get((newColumnPos * AMOUNT_OF_PARTS_IN_DATA) + i));
         }
 
-        for (int i = 0; i < amountOfPartsInData; i++){
-            parts.set((newColumnPos * amountOfPartsInData) + i, oldColumnParts.get(i));
-            parts.set((oldColumnPos * amountOfPartsInData) + i, newColumnParts.get(i));
+        for (int i = 0; i < AMOUNT_OF_PARTS_IN_DATA; i++){
+            parts.set((newColumnPos * AMOUNT_OF_PARTS_IN_DATA) + i, oldColumnParts.get(i));
+            parts.set((oldColumnPos * AMOUNT_OF_PARTS_IN_DATA) + i, newColumnParts.get(i));
         }
 
 
         for (int i = 0; i < parts.size(); i++)
-            data += (parts.get(i) + separator);
+            data += (parts.get(i) + SEPARATOR);
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
@@ -508,16 +507,16 @@ public class ProjectTableData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData"
                 + File.separator + "ProjectBoard", projectName + ".txt");
 
-        String[] parts = dataOld.split(separator); //splitting the data
+        String[] parts = dataOld.split(SEPARATOR); //splitting the data
 
-        for (int i = 1; i < amountOfPartsInData; i++){
+        for (int i = 1; i < AMOUNT_OF_PARTS_IN_DATA; i++){
             //getting the data title for example
             StringBuilder dataRaw = new StringBuilder(""); //the final descriptions data
 
-            String oldColumnItems = parts[(oldColumn * amountOfPartsInData) + i]; //refers to the items inside the titles for example, [title1, title2]
+            String oldColumnItems = parts[(oldColumn * AMOUNT_OF_PARTS_IN_DATA) + i]; //refers to the items inside the titles for example, [title1, title2]
             String[] oldItemParts = oldColumnItems.split(","); //refers to the parts of the items for example, out of [title1, title2] just title1 or title2
 
-            String newColumnItems = parts[(newColumn * amountOfPartsInData) + i];
+            String newColumnItems = parts[(newColumn * AMOUNT_OF_PARTS_IN_DATA) + i];
             String[] newItemParts = newColumnItems.split(",");
 
             String newData = oldItemParts[itemPos]; //the data that will be moved
@@ -545,7 +544,7 @@ public class ProjectTableData {
             }
 
             //replacing the data (adding the new element to the data)
-            parts[(newColumn * amountOfPartsInData) + i] = dataRaw.toString();
+            parts[(newColumn * AMOUNT_OF_PARTS_IN_DATA) + i] = dataRaw.toString();
 
 
             //REMOVING PARTS OF THE DATA
@@ -573,11 +572,11 @@ public class ProjectTableData {
             if (itemPos == oldItemParts.length - 1)
                 dataRaw.append("]");
 
-            parts[(oldColumn * amountOfPartsInData) + i] = dataRaw.toString();
+            parts[(oldColumn * AMOUNT_OF_PARTS_IN_DATA) + i] = dataRaw.toString();
         }
 
         for (int i = 0; i < parts.length; i++) {
-            data += (parts[i] + separator);
+            data += (parts[i] + SEPARATOR);
         }
         try {
             writer = new BufferedWriter(new FileWriter(f, false));

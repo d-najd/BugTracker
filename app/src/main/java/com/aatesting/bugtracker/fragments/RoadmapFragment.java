@@ -9,12 +9,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
@@ -150,7 +148,7 @@ public class RoadmapFragment extends Fragment {
 
     private void GetEpicsFromStorage(){
         String data = RoadmapEpicData.GetData(projectName, mcontext);
-        int amountOfPartsInData = RoadmapEpicData.amountOfPartsInData;
+        int amountOfPartsInData = RoadmapEpicData.AMOUNT_OF_PARTS_IN_DATA;
 
         SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
 
