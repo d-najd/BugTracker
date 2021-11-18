@@ -54,7 +54,7 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFraProjectsRecentlyViewed"
+        android:id="@+id/recentlyViewedRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"
@@ -80,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewFraProjects"
+        android:id="@+id/allProjectsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="50dp"

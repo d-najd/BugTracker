@@ -1,6 +1,5 @@
 package com.aatesting.bugtracker.fragments;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
+import com.aatesting.bugtracker.data.RecentlyViewedProjectsData;
 import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -26,51 +25,40 @@ import com.aatesting.bugtracker.data.ProjectsDatabase;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.xml.XMLConstants;
-
 public class ProjectsFragment extends Fragment {
-    private RecyclerView recyclerView;
-    private ArrayList<RecyclerData> recyclerDataArrayList;
+    private RecyclerView allProjects_RecyclerView, recentlyViewed_RecyclerView,
+            starredProjects_RecyclerView;
+    private ArrayList<RecyclerData> allProjects_List, recentlyViewed_List, starredProjects_List;
     private ProjectsFragment projectsFragment;
+    private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_projects, container, false);
+        root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         projectsFragment = this;
 
         ((MainActivity)getActivity()).Listeners(0);
         ((MainActivity)getActivity()).projectsFragment = this;
 
-        recyclerDataArrayList = new ArrayList<>();
-        recyclerView = root.findViewById(R.id.recyclerViewFraProjects);
+        allProjects_List = new ArrayList<>();
+        allProjects_RecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
 
-        // added data from arraylist to adapter class.
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, requireContext());
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
-
-        // at last set adapter to recycler view.
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
-        RetrieveData();
-
-        ItemTouchHelper itemTouchHelper;
-
-        itemTouchHelper = new ItemTouchHelper(ItemMoved);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-        itemTouchHelper = new ItemTouchHelper(ItemSwiped);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
+        SetupAdapters();
         return root;
     }
 
-    public void RetrieveData()
+    public void SetupAdapters()
     {
-        recyclerView.getAdapter().notifyItemRangeRemoved(0, recyclerDataArrayList.size());
-        recyclerDataArrayList.clear();
-        String tag = recyclerView.getTag().toString();
+        SetupAllProjects_Adapter();
+        //SetupRecentlyViewedAdapter();
+    }
+
+    //one of the adapters not all
+    private void SetupAllProjects_Adapter(){
+        //The listeners are in RecyclerAdapter class
+        allProjects_RecyclerView.getAdapter().notifyItemRangeRemoved(0, allProjects_List.size());
+        allProjects_List.clear();
+        String tag = allProjects_RecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
@@ -78,11 +66,51 @@ public class ProjectsFragment extends Fragment {
 
         for (int i = 0; i < parts.length - 1; i++){
             if (i % 3 == 0) {
-                recyclerDataArrayList.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
-                recyclerView.getAdapter().notifyItemInserted(i/3);
+                allProjects_List.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
+                allProjects_RecyclerView.getAdapter().notifyItemInserted(i/3);
             }
         }
-        //The listeners are in RecyclerAdapter class
+
+        SetAdapter(allProjects_RecyclerView, allProjects_List);
+
+        ItemTouchHelper itemTouchHelper;
+
+        itemTouchHelper = new ItemTouchHelper(ItemMoved);
+        itemTouchHelper.attachToRecyclerView(allProjects_RecyclerView);
+
+        itemTouchHelper = new ItemTouchHelper(ItemSwiped);
+        itemTouchHelper.attachToRecyclerView(allProjects_RecyclerView);
+    }
+
+
+
+    private void SetupRecentlyViewedAdapter(){
+        allProjects_RecyclerView.getAdapter().notifyItemRangeRemoved(0, allProjects_List.size());
+        allProjects_List.clear();
+        String tag = allProjects_RecyclerView.getTag().toString();
+        ProjectsDatabase helper = new ProjectsDatabase(getContext());
+
+        String data = helper.GetData();
+        String [] parts = data.split("/");
+
+        for (int i = 0; i < parts.length - 1; i++){
+            if (i % 3 == 0) {
+                allProjects_List.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
+                allProjects_RecyclerView.getAdapter().notifyItemInserted(i/3);
+            }
+        }
+
+        SetAdapter(allProjects_RecyclerView, allProjects_List);
+    }
+
+    private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> RecyclerDataList) {
+        MainRecyclerAdapter allProjects_adapter = new MainRecyclerAdapter(RecyclerDataList, requireContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
+
+        allProjects_adapter.projectsFragment = this;
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(allProjects_adapter);
     }
 
     //used for reordering items
@@ -95,7 +123,7 @@ public class ProjectsFragment extends Fragment {
             int fromPosition = viewHolder.getAdapterPosition();
             int endPosition = target.getAdapterPosition();
             //TODO update item swap in data, so it does not just swap place visually
-            Collections.swap(recyclerDataArrayList, fromPosition, endPosition);
+            Collections.swap(allProjects_List, fromPosition, endPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition, endPosition);
             return false;
@@ -125,31 +153,35 @@ public class ProjectsFragment extends Fragment {
     };
 
     public void NotifyItemAdded(){
-        String tag = recyclerView.getTag().toString();
+        String tag = allProjects_RecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
         String [] parts = data.split("/");
-        recyclerDataArrayList.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
-        recyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
+        allProjects_List.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
+        allProjects_RecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
     }
 
     public void NotifyProjectNotRemoved(){
         //called when you change your mind and cancel the removal of the project
-        recyclerView.getAdapter().notifyDataSetChanged();
+        allProjects_RecyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    public void NotifyProjectViewed(String projectName){
+        RecentlyViewedProjectsData.ProjectOpened(getContext(), projectName);
     }
 
     public void RemoveProject(RecyclerView.ViewHolder viewHolder){
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
-        ProjectTableData.RemoveFile(recyclerDataArrayList.get
+        ProjectTableData.RemoveFile(allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle(), getContext());
-        RoadmapEpicData.RemoveFile(recyclerDataArrayList.get
+        RoadmapEpicData.RemoveFile(allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle(), getContext());
 
-        helper.Delete(recyclerDataArrayList.get(viewHolder.getAdapterPosition()).getId());
+        helper.Delete(allProjects_List.get(viewHolder.getAdapterPosition()).getId());
 
-        recyclerDataArrayList.remove(viewHolder.getAdapterPosition());
-        recyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+        allProjects_List.remove(viewHolder.getAdapterPosition());
+        allProjects_RecyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
     }
 }

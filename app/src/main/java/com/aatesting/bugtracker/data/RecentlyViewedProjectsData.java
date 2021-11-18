@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class RecentlyViewedProjects {
+public class RecentlyViewedProjectsData {
     /*this can be used for other data that isn't temp data but isn't settings as well
      */
 
@@ -17,31 +17,31 @@ public class RecentlyViewedProjects {
     private static final int MAX_RECENT_PROJECTS = 5;
 
     //add the project to the list when its opened
-    public static void ProjectOpened(Context context, int projectID){
-        /*TODO finish this, for ex if there are 3 projects opened and len is 3 already 4::3::5 and the new one is
-           1 then it should move all projects to the right and delete the last, 1::4::3 if there
-           arent it should add a new element ex: 1::5 to 1::5::2
-
+    public static void ProjectOpened(Context context, String projectName){
+        /*
+        the way that this works is for ex if there are 3 projects opened and len is 3 already
+        pro4::pro3::pro5 and the new one is1 then it should move all projects to the right and
+        delete the last, pro1::pro4::pro3 if there arent it should add a new element
+        ex: pro1::pro5 to pro1::pro5::pro2
          */
 
         BufferedWriter writer = null;
 
         File f = new File(context.getFilesDir() + File.separator + "ProjectData", FILE_NAME + ".txt");
         String dataOld = GetData(context);
-        String data;
+        StringBuilder builder = new StringBuilder();
         if (dataOld != null) {
             String[] parts = dataOld.split(SEPARATOR);
-            /*
-            if (parts.length >= MAX_RECENT_PROJECTS){
-                return;
+            if (parts.length == MAX_RECENT_PROJECTS){
+                builder.append(projectName).append(SEPARATOR);
+                for (int i = 0; i < MAX_RECENT_PROJECTS - 1; i++){
+                    builder.append(parts[i]).append(SEPARATOR);
+                }
             } else{
-
+                builder.append(dataOld).append(projectName).append(SEPARATOR);
             }
-
-             */
         }
-
-        data = dataOld + projectID + SEPARATOR;
+        String data = builder.toString();
 
         try {
             writer = new BufferedWriter(new FileWriter(f, false));
@@ -85,4 +85,5 @@ public class RecentlyViewedProjects {
             folder.mkdirs();
         }
     }
+
 }

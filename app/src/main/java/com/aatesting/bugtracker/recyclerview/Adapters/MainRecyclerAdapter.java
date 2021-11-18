@@ -25,6 +25,7 @@ import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
+import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -46,6 +47,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public String projectTableColumnName;
     public BottomSheetDialog projectCreateEditTask_BottomDialog;
     public ProjectTableEditTaskActivity projectCreateTableEditTask;
+    public ProjectsFragment projectsFragment;
+
     //endregion
 
     public MainRecyclerAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
@@ -160,6 +163,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
+
+                    projectsFragment.NotifyProjectViewed(holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });
@@ -167,7 +172,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
-                    int test = position;
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
