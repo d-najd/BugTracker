@@ -1,6 +1,9 @@
 package com.aatesting.bugtracker.data;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.aatesting.bugtracker.Message;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,8 +16,8 @@ public class RecentlyViewedProjectsData {
      */
 
     private static final String FILE_NAME = "RecentlyViewed";
-    private static final String SEPARATOR = "::";
-    private static final int MAX_RECENT_PROJECTS = 5;
+    public static final String SEPARATOR = "::";
+    public static final int MAX_RECENT_PROJECTS = 5;
 
     //add the project to the list when its opened
     public static void ProjectOpened(Context context, String projectName){
@@ -32,7 +35,13 @@ public class RecentlyViewedProjectsData {
         StringBuilder builder = new StringBuilder();
         if (dataOld != null) {
             String[] parts = dataOld.split(SEPARATOR);
-            if (parts.length == MAX_RECENT_PROJECTS){
+            //check if the project hasn't been added to the recentlyViewed list
+            for (String part : parts) {
+                if (part.equals(projectName))
+                    return;
+            }
+            //add the project to the list
+            if (parts.length >= MAX_RECENT_PROJECTS){
                 builder.append(projectName).append(SEPARATOR);
                 for (int i = 0; i < MAX_RECENT_PROJECTS - 1; i++){
                     builder.append(parts[i]).append(SEPARATOR);
@@ -41,6 +50,38 @@ public class RecentlyViewedProjectsData {
                 builder.append(dataOld).append(projectName).append(SEPARATOR);
             }
         }
+
+        String data = builder.toString();
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f, false));
+            writer.write(data);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void ProjectRemoved(Context context, String projectName){
+        BufferedWriter writer = null;
+
+        File f = new File(context.getFilesDir() + File.separator + "ProjectData", FILE_NAME + ".txt");
+        String dataOld = GetData(context);
+        StringBuilder builder = new StringBuilder();
+        if (dataOld != null) {
+            String[] parts = dataOld.split(SEPARATOR);
+            for (String part : parts) {
+                if (!part.equals(projectName))
+                    builder.append(part).append(SEPARATOR);
+            }
+        }
+
         String data = builder.toString();
 
         try {

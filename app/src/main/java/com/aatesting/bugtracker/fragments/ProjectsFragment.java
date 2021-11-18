@@ -1,6 +1,7 @@
 package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
@@ -23,6 +25,7 @@ import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.data.ProjectsDatabase;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ProjectsFragment extends Fragment {
@@ -40,38 +43,82 @@ public class ProjectsFragment extends Fragment {
         ((MainActivity)getActivity()).Listeners(0);
         ((MainActivity)getActivity()).projectsFragment = this;
 
-        allProjects_List = new ArrayList<>();
-        allProjects_RecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
-
         SetupAdapters();
         return root;
     }
 
+
     public void SetupAdapters()
     {
         SetupAllProjects_Adapter();
-        //SetupRecentlyViewedAdapter();
+        SetupRecentlyViewedAdapter();
+    }
+
+    private void SetupRecentlyViewedAdapter() {
+        RecentlyViewedProjectsData.MakeFolders(getContext());
+
+        recentlyViewed_List = new ArrayList<>();
+        recentlyViewed_RecyclerView = root.findViewById(R.id.recentlyViewedRecyclerView);
+
+        //NOTE The listeners are in the adapter class
+        SetAdapter(recentlyViewed_RecyclerView, recentlyViewed_List);
+
+        recentlyViewed_RecyclerView.getAdapter().notifyItemRangeRemoved(0, recentlyViewed_List.size());
+        recentlyViewed_List.clear();
+        String tag = recentlyViewed_RecyclerView.getTag().toString();
+
+        String viewedData = RecentlyViewedProjectsData.GetData(getContext());
+        String SEPARATOR = RecentlyViewedProjectsData.SEPARATOR;
+
+        if (viewedData == null)
+            return;
+        String[] viewedParts = viewedData.split(SEPARATOR);
+
+        ProjectsDatabase helper = new ProjectsDatabase(getContext());
+
+        String dbData = helper.GetData();
+        String[] dbParts = dbData.split("/");
+
+        ArrayList<String> idList = new ArrayList<>(); //it seems I have used id while passing data for
+        //some reason, it might break something in the longrun so I am getting the id for the project
+        //as well
+
+        for (String viewedPart : viewedParts){
+            for (int i = 0; i < dbParts.length / 3; i++) {
+                if (viewedPart.equals(dbParts[i * 3]))
+                    idList.add(dbParts[i * 3] + 2);
+            }
+        }
+
+        for (int i = 0; i < viewedParts.length; i++){
+            recentlyViewed_List.add(new RecyclerData(viewedParts[i],
+                    R.drawable.ic_launcher_background, tag, idList.get(i)));
+            recentlyViewed_RecyclerView.getAdapter().notifyItemInserted(i);
+        }
     }
 
     //one of the adapters not all
     private void SetupAllProjects_Adapter(){
-        //The listeners are in RecyclerAdapter class
+        allProjects_List = new ArrayList<>();
+        allProjects_RecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
+
+        //NOTE The listeners are in the adapter class
+        SetAdapter(allProjects_RecyclerView, allProjects_List);
+
         allProjects_RecyclerView.getAdapter().notifyItemRangeRemoved(0, allProjects_List.size());
         allProjects_List.clear();
         String tag = allProjects_RecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
-        String [] parts = data.split("/");
+        String[] parts = data.split("/");
 
-        for (int i = 0; i < parts.length - 1; i++){
-            if (i % 3 == 0) {
-                allProjects_List.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
-                allProjects_RecyclerView.getAdapter().notifyItemInserted(i/3);
-            }
+        for (int i = 0; i < parts.length / 3; i++) {
+            Log.wtf(parts[(i * 3) + 2], parts[(i * 3) + 2]);
+            allProjects_List.add(new RecyclerData(parts[i * 3], R.drawable.ic_launcher_background,
+                    tag, parts[(i * 3) + 2]));
+            allProjects_RecyclerView.getAdapter().notifyItemInserted(i);
         }
-
-        SetAdapter(allProjects_RecyclerView, allProjects_List);
 
         ItemTouchHelper itemTouchHelper;
 
@@ -80,27 +127,6 @@ public class ProjectsFragment extends Fragment {
 
         itemTouchHelper = new ItemTouchHelper(ItemSwiped);
         itemTouchHelper.attachToRecyclerView(allProjects_RecyclerView);
-    }
-
-
-
-    private void SetupRecentlyViewedAdapter(){
-        allProjects_RecyclerView.getAdapter().notifyItemRangeRemoved(0, allProjects_List.size());
-        allProjects_List.clear();
-        String tag = allProjects_RecyclerView.getTag().toString();
-        ProjectsDatabase helper = new ProjectsDatabase(getContext());
-
-        String data = helper.GetData();
-        String [] parts = data.split("/");
-
-        for (int i = 0; i < parts.length - 1; i++){
-            if (i % 3 == 0) {
-                allProjects_List.add(new RecyclerData(parts[i], R.drawable.ic_launcher_background, tag, parts[i + 2]));
-                allProjects_RecyclerView.getAdapter().notifyItemInserted(i/3);
-            }
-        }
-
-        SetAdapter(allProjects_RecyclerView, allProjects_List);
     }
 
     private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> RecyclerDataList) {
@@ -158,6 +184,7 @@ public class ProjectsFragment extends Fragment {
 
         String data = helper.GetData();
         String [] parts = data.split("/");
+
         allProjects_List.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
         allProjects_RecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
     }
@@ -169,6 +196,9 @@ public class ProjectsFragment extends Fragment {
 
     public void NotifyProjectViewed(String projectName){
         RecentlyViewedProjectsData.ProjectOpened(getContext(), projectName);
+
+        //refreshing the data for recentlyViewedAdapter
+        SetupRecentlyViewedAdapter();
     }
 
     public void RemoveProject(RecyclerView.ViewHolder viewHolder){
@@ -178,10 +208,15 @@ public class ProjectsFragment extends Fragment {
                 (viewHolder.getAdapterPosition()).getTitle(), getContext());
         RoadmapEpicData.RemoveFile(allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle(), getContext());
+        RecentlyViewedProjectsData.ProjectRemoved(getContext(), allProjects_List.get
+                (viewHolder.getAdapterPosition()).getTitle());
 
         helper.Delete(allProjects_List.get(viewHolder.getAdapterPosition()).getId());
 
         allProjects_List.remove(viewHolder.getAdapterPosition());
         allProjects_RecyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+
+        //refreshing the data for recentlyViewedAdapter
+        SetupRecentlyViewedAdapter();
     }
 }
