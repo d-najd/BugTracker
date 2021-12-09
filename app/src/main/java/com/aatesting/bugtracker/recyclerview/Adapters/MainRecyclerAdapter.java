@@ -80,7 +80,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
         holder.itemView.setVisibility(View.VISIBLE);
 
-
         Listeners(position);
 
         holder.title.setText(recyclerData.getTitle());
@@ -157,7 +156,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             });
 
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -231,7 +229,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         } else {
             Log.wtf("Debug", "there is no activity for the current tag, there might be something wrong");
         }
-
     }
 
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail

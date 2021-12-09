@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 
 import com.aatesting.bugtracker.GlobalValues;
@@ -24,6 +25,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import org.json.JSONObject;
 
 public class ProjectsMainActivity extends AppCompatActivity {
 
@@ -110,4 +113,5 @@ public class ProjectsMainActivity extends AppCompatActivity {
             }, 250);
         }
     }
+
 }

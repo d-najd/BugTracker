@@ -17,7 +17,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class RoadmapWeeksAdapter extends RecyclerView.Adapter<RoadmapWeeksAdapter.RecyclerViewHolder> {
-
     public ArrayList<RecyclerData> recyclerDataArrayList;
     public Context mcontext;
     public RecyclerViewHolder holder;

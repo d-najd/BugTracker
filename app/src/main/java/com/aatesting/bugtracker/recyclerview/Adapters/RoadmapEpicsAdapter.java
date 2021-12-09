@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,33 +19,28 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.RoadmapObject;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 
 public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapter.RecyclerViewHolder> {
-
-    private ArrayList<RecyclerData> recyclerDataArrayList;
+    private ArrayList<RoadmapObject> recyclerDataArrayList;
     private Context mcontext;
     private RecyclerViewHolder holder;
-    private RecyclerData recyclerData;
+    private RoadmapObject recyclerData;
 
-    private String projectName;
     private Date weeksStartDateTime;
     private Date startDateTime;
     private Date endDateTime;
 
-    public RoadmapEpicsAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Date weeksStartDateTime, String projectName, Context mcontext) {
+    public RoadmapEpicsAdapter(ArrayList<RoadmapObject> recyclerDataArrayList, Date weeksStartDateTime, Context mcontext) {
         this.weeksStartDateTime = weeksStartDateTime;
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
-        this.projectName = projectName;
     }
 
     @NonNull
@@ -63,29 +59,13 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
         holder.title.setText(recyclerData.getTitle());
 
-        startDateTime = recyclerData.getCalendarStartDate().getTime();
-        endDateTime = recyclerData.getCalendarEndDate().getTime();
+        startDateTime = recyclerData.getStartDate();
+        endDateTime = recyclerData.getDueDate();
 
         SetEpicDimensions();
         SetEpicDescription();
         SetEpicBackgroundColor(position);
         Listeners(position);
-
-        /*
-                if (daysDifference <= 0){
-                Message.message(mcontext, "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
-                        "the start date should be smaller than the end date");
-                Log.wtf("ERROR", "um the days difference in the epics inside RoadmapEpicsAdapter.java shouldn't be a negative value," +
-                        "the start date should be smaller than the end date");
-            }
-
-
-        Calendar calendarSelectedDate = GregorianCalendar.getInstance();
-        calendarSelectedDate.set(year, month, dayOfMonth);
-        SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
-        String curDate = df.format(calendarSelectedDate.getTime());
-
-     */
     }
 
     private void Listeners(int position){
@@ -106,11 +86,8 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
     private void EpicPressed(int position){
         Intent intent = new Intent(mcontext, RoadmapEditEpicActivity.class);
-        intent.putExtra("projectName", projectName);
         intent.putExtra("epicId", position);
         mcontext.startActivity(intent);
-
-
     }
 
     private void SetEpicDimensions(){

@@ -2,7 +2,6 @@ package com.aatesting.bugtracker.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,10 +23,7 @@ import com.aatesting.bugtracker.AnimationHandler;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.activities.ProjectCreateActivity;
-import com.aatesting.bugtracker.activities.ProjectTableEditDescriptionActivity;
-import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
 import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
-import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,7 +58,6 @@ public class AccountFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_account, container, false);
 
         ((MainActivity)getActivity()).Listeners(1);
-
         DemoListeners(root);
 
         return root;
@@ -72,6 +67,7 @@ public class AccountFragment extends Fragment {
         Button button = root.findViewById(R.id.button);
         Button button1 = root.findViewById(R.id.button1);
         Button button2 = root.findViewById(R.id.button2);
+        Button button3 = root.findViewById(R.id.button3);
 
         accountFragment = this;
 
@@ -104,8 +100,6 @@ public class AccountFragment extends Fragment {
             }
         });
     }
-
-
 
     public void DateTime2(View v){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

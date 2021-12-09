@@ -69,7 +69,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
 
                 allColumnTitles.add("Task");
                 allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A small, distinct piece of work, or not");
+                allColumnDescriptions.add("A small, distinct piece of work");
 
                 Dialogs.BottomDialogCreator(mcontext, v, viewGroup, "Issue Type",
                         "These are the issue types that you can choose, based on the workflow of the current issue type.",

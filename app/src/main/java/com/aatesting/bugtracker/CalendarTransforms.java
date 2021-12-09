@@ -1,5 +1,6 @@
 package com.aatesting.bugtracker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
@@ -26,23 +27,15 @@ public class CalendarTransforms {
 
         return date;
     }
-
+    @SuppressLint("SimpleDateFormat")
     public static long getMillis(String dateStr, Context mcontext){
         try {
-            String parts[] = dateStr.split("-");
-
-            int day = Integer.parseInt(parts[0]);
-            int month = Integer.parseInt(parts[1]) - 1; //doing this is such a bad idea
-            int year = Integer.parseInt(parts[2]);
-
             Calendar calendar = GregorianCalendar.getInstance();
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, day);
+            SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
 
-            long milliTime = calendar.getTimeInMillis();
+            calendar.setTime(df.parse(dateStr));
 
-            return milliTime;
+            return calendar.getTimeInMillis();
         } catch (Exception e){
             e.printStackTrace();
             return 0;
@@ -50,12 +43,21 @@ public class CalendarTransforms {
     }
 
     public static Triple<Integer, Integer, Integer> getAllCalendarData(String dateStr, Context mcontext){
-        String parts[] = dateStr.split("-");
+        Calendar calendar = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
 
-        int day = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]) - 1; //doing this is such a bad idea
-        int year = Integer.parseInt(parts[2]);
+        Date date = null;
+        try {
+            date = df.parse(dateStr);
+        } catch (ParseException e) {
+            Message.message(mcontext, "Something went wrong");
+            Log.wtf("ERROR", "something went wrong with parsing date");
+            e.printStackTrace();
+        }
 
-        return new Triple<>(day, month, year);
+        calendar.setTime(date);
+        calendar.get(Calendar.DAY_OF_MONTH);
+
+        return new Triple<>(calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
     }
 }

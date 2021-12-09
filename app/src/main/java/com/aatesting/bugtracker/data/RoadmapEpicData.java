@@ -82,7 +82,6 @@ public class RoadmapEpicData {
                 e.printStackTrace();
             }
         }
-        //this below here is used to normalize the date so
         return returnDate;
     }
 

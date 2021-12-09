@@ -90,7 +90,7 @@ public class ProjectsFragment extends Fragment {
             }
         }
 
-        for (int i = 0; i < viewedParts.length; i++){
+        for (int i = 0; i < idList.size(); i++){
             recentlyViewed_List.add(new RecyclerData(viewedParts[i],
                     R.drawable.ic_launcher_background, tag, idList.get(i)));
             recentlyViewed_RecyclerView.getAdapter().notifyItemInserted(i);

@@ -10,6 +10,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class RecentlyViewedProjectsData {
     /*this can be used for other data that isn't temp data but isn't settings as well
@@ -20,7 +23,7 @@ public class RecentlyViewedProjectsData {
     public static final int MAX_RECENT_PROJECTS = 5;
 
     //add the project to the list when its opened
-    public static void ProjectOpened(Context context, String projectName){
+    public static void ProjectOpened(Context context, String projectName) {
         /*
         the way that this works is for ex if there are 3 projects opened and len is 3 already
         pro4::pro3::pro5 and the new one is1 then it should move all projects to the right and
@@ -33,21 +36,29 @@ public class RecentlyViewedProjectsData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData", FILE_NAME + ".txt");
         String dataOld = GetData(context);
         StringBuilder builder = new StringBuilder();
-        if (dataOld != null) {
-            String[] parts = dataOld.split(SEPARATOR);
-            //check if the project hasn't been added to the recentlyViewed list
+        if (dataOld == null)
+            return;
+
+        ArrayList<String> parts = new ArrayList<>(Arrays.asList(dataOld.split(SEPARATOR)));
+        //check if the project hasn't been added to the recentlyViewed list
+        if (parts.contains(projectName) && parts.size() != MAX_RECENT_PROJECTS) {
+            builder.append(projectName).append(SEPARATOR);
             for (String part : parts) {
-                if (part.equals(projectName))
-                    return;
+                if (!part.equals(projectName))
+                    builder.append(part).append(SEPARATOR);
             }
-            //add the project to the list
-            if (parts.length >= MAX_RECENT_PROJECTS){
-                builder.append(projectName).append(SEPARATOR);
-                for (int i = 0; i < MAX_RECENT_PROJECTS - 1; i++){
-                    builder.append(parts[i]).append(SEPARATOR);
-                }
-            } else{
-                builder.append(dataOld).append(projectName).append(SEPARATOR);
+        }
+
+        //add the project to the list
+        if (parts.size() >= MAX_RECENT_PROJECTS) {
+            builder.append(projectName).append(SEPARATOR);
+            for (int i = 0; i < MAX_RECENT_PROJECTS - 1; i++) {
+                builder.append(parts.get(i)).append(SEPARATOR);
+            }
+        } else if (!parts.contains(projectName)) {
+            builder.append(projectName).append(SEPARATOR);
+            for (int i = 0; i < parts.size(); i++) {
+                builder.append(parts.get(i)).append(SEPARATOR);
             }
         }
 

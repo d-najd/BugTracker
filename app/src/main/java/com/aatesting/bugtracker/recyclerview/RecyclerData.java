@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.recyclerview;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class RecyclerData {
 
@@ -98,8 +99,9 @@ public class RecyclerData {
         this.tag = tag;
     }
 
+    public RecyclerData (Integer id, String title, String description, Date startDate, Date endDate){
 
-
+    }
 
     public ArrayList<String> getTitles(){
         return titles;
