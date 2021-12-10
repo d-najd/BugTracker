@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
@@ -23,6 +24,7 @@ import com.aatesting.bugtracker.restApi.RoadmapObject;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,7 +53,6 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
         return new RecyclerViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull @NotNull RecyclerViewHolder holder, int position) {
         recyclerData = recyclerDataArrayList.get(position);
@@ -59,8 +60,14 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
 
         holder.title.setText(recyclerData.getTitle());
 
-        startDateTime = recyclerData.getStartDate();
-        endDateTime = recyclerData.getDueDate();
+        SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+
+        try {
+            startDateTime = df.parse(recyclerData.getStartDate());
+            endDateTime = df.parse(recyclerData.getDueDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         SetEpicDimensions();
         SetEpicDescription();

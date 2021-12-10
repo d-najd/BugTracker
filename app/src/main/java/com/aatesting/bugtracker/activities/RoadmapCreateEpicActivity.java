@@ -12,10 +12,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.restApi.RoadmapApi;
+import com.aatesting.bugtracker.restApi.RoadmapObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,9 +112,17 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 String startDate = startDateDescriptionTxt.getText().toString();
                 String dueDate = dueDateDescriptionTxt.getText().toString();
 
-                RoadmapEpicData.MakeFolders(mcontext);
-                RoadmapEpicData.SaveNewEpic(projectName, title, description, startDate,
-                        dueDate, mcontext);
+                RoadmapObject object = new RoadmapObject(
+                        0,
+                        RoadmapApi.userId,
+                        title,
+                        description,
+                        startDate,
+                        dueDate,
+                        null
+                );
+
+                RoadmapApi.createRoadmap(object);
                 finish();
             }
         });
@@ -128,7 +138,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     public void UpdateStartDateDescription(Calendar calendar) {
         TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
+        SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
         String curDate = df.format(calendar.getTime());
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
@@ -137,7 +147,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     public void UpdateDueDateDescription(Calendar calendar){
         TextView dueDateDescriptionText = findViewById(R.id.dueDateDescriptionTxt);
 
-        SimpleDateFormat df = new SimpleDateFormat(mcontext.getString(R.string.storageDateFormat));
+        SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
         String curDate = df.format(calendar.getTime());
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);

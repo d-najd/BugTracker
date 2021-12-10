@@ -14,7 +14,6 @@ public class RoadmapsSingleton {
 
         return mInstance;
     }
-
     private RoadmapsSingleton() {
         list = new ArrayList<RoadmapObject>();
     }

@@ -11,6 +11,7 @@ import com.aatesting.bugtracker.Message;
 
 
 public class ProjectsDatabase {
+
     MyDbHelper myhelper;
     public ProjectsDatabase(Context context)
     {

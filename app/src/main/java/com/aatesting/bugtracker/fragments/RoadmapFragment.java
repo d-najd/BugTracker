@@ -20,6 +20,7 @@ import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.RoadmapApi;
+import com.aatesting.bugtracker.restApi.RoadmapObject;
 import com.aatesting.bugtracker.restApi.RoadmapsSingleton;
 
 import java.text.DateFormat;
@@ -60,8 +61,8 @@ public class RoadmapFragment extends Fragment {
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
-        Date earliestDate = RoadmapEpicJsonData.GetEarliestOrLatestDate(true);
-        Date latestDate = RoadmapEpicJsonData.GetEarliestOrLatestDate(false);
+        Date earliestDate = RoadmapEpicJsonData.getEarliestOrLatestDate(true);
+        Date latestDate = RoadmapEpicJsonData.getEarliestOrLatestDate(false);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -118,7 +119,7 @@ public class RoadmapFragment extends Fragment {
     private void newEpicsAdapter(){
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
 
-        Date earliestDate = RoadmapEpicJsonData.GetEarliestOrLatestDate(true);
+        Date earliestDate = RoadmapEpicJsonData.getEarliestOrLatestDate(true);
 
         Calendar calendarEarliestDate = GregorianCalendar.getInstance();
         calendarEarliestDate.setTime(earliestDate);
@@ -151,17 +152,22 @@ public class RoadmapFragment extends Fragment {
                 Log.wtf("ERROR", "current response code from the server isn't configured for, code: " + code);
                 break;
         }
-
     }
-    /*
+
     @Override
     public void onResume() {
         super.onResume();
 
-        WeeksBarRecycler();
-        RoadmapApi.setupRoadmaps(0, mcontext, this);
-        //newEpicsAdapter();
+        //update the database
+        if (GlobalValues.fieldModified != -1)
+            RoadmapApi.editRoadmap(this);
+        else
+            updateData();
     }
 
-     */
+    //check if there have been updates from other people and update the new data
+    //can be called from RoadmapApi.updateServerField or from this function
+    public void updateData(){
+        RoadmapApi.setupRoadmaps(7, mcontext, this);
+    }
 }

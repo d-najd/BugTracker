@@ -3,7 +3,6 @@ package com.aatesting.bugtracker.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -16,10 +15,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.AppSettings;
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.restApi.RoadmapApi;
 import com.aatesting.bugtracker.restApi.RoadmapObject;
 import com.aatesting.bugtracker.restApi.RoadmapsSingleton;
 
@@ -43,7 +43,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         epicId = getIntent().getExtras().getInt("epicId");
         roadmapObject = RoadmapsSingleton.getInstance().getObject(epicId);
-
         projectName = getIntent().getExtras().getString("projectName");
 
         SetupActivityValues();
@@ -54,8 +53,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         String title = roadmapObject.getTitle();
         String description = roadmapObject.getDescription();
 
-        SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
-
         TextView titleMid = findViewById(R.id.titleMiddle);
         TextView descriptionTxt = findViewById(R.id.descriptionTxt);
         TextView startDateDescriptionTxt = findViewById(R.id.startDateDescriptionTxt);
@@ -63,8 +60,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         titleMid.setText(title);
         descriptionTxt.setText(description);
-        startDateDescriptionTxt.setText(df.format(roadmapObject.getStartDate()));
-        dueDateDescriptionTxt.setText(df.format(roadmapObject.getDueDate()));
+        startDateDescriptionTxt.setText(roadmapObject.getStartDate());
+        dueDateDescriptionTxt.setText(roadmapObject.getDueDate());
     }
 
     private void Listeners(){
@@ -123,7 +120,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                RoadmapEpicData.EditEpic(projectName, epicId, 0, s.toString(), context);
+                RoadmapsSingleton.getInstance().getObject(epicId).setTitle(s.toString());
+                GlobalValues.fieldModified = epicId;
             }
         });
 
@@ -163,7 +161,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         });
     }
 
-
     public void UpdateStartDateDescription(Calendar calendar) {
         TextView startDateDescriptionText = findViewById(R.id.startDateDescriptionTxt);
 
@@ -172,7 +169,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
 
-        //RoadmapEpicData.EditEpic(projectName, epicId, 1, curDate, context);
+        RoadmapsSingleton.getInstance().getObject(epicId).setStartDate(curDate);
+        GlobalValues.fieldModified = epicId;
     }
 
     public void UpdateDueDateDescription(Calendar calendar){
@@ -183,30 +181,30 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);
 
-        //RoadmapEpicData.EditEpic(projectName, epicId, 2, curDate, context);
+        RoadmapsSingleton.getInstance().getObject(epicId).setDueDate(curDate);
+        GlobalValues.fieldModified = epicId;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //for getting data back from the description activity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 String newData = data.getStringExtra("newData");
-                Message.message(getBaseContext(), newData);
                 TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
 
                 //updating the description
                 if (newData != null) {
                     editDescriptionTxt.setText(newData);
-                    RoadmapEpicData.EditEpicExtras(projectName, epicId, 0, newData, context);
+
+                    roadmapObject.setDescription(newData);
+                    GlobalValues.fieldModified = epicId;
                 }
             }
         }
     }
 
     public void DeleteEpic(){
-        RoadmapEpicData.RemoveEpic(projectName, epicId, context);
+        RoadmapApi.removeRoadmap(epicId, activity);
         Message.message(context, "Epic removed successfully");
-        finish();
     }
 }

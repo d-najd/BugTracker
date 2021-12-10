@@ -1,11 +1,17 @@
 package com.aatesting.bugtracker.data;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.aatesting.bugtracker.AppSettings;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.restApi.RoadmapObject;
 import com.aatesting.bugtracker.restApi.RoadmapsSingleton;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
@@ -25,22 +31,36 @@ public class RoadmapEpicJsonData {
     /**
      * @return seems to return date which is +1:00h from greenwich so take that into consideration
      */
-    public static Date GetEarliestOrLatestDate (boolean getEarliest){
-        List<Date> dates = new ArrayList<>(); //for converting JSONObject date to java date
-        RoadmapsSingleton roadmapSingleton = RoadmapsSingleton.getInstance();
+    private static RoadmapsSingleton roadmapSingleton = RoadmapsSingleton.getInstance();
+    private static final SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+
+    public static Date getEarliestOrLatestDate(boolean getEarliest){
+        List<Date> dates = new ArrayList<>(); //for converting JSONObject date to java dates
 
         if (getEarliest) {
-            for (RoadmapObject roadmapObject : roadmapSingleton.getArray())
-                dates.add(roadmapObject.getStartDate());
+            for (RoadmapObject roadmapObject : roadmapSingleton.getArray()) {
+                ArrayList<RoadmapObject> list = roadmapSingleton.getArray();
+
+                try {
+                    dates.add(df.parse(roadmapObject.getStartDate()));
+                } catch (ParseException e) {
+                    Log.wtf("ERROR", "something went wrong with parsing date");
+                    e.printStackTrace();
+                }
+            }
             return Collections.min(dates);
 
         } else
         {
             for (RoadmapObject roadmapObject : roadmapSingleton.getArray())
-                dates.add(roadmapObject.getDueDate());
+                try {
+                    dates.add(df.parse(roadmapObject.getDueDate()));
+                }catch (ParseException e) {
+                    Log.wtf("ERROR","something went wrong with parsing date");
+                    e.printStackTrace();
+                }
             return Collections.max(dates);
         }
-
         /*
         if (getEarliest) {
             for (JSONObject jsonObject : data) {
@@ -68,6 +88,19 @@ public class RoadmapEpicJsonData {
         }
 
          */
+    }
+
+    public static JSONObject objectToJSON(RoadmapObject object, Context context){
+        JSONObject mJSONObject = null;
+        String jsonInString = new Gson().toJson(object);
+        try {
+            mJSONObject = new JSONObject(jsonInString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Message.message(context, "Something went wrong");
+            Log.wtf("ERROR", "error with converting java object to json object");
+        }
+        return mJSONObject;
     }
 
 

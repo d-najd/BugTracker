@@ -13,19 +13,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.data.RecentlyViewedProjectsData;
-import com.aatesting.bugtracker.data.RoadmapEpicData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.data.ProjectsDatabase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class ProjectsFragment extends Fragment {
@@ -205,8 +202,8 @@ public class ProjectsFragment extends Fragment {
 
         ProjectTableData.RemoveFile(allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle(), getContext());
-        RoadmapEpicData.RemoveFile(allProjects_List.get
-                (viewHolder.getAdapterPosition()).getTitle(), getContext());
+        //RoadmapEpicData.RemoveFile(allProjects_List.get
+        //        (viewHolder.getAdapterPosition()).getTitle(), getContext());
         RecentlyViewedProjectsData.ProjectRemoved(getContext(), allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle());
 

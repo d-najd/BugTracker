@@ -1,34 +1,25 @@
 package com.aatesting.bugtracker.restApi;
 
-import java.util.ArrayList;
-import java.util.Date;
+import org.json.JSONObject;
 
-public class RoadmapObject {
-    private Integer fieldId;
+public class RoadmapObject extends JSONObject {
+    private int field_id; //json field id, for the server
+    private int userId;
     private String title;
     private String description;
-    private Date startDate;
-    private Date dueDate;
-    private Date dateCreated;
+    private String startDate;
+    private String dueDate;
+    private String dateCreated;
 
-    public RoadmapObject(Integer field_id, String title, String description, Date startDate,
-                         Date dueDate, Date dateCreated) {
-        super();
-        this.fieldId = field_id;
+    public RoadmapObject(int field_id, int userId, String title, String description, String startDate,
+                         String dueDate, String dateCreated) {
+        this.field_id = field_id;
+        this.userId = userId;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.dueDate = dueDate;
         this.dateCreated = dateCreated;
-    }
-
-
-    public Integer getField_id() {
-        return fieldId;
-    }
-
-    public void setField_id(Integer field_id) {
-        this.fieldId = field_id;
     }
 
     public String getTitle() {
@@ -47,28 +38,44 @@ public class RoadmapObject {
         this.description = description;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Date getDueDate() {
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 
-    public Date getDateCreated() {
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Date dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public int getField_id() {
+        return field_id;
+    }
+
+    public void setField_id(int field_id) {
+        this.field_id = field_id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
 
