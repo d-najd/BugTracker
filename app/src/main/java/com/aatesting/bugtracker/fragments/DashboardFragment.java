@@ -7,28 +7,30 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.StringToList;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends ModifiedFragment {
     private RecyclerView recyclerView;
-    private ArrayList<RecyclerData> recyclerDataArrayList;
+    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
     private ArrayList<String> titles = new ArrayList<>();
     private ArrayList<Integer> imgIds = new ArrayList<>();
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     private String projectName; //data is passed through intent
     private String tag;
-    private int amountOfPartsInData;
+    private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -36,6 +38,7 @@ public class DashboardFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         ((ProjectsMainActivity)getActivity()).Listeners(0);
+        ((ProjectsMainActivity)getActivity()).thisFragment = this;
 
         recyclerView = root.findViewById(R.id.mainRecyclerView);
         tag = recyclerView.getTag().toString();
@@ -43,50 +46,24 @@ public class DashboardFragment extends Fragment {
 
         ProjectTableData.MakeFolders(getContext());
 
-        //titles.add("TEST");
-        //titles.add("TEST");
-        //imgIds.add(R.drawable.ic_launcher_background);
-        //imgIds.add(R.drawable.ic_launcher_foreground);
-
-        //saveData(titles, imgIds, "TO DO", projectName);
-
-        //removeData(2, projectName);
-
-        GetData();
+        ApiController.getAllFields(7, getContext(), "boards", this);
 
         return root;
     }
 
-    private void GetData(){
-        recyclerDataArrayList = new ArrayList<>();
+    private void setupRecycler(){
+        recyclerDataArrayList.clear();
 
-        String data = ProjectTableData.GetData(projectName, getContext());
-        amountOfPartsInData = ProjectTableData.AMOUNT_OF_PARTS_IN_DATA;
-
-        //for getting the data nad putting it in arrayList so it can be used by the adapter
-        if (data == null){
-            Log.wtf("DATA IS EMPTY", "the data is null there is problem");
-        } else {
-            String[] parts = data.split("::");
-
-            for (int i = 0; i < parts.length / amountOfPartsInData; i++){
-                titles = StringToList.StringToList(parts[1 + (i * amountOfPartsInData)], null);
-                imgIds = StringToList.StringToList(parts[2 + (i * amountOfPartsInData)], 0);
-
-                recyclerDataArrayList.add(new RecyclerData(parts[i * amountOfPartsInData], titles, imgIds, String.valueOf(i), tag));
-            }
+        for (int i = 0; i < ApiSingleton.getInstance().getArray().size(); i++){
+            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i).getTitle(), null, null, String.valueOf(i), tag));
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
         ProjectTableCreateAdapter adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, getContext());
 
-        // setting grid layout manager to implement grid view.
-        // in this method '1' represents number of columns to be displayed in grid view.
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
-        // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.ProjectMainActivity = (ProjectsMainActivity) getActivity();
@@ -96,9 +73,29 @@ public class DashboardFragment extends Fragment {
     }
 
     @Override
+    public void onResponse(int code) {
+        switch (code) {
+            case 0:
+                Log.wtf("ERROR", "failed to get data");
+                Message.message(getContext(), "Failed to get server data");
+                break;
+            case 1:
+                setupRecycler();
+                break;
+            default:
+                super.onResponse(-1);
+                break;
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
+        if (!resumed){
+            resumed = true;
+            return;
+        }
 
-        GetData();
+        ApiController.getAllFields(7, getContext(), "boards", this);
     }
 }

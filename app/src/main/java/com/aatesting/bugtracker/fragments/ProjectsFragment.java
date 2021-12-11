@@ -18,6 +18,7 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.data.RecentlyViewedProjectsData;
 import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.data.ProjectsDatabase;
@@ -25,7 +26,7 @@ import com.aatesting.bugtracker.data.ProjectsDatabase;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ProjectsFragment extends Fragment {
+public class ProjectsFragment extends ModifiedFragment {
     private RecyclerView allProjects_RecyclerView, recentlyViewed_RecyclerView,
             starredProjects_RecyclerView;
     private ArrayList<RecyclerData> allProjects_List, recentlyViewed_List, starredProjects_List;

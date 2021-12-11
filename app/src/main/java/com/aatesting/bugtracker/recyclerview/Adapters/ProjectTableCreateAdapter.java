@@ -185,8 +185,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialogs.NewColumnDialog(mcontext, "Add column", "ADD",
-                        "Cancel", projectName, ProjectMainActivity, intent);
+                //Dialogs.NewColumnDialog(mcontext, "Add column", "ADD",
+                 //       "Cancel", projectName, ProjectMainActivity, intent);
             }
         });
     }

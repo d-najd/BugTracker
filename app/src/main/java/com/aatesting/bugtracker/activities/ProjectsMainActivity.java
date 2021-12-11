@@ -14,6 +14,7 @@ import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.fragments.DashboardFragment;
 import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.aatesting.bugtracker.fragments.RoadmapFragment;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +34,8 @@ public class ProjectsMainActivity extends AppCompatActivity {
     private String projectName;
     private ProjectsMainActivity projectsMainActivity;
     private Context context;
+
+    public ModifiedFragment thisFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Dialogs.NewColumnDialog(context, "Add column", "ADD",
-                            "Cancel", projectName, projectsMainActivity, getIntent());
+                            "Cancel", thisFragment);
                 }
             });
         }

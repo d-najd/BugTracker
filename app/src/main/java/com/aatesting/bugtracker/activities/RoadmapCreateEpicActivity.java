@@ -16,8 +16,8 @@ import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
-import com.aatesting.bugtracker.restApi.RoadmapApi;
-import com.aatesting.bugtracker.restApi.RoadmapObject;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -112,9 +112,9 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 String startDate = startDateDescriptionTxt.getText().toString();
                 String dueDate = dueDateDescriptionTxt.getText().toString();
 
-                RoadmapObject object = new RoadmapObject(
+                ApiJSONObject object = new ApiJSONObject(
                         0,
-                        RoadmapApi.userId,
+                        ApiController.userId,
                         title,
                         description,
                         startDate,
@@ -122,8 +122,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                RoadmapApi.createRoadmap(object);
-                finish();
+                ApiController.createField(object, "roadmaps", activity);
             }
         });
 

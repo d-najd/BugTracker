@@ -1,9 +1,15 @@
 package com.aatesting.bugtracker.restApi;
 
+import androidx.annotation.NonNull;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RoadmapObject extends JSONObject {
-    private int field_id; //json field id, for the server
+public class ApiJSONObject extends JSONObject {
+    //for some reason the server sends field_id which should be impossible so here we are
+    private int id;
+
     private int userId;
     private String title;
     private String description;
@@ -11,15 +17,39 @@ public class RoadmapObject extends JSONObject {
     private String dueDate;
     private String dateCreated;
 
-    public RoadmapObject(int field_id, int userId, String title, String description, String startDate,
+    //for board object
+    public ApiJSONObject(int id, int userId, String title) {
+        this.id = id;
+        this.userId = userId;
+        this.title = title;
+    }
+
+    //for roadmap object
+    public ApiJSONObject(int id, int userId, String title, String description, String startDate,
                          String dueDate, String dateCreated) {
-        this.field_id = field_id;
+        this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.dueDate = dueDate;
         this.dateCreated = dateCreated;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -60,22 +90,6 @@ public class RoadmapObject extends JSONObject {
 
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
-    }
-
-    public int getField_id() {
-        return field_id;
-    }
-
-    public void setField_id(int field_id) {
-        this.field_id = field_id;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 }
 

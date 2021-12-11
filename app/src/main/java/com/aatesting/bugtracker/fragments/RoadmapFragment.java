@@ -8,20 +8,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicJsonData;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
-import com.aatesting.bugtracker.restApi.RoadmapApi;
-import com.aatesting.bugtracker.restApi.RoadmapObject;
-import com.aatesting.bugtracker.restApi.RoadmapsSingleton;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -30,12 +30,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class RoadmapFragment extends Fragment {
+public class RoadmapFragment extends ModifiedFragment {
     private Context mcontext;
     private View root;
     private ArrayList<RecyclerData> weeksRecyclerDataArrayList = new ArrayList<>();;
     private String tag;
     private Calendar calendarCurDate;
+    private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +48,8 @@ public class RoadmapFragment extends Fragment {
         tag = recyclerView.getTag().toString();
 
         ((ProjectsMainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
-        RoadmapApi.setupRoadmaps(7, mcontext, this);
+        ((ProjectsMainActivity)getActivity()).thisFragment = this;
+        ApiController.getAllFields(7, mcontext, "roadmaps", this);
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
 
@@ -56,7 +59,7 @@ public class RoadmapFragment extends Fragment {
     }
 
     private void weeksBarRecycler(){
-        weeksRecyclerDataArrayList = new ArrayList<>();
+        weeksRecyclerDataArrayList.clear();
 
         RecyclerView recyclerView = root.findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
@@ -131,7 +134,7 @@ public class RoadmapFragment extends Fragment {
                 - calendarEarliestDate.get(Calendar.DAY_OF_WEEK) + 2);
         Date weeksStartDate = calendarEarliestDate.getTime();
 
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(RoadmapsSingleton.getInstance().getArray(), weeksStartDate, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(ApiSingleton.getInstance().getArray(), weeksStartDate, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
@@ -139,17 +142,22 @@ public class RoadmapFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    @Override
     public void onResponse(int code){
         switch (code) {
             case 0:
                 Log.wtf("ERROR", "failed to get data");
+                Message.message(getContext(), "Failed to get server data");
                 break;
             case 1:
                 newEpicsAdapter();
                 weeksBarRecycler();
                 break;
+            case 2:
+                updateData();
+                break;
             default:
-                Log.wtf("ERROR", "current response code from the server isn't configured for, code: " + code);
+                super.onResponse(-1);
                 break;
         }
     }
@@ -160,14 +168,17 @@ public class RoadmapFragment extends Fragment {
 
         //update the database
         if (GlobalValues.fieldModified != -1)
-            RoadmapApi.editRoadmap(this);
-        else
+            ApiController.editField(this, "roadmaps");
+        else if (!resumed) {
+            resumed = true;
+            return;
+        } else
             updateData();
     }
 
     //check if there have been updates from other people and update the new data
     //can be called from RoadmapApi.updateServerField or from this function
     public void updateData(){
-        RoadmapApi.setupRoadmaps(7, mcontext, this);
+        ApiController.getAllFields(7, mcontext, "roadmaps", this);
     }
 }

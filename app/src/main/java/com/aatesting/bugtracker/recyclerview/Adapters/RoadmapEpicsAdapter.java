@@ -2,7 +2,6 @@ package com.aatesting.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,8 +18,7 @@ import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
-import com.aatesting.bugtracker.recyclerview.RecyclerData;
-import com.aatesting.bugtracker.restApi.RoadmapObject;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,16 +28,16 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapter.RecyclerViewHolder> {
-    private ArrayList<RoadmapObject> recyclerDataArrayList;
+    private ArrayList<ApiJSONObject> recyclerDataArrayList;
     private Context mcontext;
     private RecyclerViewHolder holder;
-    private RoadmapObject recyclerData;
+    private ApiJSONObject recyclerData;
 
     private Date weeksStartDateTime;
     private Date startDateTime;
     private Date endDateTime;
 
-    public RoadmapEpicsAdapter(ArrayList<RoadmapObject> recyclerDataArrayList, Date weeksStartDateTime, Context mcontext) {
+    public RoadmapEpicsAdapter(ArrayList<ApiJSONObject> recyclerDataArrayList, Date weeksStartDateTime, Context mcontext) {
         this.weeksStartDateTime = weeksStartDateTime;
         this.recyclerDataArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;

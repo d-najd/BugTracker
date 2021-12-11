@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +29,13 @@ import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.fragments.ProjectsFragment;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.SimpleDateFormat;
@@ -49,7 +53,8 @@ public class Dialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    public static void DeleteTaskDialog(Context mcontext, String title, String description, String negativeButtonTxt, String positiveButtonTxt, RoadmapEditEpicActivity activity){
+    public static void DeleteTaskDialog(Context mcontext, String title, String description, String
+            negativeButtonTxt, String positiveButtonTxt, RoadmapEditEpicActivity activity){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, false);
         AlertDialog.Builder builder = data.first;
 
@@ -159,8 +164,8 @@ public class Dialogs {
 
     //for adding new column
     public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
-                                       String negativeButtonTxt, String projectName,
-                                       ProjectsMainActivity activity, Intent intent){
+                                       String negativeButtonTxt,
+                                       ModifiedFragment fragment){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -168,33 +173,30 @@ public class Dialogs {
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                activity.RefreshActivity();
+                //fragment.onResponse(1);
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                activity.RefreshActivity();
+                //fragment.onResponse(1);
             }
         });
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        ArrayList<String> titlesEmptyArr = new ArrayList<>();
-                        ArrayList<String> descriptionsEmptyArr = new ArrayList<>();
-                        ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
+                        ApiJSONObject object = new ApiJSONObject(
+                                0,
+                                ApiController.userId,
+                                editText.getText().toString()
+                        );
 
+                        ApiController.createField(object, "boards", null);
 
-                        //titlesEmptyArr.add("HOHOHO");
-                        //imgsEmptyArr.add(R.drawable.ic_account_24dp);
-                        String title = editText.getText().toString();
-
-                        ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
-
-
-                        activity.RefreshActivity();
+                        //ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
+                        fragment.onResponse(1);
                     }
 
                 });
@@ -238,51 +240,8 @@ public class Dialogs {
        AddMargins(editText);
     }
 
-
-    public static void CalendarDateSetterDialog(Context mcontext, View v, CreateProjectsAdapter activity){
-        Triple<AlertDialog.Builder, CalendarView, View> data = BasicCalendarDialogConstructor(mcontext, v);
-        AlertDialog.Builder builder = data.getFirst();
-        CalendarView calendarView = data.getSecond();
-        View dialogView = data.getThird();
-
-        TextView dayMonthTxt = dialogView.findViewById(R.id.dayMonth);
-        TextView yearTxt = dialogView.findViewById(R.id.year);
-
-        final Calendar[] calendarSelectedDate = {GregorianCalendar.getInstance()};
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                calendarSelectedDate[0] = GregorianCalendar.getInstance();
-                calendarSelectedDate[0].set(year, month, dayOfMonth);
-                SimpleDateFormat df = new SimpleDateFormat("EEEE', 'MMM' 'd");
-                String curDate = df.format(calendarSelectedDate[0].getTime());
-
-                yearTxt.setText(year + "");
-                dayMonthTxt.setText(curDate);
-            }
-        });
-
-        builder.setView(dialogView)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //use calendarSelectedDate[0] to pass calendar data
-                        activity.AllowReminders("null");
-                        activity.DateTime2(v);
-                    }
-                })
-
-                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
-
-        DialogBuilder(mcontext, builder);
-    }
-
-    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapEditEpicActivity activity, String date, boolean startDate){
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapEditEpicActivity
+            activity, String date, boolean startDate){
         //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
         // you want to remove it and return it to default (empty)
         //true for startDate, false for dueDate
@@ -348,7 +307,8 @@ public class Dialogs {
         DialogBuilder(mcontext, builder);
     }
 
-    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapCreateEpicActivity activity, String date, boolean startDate){
+    public static void CalendarDateSetterDialog(Context mcontext, View v, RoadmapCreateEpicActivity
+            activity, String date, boolean startDate){
         //TODO add a button on the leftBottom called REMOVE, for when a date has been already set but
         // you want to remove it and return it to default (empty)
         //true for startDate, false for dueDate

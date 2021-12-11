@@ -4,46 +4,35 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.fragment.app.Fragment;
-
 import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.RoadmapEpicJsonData;
-import com.aatesting.bugtracker.fragments.RoadmapFragment;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
-public class RoadmapApi {
-    private static Context context;
-    private static final SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+public class ApiController {
+    public static Context context;
     public static int userId;
 
-    public static void setupRoadmaps(int userId, Context context, RoadmapFragment fragment){
-        RoadmapApi.context = context;
-        RoadmapApi.userId = userId;
+    public static void getAllFields(int userId, Context context, String url, ModifiedFragment fragment){
+        ApiController.context = context;
+        ApiController.userId = userId;
 
         RequestQueue requestQueue = Volley.newRequestQueue(context); // this might be in different context so setting the value before hand might be a bad idea
 
-        String URL = AppSettings.SERVERIP + "/roadmaps/all/" + userId;
+        String URL = AppSettings.SERVERIP + "/" + url + "/all/" + userId;
 
-        // Initialize a new JsonArrayRequest instance
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 URL,
@@ -51,8 +40,8 @@ public class RoadmapApi {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        RoadmapsSingleton.getInstance().reset();
-                        dataToSingleton(response);
+                        ApiSingleton.getInstance().reset();
+                        dataToSingleton(response, url);
 
                         fragment.onResponse(1);
                     }
@@ -62,17 +51,21 @@ public class RoadmapApi {
                     public void onErrorResponse(VolleyError error){
                         Message.message(context, "failed to get data from the server");
                         Log.wtf("ERROR", error.toString());
-                        fragment.onResponse( 0);
+                        fragment.onResponse(0);
                     }
                 }
         );
         requestQueue.add(jsonArrayRequest);
     }
 
-    public static void createRoadmap(RoadmapObject object){
-        String URL = AppSettings.SERVERIP + "/roadmaps/" + userId;
+    /**
+     * @param activity if activity is passed it will be closed upon creation of the field
+     */
 
-        JSONObject jsonObject = RoadmapEpicJsonData.objectToJSON(object, context);
+    public static void createField(ApiJSONObject object, String url, Activity activity){
+        String URL = AppSettings.SERVERIP + "/" + url;
+
+        JSONObject jsonObject = objectToJSON(object, context);
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -83,7 +76,8 @@ public class RoadmapApi {
                     @Override
                     public void onResponse(JSONObject response) {
                         Message.message(context, "data successfully saved");
-                        GlobalValues.fieldModified = -1;
+                        if (activity != null)
+                            activity.finish();
                     }
                 },
                 new Response.ErrorListener() {
@@ -95,16 +89,15 @@ public class RoadmapApi {
                     }
                 }
         );
-
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void editRoadmap(RoadmapFragment fragment){
+    public static void editField(ModifiedFragment fragment, String url){
         //TODO fieldmodified isnt going to work in this case, get the object with singelton and then get its values and pass some of them in the url
-        String URL = AppSettings.SERVERIP + "/roadmaps/" + userId + "/" + GlobalValues.fieldModified;
+        String URL = AppSettings.SERVERIP + "/" + url;
 
-        RoadmapObject object = RoadmapsSingleton.getInstance().getObject(GlobalValues.fieldModified);
-        JSONObject jsonObject = RoadmapEpicJsonData.objectToJSON(object, context);
+        ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
+        JSONObject jsonObject = objectToJSON(object, context);
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -117,7 +110,7 @@ public class RoadmapApi {
                     public void onResponse(JSONObject response) {
                         Message.message(context, "data successfully saved");
                         GlobalValues.fieldModified = -1;
-                        fragment.updateData();
+                        fragment.onResponse(2);
                     }
                 },
                 new Response.ErrorListener() {
@@ -133,8 +126,8 @@ public class RoadmapApi {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void removeRoadmap(int fieldId, Activity activity){
-        String URL = AppSettings.SERVERIP + "/roadmaps/" + userId + "/" + RoadmapsSingleton.getInstance().getObject(fieldId).getField_id();
+    public static void removeRoadmap(int fieldId, Activity activity, String url){
+        String URL = AppSettings.SERVERIP + "/" + url + "/" + ApiSingleton.getInstance().getObject(fieldId).getId();
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -166,34 +159,12 @@ public class RoadmapApi {
         requestQueue.add(jsonObjectRequest);
     }
 
-    //putting the data to singleton class which is located in RoadmapObject-RoadmapsSingleton
-    private static void dataToSingleton(JSONArray response){
-        RoadmapsSingleton roadmapSingleton = RoadmapsSingleton.getInstance();
+
+    private static void dataToSingleton(JSONArray response, String value){
 
         for (int i = 0; i < response.length(); i++) {
             try {
-                JSONObject object = response.getJSONObject(i);
-
-                //somebody decided it would be funny to return "null" instead of null and now I have to do this
-
-                int userId = checkIfIntNull("userId", object);
-                int field_id = checkIfIntNull("field_id", object);
-                String title = checkIfStrNull("title", object);
-                String description = checkIfStrNull("description", object);
-                String startDate = checkIfStrNull("startDate", object);
-                String dueDate = checkIfStrNull("dueDate", object);
-                String dateCreated = checkIfStrNull("dateCreated", object);
-
-                roadmapSingleton.addToArray(new RoadmapObject(
-                        field_id,
-                        userId,
-                        title,
-                        description,
-                        startDate,
-                        dueDate,
-                        dateCreated
-                ));
-
+                addValueToSingleton(response, value, i);
             } catch (JSONException e) {
                 Log.wtf("ERROR", "Failed to convert JSONArray to List<JSONObject>");
                 e.printStackTrace();
@@ -201,7 +172,67 @@ public class RoadmapApi {
         }
     }
 
-    private static String checkIfStrNull(String getVal, JSONObject object){
+    /**
+     * adds each object to singleton instance
+     * @param value is for differenciating which singleton to use
+     */
+    private static void addValueToSingleton(JSONArray response, String value, int i) throws JSONException{
+        switch (value) {
+            case "boards":
+                JSONObject object = response.getJSONObject(i);
+
+                int id = ApiController.checkIfIntNull("id", object, context);
+                int userId = ApiController.checkIfIntNull("userId", object, context);
+                String title = ApiController.checkIfStrNull("title", object, context);
+
+                ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                        id,
+                        userId,
+                        title
+                ));
+                break;
+            case "roadmaps":
+                object = response.getJSONObject(i);
+
+                userId = ApiController.checkIfIntNull("userId", object, context);
+                id = ApiController.checkIfIntNull("id", object, context);
+                title = ApiController.checkIfStrNull("title", object, context);
+                String description = ApiController.checkIfStrNull("description", object, context);
+                String startDate = ApiController.checkIfStrNull("startDate", object, context);
+                String dueDate = ApiController.checkIfStrNull("dueDate", object, context);
+                String dateCreated = ApiController.checkIfStrNull("dateCreated", object, context);
+
+                ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                        id,
+                        userId,
+                        title,
+                        description,
+                        startDate,
+                        dueDate,
+                        dateCreated
+                ));
+                break;
+            default:
+                Message.message(context, "Something went wrong");
+                Log.wtf("ERROR", "current url isn't defined for adding to singleton");
+                break;
+        }
+    }
+
+    public static JSONObject objectToJSON(ApiJSONObject object, Context context){
+        JSONObject mJSONObject = null;
+        String jsonInString = new Gson().toJson(object);
+        try {
+            mJSONObject = new JSONObject(jsonInString);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Message.message(context, "Something went wrong");
+            Log.wtf("ERROR", "error with converting java object to json object");
+        }
+        return mJSONObject;
+    }
+
+    public static String checkIfStrNull(String getVal, JSONObject object, Context context){
         try {
             if (!object.get(getVal).toString().equals("null"))
                 return object.getString(getVal);
@@ -209,13 +240,13 @@ public class RoadmapApi {
                 return null;
         } catch (JSONException e) {
             Message.message(context, "something went wrong");
-            Log.wtf("ERROR", "the field " + getVal + " in roadmap object does not exist");
+            Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
             e.printStackTrace();
             return null;
         }
     }
 
-    private static int checkIfIntNull(String getVal, JSONObject object){
+    public static int checkIfIntNull(String getVal, JSONObject object, Context context){
         try{
             if (!object.get(getVal).toString().equals("null"))
                 return Integer.parseInt(object.get(getVal).toString());
@@ -223,11 +254,9 @@ public class RoadmapApi {
                 return -1;
         } catch (NumberFormatException | JSONException e) {
             Message.message(context, "something went wrong");
-            Log.wtf("ERROR", "the field " + getVal + " in roadmap object does not exist");
+            Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
             e.printStackTrace();
             return -1;
         }
     }
 }
-
-

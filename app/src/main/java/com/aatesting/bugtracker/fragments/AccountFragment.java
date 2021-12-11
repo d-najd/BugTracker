@@ -24,6 +24,7 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.activities.ProjectCreateActivity;
 import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class AccountFragment extends Fragment {
+public class AccountFragment extends ModifiedFragment {
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();

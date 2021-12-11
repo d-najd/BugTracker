@@ -19,9 +19,9 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
-import com.aatesting.bugtracker.restApi.RoadmapApi;
-import com.aatesting.bugtracker.restApi.RoadmapObject;
-import com.aatesting.bugtracker.restApi.RoadmapsSingleton;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     private int epicId;
     private Context context;
 
-    private RoadmapObject roadmapObject;
+    private ApiJSONObject apiJsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         context = this;
 
         epicId = getIntent().getExtras().getInt("epicId");
-        roadmapObject = RoadmapsSingleton.getInstance().getObject(epicId);
+        apiJsonObject = ApiSingleton.getInstance().getObject(epicId);
         projectName = getIntent().getExtras().getString("projectName");
 
         SetupActivityValues();
@@ -50,8 +50,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     }
 
     private void SetupActivityValues(){
-        String title = roadmapObject.getTitle();
-        String description = roadmapObject.getDescription();
+        String title = apiJsonObject.getTitle();
+        String description = apiJsonObject.getDescription();
 
         TextView titleMid = findViewById(R.id.titleMiddle);
         TextView descriptionTxt = findViewById(R.id.descriptionTxt);
@@ -60,8 +60,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         titleMid.setText(title);
         descriptionTxt.setText(description);
-        startDateDescriptionTxt.setText(roadmapObject.getStartDate());
-        dueDateDescriptionTxt.setText(roadmapObject.getDueDate());
+        startDateDescriptionTxt.setText(apiJsonObject.getStartDate());
+        dueDateDescriptionTxt.setText(apiJsonObject.getDueDate());
     }
 
     private void Listeners(){
@@ -120,7 +120,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                RoadmapsSingleton.getInstance().getObject(epicId).setTitle(s.toString());
+                ApiSingleton.getInstance().getObject(epicId).setTitle(s.toString());
                 GlobalValues.fieldModified = epicId;
             }
         });
@@ -169,7 +169,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
 
-        RoadmapsSingleton.getInstance().getObject(epicId).setStartDate(curDate);
+        ApiSingleton.getInstance().getObject(epicId).setStartDate(curDate);
         GlobalValues.fieldModified = epicId;
     }
 
@@ -181,7 +181,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);
 
-        RoadmapsSingleton.getInstance().getObject(epicId).setDueDate(curDate);
+        ApiSingleton.getInstance().getObject(epicId).setDueDate(curDate);
         GlobalValues.fieldModified = epicId;
     }
 
@@ -196,7 +196,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
                 if (newData != null) {
                     editDescriptionTxt.setText(newData);
 
-                    roadmapObject.setDescription(newData);
+                    apiJsonObject.setDescription(newData);
                     GlobalValues.fieldModified = epicId;
                 }
             }
@@ -204,7 +204,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     }
 
     public void DeleteEpic(){
-        RoadmapApi.removeRoadmap(epicId, activity);
+        ApiController.removeRoadmap(epicId, activity, "roadmaps");
         Message.message(context, "Epic removed successfully");
     }
 }
