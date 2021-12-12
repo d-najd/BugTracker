@@ -143,23 +143,15 @@ public class RoadmapFragment extends ModifiedFragment {
     }
 
     @Override
-    public void onResponse(int code){
-        switch (code) {
-            case 0:
-                Log.wtf("ERROR", "failed to get data");
-                Message.message(getContext(), "Failed to get server data");
-                break;
-            case 1:
-                newEpicsAdapter();
-                weeksBarRecycler();
-                break;
-            case 2:
-                updateData();
-                break;
-            default:
-                super.onResponse(-1);
-                break;
-        }
+    public void onResponse(String code) {
+
+        if (code.equals(this.getString(R.string.setupData))) {
+            newEpicsAdapter();
+            weeksBarRecycler();
+        } else if (code.equals(this.getString(R.string.getData))) {
+            updateData();
+        } else
+            super.onResponse("Error");
     }
 
     @Override

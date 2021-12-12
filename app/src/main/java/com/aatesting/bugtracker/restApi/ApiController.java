@@ -7,6 +7,7 @@ import android.util.Log;
 import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,15 +44,13 @@ public class ApiController {
                         ApiSingleton.getInstance().reset();
                         dataToSingleton(response, url);
 
-                        fragment.onResponse(1);
+                        fragment.onResponse(fragment.getString(R.string.setupData));
                     }
                 },
                 new Response.ErrorListener(){
                     @Override
                     public void onErrorResponse(VolleyError error){
-                        Message.message(context, "failed to get data from the server");
-                        Log.wtf("ERROR", error.toString());
-                        fragment.onResponse(0);
+                        fragment.onResponse("Error");
                     }
                 }
         );
@@ -62,7 +61,7 @@ public class ApiController {
      * @param activity if activity is passed it will be closed upon creation of the field
      */
 
-    public static void createField(ApiJSONObject object, String url, Activity activity){
+    public static void createField(ApiJSONObject object, String url, ModifiedFragment fragment, Activity activity){
         String URL = AppSettings.SERVERIP + "/" + url;
 
         JSONObject jsonObject = objectToJSON(object, context);
@@ -78,14 +77,16 @@ public class ApiController {
                         Message.message(context, "data successfully saved");
                         if (activity != null)
                             activity.finish();
+                        if (fragment != null){
+                            fragment.onResponse(fragment.getString(R.string.getData));
+                        }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Message.message(context, "Something went wrong");
-                        Log.wtf("ERROR", "something went wrong with creating server roadmap" + error.toString());
                         GlobalValues.fieldModified = -1;
+                        fragment.onResponse("Error");
                     }
                 }
         );
@@ -93,7 +94,6 @@ public class ApiController {
     }
 
     public static void editField(ModifiedFragment fragment, String url){
-        //TODO fieldmodified isnt going to work in this case, get the object with singelton and then get its values and pass some of them in the url
         String URL = AppSettings.SERVERIP + "/" + url;
 
         ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
@@ -110,15 +110,14 @@ public class ApiController {
                     public void onResponse(JSONObject response) {
                         Message.message(context, "data successfully saved");
                         GlobalValues.fieldModified = -1;
-                        fragment.onResponse(2);
+                        fragment.onResponse(fragment.getString(R.string.getData));
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Message.message(context, "Something went wrong");
-                        Log.wtf("ERROR", "something went wrong with updating the server data " + error.toString());
                         GlobalValues.fieldModified = -1;
+                        fragment.onResponse("Error");
                     }
                 }
         );
@@ -126,7 +125,7 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void removeRoadmap(int fieldId, Activity activity, String url){
+    public static void removeField(int fieldId, Activity activity, ModifiedFragment fragment, String url){
         String URL = AppSettings.SERVERIP + "/" + url + "/" + ApiSingleton.getInstance().getObject(fieldId).getId();
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -140,7 +139,11 @@ public class ApiController {
                     public void onResponse(JSONObject response) {
                         Message.message(context, "data successfully removed");
                         GlobalValues.fieldModified = -1;
-                        activity.finish();
+                        if (activity != null)
+                            activity.finish();
+                        if (fragment != null){
+                            fragment.onResponse(fragment.getString(R.string.getData));
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -148,10 +151,19 @@ public class ApiController {
                     public void onErrorResponse(VolleyError error) {
                         if (error.toString().equals("false"))
                             return;
-                        Message.message(context, "Something went wrong");
-                        Log.wtf("ERROR", "something went wrong with updating the server data " + error.toString());
                         GlobalValues.fieldModified = -1;
-                        activity.finish();
+
+                        if (fragment != null)
+                        {
+                            fragment.onResponse("Error");
+                        }
+                        if (activity != null) {
+                            activity.finish();
+                            if (fragment == null){
+                                Message.message(context, "Something went wrong");
+                                Log.wtf("Error", "something went wrong with removing field server sided");
+                            }
+                        }
                     }
                 }
         );
@@ -219,7 +231,7 @@ public class ApiController {
         }
     }
 
-    public static JSONObject objectToJSON(ApiJSONObject object, Context context){
+    private static JSONObject objectToJSON(ApiJSONObject object, Context context){
         JSONObject mJSONObject = null;
         String jsonInString = new Gson().toJson(object);
         try {
@@ -232,7 +244,7 @@ public class ApiController {
         return mJSONObject;
     }
 
-    public static String checkIfStrNull(String getVal, JSONObject object, Context context){
+    private static String checkIfStrNull(String getVal, JSONObject object, Context context){
         try {
             if (!object.get(getVal).toString().equals("null"))
                 return object.getString(getVal);
@@ -246,7 +258,7 @@ public class ApiController {
         }
     }
 
-    public static int checkIfIntNull(String getVal, JSONObject object, Context context){
+    private static int checkIfIntNull(String getVal, JSONObject object, Context context){
         try{
             if (!object.get(getVal).toString().equals("null"))
                 return Integer.parseInt(object.get(getVal).toString());

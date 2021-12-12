@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
@@ -18,6 +19,7 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
@@ -54,6 +56,8 @@ public class DashboardFragment extends ModifiedFragment {
     private void setupRecycler(){
         recyclerDataArrayList.clear();
 
+        ArrayList<ApiJSONObject> test =  ApiSingleton.getInstance().getArray();
+
         for (int i = 0; i < ApiSingleton.getInstance().getArray().size(); i++){
             recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i).getTitle(), null, null, String.valueOf(i), tag));
         }
@@ -73,29 +77,33 @@ public class DashboardFragment extends ModifiedFragment {
     }
 
     @Override
-    public void onResponse(int code) {
-        switch (code) {
-            case 0:
-                Log.wtf("ERROR", "failed to get data");
-                Message.message(getContext(), "Failed to get server data");
-                break;
-            case 1:
-                setupRecycler();
-                break;
-            default:
-                super.onResponse(-1);
-                break;
+    public void onResponse(String code) {
+        if (code.equals(this.getString(R.string.setupData))){
+            setupRecycler();
         }
+        else if (code.equals(this.getString(R.string.getData))){
+            updateData();
+        }
+        else
+            super.onResponse("Error");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (!resumed){
+
+        //if (GlobalValues.fieldModified != -1)
+         //   ApiController.editField(this, "boards");
+        if (!resumed) {
             resumed = true;
             return;
-        }
+        } else
+            updateData();
 
+
+    }
+
+    private void updateData(){
         ApiController.getAllFields(7, getContext(), "boards", this);
     }
 }

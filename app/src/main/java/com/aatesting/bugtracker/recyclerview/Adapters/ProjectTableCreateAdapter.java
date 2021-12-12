@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,6 +21,8 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerData curData = DataArrayList.get(position);
 
                 Dialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, ProjectMainActivity);
-
             }
         });
     }
@@ -126,8 +126,9 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
-            String description = ProjectTableData.GetColumnData(projectName, holderPosition, 0, mcontext);
-            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", holderPosition, ProjectMainActivity, this);
+
+            String description = ApiSingleton.getInstance().getObject(holderPosition).getTitle();
+            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", ProjectMainActivity.thisFragment, holderPosition);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
             ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition - 1, mcontext);
             RefreshActivity();
@@ -135,8 +136,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition + 1, mcontext);
             RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
-            ProjectTableData.RemoveColumn(projectName, holderPosition, mcontext);
-            RefreshActivity();
+            ApiController.removeField(holderPosition, null, ProjectMainActivity.thisFragment,"boards");
         }
     }
 
@@ -185,8 +185,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Dialogs.NewColumnDialog(mcontext, "Add column", "ADD",
-                 //       "Cancel", projectName, ProjectMainActivity, intent);
+                Dialogs.NewColumnDialog(v.getContext(), "Add column", "ADD",
+                        "Cancel", ProjectMainActivity.thisFragment);
             }
         });
     }

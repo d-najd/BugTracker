@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.CalendarTransforms;
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
@@ -36,6 +37,7 @@ import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.text.SimpleDateFormat;
@@ -128,23 +130,24 @@ public class Dialogs {
     }
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
-                                          String positiveButtonTxt, int holderPos, ProjectsMainActivity activity,
-                                            ProjectTableCreateAdapter adapter) {
+                                          String positiveButtonTxt, ModifiedFragment fragment, int fieldId) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
+        String startTitle = editText.getText().toString();
+
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                activity.RefreshActivity();
+                //activity.RefreshActivity();
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                activity.RefreshActivity();
+                //activity.RefreshActivity();
             }
         });
 
@@ -153,8 +156,16 @@ public class Dialogs {
             public void onClick(DialogInterface dialog, int which) {
                 String newTitle = data.second.getText().toString();
 
-                activity.RefreshActivity();
-                adapter.RenameTitle(holderPos, newTitle);
+                if (!startTitle.equals(newTitle)){
+                    GlobalValues.fieldModified = fieldId;
+                    ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
+
+                    object.setTitle(newTitle);
+                    ApiController.editField(fragment, "boards");
+                }
+
+                //activity.RefreshActivity();
+                //adapter.RenameTitle(holderPos, newTitle);
             }
         });
 
@@ -193,10 +204,10 @@ public class Dialogs {
                                 editText.getText().toString()
                         );
 
-                        ApiController.createField(object, "boards", null);
+                        ApiController.createField(object, "boards", fragment, null);
 
                         //ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
-                        fragment.onResponse(1);
+                        //fragment.onResponse("update");
                     }
 
                 });

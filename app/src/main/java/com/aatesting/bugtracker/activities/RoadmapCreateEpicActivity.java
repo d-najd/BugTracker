@@ -122,7 +122,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                ApiController.createField(object, "roadmaps", activity);
+                ApiController.createField(object, "roadmaps", null, activity);
             }
         });
 
