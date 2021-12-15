@@ -201,7 +201,8 @@ public class Dialogs {
                         ApiJSONObject object = new ApiJSONObject(
                                 0,
                                 ApiController.userId,
-                                editText.getText().toString()
+                                editText.getText().toString(),
+                                null
                         );
 
                         ApiController.createField(object, "boards", fragment, null);
@@ -216,9 +217,9 @@ public class Dialogs {
     }
 
     //for adding new item inside the column
-    public static void NewColumnItemDialog(Context mcontext, String title, String positiveButtonTxt,
-                                           String negativeButtonTxt, int position, String projectName,
-                                           ProjectsMainActivity activity){
+    public static void newItemDialog(Context mcontext, String title, String positiveButtonTxt,
+                                     String negativeButtonTxt, int position, String projectName,
+                                     ProjectsMainActivity activity){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;

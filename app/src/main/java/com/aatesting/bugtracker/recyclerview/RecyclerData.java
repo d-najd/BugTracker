@@ -16,7 +16,6 @@ public class RecyclerData {
     private ArrayList<Integer> imgIds;
     private Boolean favorite = false;
     private Boolean editTextEnable = false;
-
     private Calendar calendarStartDate;
     private Calendar calendarEndDate;
 
@@ -71,14 +70,6 @@ public class RecyclerData {
         this.secondImgId = secondImgId;
     }
 
-    public RecyclerData(String title, ArrayList<String> titles, ArrayList<Integer> imgIds, String id, String tag)
-    {
-        this.title = title;
-        this.titles = titles;
-        this.imgIds = imgIds;
-        this.tag = tag;
-        this.id = id;
-    }
 
     public RecyclerData(String title, String tag) {
         this.title = title;

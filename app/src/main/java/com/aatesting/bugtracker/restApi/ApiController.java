@@ -22,11 +22,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class ApiController {
     public static Context context;
     public static int userId;
 
-    public static void getAllFields(int userId, Context context, String url, ModifiedFragment fragment){
+    public static void getAllFields(int userId, Context context, String url, ModifiedFragment fragment) {
         ApiController.context = context;
         ApiController.userId = userId;
 
@@ -47,9 +49,9 @@ public class ApiController {
                         fragment.onResponse(fragment.getString(R.string.setupData));
                     }
                 },
-                new Response.ErrorListener(){
+                new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError error){
+                    public void onErrorResponse(VolleyError error) {
                         fragment.onResponse("Error");
                     }
                 }
@@ -61,7 +63,7 @@ public class ApiController {
      * @param activity if activity is passed it will be closed upon creation of the field
      */
 
-    public static void createField(ApiJSONObject object, String url, ModifiedFragment fragment, Activity activity){
+    public static void createField(ApiJSONObject object, String url, ModifiedFragment fragment, Activity activity) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         JSONObject jsonObject = objectToJSON(object, context);
@@ -77,7 +79,7 @@ public class ApiController {
                         Message.message(context, "data successfully saved");
                         if (activity != null)
                             activity.finish();
-                        if (fragment != null){
+                        if (fragment != null) {
                             fragment.onResponse(fragment.getString(R.string.getData));
                         }
                     }
@@ -93,7 +95,7 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void editField(ModifiedFragment fragment, String url){
+    public static void editField(ModifiedFragment fragment, String url) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
@@ -125,7 +127,7 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void removeField(int fieldId, Activity activity, ModifiedFragment fragment, String url){
+    public static void removeField(int fieldId, Activity activity, ModifiedFragment fragment, String url) {
         String URL = AppSettings.SERVERIP + "/" + url + "/" + ApiSingleton.getInstance().getObject(fieldId).getId();
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -141,7 +143,7 @@ public class ApiController {
                         GlobalValues.fieldModified = -1;
                         if (activity != null)
                             activity.finish();
-                        if (fragment != null){
+                        if (fragment != null) {
                             fragment.onResponse(fragment.getString(R.string.getData));
                         }
                     }
@@ -153,13 +155,12 @@ public class ApiController {
                             return;
                         GlobalValues.fieldModified = -1;
 
-                        if (fragment != null)
-                        {
+                        if (fragment != null) {
                             fragment.onResponse("Error");
                         }
                         if (activity != null) {
                             activity.finish();
-                            if (fragment == null){
+                            if (fragment == null) {
                                 Message.message(context, "Something went wrong");
                                 Log.wtf("Error", "something went wrong with removing field server sided");
                             }
@@ -172,11 +173,13 @@ public class ApiController {
     }
 
 
-    private static void dataToSingleton(JSONArray response, String value){
+    private static void dataToSingleton(JSONArray response, String value) {
+
+        response = response;
 
         for (int i = 0; i < response.length(); i++) {
             try {
-                addValueToSingleton(response, value, i);
+                singletonConstructor(response, value, i);
             } catch (JSONException e) {
                 Log.wtf("ERROR", "Failed to convert JSONArray to List<JSONObject>");
                 e.printStackTrace();
@@ -185,66 +188,106 @@ public class ApiController {
     }
 
     /**
-     * adds each object to singleton instance
-     * @param value is for differenciating which singleton to use
+     * every type of value is added here so everything is in 1 place
+     * @param response the input array
+     * @param type the name of the field
+     * @param i the current iteration of the loop (for knowing which object inside the list to get
+     * @return returns ApiJsonObject if specific case has been added if not returns null
+     * @throws JSONException
      */
-    private static void addValueToSingleton(JSONArray response, String value, int i) throws JSONException{
-        switch (value) {
+    private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
+        switch (type) {
             case "boards":
-                JSONObject object = response.getJSONObject(i);
-
-                int id = ApiController.checkIfIntNull("id", object, context);
-                int userId = ApiController.checkIfIntNull("userId", object, context);
-                String title = ApiController.checkIfStrNull("title", object, context);
-
-                ApiSingleton.getInstance().addToArray(new ApiJSONObject(
-                        id,
-                        userId,
-                        title
-                ));
+                addSingletonBoards(response, i);
                 break;
             case "roadmaps":
-                object = response.getJSONObject(i);
-
-                userId = ApiController.checkIfIntNull("userId", object, context);
-                id = ApiController.checkIfIntNull("id", object, context);
-                title = ApiController.checkIfStrNull("title", object, context);
-                String description = ApiController.checkIfStrNull("description", object, context);
-                String startDate = ApiController.checkIfStrNull("startDate", object, context);
-                String dueDate = ApiController.checkIfStrNull("dueDate", object, context);
-                String dateCreated = ApiController.checkIfStrNull("dateCreated", object, context);
-
-                ApiSingleton.getInstance().addToArray(new ApiJSONObject(
-                        id,
-                        userId,
-                        title,
-                        description,
-                        startDate,
-                        dueDate,
-                        dateCreated
-                ));
+                addSingletonRoadmaps(response, i);
                 break;
+            case "tasks":
+                return JSONToObject(response.getJSONObject(i), "tasks", context);
             default:
                 Message.message(context, "Something went wrong");
                 Log.wtf("ERROR", "current url isn't defined for adding to singleton");
                 break;
         }
+        return null;
     }
 
-    private static JSONObject objectToJSON(ApiJSONObject object, Context context){
+    private static void addSingletonRoadmaps(JSONArray response, int i) throws JSONException {
+        JSONObject object = response.getJSONObject(i);
+
+        int userId = ApiController.checkIfIntNull("userId", object, context);
+        int id = ApiController.checkIfIntNull("id", object, context);
+        String title = ApiController.checkIfStrNull("title", object, context);
+        String description = ApiController.checkIfStrNull("description", object, context);
+        String startDate = ApiController.checkIfStrNull("startDate", object, context);
+        String dueDate = ApiController.checkIfStrNull("dueDate", object, context);
+        String dateCreated = ApiController.checkIfStrNull("dateCreated", object, context);
+
+        ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                id,
+                userId,
+                title,
+                description,
+                startDate,
+                dueDate,
+                dateCreated
+        ));
+    }
+
+    private static void addSingletonBoards(JSONArray response, int i) throws JSONException {
+        JSONObject object = response.getJSONObject(i);
+
+        int id = checkIfIntNull("id", object, context);
+        int userId = checkIfIntNull("userId", object, context);
+        String title = checkIfStrNull("title", object, context);
+        ArrayList<ApiJSONObject> tasks = checkIfListNull("tasks", object, context);
+
+        ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                id,
+                userId,
+                title,
+                tasks
+        ));
+    }
+
+    private static JSONObject objectToJSON(ApiJSONObject object, Context context) {
         JSONObject mJSONObject = null;
         String jsonInString = new Gson().toJson(object);
         try {
             mJSONObject = new JSONObject(jsonInString);
         } catch (JSONException e) {
-            e.printStackTrace();
             Message.message(context, "Something went wrong");
             Log.wtf("ERROR", "error with converting java object to json object");
+            e.printStackTrace();
         }
         return mJSONObject;
     }
 
-    private static String checkIfStrNull(String getVal, JSONObject object, Context context){
+    private static ApiJSONObject JSONToObject(JSONObject jsonObject, String type, Context context){
+        ApiJSONObject object = null;
+        switch (type)
+        {
+            case "tasks":
+                int id = checkIfIntNull("id", jsonObject, context);
+                String title = checkIfStrNull("title", jsonObject, context);
+                String description = checkIfStrNull("description", jsonObject, context);
+                String dateCreated = ApiController.checkIfStrNull("dateCreated", jsonObject, context);
+
+                object = new ApiJSONObject(
+                        id,
+                        title,
+                        description,
+                        dateCreated);
+                break;
+            default:
+                Log.wtf("ERROR", "unable to convert the type " + type + " to java object because the case for that object does not exist" );
+                Message.message(context, "Something went wrong");
+        }
+        return object;
+    }
+
+    private static String checkIfStrNull(String getVal, JSONObject object, Context context) {
         try {
             if (!object.get(getVal).toString().equals("null"))
                 return object.getString(getVal);
@@ -258,8 +301,8 @@ public class ApiController {
         }
     }
 
-    private static int checkIfIntNull(String getVal, JSONObject object, Context context){
-        try{
+    private static int checkIfIntNull(String getVal, JSONObject object, Context context) {
+        try {
             if (!object.get(getVal).toString().equals("null"))
                 return Integer.parseInt(object.get(getVal).toString());
             else
@@ -270,5 +313,25 @@ public class ApiController {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    private static ArrayList<ApiJSONObject> checkIfListNull(String getVal, JSONObject object, Context context) {
+        JSONArray jsonArray;
+        ArrayList<ApiJSONObject> returnList = new ArrayList<>();
+        try {
+            if (!object.get(getVal).toString().equals("null") && !object.get(getVal).toString().equals("[]")) {
+                jsonArray = object.getJSONArray(getVal);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    returnList.add(singletonConstructor(jsonArray, "tasks", i));
+                }
+            }
+            else
+                return null;
+        } catch (JSONException e) {
+            Message.message(context, "something went wrong");
+            Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
+            e.printStackTrace();
+        }
+        return returnList;
     }
 }

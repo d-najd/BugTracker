@@ -56,10 +56,8 @@ public class DashboardFragment extends ModifiedFragment {
     private void setupRecycler(){
         recyclerDataArrayList.clear();
 
-        ArrayList<ApiJSONObject> test =  ApiSingleton.getInstance().getArray();
-
         for (int i = 0; i < ApiSingleton.getInstance().getArray().size(); i++){
-            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i).getTitle(), null, null, String.valueOf(i), tag));
+            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i).getTitle(), String.valueOf(i), tag));
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));

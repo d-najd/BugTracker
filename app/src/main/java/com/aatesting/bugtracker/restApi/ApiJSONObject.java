@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class ApiJSONObject extends JSONObject {
     //for some reason the server sends field_id which should be impossible so here we are
     private int id;
@@ -16,12 +18,17 @@ public class ApiJSONObject extends JSONObject {
     private String startDate;
     private String dueDate;
     private String dateCreated;
+    private ArrayList<ApiJSONObject> tasks;
 
     //for board object
-    public ApiJSONObject(int id, int userId, String title) {
+    public ApiJSONObject(int id, int userId, String title, ArrayList<ApiJSONObject> tasks) {
         this.id = id;
         this.userId = userId;
         this.title = title;
+        if (tasks == null)
+            this.tasks = new ArrayList<>();
+        else
+            this.tasks = tasks;
     }
 
     //for roadmap object
@@ -33,6 +40,14 @@ public class ApiJSONObject extends JSONObject {
         this.description = description;
         this.startDate = startDate;
         this.dueDate = dueDate;
+        this.dateCreated = dateCreated;
+    }
+
+    //for board/tasks
+    public ApiJSONObject(int id, String title, String description, String dateCreated){
+        this.id = id;
+        this.title = title;
+        this.description = description;
         this.dateCreated = dateCreated;
     }
 
@@ -90,6 +105,14 @@ public class ApiJSONObject extends JSONObject {
 
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public ArrayList<ApiJSONObject> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(ArrayList<ApiJSONObject> tasks) {
+        this.tasks = tasks;
     }
 }
 

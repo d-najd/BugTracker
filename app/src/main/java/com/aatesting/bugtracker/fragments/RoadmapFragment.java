@@ -144,7 +144,6 @@ public class RoadmapFragment extends ModifiedFragment {
 
     @Override
     public void onResponse(String code) {
-
         if (code.equals(this.getString(R.string.setupData))) {
             newEpicsAdapter();
             weeksBarRecycler();

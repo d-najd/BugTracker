@@ -22,7 +22,10 @@ import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +97,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                Dialogs.NewColumnItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, ProjectMainActivity);
+                Dialogs.newItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, ProjectMainActivity);
             }
         });
     }
@@ -126,31 +129,34 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
         if (itemText == mcontext.getString(R.string.renameColumn)){
-
             String description = ApiSingleton.getInstance().getObject(holderPosition).getTitle();
             Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", ProjectMainActivity.thisFragment, holderPosition);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
             ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition - 1, mcontext);
-            RefreshActivity();
+            //RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
             ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition + 1, mcontext);
-            RefreshActivity();
+            //RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ApiController.removeField(holderPosition, null, ProjectMainActivity.thisFragment,"boards");
         }
     }
 
     private void TableData(RecyclerData recyclerData, int position) {
-        int tableSize = 0;
         recyclerDataArrayList.clear();
-        if (recyclerData.getTitles() != null)
-            tableSize = recyclerData.getTitles().size();
+        //there is an extra column "add column" at the end, he isn't connected with ApiSingleton so
+        //there isnt any data for him and just skipping him instead of crashing the app
+        if (ApiSingleton.getInstance().getArray().size() <= position)
+            return;
+        //needs to be converted to Arraylist<RecyclerData> to be used
+        ArrayList<ApiJSONObject> rawRecyclerData = ApiSingleton.getInstance().getObject(position).getTasks();
 
-        if (tableSize != 0) {
-            for (int i = 0; i < tableSize; i++) {
-                recyclerDataArrayList.add(new RecyclerData(recyclerData.getTitles().get(i),
-                        recyclerData.getImgIds().get(i), tag));
-            }
+        for (ApiJSONObject object : rawRecyclerData){
+            recyclerDataArrayList.add(new RecyclerData(
+                    object.getTitle(),
+                    object.getDescription(),
+                    tag
+            ));
         }
 
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, mcontext);
@@ -196,12 +202,15 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         return DataArrayList.size();
     }
 
+    /*
     private void RefreshActivity(){
         ProjectMainActivity.finish();
         ProjectMainActivity.overridePendingTransition(0, 0);
         ProjectMainActivity.startActivity(intent);
         ProjectMainActivity.overridePendingTransition(0, 0);
     }
+
+     */
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private EditText title;
