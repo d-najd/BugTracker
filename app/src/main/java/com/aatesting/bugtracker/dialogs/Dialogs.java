@@ -3,7 +3,6 @@ package com.aatesting.bugtracker.dialogs;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,14 +22,11 @@ import com.aatesting.bugtracker.CalendarTransforms;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.MainActivity;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
-import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
-import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -137,20 +132,6 @@ public class Dialogs {
 
         String startTitle = editText.getText().toString();
 
-        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //activity.RefreshActivity();
-            }
-        });
-
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                //activity.RefreshActivity();
-            }
-        });
-
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -163,9 +144,6 @@ public class Dialogs {
                     object.setTitle(newTitle);
                     ApiController.editField(fragment, "boards");
                 }
-
-                //activity.RefreshActivity();
-                //adapter.RenameTitle(holderPos, newTitle);
             }
         });
 
@@ -181,19 +159,6 @@ public class Dialogs {
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
-        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //fragment.onResponse(1);
-            }
-        });
-
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                //fragment.onResponse(1);
-            }
-        });
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
@@ -206,9 +171,6 @@ public class Dialogs {
                         );
 
                         ApiController.createField(object, "boards", fragment, null);
-
-                        //ProjectTableData.SaveNewColumn(projectName, title, titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, mcontext);
-                        //fragment.onResponse("update");
                     }
 
                 });
@@ -218,33 +180,21 @@ public class Dialogs {
 
     //for adding new item inside the column
     public static void newItemDialog(Context mcontext, String title, String positiveButtonTxt,
-                                     String negativeButtonTxt, int position, String projectName,
-                                     ProjectsMainActivity activity){
+                                     String negativeButtonTxt){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
-        builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                activity.RefreshActivity();
-            }
-        });
-
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                activity.RefreshActivity();
-            }
-        });
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String title = editText.getText().toString();
 
-                ProjectTableData.SaveNewItem(title, projectName, position, true, mcontext);
-                activity.RefreshActivity();
+                //NOTE the api usually automatically refreshes the activity so should watch out for that
+
+
+                //ProjectTableData.SaveNewItem(title, projectName, position, true, mcontext);
             }
         });
 

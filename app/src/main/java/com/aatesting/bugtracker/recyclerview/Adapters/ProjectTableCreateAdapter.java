@@ -25,8 +25,6 @@ import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +33,11 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     private ArrayList<RecyclerData> DataArrayList;
     private Context mcontext;
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+    //please don't remove, it fixes the problem with nested recyclerviews, I dont know why or how
+    // but please dont remove it
+    private ArrayList<ArrayList<RecyclerData>> subRecyclerData = new ArrayList<>();
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
-    public RecyclerViewHolder holder;
+    private RecyclerViewHolder holder;
     public ProjectsMainActivity ProjectMainActivity;
     public String projectName;
     private String tag;
@@ -89,6 +90,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     }
 
     private void Listeners(int position){
+        ProjectTableCreateAdapter adapter = this;
+
         holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +100,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
-                Dialogs.newItemDialog(mcontext, "Add problem", "ADD", "CANCEL", position, projectName, ProjectMainActivity);
+                Dialogs.newItemDialog(mcontext, "Add problem", "ADD",
+                        "CANCEL");
             }
         });
     }
@@ -146,9 +150,9 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         recyclerDataArrayList.clear();
         //there is an extra column "add column" at the end, he isn't connected with ApiSingleton so
         //there isnt any data for him and just skipping him instead of crashing the app
-        if (ApiSingleton.getInstance().getArray().size() <= position)
+        if (ApiSingleton.getInstance().getArray().size() <= position) {
             return;
-        //needs to be converted to Arraylist<RecyclerData> to be used
+        }//needs to be converted to Arraylist<RecyclerData> to be used
         ArrayList<ApiJSONObject> rawRecyclerData = ApiSingleton.getInstance().getObject(position).getTasks();
 
         for (ApiJSONObject object : rawRecyclerData){
@@ -158,9 +162,9 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                     tag
             ));
         }
+        subRecyclerData.add(new ArrayList<>(recyclerDataArrayList));
 
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, mcontext);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
                 LinearLayoutManager.VERTICAL, false);
 
@@ -175,7 +179,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         adapter.projectName = projectName;
         adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
         adapter.projectTableColumnPos = position;
-        //This might break some stuff, need to be on the lookout
+
+        refreshData(position);
     }
 
     private void NewColumnCreator(){
@@ -202,15 +207,27 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         return DataArrayList.size();
     }
 
-    /*
-    private void RefreshActivity(){
-        ProjectMainActivity.finish();
-        ProjectMainActivity.overridePendingTransition(0, 0);
-        ProjectMainActivity.startActivity(intent);
-        ProjectMainActivity.overridePendingTransition(0, 0);
-    }
+    //for the love of god dont change any of the fields, including the subRecyclerData, I am not sure
+    //how or why the fuck it works but it fixes a HUGE problem, just don't
+    private void refreshData(int position){
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(subRecyclerData.get(0), mcontext);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
+                LinearLayoutManager.VERTICAL, false);
 
-     */
+        // at last set adapter to recycler view.
+        holderArrayList.get(position).recyclerView.setHasFixedSize(false);
+
+        RecyclerView recyclerView = holderArrayList.get(position).recyclerView;
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(adapter);
+
+        adapter.projectName = projectName;
+        adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
+        adapter.projectTableColumnPos = position;
+
+        subRecyclerData.clear();
+    }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private EditText title;

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
@@ -19,7 +18,6 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
-import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
@@ -33,6 +31,7 @@ public class DashboardFragment extends ModifiedFragment {
     private String projectName; //data is passed through intent
     private String tag;
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
+    private ProjectTableCreateAdapter adapter;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -62,7 +61,7 @@ public class DashboardFragment extends ModifiedFragment {
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
 
-        ProjectTableCreateAdapter adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, getContext());
+        adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, getContext());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
@@ -97,8 +96,6 @@ public class DashboardFragment extends ModifiedFragment {
             return;
         } else
             updateData();
-
-
     }
 
     private void updateData(){

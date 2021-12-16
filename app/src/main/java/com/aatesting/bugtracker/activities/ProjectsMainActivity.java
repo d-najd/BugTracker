@@ -1,33 +1,22 @@
 package com.aatesting.bugtracker.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 
-import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
-import com.aatesting.bugtracker.fragments.DashboardFragment;
-import com.aatesting.bugtracker.fragments.ProjectsFragment;
-import com.aatesting.bugtracker.fragments.RoadmapFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import org.json.JSONObject;
 
 public class ProjectsMainActivity extends AppCompatActivity {
 
@@ -80,41 +69,4 @@ public class ProjectsMainActivity extends AppCompatActivity {
             });
         }
     }
-
-    public void RefreshActivity(){
-        //TODO this is gonna break in the future, need to check if the items are loaded
-        // before doing this instead of waiting
-        if (GlobalValues.reloadedActivity) {
-            GlobalValues.reloadedActivity = false;
-            Handler h = new Handler();
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                    overridePendingTransition(0, 0);
-                }
-            }, 250);
-        } else
-            GlobalValues.reloadedActivity = true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //this is a dumb way of fixing the problem
-        if (GlobalValues.reloadedActivity){
-            GlobalValues.reloadedActivity = false;
-            Handler h = new Handler();
-            h.postDelayed(new Runnable() {
-                public void run() {
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                    overridePendingTransition(0, 0);
-                }
-            }, 250);
-        }
-    }
-
 }
