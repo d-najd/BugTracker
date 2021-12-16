@@ -114,5 +114,9 @@ public class ApiJSONObject extends JSONObject {
     public void setTasks(ArrayList<ApiJSONObject> tasks) {
         this.tasks = tasks;
     }
+
+    public ApiJSONObject getTask(int position){
+        return tasks.get(position);
+    }
 }
 

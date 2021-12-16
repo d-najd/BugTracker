@@ -180,16 +180,25 @@ public class Dialogs {
 
     //for adding new item inside the column
     public static void newItemDialog(Context mcontext, String title, String positiveButtonTxt,
-                                     String negativeButtonTxt){
+                                     String negativeButtonTxt, int position, ModifiedFragment fragment){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
-
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String title = editText.getText().toString();
+
+                ApiJSONObject object = new ApiJSONObject(
+                        0,
+                        title,
+                        null,
+                        null
+                );
+                
+                ApiController.createField(object, "tasks/board/" +
+                        ApiSingleton.getInstance().getObject(position).getId(), fragment, null);
 
                 //NOTE the api usually automatically refreshes the activity so should watch out for that
 

@@ -67,7 +67,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
 
                 allColumnTitles.add("Hybrid epic");
                 allColumnImages.add(2131165294);
-                allColumnDescriptions.add("An epic which acts like a column in the board of the project");
+                allColumnDescriptions.add("An epic which acts like a column");
 
                 allColumnTitles.add("Task");
                 allColumnImages.add(2131165294);

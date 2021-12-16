@@ -1,5 +1,6 @@
 package com.aatesting.bugtracker.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,9 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -33,48 +37,53 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
     public String newData; //the data (string) for the description
     //to get the correct descrition and stuff instead of carrying it for ages.
     private String tag; //there are multiple tags for this activity bc of the bottomdialogs
-    private String projectName;
-    private String oldDescription;
+    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+
     private int itemPos;
     private int columnPos;
-    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
-    //used for the bottomdialogs
-    private ArrayList<String> allColumnTitles = new ArrayList<>();
-    private ArrayList<Integer> allColumnImages = new ArrayList<>();
-    private ArrayList<String> allColumnDescriptions = new ArrayList<>();
+    private String projectName;
+    private String description;
+    private String columnName;
+    private String itemName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projectcreate_edittask);
 
-        tag = getString(R.string.projectEditTask0);
-
-        projectName = getIntent().getExtras().getString("projectName");
-        columnPos = getIntent().getExtras().getInt("columnPos");
-        itemPos = getIntent().getExtras().getInt("itemPos");
-        String columnName = getIntent().getExtras().getString("columnName");
-        String itemName = getIntent().getExtras().getString("itemName");
+        getData();
 
         editDescriptionTxt = findViewById(R.id.descriptionTxt);
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
 
-        oldDescription = ProjectTableData.GetItemListData(projectName, columnPos, itemPos, 3,this);
-
         columnSelector.setText(columnName);
         titleMiddle.setText(itemName);
 
         //setting the description
-        if (oldDescription == null) {
+        if (description == null) {
             editDescriptionTxt.setText(getString(R.string.description));
             editDescriptionTxt.setTextColor(getColor(R.color.white38));
         }
         else {
-            editDescriptionTxt.setText(oldDescription);
+            editDescriptionTxt.setText(description);
             editDescriptionTxt.setTextColor(getColor(R.color.white60));
         }
         Listeners();
+    }
+
+    private void getData() {
+        tag = getString(R.string.projectEditTask);
+
+        columnPos = getIntent().getExtras().getInt("columnPos");
+        itemPos = getIntent().getExtras().getInt("itemPos");
+
+        ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+
+        projectName = object.getTitle();
+        columnName = ApiSingleton.getInstance().getObject(columnPos).getTitle();
+        itemName = object.getTitle();
+        description = object.getDescription();
     }
 
     private void Listeners(){
@@ -99,7 +108,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ProjectTableData.EditListData(projectName, s.toString(), columnPos, itemPos, 1, context);
+                //ProjectTableData.EditListData(projectName, s.toString(), columnPos, itemPos, 1, context);
             }
         });
 
@@ -107,10 +116,14 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ViewGroup viewGroup = v.findViewById(android.R.id.content);
-                allColumnTitles.clear();
-                allColumnImages.clear();
+                ArrayList<String> allColumnTitles = new ArrayList<>();
+                ArrayList<Integer> allColumnImages = new ArrayList<>();
 
-                allColumnTitles = ProjectTableData.GetAllItemData(projectName, 0, context);
+                int size = ApiSingleton.getInstance().getArray().size();
+
+                for (ApiJSONObject object : ApiSingleton.getInstance().getArray()){
+                    allColumnTitles.add(object.getTitle());
+                }
 
                 for (int i = 0; i < allColumnTitles.size(); i++){
                     allColumnImages.add(2131165294);
@@ -132,7 +145,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( ProjectTableEditTaskActivity.this, ProjectTableEditDescriptionActivity.class);
-                intent.putExtra("oldData", oldDescription);
+                intent.putExtra("oldData", description);
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
         });
@@ -154,8 +167,12 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ProjectTableData.RemoveTask(projectName, columnPos, itemPos, context);
-                finish();
+                int columnId = ApiSingleton.getInstance().getObject(columnPos).getId();
+                int taskId = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos).getId();
+
+                //removing the connection between the task and board
+                ApiController.removeField(projectCreateTableEditTask, null, "btj/board/" + columnId
+                + "/task/" + taskId);
             }
         });
 
@@ -168,18 +185,20 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         });
     }
 
-
     public void UpdateColumn(int columnPos){
         //for when you use the button to change the column.
         this.columnPos = columnPos;
         itemPos = 0;
 
-        String columnName = ProjectTableData.GetColumnData(projectName, columnPos, 0, this);
-        columnSelector.setText(columnName);
+        columnSelector.setText("Change this");
     }
 
     private void issueTypeOnClick(View v, Context context){
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+        ArrayList<String> allColumnTitles = new ArrayList<>();
+        ArrayList<String> allColumnDescriptions = new ArrayList<>();
+        ArrayList<Integer> allColumnImages = new ArrayList<>();
 
         allColumnTitles.clear();
         allColumnImages.clear();
@@ -189,10 +208,9 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         allColumnImages.add(2131165294);
         allColumnDescriptions.add("A small, distinct piece of work");
 
-        tag = getString(R.string.projectEditTask1);
         Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                allColumnTitles, allColumnDescriptions, allColumnImages, tag);
-        tag = getString(R.string.projectEditTask0);
+                allColumnTitles, allColumnDescriptions, allColumnImages, null);
+        tag = getString(R.string.projectEditTask);
     }
 
 
@@ -202,7 +220,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 newData = data.getStringExtra("newData");
-                ProjectTableData.EditListData(projectName, newData, columnPos, itemPos, 3, this);
+                //ProjectTableData.EditListData(projectName, newData, columnPos, itemPos, 3, this);
                 Message.message(getBaseContext(), newData);
 
                 //updating the description

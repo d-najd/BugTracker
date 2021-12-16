@@ -60,6 +60,8 @@ public class ApiController {
     }
 
     /**
+     * @param fragment if fragment is specified getData response will be sent to the specified fragment
+     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/[url]
      * @param activity if activity is passed it will be closed upon creation of the field
      */
 
@@ -127,8 +129,13 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void removeField(int fieldId, Activity activity, ModifiedFragment fragment, String url) {
-        String URL = AppSettings.SERVERIP + "/" + url + "/" + ApiSingleton.getInstance().getObject(fieldId).getId();
+    /**
+     * @param fragment if fragment is specified getData response will be sent to the specified fragment
+     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/[url]
+     * @param activity if activity is passed it will be closed upon creation of the field
+     */
+    public static void removeField(Activity activity, ModifiedFragment fragment, String url) {
+        String URL = AppSettings.SERVERIP + "/" + url;
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -173,13 +180,10 @@ public class ApiController {
     }
 
 
-    private static void dataToSingleton(JSONArray response, String value) {
-
-        response = response;
-
-        for (int i = 0; i < response.length(); i++) {
+    private static void dataToSingleton(JSONArray data, String value) {
+        for (int i = 0; i < data.length(); i++) {
             try {
-                singletonConstructor(response, value, i);
+                singletonConstructor(data, value, i);
             } catch (JSONException e) {
                 Log.wtf("ERROR", "Failed to convert JSONArray to List<JSONObject>");
                 e.printStackTrace();

@@ -26,16 +26,15 @@ import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
 public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTableCreateAdapter.RecyclerViewHolder> {
-    private ArrayList<RecyclerData> DataArrayList;
+    private ArrayList<RecyclerData> DataArrayList; //is different from recyclerdataArrayList
     private Context mcontext;
-    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
-    //please don't remove, it fixes the problem with nested recyclerviews, I dont know why or how
-    // but please dont remove it
-    private ArrayList<ArrayList<RecyclerData>> subRecyclerData = new ArrayList<>();
+    private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>(); //is different from dataArrayList
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     private RecyclerViewHolder holder;
     public ProjectsMainActivity ProjectMainActivity;
@@ -56,6 +55,9 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         return new RecyclerViewHolder(view);
     }
 
+    //TODO messes up the order of the items if you keep refreshing the data for some reason
+    //  it may be because it isn't asynchronous?
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
@@ -74,10 +76,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         //column that adds more columns (last one) or the other one
         if (position != DataArrayList.size() - 1) {
             holder.title.setText(recyclerData.getTitle());
-            if (recyclerData.getTitles() != null)
-                holder.numberOfItems.setText(recyclerData.getTitles().size() + "");
-            else
-                holder.numberOfItems.setText("0");
+            holder.numberOfItems.setText(ApiSingleton.getInstance().getObject(position).getTasks().size() + "");
         }else{
             NewColumnCreator();
         }
@@ -95,13 +94,11 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         holder.addColumnBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerDataArrayList.clear();
-
                 RecyclerViewHolder curholder = holderArrayList.get(position);
                 RecyclerData curData = DataArrayList.get(position);
 
                 Dialogs.newItemDialog(mcontext, "Add problem", "ADD",
-                        "CANCEL");
+                        "CANCEL", position, ProjectMainActivity.thisFragment);
             }
         });
     }
@@ -142,7 +139,8 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition + 1, mcontext);
             //RefreshActivity();
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
-            ApiController.removeField(holderPosition, null, ProjectMainActivity.thisFragment,"boards");
+            ApiController.removeField(null, ProjectMainActivity.thisFragment,"boards/" +
+                    ApiSingleton.getInstance().getObject(holderPosition).getId());
         }
     }
 
@@ -162,16 +160,19 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                     tag
             ));
         }
-        subRecyclerData.add(new ArrayList<>(recyclerDataArrayList));
 
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, mcontext);
+        //for the love of god dont change any of the fields, including the subRecyclerData, I am not sure
+        //how or why the fuck this works but it fixes a HUGE problem, just don't
+        final ArrayList<RecyclerData> data = new ArrayList<>(recyclerDataArrayList);
+
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(data, mcontext);
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
                 LinearLayoutManager.VERTICAL, false);
 
         // at last set adapter to recycler view.
-        holder.recyclerView.setHasFixedSize(false);
+        holderArrayList.get(position).recyclerView.setHasFixedSize(false);
 
-        RecyclerView recyclerView = holder.recyclerView;
+        RecyclerView recyclerView = holderArrayList.get(position).recyclerView;
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.setAdapter(adapter);
@@ -179,8 +180,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         adapter.projectName = projectName;
         adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
         adapter.projectTableColumnPos = position;
-
-        refreshData(position);
     }
 
     private void NewColumnCreator(){
@@ -205,28 +204,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     @Override
     public int getItemCount() {
         return DataArrayList.size();
-    }
-
-    //for the love of god dont change any of the fields, including the subRecyclerData, I am not sure
-    //how or why the fuck it works but it fixes a HUGE problem, just don't
-    private void refreshData(int position){
-        MainRecyclerAdapter adapter = new MainRecyclerAdapter(subRecyclerData.get(0), mcontext);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext,
-                LinearLayoutManager.VERTICAL, false);
-
-        // at last set adapter to recycler view.
-        holderArrayList.get(position).recyclerView.setHasFixedSize(false);
-
-        RecyclerView recyclerView = holderArrayList.get(position).recyclerView;
-        recyclerView.setLayoutManager(layoutManager);
-
-        recyclerView.setAdapter(adapter);
-
-        adapter.projectName = projectName;
-        adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
-        adapter.projectTableColumnPos = position;
-
-        subRecyclerData.clear();
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder {

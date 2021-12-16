@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
@@ -131,7 +131,7 @@ public class ProjectsFragment extends ModifiedFragment {
         MainRecyclerAdapter allProjects_adapter = new MainRecyclerAdapter(RecyclerDataList, requireContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
 
-        allProjects_adapter.projectsFragment = this;
+        allProjects_adapter.fragment = this;
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(allProjects_adapter);
@@ -191,7 +191,20 @@ public class ProjectsFragment extends ModifiedFragment {
         allProjects_RecyclerView.getAdapter().notifyDataSetChanged();
     }
 
-    public void NotifyProjectViewed(String projectName){
+    @Override
+    public void onResponse(String code, String data) {
+        if (data == null || code == null)
+        {
+            Log.wtf("ERROR", "code or data is null");
+            Message.message(getContext(), "Something went wrong");
+        }
+
+        if (code.equals("NotifyProjectViewed")){
+            notifyProjectViewed(data);
+        }
+    }
+
+    public void notifyProjectViewed(String projectName){
         RecentlyViewedProjectsData.ProjectOpened(getContext(), projectName);
 
         //refreshing the data for recentlyViewedAdapter

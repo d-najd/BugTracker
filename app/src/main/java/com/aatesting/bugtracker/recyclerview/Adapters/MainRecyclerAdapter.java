@@ -25,7 +25,7 @@ import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
-import com.aatesting.bugtracker.fragments.ProjectsFragment;
+import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -47,7 +47,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public String projectTableColumnName;
     public BottomSheetDialog projectCreateEditTask_BottomDialog;
     public ProjectTableEditTaskActivity projectCreateTableEditTask;
-    public ProjectsFragment projectsFragment;
+    public ModifiedFragment fragment;
 
     //endregion
 
@@ -105,7 +105,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         } else
             holder.description.setVisibility(View.GONE);
 
-        if (layout.equals(mcontext.getString(R.string.titleProjects))) {
+        if (layout != null && layout.equals(mcontext.getString(R.string.titleProjects))) {
             holder.secondaryBtn.setVisibility(View.VISIBLE);
         }
 
@@ -141,6 +141,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             }
         });
 
+        if (recyclerData.getTag() == null)
+            return;
+
         if (recyclerData.getTag().equals(mcontext.getString(R.string.titleProjects))) {
             holder.secondaryBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -162,7 +165,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
                     intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
 
-                    projectsFragment.NotifyProjectViewed(holderArrayList.get(position).title.getText().toString());
+                    fragment.onResponse("NotifyProjectViewed", holderArrayList.get(position).title.getText().toString());
                     mcontext.startActivity(intent);
                 }
             });
@@ -181,17 +184,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mcontext, ProjectTableEditTaskActivity.class);
-                    intent.putExtra("projectName", projectName);
                     intent.putExtra("columnName", projectTableColumnName);
                     intent.putExtra("columnPos", projectTableColumnPos);
-                    intent.putExtra("itemName", holderArrayList.get(position).title.getText().toString());
-                    intent.putExtra("itemPos", position);
                     mcontext.startActivity(intent);
                 }
             });
         }
 
-        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask0))){
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

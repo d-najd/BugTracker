@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import com.aatesting.bugtracker.Message;
 
 public class ModifiedFragment extends Fragment {
+    public String mFragExtraString;
+
     /**
      * for getting rid of the need to pass a specific fragment and functions for all specific fragments
      * @param code unique code for each response
@@ -17,6 +19,28 @@ public class ModifiedFragment extends Fragment {
             Message.message(getContext(), "Something went wrong");
             return;
         }
+        Log.wtf("ERROR", "onResponse method does not exist in the current fragment");
+        Message.message(getContext(), "Something went wrong");
+    }
+
+    /**
+     * for getting rid of the need to pass a specific fragment and functions for all specific fragments
+     * @param code unique code for each response
+     * @param data use this field for passing data of type string
+     */
+    public void onResponse(String code, String data){
+        if (code.equals("Error")) {
+            Log.wtf("ERROR", "Error code for onResponse");
+            Message.message(getContext(), "Something went wrong");
+            return;
+        }
+        if (data == null){
+            Log.wtf("WARNING", "the data sent through onResponse seems to be null,\n " +
+                    "please use onResponse(String) instead of onResponse(String, String) for that\n"
+                    + "purpose");
+            Message.message(getContext(), "Something went wrong");
+        }
+
         Log.wtf("ERROR", "onResponse method does not exist in the current fragment");
         Message.message(getContext(), "Something went wrong");
     }
