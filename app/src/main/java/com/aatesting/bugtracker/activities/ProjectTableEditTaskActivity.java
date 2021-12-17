@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 public class ProjectTableEditTaskActivity extends AppCompatActivity {
     private TextView editDescriptionTxt;
+    private TextView topSave;
     private EditText titleMiddle;
     private Button columnSelector;
     public String newData; //the data (string) for the description
@@ -54,6 +55,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         getData();
 
         editDescriptionTxt = findViewById(R.id.descriptionTxt);
+        topSave = findViewById(R.id.topSave);
         titleMiddle = findViewById(R.id.titleMiddle);
         columnSelector = findViewById(R.id.columnSelector);
 
@@ -77,6 +79,8 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
 
         columnPos = getIntent().getExtras().getInt("columnPos");
         itemPos = getIntent().getExtras().getInt("itemPos");
+
+        ArrayList<ApiJSONObject> re = ApiSingleton.getInstance().getArray();
 
         ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
 
@@ -108,7 +112,20 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //ProjectTableData.EditListData(projectName, s.toString(), columnPos, itemPos, 1, context);
+                //the task
+                ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+                taskObj.setTitle(s.toString());
+
+                topSave.setVisibility(View.VISIBLE);
+                GlobalValues.objectModified = taskObj;
+            }
+        });
+
+        topSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ApiController.editField(null, "tasks");
+                topSave.setVisibility(View.GONE);
             }
         });
 
@@ -170,7 +187,6 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                 int columnId = ApiSingleton.getInstance().getObject(columnPos).getId();
                 int taskId = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos).getId();
 
-                //removing the connection between the task and board
                 ApiController.removeField(projectCreateTableEditTask, null, "btj/board/" + columnId
                 + "/task/" + taskId);
             }
@@ -213,19 +229,22 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         tag = getString(R.string.projectEditTask);
     }
 
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //for getting data back from the second activity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if(resultCode == RESULT_OK) {
                 newData = data.getStringExtra("newData");
-                //ProjectTableData.EditListData(projectName, newData, columnPos, itemPos, 3, this);
-                Message.message(getBaseContext(), newData);
 
                 //updating the description
                 if (newData != null) {
                     editDescriptionTxt.setText(newData);
+
+                    ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+                    taskObj.setDescription(newData);
+
+                    topSave.setVisibility(View.VISIBLE);
+                    GlobalValues.objectModified = taskObj;
                 }
             }
         }

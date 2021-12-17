@@ -1,5 +1,7 @@
 package com.aatesting.bugtracker;
 
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
+
 public class GlobalValues {
     //for knowing whether the current activity is reloaded like the activity with multiple
     // recyclerviews which needs that, in theory this can be used for multiple things, worst case
@@ -12,5 +14,5 @@ public class GlobalValues {
     //for knowing which field of the data is modified and sending the data to the server not updating
     //the server imidiately so it doesn't overload, default value is -1 which means no field modified
     //-2 means the data needs refreshing but there is no data changed
-    public static int fieldModified = -1;
+    public static ApiJSONObject objectModified;
 }

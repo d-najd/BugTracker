@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
@@ -18,6 +19,7 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
@@ -88,9 +90,8 @@ public class DashboardFragment extends ModifiedFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        //if (GlobalValues.fieldModified != -1)
-         //   ApiController.editField(this, "boards");
+        if (GlobalValues.objectModified != null)
+            ApiController.editField(this, "tasks");
         if (!resumed) {
             resumed = true;
             return;

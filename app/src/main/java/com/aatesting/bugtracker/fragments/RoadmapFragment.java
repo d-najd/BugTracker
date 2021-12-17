@@ -158,7 +158,7 @@ public class RoadmapFragment extends ModifiedFragment {
         super.onResume();
 
         //update the database
-        if (GlobalValues.fieldModified != -1)
+        if (GlobalValues.objectModified != null)
             ApiController.editField(this, "roadmaps");
         else if (!resumed) {
             resumed = true;

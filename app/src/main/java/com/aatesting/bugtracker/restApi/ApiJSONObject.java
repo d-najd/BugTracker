@@ -7,10 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ApiJSONObject extends JSONObject {
-    //for some reason the server sends field_id which should be impossible so here we are
     private int id;
+    private int position;
 
     private int userId;
     private String title;
@@ -44,12 +45,32 @@ public class ApiJSONObject extends JSONObject {
     }
 
     //for board/tasks
-    public ApiJSONObject(int id, String title, String description, String dateCreated){
+    public ApiJSONObject(int id, int position, String title, String description, String dateCreated){
         this.id = id;
+        this.position = position;
         this.title = title;
         this.description = description;
         this.dateCreated = dateCreated;
     }
+
+    public static Comparator<ApiJSONObject> positionComparator
+            = new Comparator<ApiJSONObject>() {
+        @Override
+        public int compare(ApiJSONObject obj1, ApiJSONObject obj2) {
+
+            Integer ob1pos = obj1.getPosition();
+            Integer obj2pos = obj2.getPosition();
+
+            //ascending order
+            return ob1pos.compareTo(obj2pos);
+
+            //descending order
+            //return fruitName2.compareTo(fruitName1);
+        }
+
+    };
+
+
 
     public int getId() {
         return id;
@@ -105,6 +126,14 @@ public class ApiJSONObject extends JSONObject {
 
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     public ArrayList<ApiJSONObject> getTasks() {

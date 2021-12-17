@@ -71,7 +71,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         String layout = recyclerData.getTag();
         this.holder = holder;
-        layout = layout;
+        if (layout == null)
+            layout = "DEFINELAYOUT";
 
         holderArrayList.add(holder);
         if (holderArrayList.size() > recyclerDataArrayList.size()){
@@ -100,7 +101,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 if (recyclerData.getDescription() != null)
                     holder.editText.setHint(recyclerData.getDescription());
             }
-        } else if (recyclerData.getDescription() != null) {
+        } else if (recyclerData.getDescription() != null && !layout.equals(mcontext.getString(R.string.projectCreateTask))) {
             holder.description.setText(recyclerData.getDescription());
         } else
             holder.description.setVisibility(View.GONE);
@@ -186,6 +187,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     Intent intent = new Intent(mcontext, ProjectTableEditTaskActivity.class);
                     intent.putExtra("columnName", projectTableColumnName);
                     intent.putExtra("columnPos", projectTableColumnPos);
+                    intent.putExtra("itemPos", position);
                     mcontext.startActivity(intent);
                 }
             });

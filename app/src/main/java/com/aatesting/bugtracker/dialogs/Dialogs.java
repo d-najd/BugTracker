@@ -35,6 +35,7 @@ import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,10 +139,10 @@ public class Dialogs {
                 String newTitle = data.second.getText().toString();
 
                 if (!startTitle.equals(newTitle)){
-                    GlobalValues.fieldModified = fieldId;
-                    ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
+                    ApiJSONObject object = ApiSingleton.getInstance().getObject(fieldId);
 
                     object.setTitle(newTitle);
+                    GlobalValues.objectModified = object;
                     ApiController.editField(fragment, "boards");
                 }
             }
@@ -185,6 +186,8 @@ public class Dialogs {
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
 
+        ArrayList<ApiJSONObject> te = ApiSingleton.getInstance().getArray();
+
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -192,6 +195,7 @@ public class Dialogs {
 
                 ApiJSONObject object = new ApiJSONObject(
                         0,
+                        ApiSingleton.getInstance().getObject(position).getTasks().size(),
                         title,
                         null,
                         null

@@ -18,17 +18,29 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ApiController {
     public static Context context;
     public static int userId;
 
-    public static void getAllFields(int userId, Context context, String url, ModifiedFragment fragment) {
+    /**
+     *
+     * @param userId needs to be replaced with projectId
+     * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
+     * @param url
+     * @param fragment
+     */
+
+    public static void getAllFields(int userId, @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
         ApiController.context = context;
         ApiController.userId = userId;
 
@@ -61,11 +73,11 @@ public class ApiController {
 
     /**
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
-     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/[url]
+     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/{url}
      * @param activity if activity is passed it will be closed upon creation of the field
      */
 
-    public static void createField(ApiJSONObject object, String url, ModifiedFragment fragment, Activity activity) {
+    public static void createField(ApiJSONObject object, @NotNull String url, ModifiedFragment fragment, Activity activity) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         JSONObject jsonObject = objectToJSON(object, context);
@@ -78,7 +90,6 @@ public class ApiController {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Message.message(context, "data successfully saved");
                         if (activity != null)
                             activity.finish();
                         if (fragment != null) {
@@ -89,7 +100,7 @@ public class ApiController {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        GlobalValues.fieldModified = -1;
+                        GlobalValues.objectModified = null;
                         fragment.onResponse("Error");
                     }
                 }
@@ -97,11 +108,17 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-    public static void editField(ModifiedFragment fragment, String url) {
+
+    /**
+     *
+     * @param fragment if fragment is specified getData response will be sent to the specified fragment
+     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/{url}
+     */
+
+    public static void editField(ModifiedFragment fragment, @NotNull String url) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
-        ApiJSONObject object = ApiSingleton.getInstance().getObject(GlobalValues.fieldModified);
-        JSONObject jsonObject = objectToJSON(object, context);
+        JSONObject jsonObject = objectToJSON(GlobalValues.objectModified, context);
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -112,16 +129,17 @@ public class ApiController {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Message.message(context, "data successfully saved");
-                        GlobalValues.fieldModified = -1;
-                        fragment.onResponse(fragment.getString(R.string.getData));
+                        GlobalValues.objectModified = null;
+                        if (fragment != null)
+                            fragment.onResponse(fragment.getString(R.string.getData));
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        GlobalValues.fieldModified = -1;
-                        fragment.onResponse("Error");
+                        GlobalValues.objectModified = null;
+                        if (fragment != null)
+                            fragment.onResponse("Error");
                     }
                 }
         );
@@ -131,10 +149,10 @@ public class ApiController {
 
     /**
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
-     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/[url]
+     * @param url the last part of the url where the post request is created "xxx.xxx.xxx:xxxx/{url}
      * @param activity if activity is passed it will be closed upon creation of the field
      */
-    public static void removeField(Activity activity, ModifiedFragment fragment, String url) {
+    public static void removeField(Activity activity, ModifiedFragment fragment, @NotNull String url) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
@@ -146,8 +164,7 @@ public class ApiController {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Message.message(context, "data successfully removed");
-                        GlobalValues.fieldModified = -1;
+                        GlobalValues.objectModified = null;
                         if (activity != null)
                             activity.finish();
                         if (fragment != null) {
@@ -160,7 +177,7 @@ public class ApiController {
                     public void onErrorResponse(VolleyError error) {
                         if (error.toString().equals("false"))
                             return;
-                        GlobalValues.fieldModified = -1;
+                        GlobalValues.objectModified = null;
 
                         if (fragment != null) {
                             fragment.onResponse("Error");
@@ -274,12 +291,14 @@ public class ApiController {
         {
             case "tasks":
                 int id = checkIfIntNull("id", jsonObject, context);
+                int position = checkIfIntNull("position", jsonObject, context);
                 String title = checkIfStrNull("title", jsonObject, context);
                 String description = checkIfStrNull("description", jsonObject, context);
                 String dateCreated = ApiController.checkIfStrNull("dateCreated", jsonObject, context);
 
                 object = new ApiJSONObject(
                         id,
+                        position,
                         title,
                         description,
                         dateCreated);
@@ -326,7 +345,7 @@ public class ApiController {
             if (!object.get(getVal).toString().equals("null") && !object.get(getVal).toString().equals("[]")) {
                 jsonArray = object.getJSONArray(getVal);
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    returnList.add(singletonConstructor(jsonArray, "tasks", i));
+                    returnList.add(singletonConstructor(jsonArray, getVal, i));
                 }
             }
             else
@@ -336,6 +355,10 @@ public class ApiController {
             Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
             e.printStackTrace();
         }
+        //reorder field because for some reason the server decides to send stuff out of order and android as well
+
+        returnList.sort(Comparator.comparing(ApiJSONObject::getPosition).reversed());
+
         return returnList;
     }
 }

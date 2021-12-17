@@ -120,8 +120,10 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ApiSingleton.getInstance().getObject(epicId).setTitle(s.toString());
-                GlobalValues.fieldModified = epicId;
+                ApiJSONObject object = ApiSingleton.getInstance().getObject(epicId);
+
+                object.setTitle(s.toString());
+                GlobalValues.objectModified = object;
             }
         });
 
@@ -169,8 +171,9 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
 
-        ApiSingleton.getInstance().getObject(epicId).setStartDate(curDate);
-        GlobalValues.fieldModified = epicId;
+
+        apiJsonObject.setStartDate(curDate);
+        GlobalValues.objectModified = apiJsonObject;
     }
 
     public void UpdateDueDateDescription(Calendar calendar){
@@ -181,8 +184,9 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);
 
-        ApiSingleton.getInstance().getObject(epicId).setDueDate(curDate);
-        GlobalValues.fieldModified = epicId;
+
+        apiJsonObject.setDueDate(curDate);
+        GlobalValues.objectModified = apiJsonObject;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -197,7 +201,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
                     editDescriptionTxt.setText(newData);
 
                     apiJsonObject.setDescription(newData);
-                    GlobalValues.fieldModified = epicId;
+                    GlobalValues.objectModified = apiJsonObject;
                 }
             }
         }
