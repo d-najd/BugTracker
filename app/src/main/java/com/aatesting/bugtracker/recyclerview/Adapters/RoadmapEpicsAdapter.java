@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
@@ -98,8 +100,17 @@ public class RoadmapEpicsAdapter extends RecyclerView.Adapter<RoadmapEpicsAdapte
     private void SetEpicDimensions(){
         //region CardView
         //starting pos (the margin)
-
-        long timeDifference = startDateTime.getTime() - weeksStartDateTime.getTime(); //value is milliseconds
+        long timeDifference;
+        if (startDateTime == null || weeksStartDateTime == null || endDateTime == null) {
+            startDateTime = new Date();
+            weeksStartDateTime = new Date();
+            endDateTime = new Date();
+            Message.defErrMessage(mcontext);
+            Log.wtf("\nERROR", "startDateTime or weeksStartDateTime is null which means the startdate or duedate is null for the epic which should be impossible\n");
+            timeDifference = 0;
+        } else {
+            timeDifference = startDateTime.getTime() - weeksStartDateTime.getTime(); //value is milliseconds
+        }
         long daysDifference = timeDifference / (24 * 60 * 60 * 1000); //24 is hours, 60 and 60 are min and seconds and 1000 is milliseconds
 
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,9 +24,11 @@ import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class RoadmapEditEpicActivity extends AppCompatActivity {
     private RoadmapEditEpicActivity activity = this;
@@ -34,6 +37,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     private Context context;
 
     private ApiJSONObject apiJsonObject;
+
+    TextView startDateTxt, dueDateTxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +60,13 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         TextView titleMid = findViewById(R.id.titleMiddle);
         TextView descriptionTxt = findViewById(R.id.descriptionTxt);
-        TextView startDateDescriptionTxt = findViewById(R.id.startDateDescriptionTxt);
-        TextView dueDateDescriptionTxt = findViewById(R.id.dueDateDescriptionTxt);
+        startDateTxt = findViewById(R.id.startDateDescriptionTxt);
+        dueDateTxt = findViewById(R.id.dueDateDescriptionTxt);
 
         titleMid.setText(title);
         descriptionTxt.setText(description);
-        startDateDescriptionTxt.setText(apiJsonObject.getStartDate());
-        dueDateDescriptionTxt.setText(apiJsonObject.getDueDate());
+        startDateTxt.setText(apiJsonObject.getStartDate());
+        dueDateTxt.setText(apiJsonObject.getDueDate());
     }
 
     private void Listeners(){
@@ -168,9 +173,11 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
         String curDate = df.format(calendar.getTime());
+
+        if (forbiddenDates(curDate, dueDateTxt.getText().toString(), context)) return;
+
         startDateDescriptionText.setText(curDate);
         startDateDescriptionText.setVisibility(View.VISIBLE);
-
 
         apiJsonObject.setStartDate(curDate);
         GlobalValues.objectModified = apiJsonObject;
@@ -181,12 +188,34 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
         String curDate = df.format(calendar.getTime());
+
+        if (forbiddenDates(startDateTxt.getText().toString(), curDate, context)) return;
+
         dueDateDescriptionText.setText(curDate);
         dueDateDescriptionText.setVisibility(View.VISIBLE);
 
-
         apiJsonObject.setDueDate(curDate);
         GlobalValues.objectModified = apiJsonObject;
+    }
+
+    public static boolean forbiddenDates(String startDateStr, String dueDateStr, Context context) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+        try {
+            Date dueDate = simpleDateFormat.parse(startDateStr);
+            Date startDate = simpleDateFormat.parse(dueDateStr);
+            assert dueDate != null;
+            assert startDate != null;
+
+            long timeDifference = dueDate.getTime() - startDate.getTime();
+            if (timeDifference >= 0){
+                Message.message(context, "Please select a due date which is bigger than the start date");
+                return true;
+            }
+        } catch (ParseException e){
+            Message.defErrMessage(context);
+            Log.wtf("ERROR", "WHAT THE ACTUAL FUCK? DID YOU CHANGE THE DATE FORMAT SOMEWHERE?");
+        }
+        return false;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

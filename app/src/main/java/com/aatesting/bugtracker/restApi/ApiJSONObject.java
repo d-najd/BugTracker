@@ -11,9 +11,8 @@ import java.util.Comparator;
 
 public class ApiJSONObject extends JSONObject {
     private int id;
-    private int position;
-
-    private int userId;
+    private int position = -1;
+    private int userId = -1;
     private String title;
     private String description;
     private String startDate;
@@ -22,8 +21,9 @@ public class ApiJSONObject extends JSONObject {
     private ArrayList<ApiJSONObject> tasks;
 
     //for board object
-    public ApiJSONObject(int id, int userId, String title, ArrayList<ApiJSONObject> tasks) {
+    public ApiJSONObject(int id, int position, int userId, String title, ArrayList<ApiJSONObject> tasks) {
         this.id = id;
+        this.position = position;
         this.userId = userId;
         this.title = title;
         if (tasks == null)

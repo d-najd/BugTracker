@@ -79,9 +79,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
 
         columnPos = getIntent().getExtras().getInt("columnPos");
         itemPos = getIntent().getExtras().getInt("itemPos");
-
-        ArrayList<ApiJSONObject> re = ApiSingleton.getInstance().getArray();
-
+        
         ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
 
         projectName = object.getTitle();
@@ -124,7 +122,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         topSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiController.editField(null, "tasks");
+                ApiController.editField(null, null, "tasks");
                 topSave.setVisibility(View.GONE);
             }
         });
@@ -146,15 +144,14 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                     allColumnImages.add(2131165294);
                 }
                 Pair<MainRecyclerAdapter, BottomSheetDialog> data = Dialogs.BottomDialogCreator(
-                        context, v, viewGroup, "Select a transition", null, allColumnTitles, null, allColumnImages, tag);
+                        context, v, viewGroup, "Select a transition", null, allColumnTitles, null, allColumnImages, context.getString(R.string.TEDTBottomDialog));
                 MainRecyclerAdapter adapter = data.first;
                 BottomSheetDialog bottomDialog = data.second;
 
                 adapter.projectTableColumnPos = columnPos;
-                adapter.projectCreateEditTask_BottomDialog = bottomDialog;
-                adapter.projectCreateTableEditTask = projectCreateTableEditTask;
                 adapter.itemPos = itemPos;
                 adapter.projectName = projectName;
+                adapter.activity = projectCreateTableEditTask;
             }
         });
 
@@ -201,14 +198,6 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         });
     }
 
-    public void UpdateColumn(int columnPos){
-        //for when you use the button to change the column.
-        this.columnPos = columnPos;
-        itemPos = 0;
-
-        columnSelector.setText("Change this");
-    }
-
     private void issueTypeOnClick(View v, Context context){
         ViewGroup viewGroup = v.findViewById(android.R.id.content);
 
@@ -225,7 +214,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         allColumnDescriptions.add("A small, distinct piece of work");
 
         Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                allColumnTitles, allColumnDescriptions, allColumnImages, null);
+                allColumnTitles, allColumnDescriptions, allColumnImages, tag); //TEDT = Table EDit Task
         tag = getString(R.string.projectEditTask);
     }
 

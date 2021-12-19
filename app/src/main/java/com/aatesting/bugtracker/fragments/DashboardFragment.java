@@ -91,7 +91,7 @@ public class DashboardFragment extends ModifiedFragment {
     public void onResume() {
         super.onResume();
         if (GlobalValues.objectModified != null)
-            ApiController.editField(this, "tasks");
+            ApiController.editField(this, null,"tasks");
         if (!resumed) {
             resumed = true;
             return;

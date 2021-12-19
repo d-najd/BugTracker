@@ -71,8 +71,6 @@ public class CreateProjectsAdapter extends MainRecyclerAdapter {
     }
 
     private void Listeners(int position){
-
-
         if (holder.title.getText().toString().equals(mcontext.getString(R.string.highlight)))
         {
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {

@@ -1,6 +1,7 @@
 package com.aatesting.bugtracker.restApi;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class ApiSingleton {
     private static ApiSingleton mInstance;
@@ -30,6 +31,17 @@ public class ApiSingleton {
     }
 
     public ApiJSONObject getObject(int pos){
-        return list.get(pos);
+        if (!list.isEmpty())
+            return list.get(pos);
+        else
+            return null;
+    }
+
+    public void reorderByPosition(boolean reverse){
+        if (!list.isEmpty())
+            if (ApiSingleton.getInstance().getObject(0).getPosition() != -1 && reverse)
+                ApiSingleton.getInstance().getArray().sort(Comparator.comparing(ApiJSONObject::getPosition).reversed());
+            else
+                ApiSingleton.getInstance().getArray().sort(Comparator.comparing(ApiJSONObject::getPosition));
     }
 }

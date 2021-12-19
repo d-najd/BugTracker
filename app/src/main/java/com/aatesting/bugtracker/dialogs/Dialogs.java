@@ -143,7 +143,7 @@ public class Dialogs {
 
                     object.setTitle(newTitle);
                     GlobalValues.objectModified = object;
-                    ApiController.editField(fragment, "boards");
+                    ApiController.editField(fragment, null,"boards");
                 }
             }
         });
@@ -166,6 +166,7 @@ public class Dialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         ApiJSONObject object = new ApiJSONObject(
                                 0,
+                                ApiSingleton.getInstance().getArray().size(),
                                 ApiController.userId,
                                 editText.getText().toString(),
                                 null
@@ -185,8 +186,6 @@ public class Dialogs {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
-
-        ArrayList<ApiJSONObject> te = ApiSingleton.getInstance().getArray();
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
@@ -403,11 +402,6 @@ public class Dialogs {
 
         return new Pair<>(adapter, bottomDialog);
     }
-
-
-
-
-
 
     private static Pair<AlertDialog.Builder, EditText> BasicDialog(Context mcontext, String title, String description,
                                                                    String negativeButtonTxt, boolean isEditTextDialog){

@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -34,7 +35,10 @@ public class RoadmapEpicJsonData {
                     e.printStackTrace();
                 }
             }
-            return Collections.min(dates);
+            if (!dates.isEmpty())
+                return Collections.min(dates);
+            else //return current date
+                return GregorianCalendar.getInstance().getTime();
 
         } else
         {
@@ -45,7 +49,10 @@ public class RoadmapEpicJsonData {
                     Log.wtf("ERROR","something went wrong with parsing date");
                     e.printStackTrace();
                 }
-            return Collections.max(dates);
+            if (!dates.isEmpty())
+                return Collections.max(dates);
+            else //return current date
+                return GregorianCalendar.getInstance().getTime();
         }
         /*
         if (getEarliest) {

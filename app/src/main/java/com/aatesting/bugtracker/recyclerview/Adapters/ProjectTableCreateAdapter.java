@@ -55,9 +55,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         return new RecyclerViewHolder(view);
     }
 
-    //TODO messes up the order of the items if you keep refreshing the data for some reason
-    //  it may be because it isn't asynchronous?
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
@@ -129,15 +126,17 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     }
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
+        ApiJSONObject object = ApiSingleton.getInstance().getObject(holderPosition);
+
         if (itemText == mcontext.getString(R.string.renameColumn)){
-            String description = ApiSingleton.getInstance().getObject(holderPosition).getTitle();
+            String description = object.getTitle();
             Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", ProjectMainActivity.thisFragment, holderPosition);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
-            ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition - 1, mcontext);
-            //RefreshActivity();
+            ApiController.editField(ProjectMainActivity.thisFragment, null, "boards/swap/first/" +
+                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition - 1).getId());
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
-            ProjectTableData.SwapColumns(projectName, holderPosition, holderPosition + 1, mcontext);
-            //RefreshActivity();
+            ApiController.editField(ProjectMainActivity.thisFragment, null, "boards/swap/first/" +
+                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition + 1).getId());
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ApiController.removeField(null, ProjectMainActivity.thisFragment,"boards/" +
                     ApiSingleton.getInstance().getObject(holderPosition).getId());
@@ -178,7 +177,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         recyclerView.setAdapter(adapter);
 
         adapter.projectName = projectName;
-        adapter.projectTableColumnName = holderArrayList.get(position).title.getText().toString();
+        adapter.projectTableColumnName = "PLACEHOLDER";
         adapter.projectTableColumnPos = position;
     }
 

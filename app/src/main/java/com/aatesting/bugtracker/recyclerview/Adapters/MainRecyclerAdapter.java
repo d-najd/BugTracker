@@ -1,6 +1,7 @@
 package com.aatesting.bugtracker.recyclerview.Adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +28,9 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -45,9 +49,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public int projectTableColumnPos; //in which column the item got pressed
     public int itemPos;
     public String projectTableColumnName;
-    public BottomSheetDialog projectCreateEditTask_BottomDialog;
-    public ProjectTableEditTaskActivity projectCreateTableEditTask;
     public ModifiedFragment fragment;
+    public Activity activity;
 
     //endregion
 
@@ -59,7 +62,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate Layout
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardlayout_checklist, parent, false);
         return new RecyclerViewHolder(view);
@@ -159,23 +161,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     }
                 }
             });
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
-                    intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
-
-                    fragment.onResponse("NotifyProjectViewed", holderArrayList.get(position).title.getText().toString());
-                    mcontext.startActivity(intent);
+                    ifTagProjects(position);
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
-                    intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
-                    mcontext.startActivity(intent);
+                    ifTagProjects(position);
                 }
             });
         }
@@ -184,53 +179,62 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mcontext, ProjectTableEditTaskActivity.class);
-                    intent.putExtra("columnName", projectTableColumnName);
-                    intent.putExtra("columnPos", projectTableColumnPos);
-                    intent.putExtra("itemPos", position);
-                    mcontext.startActivity(intent);
-                }
-            });
-        }
-
-        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectEditTask))){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ProjectTableData.MoveItemToOtherColumn(projectName, position,
-                            projectTableColumnPos, itemPos, mcontext);
-                    try
-                    {
-                        projectCreateEditTask_BottomDialog.dismiss();
-                        projectCreateTableEditTask.UpdateColumn(position);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.wtf("ERROR", "bottomdialog doesnt exist even tho its pressed or projectCreateTableEditTask is null, the exception is " + e);
-                        Message.message(mcontext,"Something went wrong");
-                    }
+                    ifTagProjectCreateTask(position);
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ProjectTableData.MoveItemToOtherColumn(projectName, position,
-                            projectTableColumnPos, itemPos, mcontext);
-                    try
-                    {
-                        projectCreateEditTask_BottomDialog.dismiss();
-                        projectCreateTableEditTask.UpdateColumn(position);
-                    }
-                    catch (Exception e)
-                    {
-                        Log.wtf("ERROR", "bottomdialog doesnt exist even tho its pressed or projectCreateTableEditTask is null, the exception is " + e);
-                        Message.message(mcontext,"Something went wrong");
-                    }
+                    ifTagProjectCreateTask(position);
+                }
+            });
+        }
+
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.TEDTBottomDialog))){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = position;
+                    int columnpos = projectTableColumnPos;
+                    int itempos = itemPos;
+
+                    ifTagTEDTBottomDialog(position);
+                }
+            });
+            holder.mainBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ifTagTEDTBottomDialog(position);
                 }
             });
         } else {
-            Log.wtf("Debug", "there is no activity for the current tag, there might be something wrong");
+            Log.wtf("\nWARRNING", "there is no function for the current tag: " + recyclerData.getTag() + ", there might be something wrong\n");
         }
+    }
+
+    private void ifTagTEDTBottomDialog(int position) {
+
+        int taskid = ApiSingleton.getInstance().getObject(projectTableColumnPos).getTask(itemPos).getId();
+        int columnid = ApiSingleton.getInstance().getObject(position).getId();
+
+        ApiController.editField(fragment, activity, "btj/taskid/" +
+                ApiSingleton.getInstance().getObject(projectTableColumnPos).getTask(itemPos).getId() +
+                "/boardid/" + ApiSingleton.getInstance().getObject(position).getId() + "/newpos/" + ApiSingleton.getInstance().getArray().size());
+    }
+
+    private void ifTagProjectCreateTask(int position) {
+        Intent intent = new Intent(mcontext, ProjectTableEditTaskActivity.class);
+        intent.putExtra("columnPos", projectTableColumnPos);
+        intent.putExtra("itemPos", position);
+        mcontext.startActivity(intent);
+    }
+
+    private void ifTagProjects(int position) {
+        Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
+        intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
+
+        fragment.onResponse("NotifyProjectViewed", holderArrayList.get(position).title.getText().toString());
+        mcontext.startActivity(intent);
     }
 
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail
