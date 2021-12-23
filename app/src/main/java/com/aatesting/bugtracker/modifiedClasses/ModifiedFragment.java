@@ -1,5 +1,7 @@
 package com.aatesting.bugtracker.modifiedClasses;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
@@ -9,39 +11,26 @@ import com.aatesting.bugtracker.Message;
 public class ModifiedFragment extends Fragment {
     public String mFragExtraString;
 
-    /**
-     * for getting rid of the need to pass a specific fragment and functions for all specific fragments
-     * @param code unique code for each response
+    /**the method is used for getting rid of the need to call the specific fragment and creating 100's of copies of same method but with different fragment, so instead onResponse is called whenever you want to send a request to the specific fragment
+     * @param code if nothing is wrong the code should be ok or Ok, if there is error it should be Error
+     * @apiNote please check if the context is not null before proceeding
      */
     public void onResponse(String code){
-        if (code.equals("Error")) {
+        if (code.equals("Error") || code.equals("ERROR")) {
             Log.wtf("ERROR", "Error code for onResponse");
-            Message.message(getContext(), "Something went wrong");
-            return;
+            Message.defErrMessage(getContext());
         }
-        Log.wtf("ERROR", "onResponse method does not exist in the current fragment");
-        Message.message(getContext(), "Something went wrong");
     }
 
-    /**
-     * for getting rid of the need to pass a specific fragment and functions for all specific fragments
-     * @param code unique code for each response
+    /**the method is used for getting rid of the need to call the specific fragment and creating 100's of copies of same method but with different fragment, so instead onResponse is called whenever you want to send a request to the specific fragment
+     * @param code if nothing is wrong the code should be ok or Ok, if there is error it should be Error
      * @param data use this field for passing data of type string
+     * @apiNote please check if the context is not null before proceeding
      */
-    public void onResponse(String code, String data){
-        if (code.equals("Error")) {
+    public void onResponse(String code, String data) {
+        if (code.equals("Error") || code.equals("ERROR")) {
             Log.wtf("ERROR", "Error code for onResponse");
-            Message.message(getContext(), "Something went wrong");
-            return;
+            Message.defErrMessage(getContext());
         }
-        if (data == null){
-            Log.wtf("WARNING", "the data sent through onResponse seems to be null,\n " +
-                    "please use onResponse(String) instead of onResponse(String, String) for that\n"
-                    + "purpose");
-            Message.message(getContext(), "Something went wrong");
-        }
-
-        Log.wtf("ERROR", "onResponse method does not exist in the current fragment");
-        Message.message(getContext(), "Something went wrong");
     }
 }

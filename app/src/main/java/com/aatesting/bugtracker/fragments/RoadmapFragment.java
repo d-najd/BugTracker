@@ -37,8 +37,6 @@ public class RoadmapFragment extends ModifiedFragment {
     private String tag;
     private Calendar calendarCurDate;
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
@@ -47,8 +45,8 @@ public class RoadmapFragment extends ModifiedFragment {
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
 
-        ((ProjectsMainActivity)getActivity()).Listeners(1); // for knowing which fragment is selected
-        ((ProjectsMainActivity)getActivity()).thisFragment = this;
+        ((ProjectsMainActivity)requireActivity()).Listeners(1); // for knowing which fragment is selected
+        ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ApiController.getAllFields(7, mcontext, "roadmaps", this);
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
@@ -144,6 +142,10 @@ public class RoadmapFragment extends ModifiedFragment {
 
     @Override
     public void onResponse(String code) {
+        if (getContext() == null) {
+            Log.wtf("DEBUG", "the current fragment on the screen and the fragment where the onResponse request is called from are not the same, skipping all fields inside onResponse");
+            return;
+        }
         if (code.equals(this.getString(R.string.setupData))) {
             newEpicsAdapter();
             weeksBarRecycler();

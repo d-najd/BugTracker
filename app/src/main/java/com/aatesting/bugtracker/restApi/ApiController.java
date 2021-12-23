@@ -32,7 +32,7 @@ import java.util.Comparator;
 public class ApiController {
     public static Context context;
     public static int userId;
-
+    public static RequestQueue requestQueue;
     /**
      *
      * @param userId needs to be replaced with projectId
@@ -42,10 +42,12 @@ public class ApiController {
      */
 
     public static void getAllFields(int userId, @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
-        ApiController.context = context;
         ApiController.userId = userId;
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context); // this might be in different context so setting the value before hand might be a bad idea
+        if (requestQueue == null || context != ApiController.context) {
+            ApiController.context = context;
+            requestQueue = Volley.newRequestQueue(context);
+        }
 
         String URL = AppSettings.SERVERIP + "/" + url + "/all/" + userId;
 
@@ -74,7 +76,11 @@ public class ApiController {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         JSONObject jsonObject = objectToJSON(object, context);
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        if (requestQueue == null){
+            Message.message(context, "Something went wrong");
+            Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
+        }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.POST,
@@ -110,7 +116,10 @@ public class ApiController {
         if (GlobalValues.objectModified != null)
             jsonObject = objectToJSON(GlobalValues.objectModified, context);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        if (requestQueue == null){
+            Message.message(context, "Something went wrong");
+            Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
+        }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.PUT,
@@ -143,7 +152,10 @@ public class ApiController {
     public static void removeField(Activity activity, ModifiedFragment fragment, @NotNull String url) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        if (requestQueue == null){
+            Message.message(context, "Something went wrong");
+            Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
+        }
 
         StringRequest request = new StringRequest(
                 Request.Method.DELETE,

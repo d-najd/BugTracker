@@ -40,7 +40,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_roadmap_createepic);
 
         projectName = getIntent().getExtras().getString("projectName");
-
         Listeners();
     }
 
@@ -128,7 +127,8 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                ApiController.createField(object, "roadmaps", null, activity);
+                //TODO change this with the current project pressed
+                ApiController.createField(object, "roadmaps/1", null, activity);
             }
 
             /*forbidden dates atm are dates where the start date is bigger than the due date ex:

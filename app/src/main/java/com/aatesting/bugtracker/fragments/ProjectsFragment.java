@@ -38,8 +38,8 @@ public class ProjectsFragment extends ModifiedFragment {
 
         projectsFragment = this;
 
-        ((MainActivity)getActivity()).Listeners(0);
-        ((MainActivity)getActivity()).projectsFragment = this;
+        ((MainActivity)requireActivity()).Listeners(0);
+        ((MainActivity)requireActivity()).projectsFragment = this;
 
         SetupAdapters();
         return root;
@@ -53,7 +53,7 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     private void SetupRecentlyViewedAdapter() {
-        RecentlyViewedProjectsData.MakeFolders(getContext());
+        RecentlyViewedProjectsData.MakeFolders(requireContext());
 
         recentlyViewed_List = new ArrayList<>();
         recentlyViewed_RecyclerView = root.findViewById(R.id.recentlyViewedRecyclerView);
@@ -65,14 +65,14 @@ public class ProjectsFragment extends ModifiedFragment {
         recentlyViewed_List.clear();
         String tag = recentlyViewed_RecyclerView.getTag().toString();
 
-        String viewedData = RecentlyViewedProjectsData.GetData(getContext());
+        String viewedData = RecentlyViewedProjectsData.GetData(requireContext());
         String SEPARATOR = RecentlyViewedProjectsData.SEPARATOR;
 
         if (viewedData == null)
             return;
         String[] viewedParts = viewedData.split(SEPARATOR);
 
-        ProjectsDatabase helper = new ProjectsDatabase(getContext());
+        ProjectsDatabase helper = new ProjectsDatabase(requireContext());
 
         String dbData = helper.GetData();
         String[] dbParts = dbData.split("/");
@@ -193,21 +193,15 @@ public class ProjectsFragment extends ModifiedFragment {
 
     @Override
     public void onResponse(String code, String data) {
-        if (data == null || code == null)
-        {
-            Log.wtf("ERROR", "code or data is null");
-            Message.message(getContext(), "Something went wrong");
-        }
-
         if (code.equals("NotifyProjectViewed")){
             notifyProjectViewed(data);
+        } else {
+            super.onResponse("ERROR");
         }
     }
 
-    public void notifyProjectViewed(String projectName){
-        RecentlyViewedProjectsData.ProjectOpened(getContext(), projectName);
-
-        //refreshing the data for recentlyViewedAdapter
+    public void notifyProjectViewed(String projectName) {
+        RecentlyViewedProjectsData.ProjectOpened(requireContext(), projectName);
         SetupRecentlyViewedAdapter();
     }
 
@@ -215,10 +209,10 @@ public class ProjectsFragment extends ModifiedFragment {
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         ProjectTableData.RemoveFile(allProjects_List.get
-                (viewHolder.getAdapterPosition()).getTitle(), getContext());
+                (viewHolder.getAdapterPosition()).getTitle(), requireContext());
         //RoadmapEpicData.RemoveFile(allProjects_List.get
         //        (viewHolder.getAdapterPosition()).getTitle(), getContext());
-        RecentlyViewedProjectsData.ProjectRemoved(getContext(), allProjects_List.get
+        RecentlyViewedProjectsData.ProjectRemoved(requireContext(), allProjects_List.get
                 (viewHolder.getAdapterPosition()).getTitle());
 
         helper.Delete(allProjects_List.get(viewHolder.getAdapterPosition()).getId());

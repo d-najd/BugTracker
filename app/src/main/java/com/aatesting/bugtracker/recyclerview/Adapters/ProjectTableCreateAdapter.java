@@ -26,8 +26,6 @@ import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -37,7 +35,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     private ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>(); //is different from dataArrayList
     private ArrayList<RecyclerViewHolder> holderArrayList = new ArrayList<>();
     private RecyclerViewHolder holder;
-    public ProjectsMainActivity ProjectMainActivity;
+    public ProjectsMainActivity projectMainActivity;
     public String projectName;
     private String tag;
     public Intent intent;
@@ -95,7 +93,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerData curData = DataArrayList.get(position);
 
                 Dialogs.newItemDialog(mcontext, "Add problem", "ADD",
-                        "CANCEL", position, ProjectMainActivity.thisFragment);
+                        "CANCEL", position, projectMainActivity.thisFragment);
             }
         });
     }
@@ -130,15 +128,15 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
         if (itemText == mcontext.getString(R.string.renameColumn)){
             String description = object.getTitle();
-            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", ProjectMainActivity.thisFragment, holderPosition);
+            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", projectMainActivity.thisFragment, holderPosition);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
-            ApiController.editField(ProjectMainActivity.thisFragment, null, "boards/swap/first/" +
+            ApiController.editField(projectMainActivity.thisFragment, null, "boards/swap/first/" +
                     object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition - 1).getId());
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
-            ApiController.editField(ProjectMainActivity.thisFragment, null, "boards/swap/first/" +
+            ApiController.editField(projectMainActivity.thisFragment, null, "boards/swap/first/" +
                     object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition + 1).getId());
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
-            ApiController.removeField(null, ProjectMainActivity.thisFragment,"boards/" +
+            ApiController.removeField(null, projectMainActivity.thisFragment,"boards/" +
                     ApiSingleton.getInstance().getObject(holderPosition).getId());
         }
     }
@@ -195,7 +193,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             @Override
             public void onClick(View v) {
                 Dialogs.NewColumnDialog(v.getContext(), "Add column", "ADD",
-                        "Cancel", ProjectMainActivity.thisFragment);
+                        "Cancel", projectMainActivity.thisFragment);
             }
         });
     }

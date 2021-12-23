@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
@@ -19,10 +18,10 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
-import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DashboardFragment extends ModifiedFragment {
     private RecyclerView recyclerView;
@@ -35,21 +34,20 @@ public class DashboardFragment extends ModifiedFragment {
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
     private ProjectTableCreateAdapter adapter;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        ((ProjectsMainActivity)getActivity()).Listeners(0);
-        ((ProjectsMainActivity)getActivity()).thisFragment = this;
+        ((ProjectsMainActivity)requireActivity()).Listeners(0);
+        ((ProjectsMainActivity)requireActivity()).thisFragment = this;
 
         recyclerView = root.findViewById(R.id.mainRecyclerView);
         tag = recyclerView.getTag().toString();
-        projectName = getActivity().getIntent().getExtras().getString("projectName");
+        projectName = requireActivity().getIntent().getExtras().getString("projectName");
 
-        ProjectTableData.MakeFolders(getContext());
+        ProjectTableData.MakeFolders(requireContext());
 
-        ApiController.getAllFields(7, getContext(), "boards", this);
+        ApiController.getAllFields(7, requireContext(), "boards", this);
 
         return root;
     }
@@ -69,14 +67,18 @@ public class DashboardFragment extends ModifiedFragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        adapter.ProjectMainActivity = (ProjectsMainActivity) getActivity();
+        adapter.projectMainActivity = (ProjectsMainActivity) getActivity();
         adapter.projectName = projectName;
-        adapter.intent = getActivity().getIntent();
+        adapter.intent = requireActivity().getIntent();
         recyclerView.setRecycledViewPool(viewPool);
     }
 
     @Override
     public void onResponse(String code) {
+        if (getContext() == null) {
+            Log.wtf("DEBUG", "the current fragment on the screen and the fragment where the onResponse request is called from are not the same, skipping all fields inside onResponse");
+            return;
+        }
         if (code.equals(this.getString(R.string.setupData))){
             setupRecycler();
         }
@@ -100,6 +102,6 @@ public class DashboardFragment extends ModifiedFragment {
     }
 
     private void updateData(){
-        ApiController.getAllFields(7, getContext(), "boards", this);
+        ApiController.getAllFields(7, requireContext(), "boards", this);
     }
 }
