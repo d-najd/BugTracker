@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
@@ -22,16 +21,20 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.data.ProjectsDatabase;
+import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class ProjectsFragment extends ModifiedFragment {
-    private RecyclerView allProjects_RecyclerView, recentlyViewed_RecyclerView,
-            starredProjects_RecyclerView;
-    private ArrayList<RecyclerData> allProjects_List, recentlyViewed_List, starredProjects_List;
+    private RecyclerView mainProjectsRecyclerView, recentlyViewed_RecyclerView;
+    private ArrayList<RecyclerData> mainProjectsList = new ArrayList<>(), recentlyViewed_List;
     private ProjectsFragment projectsFragment;
     private View root;
+
+    //url of the thing you want to get from the server
+    private String type = "project";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_projects, container, false);
@@ -48,8 +51,8 @@ public class ProjectsFragment extends ModifiedFragment {
 
     public void SetupAdapters()
     {
-        SetupAllProjects_Adapter();
-        SetupRecentlyViewedAdapter();
+        ApiController.getAllFields(false,requireContext(), type, projectsFragment);
+        //SetupRecentlyViewedAdapter();
     }
 
     private void SetupRecentlyViewedAdapter() {
@@ -94,18 +97,30 @@ public class ProjectsFragment extends ModifiedFragment {
             recentlyViewed_RecyclerView.getAdapter().notifyItemInserted(i);
         }
     }
-
     //one of the adapters not all
-    private void SetupAllProjects_Adapter(){
-        allProjects_List = new ArrayList<>();
-        allProjects_RecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
-
+    private void setupMainProjectsAdapter(){
         //NOTE The listeners are in the adapter class
-        SetAdapter(allProjects_RecyclerView, allProjects_List);
+        //getting data
+        mainProjectsList.clear();
+        mainProjectsRecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
 
-        allProjects_RecyclerView.getAdapter().notifyItemRangeRemoved(0, allProjects_List.size());
-        allProjects_List.clear();
-        String tag = allProjects_RecyclerView.getTag().toString();
+        String tag = mainProjectsRecyclerView.getTag().toString();
+        for (int i = 0; i < ApiSingleton.getInstance().getArray(type).size(); i++){
+            mainProjectsList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, type).getTitle(), tag));
+        }
+
+        //setting adapter
+        SetAdapter(mainProjectsRecyclerView, mainProjectsList);
+
+
+        // mainProjectsRecyclerView.getAdapter().notifyItemRangeRemoved(0, mainProjectsList.size());
+
+
+
+
+        /*
+        mainProjectsList.clear();
+        String tag = mainProjectsRecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
@@ -113,28 +128,30 @@ public class ProjectsFragment extends ModifiedFragment {
 
         for (int i = 0; i < parts.length / 3; i++) {
             Log.wtf(parts[(i * 3) + 2], parts[(i * 3) + 2]);
-            allProjects_List.add(new RecyclerData(parts[i * 3], R.drawable.ic_launcher_background,
+            mainProjectsList.add(new RecyclerData(parts[i * 3], R.drawable.ic_launcher_background,
                     tag, parts[(i * 3) + 2]));
-            allProjects_RecyclerView.getAdapter().notifyItemInserted(i);
+            mainProjectsRecyclerView.getAdapter().notifyItemInserted(i);
         }
 
         ItemTouchHelper itemTouchHelper;
 
         itemTouchHelper = new ItemTouchHelper(ItemMoved);
-        itemTouchHelper.attachToRecyclerView(allProjects_RecyclerView);
+        itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
 
         itemTouchHelper = new ItemTouchHelper(ItemSwiped);
-        itemTouchHelper.attachToRecyclerView(allProjects_RecyclerView);
+        itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
+
+         */
     }
 
-    private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> RecyclerDataList) {
-        MainRecyclerAdapter allProjects_adapter = new MainRecyclerAdapter(RecyclerDataList, requireContext());
+    private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> recyclerData) {
+        MainRecyclerAdapter mainProjectsAdapter = new MainRecyclerAdapter(recyclerData, requireContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext());
 
-        allProjects_adapter.fragment = this;
+        mainProjectsAdapter.fragment = this;
 
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(allProjects_adapter);
+        recyclerView.setAdapter(mainProjectsAdapter);
     }
 
     //used for reordering items
@@ -147,7 +164,7 @@ public class ProjectsFragment extends ModifiedFragment {
             int fromPosition = viewHolder.getAdapterPosition();
             int endPosition = target.getAdapterPosition();
             //TODO update item swap in data, so it does not just swap place visually
-            Collections.swap(allProjects_List, fromPosition, endPosition);
+            Collections.swap(mainProjectsList, fromPosition, endPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition, endPosition);
             return false;
@@ -176,19 +193,19 @@ public class ProjectsFragment extends ModifiedFragment {
     };
 
     public void NotifyItemAdded(){
-        String tag = allProjects_RecyclerView.getTag().toString();
+        String tag = mainProjectsRecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
         String data = helper.GetData();
         String [] parts = data.split("/");
 
-        allProjects_List.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
-        allProjects_RecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
+        mainProjectsList.add(new RecyclerData(parts[parts.length - 3], R.drawable.ic_launcher_background, tag, parts[parts.length - 1]));
+        mainProjectsRecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
     }
 
     public void NotifyProjectNotRemoved(){
         //called when you change your mind and cancel the removal of the project
-        allProjects_RecyclerView.getAdapter().notifyDataSetChanged();
+        mainProjectsRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -200,27 +217,44 @@ public class ProjectsFragment extends ModifiedFragment {
         }
     }
 
+    @Override
+    public void onResponse(String code) {
+        if (code.equals(this.getString(R.string.setupData))){
+            setupMainProjectsAdapter();
+        } else if (code.equals(this.getString(R.string.getData))){
+            updateData();
+        }
+        else {
+            Log.wtf("ERROR", "onResponse crashed at ProjectsFragment with code " + code);
+            super.onResponse("ERROR");
+        }
+    }
+
+    private void updateData(){
+        ApiController.getAllFields(false,requireContext(), type, this);
+    }
+
     public void notifyProjectViewed(String projectName) {
         RecentlyViewedProjectsData.ProjectOpened(requireContext(), projectName);
-        SetupRecentlyViewedAdapter();
+        //SetupRecentlyViewedAdapter();
     }
 
     public void RemoveProject(RecyclerView.ViewHolder viewHolder){
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
-        ProjectTableData.RemoveFile(allProjects_List.get
+        ProjectTableData.RemoveFile(mainProjectsList.get
                 (viewHolder.getAdapterPosition()).getTitle(), requireContext());
         //RoadmapEpicData.RemoveFile(allProjects_List.get
         //        (viewHolder.getAdapterPosition()).getTitle(), getContext());
-        RecentlyViewedProjectsData.ProjectRemoved(requireContext(), allProjects_List.get
+        RecentlyViewedProjectsData.ProjectRemoved(requireContext(), mainProjectsList.get
                 (viewHolder.getAdapterPosition()).getTitle());
 
-        helper.Delete(allProjects_List.get(viewHolder.getAdapterPosition()).getId());
+        helper.Delete(mainProjectsList.get(viewHolder.getAdapterPosition()).getId());
 
-        allProjects_List.remove(viewHolder.getAdapterPosition());
-        allProjects_RecyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+        mainProjectsList.remove(viewHolder.getAdapterPosition());
+        mainProjectsRecyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
 
         //refreshing the data for recentlyViewedAdapter
-        SetupRecentlyViewedAdapter();
+        //SetupRecentlyViewedAdapter();
     }
 }

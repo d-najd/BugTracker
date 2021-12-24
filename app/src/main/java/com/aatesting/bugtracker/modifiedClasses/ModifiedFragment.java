@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment;
 import com.aatesting.bugtracker.Message;
 
 public class ModifiedFragment extends Fragment {
-    public String mFragExtraString;
-
     /**the method is used for getting rid of the need to call the specific fragment and creating 100's of copies of same method but with different fragment, so instead onResponse is called whenever you want to send a request to the specific fragment
      * @param code if nothing is wrong the code should be ok or Ok, if there is error it should be Error
      * @apiNote please check if the context is not null before proceeding

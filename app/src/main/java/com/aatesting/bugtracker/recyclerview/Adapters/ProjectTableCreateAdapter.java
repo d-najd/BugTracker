@@ -39,6 +39,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     public String projectName;
     private String tag;
     public Intent intent;
+    private String type = "boards";
 
     public ProjectTableCreateAdapter(ArrayList<RecyclerData> recyclerDataArrayList, Context mcontext) {
         this.DataArrayList = recyclerDataArrayList;
@@ -71,7 +72,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         //column that adds more columns (last one) or the other one
         if (position != DataArrayList.size() - 1) {
             holder.title.setText(recyclerData.getTitle());
-            holder.numberOfItems.setText(ApiSingleton.getInstance().getObject(position).getTasks().size() + "");
+            holder.numberOfItems.setText(ApiSingleton.getInstance().getObject(position, type).getTasks().size() + "");
         }else{
             NewColumnCreator();
         }
@@ -93,7 +94,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                 RecyclerData curData = DataArrayList.get(position);
 
                 Dialogs.newItemDialog(mcontext, "Add problem", "ADD",
-                        "CANCEL", position, projectMainActivity.thisFragment);
+                        "CANCEL", position, projectMainActivity.thisFragment, type);
             }
         });
     }
@@ -124,20 +125,20 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     }
 
     public void CustomSpinnerItemPressed(String itemText, int holderPosition, int itemPosition){
-        ApiJSONObject object = ApiSingleton.getInstance().getObject(holderPosition);
+        ApiJSONObject object = ApiSingleton.getInstance().getObject(holderPosition, type);
 
         if (itemText == mcontext.getString(R.string.renameColumn)){
             String description = object.getTitle();
-            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", projectMainActivity.thisFragment, holderPosition);
+            Dialogs.RenameColumnDialog(mcontext, "Rename Column", description, "CANCEL","RENAME", projectMainActivity.thisFragment, holderPosition, type);
         } else if (itemText == mcontext.getString(R.string.moveColumnLeft)){
             ApiController.editField(projectMainActivity.thisFragment, null, "boards/swap/first/" +
-                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition - 1).getId());
+                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition - 1, type).getId());
         } else if (itemText == mcontext.getString(R.string.moveColumnRight)){
             ApiController.editField(projectMainActivity.thisFragment, null, "boards/swap/first/" +
-                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition + 1).getId());
+                    object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition + 1, type).getId());
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ApiController.removeField(null, projectMainActivity.thisFragment,"boards/" +
-                    ApiSingleton.getInstance().getObject(holderPosition).getId());
+                    ApiSingleton.getInstance().getObject(holderPosition, type).getId());
         }
     }
 
@@ -145,10 +146,10 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
         recyclerDataArrayList.clear();
         //there is an extra column "add column" at the end, he isn't connected with ApiSingleton so
         //there isnt any data for him and just skipping him instead of crashing the app
-        if (ApiSingleton.getInstance().getArray().size() <= position) {
+        if (ApiSingleton.getInstance().getArray("boards").size() <= position) {
             return;
         }//needs to be converted to Arraylist<RecyclerData> to be used
-        ArrayList<ApiJSONObject> rawRecyclerData = ApiSingleton.getInstance().getObject(position).getTasks();
+        ArrayList<ApiJSONObject> rawRecyclerData = ApiSingleton.getInstance().getObject(position, type).getTasks();
 
         for (ApiJSONObject object : rawRecyclerData){
             recyclerDataArrayList.add(new RecyclerData(
@@ -193,7 +194,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
             @Override
             public void onClick(View v) {
                 Dialogs.NewColumnDialog(v.getContext(), "Add column", "ADD",
-                        "Cancel", projectMainActivity.thisFragment);
+                        "Cancel", projectMainActivity.thisFragment, type);
             }
         });
     }

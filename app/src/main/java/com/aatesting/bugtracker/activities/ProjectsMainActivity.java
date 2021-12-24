@@ -25,6 +25,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
     private Context context;
 
     public ModifiedFragment thisFragment;
+    private String type = "boards";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Dialogs.NewColumnDialog(context, "Add column", "ADD",
-                            "Cancel", thisFragment);
+                            "Cancel", thisFragment, type);
                 }
             });
         }

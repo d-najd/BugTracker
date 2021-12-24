@@ -47,6 +47,8 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
     private String columnName;
     private String itemName;
 
+    private String type = "boards";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,10 +82,10 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         columnPos = getIntent().getExtras().getInt("columnPos");
         itemPos = getIntent().getExtras().getInt("itemPos");
         
-        ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+        ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos, type).getTask(itemPos);
 
         projectName = object.getTitle();
-        columnName = ApiSingleton.getInstance().getObject(columnPos).getTitle();
+        columnName = ApiSingleton.getInstance().getObject(columnPos, type).getTitle();
         itemName = object.getTitle();
         description = object.getDescription();
     }
@@ -111,7 +113,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 //the task
-                ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+                ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos, type).getTask(itemPos);
                 taskObj.setTitle(s.toString());
 
                 topSave.setVisibility(View.VISIBLE);
@@ -134,9 +136,9 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                 ArrayList<String> allColumnTitles = new ArrayList<>();
                 ArrayList<Integer> allColumnImages = new ArrayList<>();
 
-                int size = ApiSingleton.getInstance().getArray().size();
+                int size = ApiSingleton.getInstance().getArray("boards").size();
 
-                for (ApiJSONObject object : ApiSingleton.getInstance().getArray()){
+                for (ApiJSONObject object : ApiSingleton.getInstance().getArray("boards")){
                     allColumnTitles.add(object.getTitle());
                 }
 
@@ -181,8 +183,8 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int columnId = ApiSingleton.getInstance().getObject(columnPos).getId();
-                int taskId = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos).getId();
+                int columnId = ApiSingleton.getInstance().getObject(columnPos, type).getId();
+                int taskId = ApiSingleton.getInstance().getObject(columnPos, type).getTask(itemPos).getId();
 
                 ApiController.removeField(projectCreateTableEditTask, null, "btj/board/" + columnId
                 + "/task/" + taskId);
@@ -229,7 +231,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                 if (newData != null) {
                     editDescriptionTxt.setText(newData);
 
-                    ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos).getTask(itemPos);
+                    ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos, type).getTask(itemPos);
                     taskObj.setDescription(newData);
 
                     topSave.setVisibility(View.VISIBLE);

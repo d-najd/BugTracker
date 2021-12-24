@@ -33,6 +33,7 @@ public class DashboardFragment extends ModifiedFragment {
     private String tag;
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
     private ProjectTableCreateAdapter adapter;
+    private String type = "boards";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class DashboardFragment extends ModifiedFragment {
 
         ProjectTableData.MakeFolders(requireContext());
 
-        ApiController.getAllFields(7, requireContext(), "boards", this);
+        ApiController.getAllFields(true, requireContext(), type, this);
 
         return root;
     }
@@ -55,8 +56,8 @@ public class DashboardFragment extends ModifiedFragment {
     private void setupRecycler(){
         recyclerDataArrayList.clear();
 
-        for (int i = 0; i < ApiSingleton.getInstance().getArray().size(); i++){
-            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i).getTitle(), String.valueOf(i), tag));
+        for (int i = 0; i < ApiSingleton.getInstance().getArray(type).size(); i++){
+            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, type).getTitle(), String.valueOf(i), tag));
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
@@ -85,8 +86,10 @@ public class DashboardFragment extends ModifiedFragment {
         else if (code.equals(this.getString(R.string.getData))){
             updateData();
         }
-        else
+        else {
+            Log.wtf("ERROR", "onResponse crashed at DashboardFragment with code " + code);
             super.onResponse("Error");
+        }
     }
 
     @Override
@@ -102,6 +105,6 @@ public class DashboardFragment extends ModifiedFragment {
     }
 
     private void updateData(){
-        ApiController.getAllFields(7, requireContext(), "boards", this);
+        ApiController.getAllFields(true, requireContext(), type, this);
     }
 }

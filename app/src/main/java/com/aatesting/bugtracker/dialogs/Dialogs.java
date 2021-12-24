@@ -68,7 +68,7 @@ public class Dialogs {
     }
 
     public static void NewProjectDialog(Context mcontext, String title, String positiveButtonTxt,
-                                       String negativeButtonTxt, MainActivity activity){
+                                       String negativeButtonTxt, ModifiedFragment fragment){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -89,7 +89,15 @@ public class Dialogs {
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                activity.AddProject(editText.getText().toString());
+                String title = editText.getText().toString();
+
+                ApiJSONObject object = new ApiJSONObject(
+                        -1,
+                        title
+                );
+
+                //TODO change this with the current project pressed
+                ApiController.createField(object, "project", fragment, null);
             }
         });
         DialogBuilder(mcontext, builder);
@@ -126,7 +134,7 @@ public class Dialogs {
     }
 
     public static void RenameColumnDialog(Context mcontext, String title, String description, String negativeButtonTxt,
-                                          String positiveButtonTxt, ModifiedFragment fragment, int fieldId) {
+                                          String positiveButtonTxt, ModifiedFragment fragment, int fieldId, String type) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -139,7 +147,7 @@ public class Dialogs {
                 String newTitle = data.second.getText().toString();
 
                 if (!startTitle.equals(newTitle)){
-                    ApiJSONObject object = ApiSingleton.getInstance().getObject(fieldId);
+                    ApiJSONObject object = ApiSingleton.getInstance().getObject(fieldId, type);
 
                     object.setTitle(newTitle);
                     GlobalValues.objectModified = object;
@@ -155,7 +163,7 @@ public class Dialogs {
     //for adding new column
     public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
                                        String negativeButtonTxt,
-                                       ModifiedFragment fragment){
+                                       ModifiedFragment fragment, String type){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -166,13 +174,12 @@ public class Dialogs {
                     public void onClick(DialogInterface dialog, int which) {
                         ApiJSONObject object = new ApiJSONObject(
                                 0,
-                                ApiSingleton.getInstance().getArray().size(),
-                                ApiController.userId,
+                                ApiSingleton.getInstance().getArray(type).size(),
                                 editText.getText().toString(),
                                 null
                         );
 
-                        ApiController.createField(object, "boards", fragment, null);
+                        ApiController.createField(object, type + "/" + GlobalValues.projectOpened, fragment, null);
                     }
 
                 });
@@ -182,7 +189,7 @@ public class Dialogs {
 
     //for adding new item inside the column
     public static void newItemDialog(Context mcontext, String title, String positiveButtonTxt,
-                                     String negativeButtonTxt, int position, ModifiedFragment fragment){
+                                     String negativeButtonTxt, int position, ModifiedFragment fragment, String type){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -194,14 +201,14 @@ public class Dialogs {
 
                 ApiJSONObject object = new ApiJSONObject(
                         0,
-                        ApiSingleton.getInstance().getObject(position).getTasks().size(),
+                        ApiSingleton.getInstance().getObject(position, type).getTasks().size(),
                         title,
                         null,
                         null
                 );
                 
                 ApiController.createField(object, "tasks/board/" +
-                        ApiSingleton.getInstance().getObject(position).getId(), fragment, null);
+                        ApiSingleton.getInstance().getObject(position, type).getId(), fragment, null);
 
                 //NOTE the api usually automatically refreshes the activity so should watch out for that
 

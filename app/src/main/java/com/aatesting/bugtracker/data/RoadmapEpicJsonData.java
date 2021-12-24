@@ -27,7 +27,7 @@ public class RoadmapEpicJsonData {
         List<Date> dates = new ArrayList<>(); //for converting JSONObject date to java dates
 
         if (getEarliest) {
-            for (ApiJSONObject apiJsonObject : apiSingleton.getArray()) {
+            for (ApiJSONObject apiJsonObject : apiSingleton.getArray("roadmaps")) {
                 try {
                     dates.add(df.parse(apiJsonObject.getStartDate()));
                 } catch (ParseException e) {
@@ -42,7 +42,7 @@ public class RoadmapEpicJsonData {
 
         } else
         {
-            for (ApiJSONObject apiJsonObject : apiSingleton.getArray())
+            for (ApiJSONObject apiJsonObject : apiSingleton.getArray("roadmaps"))
                 try {
                     dates.add(df.parse(apiJsonObject.getDueDate()));
                 }catch (ParseException e) {

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Dialogs.NewProjectDialog(context, "Create Project",
-                            "CREATE", "CANCEL", mainActivity);
+                            "CREATE", "CANCEL", projectsFragment);
                     //Intent intent = new Intent(MainActivity.this, ProjectCreateActivity.class);
                     //startActivity(intent);
                 }
@@ -76,23 +76,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void AddProject(String title)
-    {
-        ProjectsDatabase helper = new ProjectsDatabase(this);
-        String description = "NULL";
-        if(title.isEmpty())
-        {
-            Message.message(this,"Enter Both Project Name and Description");
-        }
-        else
-        {
-            long id = helper.InsertData(title, description);
-            ProjectTableData.CreatingNewProject(title, this);
-            projectsFragment.NotifyItemAdded();
-            if(id<=0)
-            {
-                Message.message(this,"Insertion Unsuccessful");
-            }
-        }
-    }
 }

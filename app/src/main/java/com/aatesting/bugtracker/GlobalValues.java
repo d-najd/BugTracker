@@ -15,4 +15,7 @@ public class GlobalValues {
     //the server imidiately so it doesn't overload, default value is -1 which means no field modified
     //-2 means the data needs refreshing but there is no data changed
     public static ApiJSONObject objectModified;
+
+    //the current project opened
+    public static int projectOpened;
 }

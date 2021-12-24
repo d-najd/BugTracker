@@ -20,11 +20,16 @@ public class ApiJSONObject extends JSONObject {
     private String dateCreated;
     private ArrayList<ApiJSONObject> tasks;
 
+    //for project
+    public ApiJSONObject(int id, String title){
+        this.id = id;
+        this.title = title;
+    }
+
     //for board object
-    public ApiJSONObject(int id, int position, int userId, String title, ArrayList<ApiJSONObject> tasks) {
+    public ApiJSONObject(int id, int position, String title, ArrayList<ApiJSONObject> tasks) {
         this.id = id;
         this.position = position;
-        this.userId = userId;
         this.title = title;
         if (tasks == null)
             this.tasks = new ArrayList<>();
@@ -33,10 +38,9 @@ public class ApiJSONObject extends JSONObject {
     }
 
     //for roadmap object
-    public ApiJSONObject(int id, int userId, String title, String description, String startDate,
+    public ApiJSONObject(int id, String title, String description, String startDate,
                          String dueDate, String dateCreated) {
         this.id = id;
-        this.userId = userId;
         this.title = title;
         this.description = description;
         this.startDate = startDate;

@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
@@ -51,6 +52,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public String projectTableColumnName;
     public ModifiedFragment fragment;
     public Activity activity;
+
+    private String type;
 
     //endregion
 
@@ -198,7 +201,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     int columnpos = projectTableColumnPos;
                     int itempos = itemPos;
 
+                    type = "boards";
                     ifTagTEDTBottomDialog(position);
+                    type = null;
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
@@ -214,12 +219,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private void ifTagTEDTBottomDialog(int position) {
 
-        int taskid = ApiSingleton.getInstance().getObject(projectTableColumnPos).getTask(itemPos).getId();
-        int columnid = ApiSingleton.getInstance().getObject(position).getId();
+        int taskid = ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId();
+        int columnid = ApiSingleton.getInstance().getObject(position, type).getId();
 
         ApiController.editField(fragment, activity, "btj/taskid/" +
-                ApiSingleton.getInstance().getObject(projectTableColumnPos).getTask(itemPos).getId() +
-                "/boardid/" + ApiSingleton.getInstance().getObject(position).getId() + "/newpos/" + ApiSingleton.getInstance().getArray().size());
+                ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId() +
+                "/boardid/" + ApiSingleton.getInstance().getObject(position, type).getId() + "/newpos/" + ApiSingleton.getInstance().getArray("project").size());
     }
 
     private void ifTagProjectCreateTask(int position) {
@@ -232,6 +237,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     private void ifTagProjects(int position) {
         Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
         intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
+
+        GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(position, "project").getId();
 
         fragment.onResponse("NotifyProjectViewed", holderArrayList.get(position).title.getText().toString());
         mcontext.startActivity(intent);

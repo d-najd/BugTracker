@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.AppSettings;
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
@@ -33,6 +34,8 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     private RoadmapCreateEpicActivity activity = this;
     private Context mcontext = this;
     private String projectName;
+
+    private String type = "roadmaps";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +122,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
 
                 ApiJSONObject object = new ApiJSONObject(
                         0,
-                        ApiController.userId,
                         title,
                         description,
                         startDateStr,
@@ -127,8 +129,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                //TODO change this with the current project pressed
-                ApiController.createField(object, "roadmaps/1", null, activity);
+                ApiController.createField(object, type + "/" + GlobalValues.projectOpened, null, activity);
             }
 
             /*forbidden dates atm are dates where the start date is bigger than the due date ex:
