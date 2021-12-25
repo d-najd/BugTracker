@@ -57,7 +57,6 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
         RecyclerData recyclerData = DataArrayList.get(position);
-        Log.wtf("recyclerData", recyclerData.toString());
         String layout = recyclerData.getTag();
         this.holder = holder;
         holderArrayList.add(holder);

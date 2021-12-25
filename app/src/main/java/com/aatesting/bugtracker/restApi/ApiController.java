@@ -136,6 +136,7 @@ public class ApiController {
                 URL,
                 jsonObject,
                 response -> {
+                    System.out.println(response.toString());
                     GlobalValues.objectModified = null;
                     if (activity != null)
                         activity.finish();
@@ -144,11 +145,12 @@ public class ApiController {
                 },
                 error -> {
                     GlobalValues.objectModified = null;
-                    Log.wtf("ERROR", "failed to edit field using url" + URL);
                     if (activity != null)
                         activity.finish();
                     if (fragment != null)
                         fragment.onResponse("Error");
+                    Message.message(context, "Something went wrong");
+                    Log.wtf("ERROR", "failed to get data using url " + URL + ", error response is " + error.toString());
                 }
         );
 

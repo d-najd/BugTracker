@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
@@ -26,6 +27,7 @@ import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class ProjectsFragment extends ModifiedFragment {
     private RecyclerView mainProjectsRecyclerView, recentlyViewed_RecyclerView;
@@ -113,35 +115,14 @@ public class ProjectsFragment extends ModifiedFragment {
         SetAdapter(mainProjectsRecyclerView, mainProjectsList);
 
 
-        // mainProjectsRecyclerView.getAdapter().notifyItemRangeRemoved(0, mainProjectsList.size());
-
-
-
-
-        /*
-        mainProjectsList.clear();
-        String tag = mainProjectsRecyclerView.getTag().toString();
-        ProjectsDatabase helper = new ProjectsDatabase(getContext());
-
-        String data = helper.GetData();
-        String[] parts = data.split("/");
-
-        for (int i = 0; i < parts.length / 3; i++) {
-            Log.wtf(parts[(i * 3) + 2], parts[(i * 3) + 2]);
-            mainProjectsList.add(new RecyclerData(parts[i * 3], R.drawable.ic_launcher_background,
-                    tag, parts[(i * 3) + 2]));
-            mainProjectsRecyclerView.getAdapter().notifyItemInserted(i);
-        }
 
         ItemTouchHelper itemTouchHelper;
 
-        itemTouchHelper = new ItemTouchHelper(ItemMoved);
-        itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
+        //itemTouchHelper = new ItemTouchHelper(ItemMoved);
+        //itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
 
         itemTouchHelper = new ItemTouchHelper(ItemSwiped);
         itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
-
-         */
     }
 
     private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> recyclerData) {
@@ -192,7 +173,7 @@ public class ProjectsFragment extends ModifiedFragment {
         }
     };
 
-    public void NotifyItemAdded(){
+    public void notifyItemAdded(){
         String tag = mainProjectsRecyclerView.getTag().toString();
         ProjectsDatabase helper = new ProjectsDatabase(getContext());
 
@@ -203,16 +184,16 @@ public class ProjectsFragment extends ModifiedFragment {
         mainProjectsRecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
     }
 
-    public void NotifyProjectNotRemoved(){
-        //called when you change your mind and cancel the removal of the project
-        mainProjectsRecyclerView.getAdapter().notifyDataSetChanged();
+    public void notifyProjectNotRemoved(){
+        Objects.requireNonNull(mainProjectsRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
     @Override
     public void onResponse(String code, String data) {
         if (code.equals("NotifyProjectViewed")){
             notifyProjectViewed(data);
-        } else {
+        }
+        else {
             super.onResponse("ERROR");
         }
     }
@@ -223,7 +204,14 @@ public class ProjectsFragment extends ModifiedFragment {
             setupMainProjectsAdapter();
         } else if (code.equals(this.getString(R.string.getData))){
             updateData();
+        } else if (code.equals("notifyProjectNotRemoved")){
+            Message.message(getContext(),"add method");
+            //notifyProjectNotRemoved();
+        } else if (code.equals("removeProject")){
+            Message.message(getContext(),"add method");
+            //RemoveProject();
         }
+
         else {
             Log.wtf("ERROR", "onResponse crashed at ProjectsFragment with code " + code);
             super.onResponse("ERROR");
@@ -237,6 +225,10 @@ public class ProjectsFragment extends ModifiedFragment {
     public void notifyProjectViewed(String projectName) {
         RecentlyViewedProjectsData.ProjectOpened(requireContext(), projectName);
         //SetupRecentlyViewedAdapter();
+    }
+
+    public void RemoveProject(){
+        ApiController.removeField(null, this, "");
     }
 
     public void RemoveProject(RecyclerView.ViewHolder viewHolder){

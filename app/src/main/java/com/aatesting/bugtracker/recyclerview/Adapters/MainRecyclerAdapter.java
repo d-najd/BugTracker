@@ -52,6 +52,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public String projectTableColumnName;
     public ModifiedFragment fragment;
     public Activity activity;
+    public BottomSheetDialog bottomDialog;
 
     private String type;
 
@@ -218,13 +219,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
     private void ifTagTEDTBottomDialog(int position) {
+        //prevents window leak
+        if (bottomDialog != null)
+            bottomDialog.cancel();
 
         int taskid = ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId();
         int columnid = ApiSingleton.getInstance().getObject(position, type).getId();
 
-        ApiController.editField(fragment, activity, "btj/taskid/" +
-                ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId() +
-                "/boardid/" + ApiSingleton.getInstance().getObject(position, type).getId() + "/newpos/" + ApiSingleton.getInstance().getArray("project").size());
+        ApiController.editField(fragment, activity,
+                "btj/startboard/" + ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getId()
+                + "/task/" + ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId()
+                + "/endboard/" + ApiSingleton.getInstance().getObject(position, type).getId()
+                + "/newpos/" + ApiSingleton.getInstance().getObject(position, type).getTasks().size());
     }
 
     private void ifTagProjectCreateTask(int position) {

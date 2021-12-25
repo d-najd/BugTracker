@@ -106,28 +106,28 @@ public class Dialogs {
 
     public static void DeleteProjectDialog(Context mcontext, String title, String description,
                                            RecyclerView.ViewHolder viewHolder, String positiveButtonTxt,
-                                           String negativeButtonTxt, ProjectsFragment fragment) {
+                                           String negativeButtonTxt, ModifiedFragment fragment) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, false);
         AlertDialog.Builder builder = data.first;
 
         builder.setNegativeButton(negativeButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fragment.NotifyProjectNotRemoved();
+                fragment.onResponse("notifyProjectNotRemoved");
             }
         });
 
         builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                fragment.NotifyProjectNotRemoved();
+                fragment.onResponse("notifyProjectNotRemoved");
             }
         });
 
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fragment.RemoveProject(viewHolder);
+                fragment.onResponse("removeProject");
             }
         });
         DialogBuilder(mcontext, builder);
@@ -402,6 +402,8 @@ public class Dialogs {
         }
 
         MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, context);
+        adapter.bottomDialog = bottomDialog;
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         bottomDialogRecyclerView.setLayoutManager(layoutManager);
