@@ -121,7 +121,8 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 if (RoadmapEditEpicActivity.forbiddenDates(startDateStr, dueDateStr, mcontext)) return;
 
                 ApiJSONObject object = new ApiJSONObject(
-                        0,
+                        -1,
+                        GlobalValues.projectOpened,
                         title,
                         description,
                         startDateStr,
@@ -129,7 +130,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                ApiController.createField(object, type + "/" + GlobalValues.projectOpened, null, activity);
+                ApiController.createField(object, type, null, activity);
             }
 
             /*forbidden dates atm are dates where the start date is bigger than the due date ex:

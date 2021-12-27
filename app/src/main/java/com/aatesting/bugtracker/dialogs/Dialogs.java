@@ -172,14 +172,15 @@ public class Dialogs {
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         ApiJSONObject object = new ApiJSONObject(
                                 0,
+                                GlobalValues.projectOpened,
                                 ApiSingleton.getInstance().getArray(type).size(),
                                 editText.getText().toString(),
                                 null
                         );
-
-                        ApiController.createField(object, type + "/" + GlobalValues.projectOpened, fragment, null);
+                        ApiController.createField(object, type, fragment, null);
                     }
 
                 });

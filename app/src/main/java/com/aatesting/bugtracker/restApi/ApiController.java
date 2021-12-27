@@ -111,7 +111,6 @@ public class ApiController {
         requestQueue.add(jsonObjectRequest);
     }
 
-
     /**
      * @apiNote modifies specified API object if GlobalValues.objectModified isn't null, if it only sends put request on the selected url
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
@@ -284,6 +283,7 @@ public class ApiController {
         JSONObject object = response.getJSONObject(i);
 
         int id = ApiController.checkIfIntNull("id", object, context);
+        int projectId = ApiController.checkIfIntNull("projectId", object, context);
         String title = ApiController.checkIfStrNull("title", object, context);
         String description = ApiController.checkIfStrNull("description", object, context);
         String startDate = ApiController.checkIfStrNull("startDate", object, context);
@@ -292,6 +292,7 @@ public class ApiController {
 
         ApiSingleton.getInstance().addToArray(new ApiJSONObject(
                 id,
+                projectId,
                 title,
                 description,
                 startDate,
@@ -304,12 +305,14 @@ public class ApiController {
         JSONObject object = response.getJSONObject(i);
 
         int id = checkIfIntNull("id", object, context);
+        int projectId = ApiController.checkIfIntNull("projectId", object, context);
         int position = checkIfIntNull("position", object, context);
         String title = checkIfStrNull("title", object, context);
         ArrayList<ApiJSONObject> tasks = checkIfListNull("tasks", object, context);
 
         ApiSingleton.getInstance().addToArray(new ApiJSONObject(
                 id,
+                projectId,
                 position,
                 title,
                 tasks
