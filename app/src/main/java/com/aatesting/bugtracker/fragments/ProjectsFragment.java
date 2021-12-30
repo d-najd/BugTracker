@@ -114,8 +114,6 @@ public class ProjectsFragment extends ModifiedFragment {
         //setting adapter
         SetAdapter(mainProjectsRecyclerView, mainProjectsList);
 
-
-
         ItemTouchHelper itemTouchHelper;
 
         //itemTouchHelper = new ItemTouchHelper(ItemMoved);
@@ -157,7 +155,6 @@ public class ProjectsFragment extends ModifiedFragment {
         }
     };
 
-
     ItemTouchHelper.SimpleCallback ItemSwiped = new ItemTouchHelper.SimpleCallback( 0, ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -166,9 +163,11 @@ public class ProjectsFragment extends ModifiedFragment {
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            int pos = viewHolder.getAdapterPosition();
+            Objects.requireNonNull(mainProjectsRecyclerView.getAdapter()).notifyItemRemoved(pos);
             Dialogs.DeleteProjectDialog(getContext(), "Delete this project?",
                     "Deleting the project permanently erases all of its contents. " +
-                            "This includes all of the epics, tasks and subtasks", viewHolder,
+                            "This includes all of the epics, tasks and subtasks", pos, type,
                     "DELETE", "CANCEL", projectsFragment);
         }
     };
@@ -184,16 +183,14 @@ public class ProjectsFragment extends ModifiedFragment {
         mainProjectsRecyclerView.getAdapter().notifyItemInserted((parts.length - 1)/3);
     }
 
-    public void notifyProjectNotRemoved(){
-        Objects.requireNonNull(mainProjectsRecyclerView.getAdapter()).notifyDataSetChanged();
-    }
-
     @Override
     public void onResponse(String code, String data) {
-        if (code.equals("NotifyProjectViewed")){
+        if (code.equals("NotifyProjectViewed"))
             notifyProjectViewed(data);
-        }
+        else if (code.equals("removeProject"))
+            removeProject(Integer.parseInt(data));
         else {
+            Log.wtf("ERROR", "onResponse crashed at ProjectsFragment with code " + code + " and data " + data);
             super.onResponse("ERROR");
         }
     }
@@ -205,11 +202,7 @@ public class ProjectsFragment extends ModifiedFragment {
         } else if (code.equals(this.getString(R.string.getData))){
             updateData();
         } else if (code.equals("notifyProjectNotRemoved")){
-            Message.message(getContext(),"add method");
-            //notifyProjectNotRemoved();
-        } else if (code.equals("removeProject")){
-            Message.message(getContext(),"add method");
-            //RemoveProject();
+            notifyProjectNotRemoved();
         }
 
         else {
@@ -219,7 +212,7 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     private void updateData(){
-        ApiController.getAllFields(false,requireContext(), type, this);
+        ApiController.getAllFields(false, requireContext(), type, this);
     }
 
     public void notifyProjectViewed(String projectName) {
@@ -227,26 +220,11 @@ public class ProjectsFragment extends ModifiedFragment {
         //SetupRecentlyViewedAdapter();
     }
 
-    public void RemoveProject(){
-        ApiController.removeField(null, this, "");
+    public void notifyProjectNotRemoved(){
+        Objects.requireNonNull(mainProjectsRecyclerView.getAdapter()).notifyDataSetChanged();
     }
 
-    public void RemoveProject(RecyclerView.ViewHolder viewHolder){
-        ProjectsDatabase helper = new ProjectsDatabase(getContext());
-
-        ProjectTableData.RemoveFile(mainProjectsList.get
-                (viewHolder.getAdapterPosition()).getTitle(), requireContext());
-        //RoadmapEpicData.RemoveFile(allProjects_List.get
-        //        (viewHolder.getAdapterPosition()).getTitle(), getContext());
-        RecentlyViewedProjectsData.ProjectRemoved(requireContext(), mainProjectsList.get
-                (viewHolder.getAdapterPosition()).getTitle());
-
-        helper.Delete(mainProjectsList.get(viewHolder.getAdapterPosition()).getId());
-
-        mainProjectsList.remove(viewHolder.getAdapterPosition());
-        mainProjectsRecyclerView.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
-
-        //refreshing the data for recentlyViewedAdapter
-        //SetupRecentlyViewedAdapter();
+    public void removeProject(int field){
+        ApiController.removeField(null, this, "project/" + field);
     }
 }

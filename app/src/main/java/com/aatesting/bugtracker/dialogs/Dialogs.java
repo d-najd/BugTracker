@@ -105,7 +105,7 @@ public class Dialogs {
     }
 
     public static void DeleteProjectDialog(Context mcontext, String title, String description,
-                                           RecyclerView.ViewHolder viewHolder, String positiveButtonTxt,
+                                           Integer pos, String type, String positiveButtonTxt,
                                            String negativeButtonTxt, ModifiedFragment fragment) {
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, description, negativeButtonTxt, false);
         AlertDialog.Builder builder = data.first;
@@ -127,7 +127,7 @@ public class Dialogs {
         builder.setPositiveButton(positiveButtonTxt, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                fragment.onResponse("removeProject");
+                fragment.onResponse("removeProject", "" + ApiSingleton.getInstance().getObject(pos, type).getId());
             }
         });
         DialogBuilder(mcontext, builder);
