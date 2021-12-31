@@ -61,7 +61,6 @@ public class ApiController {
                     ApiSingleton.getInstance().reset(url);
                     dataToSingleton(response, url);
 
-                    //fragment.onResponse(fragment.getString(R.string.setupData));
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
                 error -> {

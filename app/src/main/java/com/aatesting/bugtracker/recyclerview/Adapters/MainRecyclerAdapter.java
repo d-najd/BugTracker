@@ -246,7 +246,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
         GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(position, "project").getId();
 
-        fragment.onResponse("NotifyProjectViewed", holderArrayList.get(position).title.getText().toString());
+        fragment.onResponse("NotifyProjectViewed", String.valueOf(GlobalValues.projectOpened));
         mcontext.startActivity(intent);
     }
 

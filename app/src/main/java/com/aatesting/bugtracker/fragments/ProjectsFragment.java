@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.data.RecentlyViewedProjectsData;
@@ -23,15 +22,17 @@ import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.data.ProjectsDatabase;
 import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class ProjectsFragment extends ModifiedFragment {
     private RecyclerView mainProjectsRecyclerView, recentlyViewed_RecyclerView;
-    private ArrayList<RecyclerData> mainProjectsList = new ArrayList<>(), recentlyViewed_List;
+    private ArrayList<RecyclerData> mainProjectsList = new ArrayList<>(), recentlyViewed_List = new ArrayList<>();
     private ProjectsFragment projectsFragment;
     private View root;
 
@@ -46,59 +47,30 @@ public class ProjectsFragment extends ModifiedFragment {
         ((MainActivity)requireActivity()).Listeners(0);
         ((MainActivity)requireActivity()).projectsFragment = this;
 
-        SetupAdapters();
+        //setting up the main adapter
+        ApiController.getAllFields(false,requireContext(), type, projectsFragment);
+
         return root;
     }
 
 
-    public void SetupAdapters()
-    {
-        ApiController.getAllFields(false,requireContext(), type, projectsFragment);
-        //SetupRecentlyViewedAdapter();
-    }
-
-    private void SetupRecentlyViewedAdapter() {
+    private void setupRecentlyViewedAdapter() {
         RecentlyViewedProjectsData.MakeFolders(requireContext());
 
-        recentlyViewed_List = new ArrayList<>();
         recentlyViewed_RecyclerView = root.findViewById(R.id.recentlyViewedRecyclerView);
-
-        //NOTE The listeners are in the adapter class
-        SetAdapter(recentlyViewed_RecyclerView, recentlyViewed_List);
-
-        recentlyViewed_RecyclerView.getAdapter().notifyItemRangeRemoved(0, recentlyViewed_List.size());
         recentlyViewed_List.clear();
+
         String tag = recentlyViewed_RecyclerView.getTag().toString();
 
-        String viewedData = RecentlyViewedProjectsData.GetData(requireContext());
-        String SEPARATOR = RecentlyViewedProjectsData.SEPARATOR;
+        List<ApiJSONObject> recViewedProjects = RecentlyViewedProjectsData.getRecentlyViewedList(getContext());
 
-        if (viewedData == null)
-            return;
-        String[] viewedParts = viewedData.split(SEPARATOR);
-
-        ProjectsDatabase helper = new ProjectsDatabase(requireContext());
-
-        String dbData = helper.GetData();
-        String[] dbParts = dbData.split("/");
-
-        ArrayList<String> idList = new ArrayList<>(); //it seems I have used id while passing data for
-        //some reason, it might break something in the longrun so I am getting the id for the project
-        //as well
-
-        for (String viewedPart : viewedParts){
-            for (int i = 0; i < dbParts.length / 3; i++) {
-                if (viewedPart.equals(dbParts[i * 3]))
-                    idList.add(dbParts[i * 3] + 2);
-            }
+        for (ApiJSONObject project : recViewedProjects) {
+            recentlyViewed_List.add(new RecyclerData(project.getTitle(), tag));
         }
 
-        for (int i = 0; i < idList.size(); i++){
-            recentlyViewed_List.add(new RecyclerData(viewedParts[i],
-                    R.drawable.ic_launcher_background, tag, idList.get(i)));
-            recentlyViewed_RecyclerView.getAdapter().notifyItemInserted(i);
-        }
+        SetAdapter(recentlyViewed_RecyclerView, recentlyViewed_List);
     }
+
     //one of the adapters not all
     private void setupMainProjectsAdapter(){
         //NOTE The listeners are in the adapter class
@@ -121,6 +93,8 @@ public class ProjectsFragment extends ModifiedFragment {
 
         itemTouchHelper = new ItemTouchHelper(ItemSwiped);
         itemTouchHelper.attachToRecyclerView(mainProjectsRecyclerView);
+
+        setupRecentlyViewedAdapter();
     }
 
     private void SetAdapter(RecyclerView recyclerView, ArrayList<RecyclerData> recyclerData) {
@@ -215,9 +189,9 @@ public class ProjectsFragment extends ModifiedFragment {
         ApiController.getAllFields(false, requireContext(), type, this);
     }
 
-    public void notifyProjectViewed(String projectName) {
-        RecentlyViewedProjectsData.ProjectOpened(requireContext(), projectName);
-        //SetupRecentlyViewedAdapter();
+    public void notifyProjectViewed(String projectId) {
+        RecentlyViewedProjectsData.projectOpened(requireContext(), projectId);
+        setupRecentlyViewedAdapter();
     }
 
     public void notifyProjectNotRemoved(){

@@ -27,6 +27,11 @@ public class ApiJSONObject extends JSONObject {
         this.title = title;
     }
 
+    //for keeping track of viewed projects
+    public ApiJSONObject(int id){
+        this.id = id;
+    }
+
     //for board object
     public ApiJSONObject(int id, int projectId, int position, String title, ArrayList<ApiJSONObject> tasks) {
         this.id = id;
