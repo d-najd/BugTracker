@@ -1,35 +1,22 @@
 package com.aatesting.bugtracker.fragments;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.aatesting.bugtracker.AnimationHandler;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
-import com.aatesting.bugtracker.activities.ProjectCreateActivity;
-import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class AccountFragment extends ModifiedFragment {
@@ -51,19 +38,44 @@ public class AccountFragment extends ModifiedFragment {
     public int reminderTypeSelected = -1;
     public int repeatSelected = -1;
 
-    AccountFragment accountFragment;
-
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_account, container, false);
+        View root = inflater.inflate(R.layout.fragment_signin, container, false);
 
         ((MainActivity)getActivity()).Listeners(1);
-        DemoListeners(root);
-
+        signInListeners(root);
         return root;
     }
 
+    private void signInListeners(View root) {
+        TextView signUpText = null;
+
+        try {
+            signUpText = root.findViewById(R.id.signUpText);
+        } catch (Exception e) {
+
+        }
+
+        if (signUpText != null)
+            signUpText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Create new fragment and transaction
+                    Fragment newFragment = new ModifiedFragment();
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                    // Replace whatever is in the fragment_container view with this fragment,
+                    // and add the transaction to the back stack if needed
+                    transaction.replace(R.id.container, newFragment);
+                    transaction.addToBackStack(null);
+
+                    // Commit the transaction
+                    transaction.commit();
+                }
+            });
+    }
+
+    /*
     private void DemoListeners(View root){
         Button button = root.findViewById(R.id.button);
         Button button1 = root.findViewById(R.id.button1);
@@ -334,4 +346,6 @@ public class AccountFragment extends ModifiedFragment {
         });
         anim.start();
     }
+
+     */
 }
