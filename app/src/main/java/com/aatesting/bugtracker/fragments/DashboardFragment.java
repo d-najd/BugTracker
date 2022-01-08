@@ -48,7 +48,7 @@ public class DashboardFragment extends ModifiedFragment {
 
         ProjectTableData.MakeFolders(requireContext());
 
-        ApiController.getAllFields(true, requireContext(), type, this);
+        ApiController.getAllFields(false, requireContext(), type, this);
 
         return root;
     }

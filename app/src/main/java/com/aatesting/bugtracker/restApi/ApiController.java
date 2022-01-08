@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.restApi;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import com.aatesting.bugtracker.AppSettings;
@@ -9,10 +10,10 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -24,22 +25,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.Authenticator;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class ApiController {
     public static Context context;
     public static RequestQueue requestQueue;
+
+
     /**
      *
-     * @param userId needs to be replaced with projectId, if -1 will be skipped
      * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
      * @param fragment if fragment is specified setupData response will be sent to the specified fragment
      */
-
     public static void getAllFields(Boolean includeProjectId, @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
         if (requestQueue == null || context != ApiController.context) {
             ApiController.context = context;
@@ -69,8 +82,19 @@ public class ApiController {
                     error.printStackTrace();
                 }
 
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> params = new HashMap<String, String>();
+                String creds = String.format("%s:%s","admin","password");
+                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                params.put("Authorization", auth);
+                return params;
+            }
+        };
         requestQueue.add(jsonArrayRequest);
+
+
     }
 
     /**
