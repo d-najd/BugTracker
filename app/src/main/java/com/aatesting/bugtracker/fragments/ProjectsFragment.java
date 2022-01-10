@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.data.RecentlyViewedProjectsData;
@@ -37,7 +37,6 @@ public class ProjectsFragment extends ModifiedFragment {
     private View root;
 
     //url of the thing you want to get from the server
-    private String type = "project";
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_projects, container, false);
@@ -48,7 +47,8 @@ public class ProjectsFragment extends ModifiedFragment {
         ((MainActivity)requireActivity()).projectsFragment = this;
 
         //setting up the main adapter
-        ApiController.getAllFields(false,requireContext(), type, projectsFragment);
+        ApiController.getFields(false, false, true, requireContext(),
+                GlobalValues.PROJECTS_URL, projectsFragment);
 
         return root;
     }
@@ -79,8 +79,8 @@ public class ProjectsFragment extends ModifiedFragment {
         mainProjectsRecyclerView = root.findViewById(R.id.allProjectsRecyclerView);
 
         String tag = mainProjectsRecyclerView.getTag().toString();
-        for (int i = 0; i < ApiSingleton.getInstance().getArray(type).size(); i++){
-            mainProjectsList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, type).getTitle(), tag));
+        for (int i = 0; i < ApiSingleton.getInstance().getArray(GlobalValues.PROJECTS_URL).size(); i++){
+            mainProjectsList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, GlobalValues.PROJECTS_URL).getTitle(), tag));
         }
 
         //setting adapter
@@ -141,7 +141,7 @@ public class ProjectsFragment extends ModifiedFragment {
             Objects.requireNonNull(mainProjectsRecyclerView.getAdapter()).notifyItemRemoved(pos);
             Dialogs.DeleteProjectDialog(getContext(), "Delete this project?",
                     "Deleting the project permanently erases all of its contents. " +
-                            "This includes all of the epics, tasks and subtasks", pos, type,
+                            "This includes all of the epics, tasks and subtasks", pos, GlobalValues.PROJECTS_URL,
                     "DELETE", "CANCEL", projectsFragment);
         }
     };
@@ -186,7 +186,8 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     private void updateData(){
-        ApiController.getAllFields(false, requireContext(), type, this);
+        ApiController.getFields(false, false,
+                true, requireContext(), GlobalValues.PROJECTS_URL, this);
     }
 
     public void notifyProjectViewed(String projectId) {
@@ -199,6 +200,6 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     public void removeProject(int field){
-        ApiController.removeField(null, this, "project/" + field);
+        ApiController.removeField(null, this, GlobalValues.PROJECTS_URL + "/" + field);
     }
 }

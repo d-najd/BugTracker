@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicJsonData;
@@ -38,7 +37,6 @@ public class RoadmapFragment extends ModifiedFragment {
     private Calendar calendarCurDate;
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
 
-    private String type = "roadmaps";
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_roadmap, container, false);
@@ -49,7 +47,8 @@ public class RoadmapFragment extends ModifiedFragment {
 
         ((ProjectsMainActivity)requireActivity()).Listeners(1); // for knowing which fragment is selected
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ApiController.getAllFields(true,mcontext, type, this);
+        ApiController.getFields(true, true, true, mcontext,
+                GlobalValues.ROADMAPS_URL, this);
 
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
 
@@ -134,7 +133,7 @@ public class RoadmapFragment extends ModifiedFragment {
                 - calendarEarliestDate.get(Calendar.DAY_OF_WEEK) + 2);
         Date weeksStartDate = calendarEarliestDate.getTime();
 
-        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(ApiSingleton.getInstance().getArray(type), weeksStartDate, mcontext);
+        RoadmapEpicsAdapter adapter = new RoadmapEpicsAdapter(ApiSingleton.getInstance().getArray(GlobalValues.ROADMAPS_URL), weeksStartDate, mcontext);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(mcontext);
 
@@ -165,7 +164,7 @@ public class RoadmapFragment extends ModifiedFragment {
 
         //update the database
         if (GlobalValues.objectModified != null)
-            ApiController.editField(this, null,type);
+            ApiController.editField(this, null, GlobalValues.ROADMAPS_URL);
         else if (!resumed) {
             resumed = true;
             return;
@@ -176,6 +175,7 @@ public class RoadmapFragment extends ModifiedFragment {
     //check if there have been updates from other people and update the new data
     //can be called from RoadmapApi.updateServerField or from this function
     public void updateData(){
-        ApiController.getAllFields(true, mcontext, type, this);
+        ApiController.getFields(true, true, true, mcontext,
+                GlobalValues.ROADMAPS_URL, this);
     }
 }

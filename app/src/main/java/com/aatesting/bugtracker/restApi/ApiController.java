@@ -46,26 +46,36 @@ public class ApiController {
     public static Context context;
     public static RequestQueue requestQueue;
 
+    public static String username = "admin";
+    public static String password = "password";
+
 
     /**
-     *
+     * @param includeProjectId include the current project id
+     * @param includeAll include "/all" after the base url after includeProjectId has been checked
+     * @param includeGetByUser includes "/getByUser" after include all has been checked
      * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
      * @param fragment if fragment is specified setupData response will be sent to the specified fragment
      */
-    public static void getAllFields(Boolean includeProjectId, @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
+    public static void getFields(Boolean includeProjectId, Boolean includeAll, Boolean includeGetByUser,
+                                 @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
         if (requestQueue == null || context != ApiController.context) {
             ApiController.context = context;
             requestQueue = Volley.newRequestQueue(context);
         }
 
-        String URL;
+        String URL = AppSettings.SERVERIP + "/" + url;
 
-        if (!includeProjectId)
-            URL = AppSettings.SERVERIP + "/" + url + "/all";
-        else
-            URL = AppSettings.SERVERIP + "/" + url + "/all/" + GlobalValues.projectOpened;
+        if (includeAll)
+            URL += "/all";
+        if (includeProjectId)
+            URL += "/" + GlobalValues.projectOpened;
+        if (includeGetByUser)
+            URL += "/" + GlobalValues.GET_BY_USER;
 
+        //java decided it wants final but this doesn't look like final to me?
+        String finalURL = URL;
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(
                 Request.Method.GET,
                 URL,
@@ -77,7 +87,7 @@ public class ApiController {
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
                 error -> {
-                    Log.wtf("ERROR", "failed to get all fields using url" + URL);
+                    Log.wtf("ERROR", "failed to get all fields using url " + finalURL);
                     fragment.onResponse("Error");
                     error.printStackTrace();
                 }
@@ -85,16 +95,10 @@ public class ApiController {
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                HashMap<String, String> params = new HashMap<String, String>();
-                String creds = String.format("%s:%s","admin","password");
-                String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
-                params.put("Authorization", auth);
-                return params;
+                return setHeaders();
             }
         };
         requestQueue.add(jsonArrayRequest);
-
-
     }
 
     /**
@@ -130,7 +134,12 @@ public class ApiController {
                     fragment.onResponse("Error");
                     error.printStackTrace();
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return setHeaders();
+            }
+        };
         requestQueue.add(jsonObjectRequest);
     }
 
@@ -174,7 +183,12 @@ public class ApiController {
                     Message.message(context, "Something went wrong");
                     Log.wtf("ERROR", "failed to get data using url " + URL + ", error response is " + error.toString());
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return setHeaders();
+            }
+        };
 
         requestQueue.add(jsonObjectRequest);
     }
@@ -222,9 +236,26 @@ public class ApiController {
                         Log.wtf("Error", "something went wrong with removing field server sided");
                     }
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                return setHeaders();
+            }
+        };
 
         requestQueue.add(request);
+    }
+
+    /**
+     * @return the headers of the request like authentication
+     */
+    @NotNull
+    private static HashMap<String, String> setHeaders() {
+        HashMap<String, String> params = new HashMap<String, String>();
+        String creds = String.format("%s:%s",username,password);
+        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+        params.put("Authorization", auth);
+        return params;
     }
 
     private static void dataToSingleton(JSONArray data, String value) {
@@ -240,12 +271,12 @@ public class ApiController {
         //reorder by position field if it exists in the current singleton
 
         switch (value){
-            case "roadmaps":
-            case "boards":
-            case "project":
+            case GlobalValues.ROADMAPS_URL:
+            case GlobalValues.BOARDS_URL:
+            case GlobalValues.PROJECTS_URL:
                 ApiSingleton.getInstance().reorderByPosition(false, value);
                 break;
-            case "tasks":
+            case GlobalValues.TASKS_URL:
                 ApiSingleton.getInstance().reorderByPosition(true, value);
                 break;
             default:
@@ -267,17 +298,17 @@ public class ApiController {
     private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
         try {
             switch (type) {
-                case "project":
+                case GlobalValues.PROJECTS_URL:
                     addSingletonProjects(response, i, type);
                     break;
-                case "boards":
+                case GlobalValues.BOARDS_URL:
                     addSingletonBoards(response, i, type);
                     break;
-                case "roadmaps":
+                case GlobalValues.ROADMAPS_URL:
                     addSingletonRoadmaps(response, i, type);
                     break;
-                case "tasks":
-                    return JSONToObject(response.getJSONObject(i), "tasks", context);
+                case GlobalValues.TASKS_URL:
+                    return JSONToObject(response.getJSONObject(i), GlobalValues.TASKS_URL, context);
                 default:
                     Message.message(context, "Something went wrong");
                     Log.wtf("ERROR", "current url isn't defined for adding to singleton");

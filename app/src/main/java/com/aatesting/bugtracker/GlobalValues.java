@@ -18,4 +18,10 @@ public class GlobalValues {
 
     //the current project opened
     public static int projectOpened;
+
+    public static final String GET_BY_USER = "getByUser";
+    public static final String BOARDS_URL = "boards";
+    public static final String ROADMAPS_URL = "roadmaps";
+    public static final String PROJECTS_URL = "project";
+    public static final String TASKS_URL = "tasks";
 }

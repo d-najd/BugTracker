@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +22,6 @@ import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class DashboardFragment extends ModifiedFragment {
     private RecyclerView recyclerView;
@@ -33,7 +33,6 @@ public class DashboardFragment extends ModifiedFragment {
     private String tag;
     private boolean resumed; //to prevent creating the recyclerview twice when the activity is started
     private ProjectTableCreateAdapter adapter;
-    private String type = "boards";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +47,11 @@ public class DashboardFragment extends ModifiedFragment {
 
         ProjectTableData.MakeFolders(requireContext());
 
-        ApiController.getAllFields(false, requireContext(), type, this);
+        Toast.makeText(getContext(), "TEST IF GETTING OF THE FIELDS WORK", Toast.LENGTH_SHORT).show();
+
+        ApiController.getFields(true, true, false,  requireContext(), GlobalValues.BOARDS_URL, this);
+                //old
+        //ApiController.getAllFields(false, true, requireContext(), GlobalValues.BOARDS_URL, this);
 
         return root;
     }
@@ -56,8 +59,8 @@ public class DashboardFragment extends ModifiedFragment {
     private void setupRecycler(){
         recyclerDataArrayList.clear();
 
-        for (int i = 0; i < ApiSingleton.getInstance().getArray(type).size(); i++){
-            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, type).getTitle(), String.valueOf(i), tag));
+        for (int i = 0; i < ApiSingleton.getInstance().getArray(GlobalValues.BOARDS_URL).size(); i++){
+            recyclerDataArrayList.add(new RecyclerData(ApiSingleton.getInstance().getObject(i, GlobalValues.BOARDS_URL).getTitle(), String.valueOf(i), tag));
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
@@ -96,7 +99,7 @@ public class DashboardFragment extends ModifiedFragment {
     public void onResume() {
         super.onResume();
         if (GlobalValues.objectModified != null)
-            ApiController.editField(this, null,"tasks");
+            ApiController.editField(this, null,GlobalValues.TASKS_URL);
         if (!resumed) {
             resumed = true;
             return;
@@ -105,6 +108,6 @@ public class DashboardFragment extends ModifiedFragment {
     }
 
     private void updateData(){
-        ApiController.getAllFields(true, requireContext(), type, this);
+        ApiController.getFields(true, true, false, requireContext(), GlobalValues.BOARDS_URL, this);
     }
 }
