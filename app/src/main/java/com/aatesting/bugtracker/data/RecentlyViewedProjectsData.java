@@ -3,6 +3,7 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
@@ -137,7 +138,7 @@ public class RecentlyViewedProjectsData {
 
     public static List<ApiJSONObject> getRecentlyViewedList(Context context){
         String data = getData(context);
-        ArrayList<ApiJSONObject> projects = ApiSingleton.getInstance().getArray("project");
+        ArrayList<ApiJSONObject> projects = ApiSingleton.getInstance().getArray(GlobalValues.PROJECTS_URL);
 
         if (projects.isEmpty())
         {

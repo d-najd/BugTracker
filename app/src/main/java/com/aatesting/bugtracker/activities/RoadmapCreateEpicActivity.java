@@ -35,8 +35,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
     private Context mcontext = this;
     private String projectName;
 
-    private String type = "roadmaps";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +128,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         null
                 );
 
-                ApiController.createField(object, type, null, activity);
+                ApiController.createField(object, GlobalValues.ROADMAPS_URL, null, activity);
             }
 
             /*forbidden dates atm are dates where the start date is bigger than the due date ex:

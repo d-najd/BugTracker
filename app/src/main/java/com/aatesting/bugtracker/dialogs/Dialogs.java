@@ -97,7 +97,7 @@ public class Dialogs {
                 );
 
                 //TODO change this with the current project pressed
-                ApiController.createField(object, "project", fragment, null);
+                ApiController.createField(object, GlobalValues.PROJECTS_URL, fragment, null);
             }
         });
         DialogBuilder(mcontext, builder);
@@ -151,7 +151,7 @@ public class Dialogs {
 
                     object.setTitle(newTitle);
                     GlobalValues.objectModified = object;
-                    ApiController.editField(fragment, null,"boards");
+                    ApiController.editField(fragment, null,GlobalValues.BOARDS_URL);
                 }
             }
         });
@@ -163,7 +163,7 @@ public class Dialogs {
     //for adding new column
     public static void NewColumnDialog(Context mcontext, String title, String positiveButtonTxt,
                                        String negativeButtonTxt,
-                                       ModifiedFragment fragment, String type){
+                                       ModifiedFragment fragment){
         Pair<AlertDialog.Builder, EditText> data = BasicDialog(mcontext, title, null, negativeButtonTxt, true);
         AlertDialog.Builder builder = data.first;
         EditText editText = data.second;
@@ -176,11 +176,11 @@ public class Dialogs {
                         ApiJSONObject object = new ApiJSONObject(
                                 0,
                                 GlobalValues.projectOpened,
-                                ApiSingleton.getInstance().getArray(type).size(),
+                                ApiSingleton.getInstance().getArray(GlobalValues.BOARDS_URL).size(),
                                 editText.getText().toString(),
                                 null
                         );
-                        ApiController.createField(object, type, fragment, null);
+                        ApiController.createField(object, GlobalValues.BOARDS_URL, fragment, null);
                     }
 
                 });
@@ -208,12 +208,10 @@ public class Dialogs {
                         null
                 );
                 
-                ApiController.createField(object, "tasks/board/" +
+                ApiController.createField(object, GlobalValues.TASKS_URL + "/" + GlobalValues.BOARDS_URL +
                         ApiSingleton.getInstance().getObject(position, type).getId(), fragment, null);
 
                 //NOTE the api usually automatically refreshes the activity so should watch out for that
-
-
                 //ProjectTableData.SaveNewItem(title, projectName, position, true, mcontext);
             }
         });

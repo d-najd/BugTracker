@@ -33,6 +33,7 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +88,7 @@ public class ApiController {
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
                 error -> {
-                    Log.wtf("ERROR", "failed to get all fields using url " + finalURL);
+                    Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
                     fragment.onResponse("Error");
                     error.printStackTrace();
                 }
@@ -95,7 +96,7 @@ public class ApiController {
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                return setHeaders();
+                return setHeaders(false);
             }
         };
         requestQueue.add(jsonArrayRequest);
@@ -117,10 +118,10 @@ public class ApiController {
             Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
         }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        JSONObject finalJsonObject = jsonObject;
+        StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 URL,
-                jsonObject,
                 response -> {
                     if (activity != null)
                         activity.finish();
@@ -132,15 +133,19 @@ public class ApiController {
                     Log.wtf("ERROR", "failed to save field using URL" + URL);
                     GlobalValues.objectModified = null;
                     fragment.onResponse("Error");
-                    error.printStackTrace();
                 }
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                return setHeaders();
+                return setHeaders(true);
+            }
+
+            @Override
+            public byte[] getBody() {
+                return jsonObject.toString().getBytes();
             }
         };
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(stringRequest);
     }
 
     /**
@@ -162,12 +167,11 @@ public class ApiController {
             Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
         }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+        JSONObject finalJsonObject = jsonObject;
+        StringRequest stringRequest = new StringRequest(
                 Request.Method.PUT,
                 URL,
-                jsonObject,
                 response -> {
-                    System.out.println(response.toString());
                     GlobalValues.objectModified = null;
                     if (activity != null)
                         activity.finish();
@@ -181,16 +185,22 @@ public class ApiController {
                     if (fragment != null)
                         fragment.onResponse("Error");
                     Message.message(context, "Something went wrong");
-                    Log.wtf("ERROR", "failed to get data using url " + URL + ", error response is " + error.toString());
+                    Log.wtf("ERROR", "failed to edit data using url " + URL + ", error response is " + new String(error.networkResponse.data));
                 }
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                return setHeaders();
+                return setHeaders(true);
+            }
+
+            @Override
+            public byte[] getBody() {
+                if (finalJsonObject == null)
+                    return null;
+                return finalJsonObject.toString().getBytes();
             }
         };
-
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(stringRequest);
     }
 
     /**
@@ -233,13 +243,13 @@ public class ApiController {
                     }
                     if (fragment == null) {
                         Message.message(context, "Something went wrong");
-                        Log.wtf("Error", "something went wrong with removing field server sided");
+                        Log.wtf("ERROR", "failed to get data using url " + URL + ", error response is " + new String(error.networkResponse.data));
                     }
                 }
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                return setHeaders();
+                return setHeaders(false);
             }
         };
 
@@ -249,12 +259,15 @@ public class ApiController {
     /**
      * @return the headers of the request like authentication
      */
+
     @NotNull
-    private static HashMap<String, String> setHeaders() {
+    private static HashMap<String, String> setHeaders(Boolean includeObject) {
         HashMap<String, String> params = new HashMap<String, String>();
         String creds = String.format("%s:%s",username,password);
         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
         params.put("Authorization", auth);
+        if (includeObject)
+            params.put("Content-Type", "application/json; charset=utf-8");
         return params;
     }
 
@@ -362,7 +375,7 @@ public class ApiController {
         int projectId = ApiController.checkIfIntNull("projectId", object, context);
         int position = checkIfIntNull("position", object, context);
         String title = checkIfStrNull("title", object, context);
-        ArrayList<ApiJSONObject> tasks = checkIfListNull("tasks", object, context);
+        ArrayList<ApiJSONObject> tasks = checkIfListNull(GlobalValues.TASKS_URL, object, context);
 
         ApiSingleton.getInstance().addToArray(new ApiJSONObject(
                 id,
@@ -390,7 +403,7 @@ public class ApiController {
         ApiJSONObject object = null;
         switch (type)
         {
-            case "tasks":
+            case GlobalValues.TASKS_URL:
                 int id = checkIfIntNull("id", jsonObject, context);
                 int position = checkIfIntNull("position", jsonObject, context);
                 String title = checkIfStrNull("title", jsonObject, context);

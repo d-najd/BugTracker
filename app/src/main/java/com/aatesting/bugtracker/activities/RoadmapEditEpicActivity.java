@@ -40,8 +40,6 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
     TextView startDateTxt, dueDateTxt;
 
-    private String type = "roadmaps";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +47,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         context = this;
 
         epicId = getIntent().getExtras().getInt("epicId");
-        apiJsonObject = ApiSingleton.getInstance().getObject(epicId, type);
+        apiJsonObject = ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL);
         projectName = getIntent().getExtras().getString("projectName");
 
         SetupActivityValues();
@@ -127,7 +125,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ApiJSONObject object = ApiSingleton.getInstance().getObject(epicId, type);
+                ApiJSONObject object = ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL);
 
                 object.setTitle(s.toString());
                 GlobalValues.objectModified = object;
@@ -239,7 +237,8 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     }
 
     public void DeleteEpic(){
-        ApiController.removeField(activity, null, "roadmaps/" + ApiSingleton.getInstance().getObject(epicId, type).getId());
+        ApiController.removeField(activity, null, GlobalValues.ROADMAPS_URL + "/" +
+                ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL).getId());
         Message.message(context, "Epic removed successfully");
     }
 }

@@ -24,4 +24,5 @@ public class GlobalValues {
     public static final String ROADMAPS_URL = "roadmaps";
     public static final String PROJECTS_URL = "project";
     public static final String TASKS_URL = "tasks";
+    public static final String BTJ_URL = "btj";
 }

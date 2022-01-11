@@ -202,9 +202,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     int columnpos = projectTableColumnPos;
                     int itempos = itemPos;
 
-                    type = "boards";
                     ifTagTEDTBottomDialog(position);
-                    type = null;
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
@@ -244,7 +242,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
         intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
 
-        GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(position, "project").getId();
+        GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(position, GlobalValues.PROJECTS_URL).getId();
 
         fragment.onResponse("NotifyProjectViewed", String.valueOf(GlobalValues.projectOpened));
         mcontext.startActivity(intent);

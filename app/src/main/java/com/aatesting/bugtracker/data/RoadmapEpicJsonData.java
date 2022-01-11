@@ -3,6 +3,7 @@ package com.aatesting.bugtracker.data;
 import android.util.Log;
 
 import com.aatesting.bugtracker.AppSettings;
+import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
@@ -27,7 +28,7 @@ public class RoadmapEpicJsonData {
         List<Date> dates = new ArrayList<>(); //for converting JSONObject date to java dates
 
         if (getEarliest) {
-            for (ApiJSONObject apiJsonObject : apiSingleton.getArray("roadmaps")) {
+            for (ApiJSONObject apiJsonObject : apiSingleton.getArray(GlobalValues.ROADMAPS_URL)) {
                 try {
                     dates.add(df.parse(apiJsonObject.getStartDate()));
                 } catch (ParseException e) {
@@ -42,7 +43,7 @@ public class RoadmapEpicJsonData {
 
         } else
         {
-            for (ApiJSONObject apiJsonObject : apiSingleton.getArray("roadmaps"))
+            for (ApiJSONObject apiJsonObject : apiSingleton.getArray(GlobalValues.ROADMAPS_URL))
                 try {
                     dates.add(df.parse(apiJsonObject.getDueDate()));
                 }catch (ParseException e) {

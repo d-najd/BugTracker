@@ -2,6 +2,8 @@ package com.aatesting.bugtracker.restApi;
 
 import android.util.Log;
 
+import com.aatesting.bugtracker.GlobalValues;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -64,11 +66,11 @@ public class ApiSingleton {
 
     private ArrayList<ApiJSONObject> findProjectByType(String type) {
         switch (type){
-            case "project":
+            case GlobalValues.PROJECTS_URL:
                 return projectList;
-            case "boards":
+            case GlobalValues.BOARDS_URL:
                 return boardsList;
-            case "roadmaps":
+            case GlobalValues.ROADMAPS_URL:
                 return roadmapsList;
             default:
                 Log.wtf("ERROR", "use specific type for each of the singleton lists, returning default value");
