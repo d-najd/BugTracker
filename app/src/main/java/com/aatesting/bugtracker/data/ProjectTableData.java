@@ -19,12 +19,7 @@ public class ProjectTableData {
 
     public static final int AMOUNT_OF_PARTS_IN_DATA = 4;
     private static final String SEPARATOR = "::"; //the type of separator used for saving the data
-    /* TODO replace with getting the parts with constants instead of needing to specify a number,
-        because the format of which the data is stored ex titles::tasktitles may change to
-        tasktitles::titles and every single reference in the entire projects where titles are called
-        with the number 0 will need to be changed with 1 instead making a constant and changing the
-        value in here
-        !!!!!same goes forRoadmapEpicData!!!!!
+    /* NOTE THIS SCRIPT IS DISABLED
      *//*
 
     tasks will be stored in ProjectData/ProjectBoard/Tasks
@@ -97,9 +92,9 @@ public class ProjectTableData {
         ArrayList<String> descriptionsEmptyArr = new ArrayList<>();
         ArrayList<Integer> imgsEmptyArr = new ArrayList<>();
 
-        SaveNewColumn(projectName, "TO DO", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
-        SaveNewColumn(projectName, "IN PROGRESS", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
-        SaveNewColumn(projectName, "DONE", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+        //SaveNewColumn(projectName, "TO DO", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+        //SaveNewColumn(projectName, "IN PROGRESS", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
+       // SaveNewColumn(projectName, "DONE", titlesEmptyArr, imgsEmptyArr, descriptionsEmptyArr, context);
     }
 
     //for creating new column with empty data mostly but can work for other stuff

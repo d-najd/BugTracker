@@ -95,7 +95,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
         else
         {
             long id = helper.InsertData(t1,t2);
-            ProjectTableData.CreatingNewProject(t1, this);
+           // ProjectTableData.CreatingNewProject(t1, this);
             if(id<=0)
             {
                 Message.message(this,"Insertion Unsuccessful");

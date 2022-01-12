@@ -80,7 +80,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
 
     public void RenameTitle(int pos, String newTitle){
         holderArrayList.get(pos).title.setText(newTitle);
-        ProjectTableData.EditData(projectName, pos, 0, newTitle, mcontext);
+        //ProjectTableData.EditData(projectName, pos, 0, newTitle, mcontext);
     }
 
     private void Listeners(int position){

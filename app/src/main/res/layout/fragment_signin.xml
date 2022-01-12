@@ -119,8 +119,44 @@
         android:alpha=".6"
         android:text="Username"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toTopOf="@+id/usernameEdt"
+        app:layout_constraintStart_toStartOf="@+id/usernameEdt" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/box_border"
+        app:layout_constraintBottom_toBottomOf="@+id/usernameEdt"
+        app:layout_constraintEnd_toEndOf="@+id/usernameEdt"
+        app:layout_constraintStart_toStartOf="@+id/usernameEdt"
+        app:layout_constraintTop_toTopOf="@+id/usernameEdt" />
+
+    <EditText
+        android:id="@+id/usernameEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/transparent"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        tools:layout_editor_absoluteX="24dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:alpha=".6"
+        android:text="Password"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/passwordEdt"
         app:layout_constraintStart_toStartOf="@+id/passwordEdt" />
+
 
     <View
         android:layout_width="match_parent"
@@ -140,48 +176,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="46dp"
-        android:layout_marginEnd="24dp"
-        android:backgroundTint="@color/transparent"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        tools:layout_editor_absoluteX="24dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:alpha=".6"
-        android:text="Password"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/reEnterPasswordEdt"
-        app:layout_constraintStart_toStartOf="@+id/reEnterPasswordEdt" />
-
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="2dp"
-        android:background="@drawable/box_border"
-        app:layout_constraintBottom_toBottomOf="@+id/reEnterPasswordEdt"
-        app:layout_constraintEnd_toEndOf="@+id/reEnterPasswordEdt"
-        app:layout_constraintStart_toStartOf="@+id/reEnterPasswordEdt"
-        app:layout_constraintTop_toTopOf="@+id/reEnterPasswordEdt" />
-
-    <EditText
-        android:id="@+id/reEnterPasswordEdt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="42dp"
         android:layout_marginEnd="24dp"
         android:inputType="textPassword"
         android:backgroundTint="@color/transparent"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/passwordEdt" />
+        app:layout_constraintTop_toBottomOf="@+id/usernameEdt" />
 
 
     <TextView
@@ -192,9 +192,10 @@
         android:text="by clicking you agree to our blah blah of service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reEnterPasswordEdt" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordEdt" />
 
     <Button
+        android:id="@+id/submit"
         android:layout_width="wrap_content"
         android:layout_height="52dp"
         android:layout_marginTop="32dp"

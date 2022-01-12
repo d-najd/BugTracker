@@ -45,7 +45,7 @@ public class DashboardFragment extends ModifiedFragment {
         tag = recyclerView.getTag().toString();
         projectName = requireActivity().getIntent().getExtras().getString("projectName");
 
-        ProjectTableData.MakeFolders(requireContext());
+        //ProjectTableData.MakeFolders(requireContext());
 
         ApiController.getFields(true, true, false,  requireContext(), GlobalValues.BOARDS_URL, this);
                 //old

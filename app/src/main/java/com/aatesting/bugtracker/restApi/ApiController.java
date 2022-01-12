@@ -9,6 +9,7 @@ import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -47,11 +49,8 @@ public class ApiController {
     public static Context context;
     public static RequestQueue requestQueue;
 
-    public static String username = "admin";
-    public static String password = "password";
-
-
     /**
+     * gets and sets up the project data
      * @param includeProjectId include the current project id
      * @param includeAll include "/all" after the base url after includeProjectId has been checked
      * @param includeGetByUser includes "/getByUser" after include all has been checked
@@ -59,6 +58,7 @@ public class ApiController {
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
      * @param fragment if fragment is specified setupData response will be sent to the specified fragment
      */
+
     public static void getFields(Boolean includeProjectId, Boolean includeAll, Boolean includeGetByUser,
                                  @NotNull Context context, @NotNull String url, ModifiedFragment fragment) {
         if (requestQueue == null || context != ApiController.context) {
@@ -89,7 +89,7 @@ public class ApiController {
                 },
                 error -> {
                     Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                    fragment.onResponse("Error");
+                    Message.defErrMessage(context);
                     error.printStackTrace();
                 }
 
@@ -101,6 +101,77 @@ public class ApiController {
         };
         requestQueue.add(jsonArrayRequest);
     }
+
+    /**
+     * used for getting a single json object, does not set up the project data
+     * @param includeProjectId include the current project id
+     * @param includeGetByUser includes "/getByUser" after include all has been checked
+     * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
+     * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
+     * @param fragment if fragment is specified setupData response will be sent to the specified fragment
+     */
+
+    public static void getField(ApiJSONObject object, Boolean includeProjectId, Boolean includeGetByUser,
+                                 @NotNull Context context, @NotNull String url, ModifiedFragment fragment)
+
+    {
+        if (requestQueue == null || context != ApiController.context) {
+            ApiController.context = context;
+            requestQueue = Volley.newRequestQueue(context);
+        }
+
+        String URL = AppSettings.SERVERIP + "/" + url;
+
+        if (includeProjectId)
+            URL += "/" + GlobalValues.projectOpened;
+        if (includeGetByUser)
+            URL += "/" + GlobalValues.GET_BY_USER;
+
+        //java decided it wants final but this doesn't look like final to me?
+        String finalURL = URL;
+        StringRequest jsonArrayRequest = new StringRequest(
+                Request.Method.GET,
+                URL,
+                response -> {
+                    if (url.equals(GlobalValues.USERS_URL)){
+                        UserData.saveUser(context, object);
+                        fragment.onResponse("gotUser");
+                    }
+                },
+                error -> {
+                    if (url.equals(GlobalValues.USERS_URL)) {
+                        if(error.networkResponse.statusCode == 401)
+                            Message.message(context, "Wrong credentials");
+                        else {
+                            Message.defErrMessage(context);
+                            Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
+                        }
+                    } else {
+                        Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
+                        Message.defErrMessage(context);
+                        error.printStackTrace();
+                    }
+
+                }
+
+        ) {
+            @Override
+            public Map<String, String> getHeaders() {
+                if (!url.equals(GlobalValues.USERS_URL))
+                    return setHeaders(false);
+                else
+                {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    String creds = String.format("%s:%s",object.getUsername(),object.getPassword());
+                    String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                    params.put("Authorization", auth);
+                    return params;
+                }
+            }
+        };
+        requestQueue.add(jsonArrayRequest);
+    }
+
 
     /**
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
@@ -131,6 +202,8 @@ public class ApiController {
                 },
                 error -> {
                     Log.wtf("ERROR", "failed to save field, the error is " + new String(error.networkResponse.data));
+                    Message.defErrMessage(context);
+
                     GlobalValues.objectModified = null;
                     fragment.onResponse("Error");
                 }
@@ -180,12 +253,9 @@ public class ApiController {
                 },
                 error -> {
                     GlobalValues.objectModified = null;
-                    if (activity != null)
-                        activity.finish();
-                    if (fragment != null)
-                        fragment.onResponse("Error");
-                    Message.message(context, "Something went wrong");
                     Log.wtf("ERROR", "failed to edit data using url " + URL + ", error response is " + new String(error.networkResponse.data));
+                    Message.defErrMessage(context);
+                    error.printStackTrace();
                 }
         ) {
             @Override
@@ -234,17 +304,9 @@ public class ApiController {
                 },
                 error -> {
                     GlobalValues.objectModified = null;
-
-                    if (fragment != null) {
-                        fragment.onResponse("Error");
-                    }
-                    if (activity != null) {
-                        activity.finish();
-                    }
-                    if (fragment == null) {
-                        Message.message(context, "Something went wrong");
-                        Log.wtf("ERROR", "failed to get data using url " + URL + ", error response is " + new String(error.networkResponse.data));
-                    }
+                    Log.wtf("ERROR", "failed to get delete using url " + URL + ", error response is " + new String(error.networkResponse.data));
+                    Message.defErrMessage(context);
+                    error.printStackTrace();
                 }
         ) {
             @Override
@@ -262,12 +324,24 @@ public class ApiController {
 
     @NotNull
     private static HashMap<String, String> setHeaders(Boolean includeObject) {
+        //for sending json data
         HashMap<String, String> params = new HashMap<String, String>();
-        String creds = String.format("%s:%s",username,password);
-        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
-        params.put("Authorization", auth);
         if (includeObject)
             params.put("Content-Type", "application/json; charset=utf-8");
+
+        //for authentication
+        String userData = UserData.getLastUserRaw(context);
+
+        if (userData == null) {
+            Log.wtf("DEBUG", "getting server data without a user");
+            return params;
+        }
+
+        //String creds = String.format("%s:%s",username,password);
+        //String auth = "Basic " + Base64.encodeToString(userData, Base64.NO_WRAP);
+        String auth = "Basic " + userData;
+        params.put("Authorization", auth);
+
         return params;
     }
 
@@ -384,6 +458,17 @@ public class ApiController {
                 title,
                 tasks
         ), type);
+    }
+
+    /**
+     * transforms JSONObject to java object
+     * @return java user object
+     */
+    private static ApiJSONObject jsonUserToObject(JSONObject object) {
+        String username = checkIfStrNull("username", object, context);
+        String password = checkIfStrNull("password", object, context);
+
+        return new ApiJSONObject(username, password);
     }
 
     private static JSONObject objectToJSON(ApiJSONObject object, Context context) {

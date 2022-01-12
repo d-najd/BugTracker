@@ -17,21 +17,22 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
+import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 public class SignUpFragment extends ModifiedFragment {
+    ApiJSONObject user;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         ((MainActivity)getActivity()).Listeners(2);
-
         View root = inflater.inflate(R.layout.fragment_signup, container, false);
 
         listeners(root);
-
         return root;
     }
 
@@ -70,7 +71,7 @@ public class SignUpFragment extends ModifiedFragment {
 
                 //username or password less than 3 is not allowed
                 if (username.length() <= 3 || password.length() <= 3 || password1.length() <= 3){
-                    Message.message(getContext(), "Username or password longer than 3 characters is required");
+                    Message.message(getContext(), "Username and password longer than 3 characters is required");
                     return;
                 }
 
@@ -79,7 +80,7 @@ public class SignUpFragment extends ModifiedFragment {
                     return;
                 }
 
-                ApiJSONObject user = new ApiJSONObject(
+                user = new ApiJSONObject(
                         username,
                         password
                 );
@@ -109,6 +110,12 @@ public class SignUpFragment extends ModifiedFragment {
      * @apiNote when the account is created this method gets called thus sending the user and the projects menu
      */
     private void swapFragment(){
+        if (user == null){
+            Message.message(requireContext(), "something went wrong with saving the user data to the device");
+            return;
+        }
+        UserData.saveUser(requireContext(), user);
+
         Bundle bundle = new Bundle();
         ProjectsFragment projectsFragment = new ProjectsFragment();
         projectsFragment.setArguments(bundle);

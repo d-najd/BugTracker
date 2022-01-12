@@ -26,6 +26,7 @@
     <!--TODO find a way to make a outline/border/stroke for the menu_bottombar
       or a way to make it elevated so it stands out from the background-->
 
+
     <include
         android:elevation="8dp"
         android:id="@+id/include"
