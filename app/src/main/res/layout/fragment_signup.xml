@@ -19,12 +19,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/signUpText"
+        android:id="@+id/signInText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="18dp"
         android:alpha=".8"
-        android:text="Sign up"
+        android:text="Sign in"
         android:textColor="@color/purple_700"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
+        android:id="@+id/cardView1"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="28dp"
@@ -41,9 +41,10 @@
         android:layout_marginBottom="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signUpText">
+        app:layout_constraintTop_toBottomOf="@+id/signInText">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/box_border_black"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -87,7 +88,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView1" />
 
     <View
         android:id="@+id/view"
@@ -108,17 +109,15 @@
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gmail"
+        android:text="Username"
         android:layout_marginBottom="4dp"
         android:textColor="@color/black"
         android:alpha=".6"
-        app:layout_constraintBottom_toTopOf="@+id/editText2"
-        app:layout_constraintStart_toStartOf="@+id/editText2" />
+        app:layout_constraintBottom_toTopOf="@+id/usernameEdt"
+        app:layout_constraintStart_toStartOf="@+id/usernameEdt" />
 
     <View
         android:layout_width="match_parent"
@@ -128,13 +127,13 @@
         android:layout_marginBottom="2dp"
         android:layout_height="0dp"
         android:background="@drawable/box_border"
-        app:layout_constraintBottom_toBottomOf="@+id/editText2"
-        app:layout_constraintEnd_toEndOf="@+id/editText2"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toTopOf="@+id/editText2" />
+        app:layout_constraintBottom_toBottomOf="@+id/usernameEdt"
+        app:layout_constraintEnd_toEndOf="@+id/usernameEdt"
+        app:layout_constraintStart_toStartOf="@+id/usernameEdt"
+        app:layout_constraintTop_toTopOf="@+id/usernameEdt" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/usernameEdt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -151,10 +150,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:alpha=".6"
-        android:text="Username"
+        android:text="Password"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/editText3"
-        app:layout_constraintStart_toStartOf="@+id/editText3" />
+        app:layout_constraintBottom_toTopOf="@+id/passwordEdt"
+        app:layout_constraintStart_toStartOf="@+id/passwordEdt" />
 
     <View
         android:layout_width="match_parent"
@@ -164,32 +163,32 @@
         android:layout_marginBottom="2dp"
         android:layout_height="0dp"
         android:background="@drawable/box_border"
-        app:layout_constraintBottom_toBottomOf="@+id/editText3"
-        app:layout_constraintEnd_toEndOf="@+id/editText3"
-        app:layout_constraintStart_toStartOf="@+id/editText3"
-        app:layout_constraintTop_toTopOf="@+id/editText3" />
+        app:layout_constraintBottom_toBottomOf="@+id/passwordEdt"
+        app:layout_constraintEnd_toEndOf="@+id/passwordEdt"
+        app:layout_constraintStart_toStartOf="@+id/passwordEdt"
+        app:layout_constraintTop_toTopOf="@+id/passwordEdt" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/passwordEdt"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="42dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/transparent"
-        android:text=""
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@+id/usernameEdt" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
+        android:text="Re-enter password"
         android:layout_marginBottom="4dp"
         android:textColor="@color/black"
         android:alpha=".6"
-        app:layout_constraintBottom_toTopOf="@+id/editText4"
-        app:layout_constraintStart_toStartOf="@+id/editText4" />
+        app:layout_constraintBottom_toTopOf="@+id/reEnterPasswordEdt"
+        app:layout_constraintStart_toStartOf="@+id/reEnterPasswordEdt" />
 
 
     <View
@@ -200,22 +199,22 @@
         android:layout_marginBottom="2dp"
         android:layout_height="0dp"
         android:background="@drawable/box_border"
-        app:layout_constraintBottom_toBottomOf="@+id/editText4"
-        app:layout_constraintEnd_toEndOf="@+id/editText4"
-        app:layout_constraintStart_toStartOf="@+id/editText4"
-        app:layout_constraintTop_toTopOf="@+id/editText4" />
+        app:layout_constraintBottom_toBottomOf="@+id/reEnterPasswordEdt"
+        app:layout_constraintEnd_toEndOf="@+id/reEnterPasswordEdt"
+        app:layout_constraintStart_toStartOf="@+id/reEnterPasswordEdt"
+        app:layout_constraintTop_toTopOf="@+id/reEnterPasswordEdt" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/reEnterPasswordEdt"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginTop="42dp"
+        android:inputType="textPassword"
         android:backgroundTint="@color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
-
+        app:layout_constraintTop_toBottomOf="@+id/passwordEdt" />
 
     <TextView
         android:id="@+id/textView13"
@@ -225,13 +224,15 @@
         android:text="by clicking you agree to our blah blah of service"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/reEnterPasswordEdt" />
 
     <Button
+        android:id="@+id/submit"
+        android:background="@drawable/button_roundedges"
         android:layout_width="wrap_content"
-        android:layout_height="62dp"
+        android:layout_height="52dp"
         android:layout_marginTop="32dp"
-        android:text="CREATE"
+        android:text="SIGN UP"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

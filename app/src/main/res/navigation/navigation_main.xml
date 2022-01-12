@@ -12,8 +12,14 @@
         tools:layout="@layout/fragment_projects" />
 
     <fragment
-        android:id="@+id/navigation_account"
-        android:name="com.aatesting.bugtracker.fragments.AccountFragment"
+        android:id="@+id/navigation_account_signIn"
+        android:name="com.aatesting.bugtracker.fragments.SignInFragment"
         android:label="@string/titleRoadmap"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_signin" />
+
+    <fragment
+        android:id="@+id/navigation_account_signUp"
+        android:name="com.aatesting.bugtracker.fragments.SignInFragment"
+        android:label="@string/titleRoadmap"
+        tools:layout="@layout/fragment_signup" />
 </navigation>

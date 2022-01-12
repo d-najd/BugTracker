@@ -34,6 +34,8 @@ import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +55,6 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public ModifiedFragment fragment;
     public Activity activity;
     public BottomSheetDialog bottomDialog;
-
-    private String type;
 
     //endregion
 
@@ -202,13 +202,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     int columnpos = projectTableColumnPos;
                     int itempos = itemPos;
 
-                    ifTagTEDTBottomDialog(position);
+                    ifTagTEDTBottomDialog(position, GlobalValues.BOARDS_URL);
                 }
             });
             holder.mainBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ifTagTEDTBottomDialog(position);
+                    ifTagTEDTBottomDialog(position, GlobalValues.BOARDS_URL);
                 }
             });
         } else {
@@ -216,7 +216,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         }
     }
 
-    private void ifTagTEDTBottomDialog(int position) {
+    private void ifTagTEDTBottomDialog(int position, @NotNull String type) {
         //prevents window leak
         if (bottomDialog != null)
             bottomDialog.cancel();
@@ -225,8 +225,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         int columnid = ApiSingleton.getInstance().getObject(position, type).getId();
 
         ApiController.editField(fragment, activity,
-                "btj/startboard/" + ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getId()
-                + "/task/" + ApiSingleton.getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId()
+                GlobalValues.BTJ_URL + "/" + GlobalValues.TASKS_URL + "/" + ApiSingleton
+                        .getInstance().getObject(projectTableColumnPos, type).getTask(itemPos).getId()
                 + "/endboard/" + ApiSingleton.getInstance().getObject(position, type).getId()
                 + "/newpos/" + ApiSingleton.getInstance().getObject(position, type).getTasks().size());
     }

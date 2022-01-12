@@ -130,7 +130,7 @@ public class ApiController {
                     }
                 },
                 error -> {
-                    Log.wtf("ERROR", "failed to save field using URL" + URL);
+                    Log.wtf("ERROR", "failed to save field, the error is " + new String(error.networkResponse.data));
                     GlobalValues.objectModified = null;
                     fragment.onResponse("Error");
                 }

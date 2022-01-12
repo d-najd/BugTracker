@@ -29,24 +29,24 @@ public class ApiSingleton {
         roadmapsList = new ArrayList<>();
     }
 
-    public ArrayList<ApiJSONObject> getArray(String type) {
+    public ArrayList<ApiJSONObject> getArray(@NotNull String type) {
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         return list;
     }
 
-    public void addToArray(ApiJSONObject value, String type){
+    public void addToArray(@NotNull ApiJSONObject value, @NotNull String type){
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         list.add(value);
     }
 
 
-    public void reset(String type) {
+    public void reset(@NotNull String type) {
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         if (list != null)
             list.clear();
     }
 
-    public ApiJSONObject getObject(int pos, String type){
+    public ApiJSONObject getObject(int pos, @NotNull String type){
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         if (!list.isEmpty())
             return list.get(pos);
@@ -54,7 +54,7 @@ public class ApiSingleton {
             return null;
     }
 
-    public void reorderByPosition(boolean reverse, String type){
+    public void reorderByPosition(boolean reverse, @NotNull String type){
         ArrayList<ApiJSONObject> list = findProjectByType(type);
 
         if (!list.isEmpty())
@@ -64,7 +64,12 @@ public class ApiSingleton {
                 ApiSingleton.getInstance().getArray(type).sort(Comparator.comparing(ApiJSONObject::getPosition));
     }
 
-    private ArrayList<ApiJSONObject> findProjectByType(String type) {
+    private ArrayList<ApiJSONObject> findProjectByType(@NotNull String type) {
+        if (type == null) {
+            Log.wtf("ERROR", "WHAT THE ACTUAL FUCK, THE TYPE IS WITH TAG @NOTNULL WTF");
+            return null;
+        }
+
         switch (type){
             case GlobalValues.PROJECTS_URL:
                 return projectList;

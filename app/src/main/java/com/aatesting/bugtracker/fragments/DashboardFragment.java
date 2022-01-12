@@ -47,8 +47,6 @@ public class DashboardFragment extends ModifiedFragment {
 
         ProjectTableData.MakeFolders(requireContext());
 
-        Toast.makeText(getContext(), "TEST IF GETTING OF THE FIELDS WORK", Toast.LENGTH_SHORT).show();
-
         ApiController.getFields(true, true, false,  requireContext(), GlobalValues.BOARDS_URL, this);
                 //old
         //ApiController.getAllFields(false, true, requireContext(), GlobalValues.BOARDS_URL, this);

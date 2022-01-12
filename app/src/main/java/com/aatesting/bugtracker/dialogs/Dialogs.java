@@ -208,7 +208,7 @@ public class Dialogs {
                         null
                 );
                 
-                ApiController.createField(object, GlobalValues.TASKS_URL + "/" + GlobalValues.BOARDS_URL +
+                ApiController.createField(object, GlobalValues.TASKS_URL + "/" + GlobalValues.BOARDS_URL + "/" +
                         ApiSingleton.getInstance().getObject(position, type).getId(), fragment, null);
 
                 //NOTE the api usually automatically refreshes the activity so should watch out for that

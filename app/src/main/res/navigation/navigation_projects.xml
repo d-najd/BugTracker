@@ -15,5 +15,5 @@
         android:id="@+id/navigation_roadmap"
         android:name="com.aatesting.bugtracker.fragments.RoadmapFragment"
         android:label="@string/titleRoadmap"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_demo" />
 </navigation>

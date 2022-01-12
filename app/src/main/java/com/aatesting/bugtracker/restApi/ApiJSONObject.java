@@ -19,7 +19,15 @@ public class ApiJSONObject extends JSONObject {
     private String startDate;
     private String dueDate;
     private String dateCreated;
+    private String username;
+    private String password;
     private ArrayList<ApiJSONObject> tasks;
+
+    //for user
+    public ApiJSONObject(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
 
     //for project
     public ApiJSONObject(int id, String title){

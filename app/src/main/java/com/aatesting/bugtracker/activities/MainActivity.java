@@ -2,17 +2,16 @@ package com.aatesting.bugtracker.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.data.ProjectTableData;
-import com.aatesting.bugtracker.data.ProjectsDatabase;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
         context = this;
 
+
         View bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
         bottomBar.setBackground(null);
@@ -40,12 +40,11 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_projects,  R.id.navigation_account)
+                R.id.navigation_projects,  R.id.navigation_account_signIn, R.id.navigation_account_signUp)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.navHostFragment);
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
 
         Listeners(0);
         //((MainActivity)getActivity()).Listeners(0);
@@ -60,17 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Dialogs.NewProjectDialog(context, "Create Project",
                             "CREATE", "CANCEL", projectsFragment);
-                    //Intent intent = new Intent(MainActivity.this, ProjectCreateActivity.class);
-                    //startActivity(intent);
-                }
-            });
-        }
-        else if (fragmentSelected == 1) {
-            mainBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //Intent intent = new Intent(MainActivity.this, RoadmapCreateEpicActivity.class);
-                    //startActivity(intent);
                 }
             });
         }

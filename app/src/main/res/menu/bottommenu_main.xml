@@ -11,7 +11,7 @@
         android:title="" />
 
     <item
-        android:id="@+id/navigation_account"
+        android:id="@+id/navigation_account_signIn"
         android:icon="@drawable/ic_account_24dp"
         android:title="@string/titleAccount" />
 

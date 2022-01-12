@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.aatesting.bugtracker.R;
@@ -19,7 +18,7 @@ import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AccountFragment extends ModifiedFragment {
+public class SignInFragment extends ModifiedFragment {
 
     private List<TextView> clockTexts = new ArrayList<TextView>();
     private List<ImageView> clockImages = new ArrayList<ImageView>();
@@ -49,28 +48,25 @@ public class AccountFragment extends ModifiedFragment {
 
     private void signInListeners(View root) {
         TextView signUpText = null;
+        signUpText = root.findViewById(R.id.signInText);
 
-        try {
-            signUpText = root.findViewById(R.id.signUpText);
-        } catch (Exception e) {
-
-        }
+        ModifiedFragment accountSignInFragment = this;
 
         if (signUpText != null)
             signUpText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Create new fragment and transaction
-                    Fragment newFragment = new ModifiedFragment();
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    Bundle bundle = new Bundle();
+                    SignUpFragment signUpFragment = new SignUpFragment();
+                    signUpFragment.setArguments(bundle);
 
-                    // Replace whatever is in the fragment_container view with this fragment,
-                    // and add the transaction to the back stack if needed
-                    transaction.replace(R.id.container, newFragment);
-                    transaction.addToBackStack(null);
+                    FragmentManager myFragmentManager = getParentFragmentManager();
 
-                    // Commit the transaction
-                    transaction.commit();
+                    FragmentTransaction fragmentTransaction = myFragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.navHostFragment, signUpFragment);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                 }
             });
     }
