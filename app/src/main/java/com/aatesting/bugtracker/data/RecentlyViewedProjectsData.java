@@ -137,33 +137,36 @@ public class RecentlyViewedProjectsData {
     }
 
     public static List<ApiJSONObject> getRecentlyViewedList(Context context){
-        String data = getData(context);
-        ArrayList<ApiJSONObject> projects = ApiSingleton.getInstance().getArray(GlobalValues.PROJECTS_URL);
+        try {
+            String data = getData(context);
+            ArrayList<ApiJSONObject> projects = ApiSingleton.getInstance().getArray(GlobalValues.PROJECTS_URL);
 
-        if (projects.isEmpty())
-        {
-            Log.d("DEBUG", "there are no projects in the server to get RecentlyViewedProject (rvp) this may be because rvp is checked before getting the projects (which should be fixed if that is the case) or there are no projects linked with the current user in the database");
-            return projects;
-        }
-        //raw because it needs to be converted to integer list
-        ArrayList<String> partsRaw = new ArrayList<>(Arrays.asList(data.split(SEPARATOR)));
-        ArrayList<Integer> parts = new ArrayList<>();
-        if (partsRaw.get(0).equals(""))
-            partsRaw.clear();
-        for(String part : partsRaw)
-            parts.add(Integer.valueOf(part));
-
-        ArrayList<ApiJSONObject> returnList = new ArrayList<>();
-
-        //sorting the return list this way so it returns the data in the correct order
-        for (Integer part : parts){
-            for (ApiJSONObject project : projects){
-                if (part == project.getId())
-                    returnList.add(project);
+            if (projects.isEmpty() || data == null) {
+                Log.d("DEBUG", "there are no projects in the server to get RecentlyViewedProject (rvp) this may be because rvp is checked before getting the projects (which should be fixed if that is the case) or there are no projects linked with the current user in the database");
+                return projects;
             }
-        }
+            //raw because it needs to be converted to integer list
+            ArrayList<String> partsRaw = new ArrayList<>(Arrays.asList(data.split(SEPARATOR)));
+            ArrayList<Integer> parts = new ArrayList<>();
+            if (partsRaw.get(0).equals(""))
+                partsRaw.clear();
+            for (String part : partsRaw)
+                parts.add(Integer.valueOf(part));
 
-        return returnList;
+            ArrayList<ApiJSONObject> returnList = new ArrayList<>();
+
+            //sorting the return list this way so it returns the data in the correct order
+            for (Integer part : parts) {
+                for (ApiJSONObject project : projects) {
+                    if (part == project.getId())
+                        returnList.add(project);
+                }
+            }
+
+            return returnList;
+        } catch (NumberFormatException e) {
+            return new ArrayList<>();
+        }
     }
 
     /*

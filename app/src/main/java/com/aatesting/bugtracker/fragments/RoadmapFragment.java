@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicJsonData;
@@ -45,14 +46,16 @@ public class RoadmapFragment extends ModifiedFragment {
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
 
-        ((ProjectsMainActivity)requireActivity()).Listeners(1); // for knowing which fragment is selected
+        //((ProjectsMainActivity)requireActivity()).oldListeners(1); // for knowing which fragment is selected
+
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ApiController.getFields(true, true, true, mcontext,
                 GlobalValues.ROADMAPS_URL, this);
-
         ViewGroup.LayoutParams scrollViewLength = root.findViewById(R.id.scrollViewLength).getLayoutParams();
 
         scrollViewLength.width = (int) (Math.round(10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width)));
+
+        ((ProjectsMainActivity)requireActivity()).listeners(root, 1, getParentFragmentManager());
 
         return root;
     }

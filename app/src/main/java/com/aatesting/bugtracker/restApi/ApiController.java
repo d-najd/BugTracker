@@ -88,9 +88,14 @@ public class ApiController {
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
                 error -> {
-                    Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                    Message.defErrMessage(context);
-                    error.printStackTrace();
+                    try {
+                        Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
+                        Message.defErrMessage(context);
+                        error.printStackTrace();
+                    } catch (NullPointerException e){
+                        Message.message(context, "server seems to be offline");
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                    }
                 }
 
         ) {
@@ -139,17 +144,23 @@ public class ApiController {
                     }
                 },
                 error -> {
-                    if (url.equals(GlobalValues.USERS_URL)) {
-                        if(error.networkResponse.statusCode == 401)
-                            Message.message(context, "Wrong credentials");
-                        else {
+                    try {
+
+                        if (url.equals(GlobalValues.USERS_URL)) {
+                            if (error.networkResponse.statusCode == 401)
+                                Message.message(context, "Wrong credentials");
+                            else {
+                                Message.defErrMessage(context);
+                                Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
+                            }
+                        } else {
+                            Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
                             Message.defErrMessage(context);
-                            Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
+                            error.printStackTrace();
                         }
-                    } else {
-                        Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                        Message.defErrMessage(context);
-                        error.printStackTrace();
+                    } catch (NullPointerException e){
+                        Message.message(context, "server seems to be offline");
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
                     }
 
                 }
@@ -201,11 +212,16 @@ public class ApiController {
                     }
                 },
                 error -> {
-                    Log.wtf("ERROR", "failed to save field, the error is " + new String(error.networkResponse.data));
-                    Message.defErrMessage(context);
+                    try {
+                        Log.wtf("ERROR", "failed to save field, the error is " + new String(error.networkResponse.data));
+                        Message.defErrMessage(context);
 
-                    GlobalValues.objectModified = null;
-                    fragment.onResponse("Error");
+                        GlobalValues.objectModified = null;
+                        fragment.onResponse("Error");
+                    } catch (NullPointerException e){
+                        Message.message(context, "server seems to be offline");
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
+                    }
                 }
         ) {
             @Override
@@ -252,10 +268,15 @@ public class ApiController {
                         fragment.onResponse(fragment.getString(R.string.getData));
                 },
                 error -> {
-                    GlobalValues.objectModified = null;
-                    Log.wtf("ERROR", "failed to edit data using url " + URL + ", error response is " + new String(error.networkResponse.data));
-                    Message.defErrMessage(context);
-                    error.printStackTrace();
+                    try {
+                        GlobalValues.objectModified = null;
+                        Log.wtf("ERROR", "failed to edit data using url " + URL + ", error response is " + new String(error.networkResponse.data));
+                        Message.defErrMessage(context);
+                        error.printStackTrace();
+                    } catch (NullPointerException e){
+                        Message.message(context, "server seems to be offline");
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
+                    }
                 }
         ) {
             @Override
@@ -303,10 +324,15 @@ public class ApiController {
                     }
                 },
                 error -> {
-                    GlobalValues.objectModified = null;
-                    Log.wtf("ERROR", "failed to get delete using url " + URL + ", error response is " + new String(error.networkResponse.data));
-                    Message.defErrMessage(context);
-                    error.printStackTrace();
+                    try {
+                        GlobalValues.objectModified = null;
+                        Log.wtf("ERROR", "failed to get delete using url " + URL + ", error response is " + new String(error.networkResponse.data));
+                        Message.defErrMessage(context);
+                        error.printStackTrace();
+                    } catch (NullPointerException e){
+                        Message.message(context, "server seems to be offline");
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
+                    }
                 }
         ) {
             @Override

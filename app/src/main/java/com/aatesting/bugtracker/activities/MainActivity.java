@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     public int fragmentSelected = 0; //0-1 from left to right
     public ProjectsFragment projectsFragment;
+    public View mainBtn;
+    public View bottomBar;
     private MainActivity mainActivity;
     private Context context;
 
@@ -32,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
         context = this;
 
-
-        View bottomBar = findViewById(R.id.bottomAppBar);
+        mainBtn = findViewById(R.id.mainBtn);
+        bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
         bottomBar.setBackground(null);
 
@@ -46,22 +48,9 @@ public class MainActivity extends AppCompatActivity {
         //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        Listeners(0);
-        //((MainActivity)getActivity()).Listeners(0);
+        mainBtn.setVisibility(View.VISIBLE);
+
+        //View test = findViewById(R.id.include);
+        //test.setVisibility(View.GONE);
     }
-
-    public void Listeners(int fragmentSelected){ //NOTE this is called from the fragments
-        View mainBtn = findViewById(R.id.mainBtn);
-
-        if (fragmentSelected == 0) {
-            mainBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Dialogs.NewProjectDialog(context, "Create Project",
-                            "CREATE", "CANCEL", projectsFragment);
-                }
-            });
-        }
-    }
-
 }

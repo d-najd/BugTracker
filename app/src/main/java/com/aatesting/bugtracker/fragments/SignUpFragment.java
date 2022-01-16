@@ -1,7 +1,9 @@
 package com.aatesting.bugtracker.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,6 @@ public class SignUpFragment extends ModifiedFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        ((MainActivity)getActivity()).Listeners(2);
         View root = inflater.inflate(R.layout.fragment_signup, container, false);
 
         listeners(root);
@@ -37,13 +38,66 @@ public class SignUpFragment extends ModifiedFragment {
     }
 
     private void listeners(View root) {
+        Handler handler = new Handler();
+        View mainBtn = ((MainActivity)getActivity()).mainBtn;
+
         TextView signInText = root.findViewById(R.id.signInText);
         EditText usernameEdt = root.findViewById(R.id.usernameEdt);
         EditText passwordEdt = root.findViewById(R.id.passwordEdt);
         EditText reEnterPasswordEdt = root.findViewById(R.id.reEnterPasswordEdt);
         Button submit = root.findViewById(R.id.submit);
 
+
         ModifiedFragment fragment = this;
+
+        usernameEdt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            passwordEdt.requestFocus();
+                        }
+                    }, 50);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        passwordEdt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            reEnterPasswordEdt.requestFocus();
+                        }
+                    }, 50);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+        reEnterPasswordEdt.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            signUp(usernameEdt, passwordEdt, reEnterPasswordEdt, fragment);
+                        }
+                    }, 50);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         signInText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,29 +119,40 @@ public class SignUpFragment extends ModifiedFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = usernameEdt.getText().toString();
-                String password = passwordEdt.getText().toString();
-                String password1 = reEnterPasswordEdt.getText().toString();
-
-                //username or password less than 3 is not allowed
-                if (username.length() <= 3 || password.length() <= 3 || password1.length() <= 3){
-                    Message.message(getContext(), "Username and password longer than 3 characters is required");
-                    return;
-                }
-
-                if (!password.equals(password1)){
-                    Message.message(getContext(), "The passwords don't match, re-enter the passwords and try again");
-                    return;
-                }
-
-                user = new ApiJSONObject(
-                        username,
-                        password
-                );
-
-                ApiController.createField(user, GlobalValues.USERS_URL, fragment, null);
+                signUp(usernameEdt, passwordEdt, reEnterPasswordEdt, fragment);
             }
         });
+
+        mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signUp(usernameEdt, passwordEdt, reEnterPasswordEdt, fragment);
+            }
+        });
+    }
+
+    private void signUp(EditText usernameEdt, EditText passwordEdt, EditText reEnterPasswordEdt, ModifiedFragment fragment) {
+        String username = usernameEdt.getText().toString();
+        String password = passwordEdt.getText().toString();
+        String password1 = reEnterPasswordEdt.getText().toString();
+
+        //username or password less than 3 is not allowed
+        if (username.length() <= 3 || password.length() <= 3 || password1.length() <= 3){
+            Message.message(getContext(), "Username and password longer than 3 characters is required");
+            return;
+        }
+
+        if (!password.equals(password1)){
+            Message.message(getContext(), "The passwords don't match, re-enter the passwords and try again");
+            return;
+        }
+
+        user = new ApiJSONObject(
+                username,
+                password
+        );
+
+        ApiController.createField(user, GlobalValues.USERS_URL, fragment, null);
     }
 
     @Override
@@ -127,5 +192,4 @@ public class SignUpFragment extends ModifiedFragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-
 }

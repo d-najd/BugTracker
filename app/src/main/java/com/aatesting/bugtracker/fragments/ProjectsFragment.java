@@ -42,15 +42,26 @@ public class ProjectsFragment extends ModifiedFragment {
         root = inflater.inflate(R.layout.fragment_projects, container, false);
 
         projectsFragment = this;
-
-        ((MainActivity)requireActivity()).Listeners(0);
         ((MainActivity)requireActivity()).projectsFragment = this;
+        listeners();
 
         //setting up the main adapter
         ApiController.getFields(false, false, true, requireContext(),
                 GlobalValues.PROJECTS_URL, projectsFragment);
 
         return root;
+    }
+
+    private void listeners(){
+        View mainBtn = ((MainActivity)getActivity()).mainBtn;
+
+        mainBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialogs.NewProjectDialog(getContext(), "Create Project",
+                        "CREATE", "CANCEL", projectsFragment);
+            }
+        });
     }
 
 

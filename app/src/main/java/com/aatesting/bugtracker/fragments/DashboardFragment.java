@@ -38,19 +38,14 @@ public class DashboardFragment extends ModifiedFragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        ((ProjectsMainActivity)requireActivity()).Listeners(0);
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
+        ((ProjectsMainActivity)requireActivity()).listeners(root, 0, getParentFragmentManager());
 
         recyclerView = root.findViewById(R.id.mainRecyclerView);
         tag = recyclerView.getTag().toString();
         projectName = requireActivity().getIntent().getExtras().getString("projectName");
 
-        //ProjectTableData.MakeFolders(requireContext());
-
         ApiController.getFields(true, true, false,  requireContext(), GlobalValues.BOARDS_URL, this);
-                //old
-        //ApiController.getAllFields(false, true, requireContext(), GlobalValues.BOARDS_URL, this);
-
         return root;
     }
 
@@ -62,9 +57,7 @@ public class DashboardFragment extends ModifiedFragment {
         }
 
         recyclerDataArrayList.add(new RecyclerData(this.getString(R.string.add_column), tag));
-
         adapter = new ProjectTableCreateAdapter(recyclerDataArrayList, getContext());
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
 
         recyclerView.setLayoutManager(layoutManager);
