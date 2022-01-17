@@ -87,6 +87,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
                     intent.putExtra("projectName", projectName);
                     startActivity(intent);
                 }
+                else if (fragment == 2) {}
                 else
                 {
                     Message.defErrMessage(context);
@@ -136,28 +137,6 @@ public class ProjectsMainActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
-                }
-            });
-        }
-    }
-
-    public void oldListeners(int fragmentSelected){ //NOTE this is called from the fragments
-        if (fragmentSelected == 0) {
-            mainBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Dialogs.NewColumnDialog(context, "Add column", "ADD",
-                            "Cancel", thisFragment);
-                }
-            });
-        }
-        else if (fragmentSelected == 1) {
-            mainBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ProjectsMainActivity.this, RoadmapCreateEpicActivity.class);
-                    intent.putExtra("projectName", projectName);
-                    startActivity(intent);
                 }
             });
         }

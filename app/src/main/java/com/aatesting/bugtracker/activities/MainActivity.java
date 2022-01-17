@@ -2,8 +2,10 @@ package com.aatesting.bugtracker.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
         context = this;
 
+
+
         mainBtn = findViewById(R.id.mainBtn);
         bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
@@ -49,8 +53,19 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         mainBtn.setVisibility(View.VISIBLE);
+        fixBottomMenu();
+    }
 
-        //View test = findViewById(R.id.include);
-        //test.setVisibility(View.GONE);
+    /**
+     * @apiNote prevents the bottom menu to get dragged when the keyboard created
+     */
+    public void fixBottomMenu(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            }
+        }, 100);
     }
 }

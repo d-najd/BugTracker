@@ -76,7 +76,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         ImageButton closeBtn = findViewById(R.id.closeBtn);
         EditText titleMiddle = findViewById(R.id.titleMiddle);
         TextView editDescriptionTxt = findViewById(R.id.descriptionTxt);
-        TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
+        TextView issueTypeMainTxt = findViewById(R.id.roleMainTxt);
 
         TextView startDateDescTxt = findViewById(R.id.startDateDescriptionTxt);
         TextView dueDateDescTxt = findViewById(R.id.dueDateDescriptionTxt);
@@ -237,7 +237,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
     }
 
     public void DeleteEpic(){
-        ApiController.removeField(activity, null, GlobalValues.ROADMAPS_URL + "/" +
+        ApiController.removeField(null, activity, null, GlobalValues.ROADMAPS_URL + "/" +
                 ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL).getId());
         Message.message(context, "Epic removed successfully");
     }

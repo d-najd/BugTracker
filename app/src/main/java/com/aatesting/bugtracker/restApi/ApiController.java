@@ -220,7 +220,7 @@ public class ApiController {
                         fragment.onResponse("Error");
                     } catch (NullPointerException e){
                         Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get post using url " + URL);
                     }
                 }
         ) {
@@ -295,11 +295,12 @@ public class ApiController {
     }
 
     /**
+     * @param object if not null will send the object along with the request
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
      * @param activity if activity is passed it will be closed upon editing of the field
      */
-    public static void removeField(Activity activity, ModifiedFragment fragment, @NotNull String url) {
+    public static void removeField(ApiJSONObject object, Activity activity, ModifiedFragment fragment, @NotNull String url) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         if (requestQueue == null){
@@ -337,7 +338,18 @@ public class ApiController {
         ) {
             @Override
             public Map<String, String> getHeaders() {
-                return setHeaders(false);
+                if (object == null)
+                    return setHeaders(false);
+                else
+                    return setHeaders(true);
+            }
+
+            @Override
+            public byte[] getBody() {
+                if (object != null)
+                    return object.toString().getBytes();
+                else
+                    return getBody();
             }
         };
 

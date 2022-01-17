@@ -18,7 +18,6 @@
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/blue"
         app:layout_constraintTop_toBottomOf="@+id/topBar"
         tools:context=".fragments.RoadmapFragment">
 

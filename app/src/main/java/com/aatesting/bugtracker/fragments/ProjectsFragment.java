@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,8 @@ public class ProjectsFragment extends ModifiedFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_projects, container, false);
+
+        ((MainActivity)getActivity()).fixBottomMenu();
 
         projectsFragment = this;
         ((MainActivity)requireActivity()).projectsFragment = this;
@@ -211,6 +214,6 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     public void removeProject(int field){
-        ApiController.removeField(null, this, GlobalValues.PROJECTS_URL + "/" + field);
+        ApiController.removeField(null,null, this, GlobalValues.PROJECTS_URL + "/" + field);
     }
 }

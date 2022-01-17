@@ -1,6 +1,5 @@
 package com.aatesting.bugtracker.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
-import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -92,8 +89,8 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         Context context = this;
         ProjectTableEditTaskActivity projectCreateTableEditTask = this;
 
-        TextView issueTypeMainTxt = findViewById(R.id.issueTypeMainTxt);
-        ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
+        TextView issueTypeMainTxt = findViewById(R.id.roleMainTxt);
+        ImageButton issueTypeImg = findViewById(R.id.roleImg);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
         Button deleteBtn = findViewById(R.id.deleteBtn);
 
@@ -183,7 +180,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int columnId = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getId();
                 int taskId = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos).getId();
-                ApiController.removeField(projectCreateTableEditTask, null,
+                ApiController.removeField(null, projectCreateTableEditTask, null,
                         GlobalValues.TASKS_URL + "/" + taskId);
             }
         });

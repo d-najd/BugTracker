@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView1"
+        android:id="@+id/manageUsersCardview"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginLeft="18dp"
@@ -51,7 +51,7 @@
             android:background="@drawable/box_border_black">
 
             <ImageView
-                android:id="@+id/imageView7"
+                android:id="@+id/manageUsersCheckbox"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
@@ -59,11 +59,11 @@
                 android:backgroundTint="@color/transparent"
                 android:src="@drawable/google_logo"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView10"
+                app:layout_constraintEnd_toStartOf="@+id/manageUsersMainText"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/manageUsersMainText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="22dp"
@@ -90,7 +90,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView1" />
+        app:layout_constraintTop_toBottomOf="@+id/manageUsersCardview" />
 
     <View
         android:id="@+id/view"

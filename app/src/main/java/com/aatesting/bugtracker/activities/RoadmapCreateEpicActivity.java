@@ -32,13 +32,15 @@ import java.util.GregorianCalendar;
 
 public class RoadmapCreateEpicActivity extends AppCompatActivity {
     private RoadmapCreateEpicActivity activity = this;
-    private Context mcontext = this;
+    private Context context = this;
     private String projectName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roadmap_createepic);
+
+        Message.message(context, "put the current date for a start date and 2 weeks after for a due date automatically when this activity gets called");
 
         projectName = getIntent().getExtras().getString("projectName");
         Listeners();
@@ -79,7 +81,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 allColumnImages.add(2131165294);
                 allColumnDescriptions.add("A small, distinct piece of work");
 
-                Dialogs.BottomDialogCreator(mcontext, v, viewGroup, "Issue Type",
+                Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type",
                         "These are the issue types that you can choose, based on the workflow of the current issue type.",
                         allColumnTitles, allColumnDescriptions, allColumnImages, null);
             }
@@ -88,7 +90,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mcontext, ProjectTableEditDescriptionActivity.class);
+                Intent intent = new Intent(context, ProjectTableEditDescriptionActivity.class);
                 intent.putExtra("oldData", editDescriptionTxt.getText().toString());
                 startActivityForResult(intent, 1); //for getting data back from the second activity
             }
@@ -97,14 +99,14 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         startDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, startDateDescriptionTxt.getText().toString(),true);
+                Dialogs.CalendarDateSetterDialog(context, v, activity, startDateDescriptionTxt.getText().toString(),true);
             }
         });
 
         dueDateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(mcontext, v, activity, dueDateDescriptionTxt.getText().toString(), false);
+                Dialogs.CalendarDateSetterDialog(context, v, activity, dueDateDescriptionTxt.getText().toString(), false);
             }
         });
 
@@ -116,7 +118,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 String startDateStr = getStartDate();
                 String dueDateStr = getDueDate(startDateStr);
 
-                if (RoadmapEditEpicActivity.forbiddenDates(startDateStr, dueDateStr, mcontext)) return;
+                if (RoadmapEditEpicActivity.forbiddenDates(startDateStr, dueDateStr, context)) return;
 
                 ApiJSONObject object = new ApiJSONObject(
                         -1,
@@ -153,7 +155,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                             calendar.add(Calendar.WEEK_OF_YEAR, -2);
                             startDate = simpleDateFormat.format(calendar.getTime());
                         } catch (ParseException e){
-                            Message.defErrMessage(mcontext);
+                            Message.defErrMessage(context);
                             Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
                             e.printStackTrace();
                             startDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
@@ -181,7 +183,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                         calendar.add(Calendar.WEEK_OF_YEAR, 2);
                         dueDate = simpleDateFormat.format(calendar.getTime());
                     } catch (ParseException e){
-                        Message.defErrMessage(mcontext);
+                        Message.defErrMessage(context);
                         Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
                         e.printStackTrace();
                         dueDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());

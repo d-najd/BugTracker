@@ -22,6 +22,13 @@ public class ApiJSONObject extends JSONObject {
     private String username;
     private String password;
     private ArrayList<ApiJSONObject> tasks;
+    private ApiJSONObject rolesIdentity;
+
+    private Boolean manageProject;
+    private Boolean manageUsers;
+    private Boolean create;
+    private Boolean edit;
+    private Boolean delete;
 
     //for user
     public ApiJSONObject(String username, String password){
@@ -62,6 +69,22 @@ public class ApiJSONObject extends JSONObject {
         this.startDate = startDate;
         this.dueDate = dueDate;
         this.dateCreated = dateCreated;
+    }
+
+    //for roles
+    public ApiJSONObject(ApiJSONObject rolesIdentity, Boolean manageProject, Boolean manageUsers, Boolean create, Boolean edit, Boolean delete) {
+        this.rolesIdentity = rolesIdentity;
+        this.manageProject = manageProject;
+        this.manageUsers = manageUsers;
+        this.create = create;
+        this.edit = edit;
+        this.delete = delete;
+    }
+
+    //for rolesIdentity
+    public ApiJSONObject(String username, int projectId){
+        this.username = username;
+        this.projectId = projectId;
     }
 
     //for board/tasks

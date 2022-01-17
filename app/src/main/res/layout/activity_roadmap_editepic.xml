@@ -89,7 +89,7 @@
     <TextView
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:id="@+id/issueTypeMainTxt"
+        android:id="@+id/roleMainTxt"
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:text="@string/epic"

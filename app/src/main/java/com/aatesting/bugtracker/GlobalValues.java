@@ -26,4 +26,5 @@ public class GlobalValues {
     public static final String TASKS_URL = "tasks";
     public static final String BTJ_URL = "btj";
     public static final String USERS_URL = "users";
+    public static final String ROLES_URL = "roles";
 }
