@@ -2,24 +2,17 @@ package com.aatesting.bugtracker.data;
 
 import android.content.Context;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.fragments.ProjectSettingsFragment;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class UserData {
     private static final String FILE_NAME = "UserData";

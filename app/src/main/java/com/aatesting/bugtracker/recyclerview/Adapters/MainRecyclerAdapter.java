@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,15 +24,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
-import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
 import com.aatesting.bugtracker.data.UserData;
-import com.aatesting.bugtracker.fragments.ProjectSettingsFragment;
+import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettings_authFragment;
+import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettings_manageUsersFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
-import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -59,7 +57,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public Activity activity;
 
     public BottomSheetDialog bottomDialog;
-    public ProjectSettingsFragment projectSettingsFragment;
+    public ProjectSettings_manageUsersFragment projectSettingsAddUserFragment;
+    public ProjectSettings_authFragment projectSettings_authFragment;
 
     //endregion
 
@@ -217,7 +216,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             });
         }
-        else if (recyclerData.getTag().equals(ProjectSettingsFragment.tag)){
+        else if (recyclerData.getTag().equals(ProjectSettings_manageUsersFragment.tag)){
             holder.mainBtn.setOnClickListener(ifTagProjectSettingsBottomDialog(position));
             holder.itemView.setOnClickListener(ifTagProjectSettingsBottomDialog(position));
         }
@@ -231,7 +230,17 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             @Override
             public void onClick(View v) {
                 String title = holderArrayList.get(position).title.getText().toString().toLowerCase();
-                View pjsView = projectSettingsFragment.view;
+                View pjsView;
+                if (projectSettingsAddUserFragment != null)
+                    pjsView = projectSettingsAddUserFragment.view;
+                else if (projectSettings_authFragment != null)
+                    pjsView = projectSettings_authFragment.view;
+                else{
+                    Message.defErrMessage(mcontext);
+                    Log.wtf("ERROR", "there is a dialog with roles but it isnt in authFragment or manageUsersFragment in projectSettings");
+                    return;
+                }
+
                 if (title.equals("admin"))
                     UserData.setRolesCheckboxes(pjsView, true, true, true, true, true);
                 else if (title.equals("manager"))
@@ -248,14 +257,23 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     return;
                 }
                 try {
-                    View psfView = projectSettingsFragment.view;
-                    TextView psfTextView = psfView.findViewById(R.id.roleMainTxt);
+                    TextView psfTextView = pjsView.findViewById(R.id.roleMainTxt);
                     psfTextView.setText(holderArrayList.get(position).title.getText().toString());
                 } catch (NullPointerException e){
                     Message.defErrMessage(v.getContext());
                     e.printStackTrace();
                 }
-                projectSettingsFragment.bottomSheetDialog.dismiss();
+
+                if (projectSettingsAddUserFragment != null)
+                    projectSettingsAddUserFragment.bottomSheetDialog.dismiss();
+                else if (projectSettings_authFragment != null)
+                    projectSettings_authFragment.bottomSheetDialog.dismiss();
+                else{
+                    Message.defErrMessage(mcontext);
+                    Log.wtf("WTF", "there is a dialog with roles but it isnt in authFragment or manageUsersFragment in projectSettings, oh and this is the second one and it should be IMPOSSIBLE TO FUCKING REACH WTF?");
+                    return;
+                }
+
             }
         };
     }

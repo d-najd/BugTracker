@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments;
+package com.aatesting.bugtracker.fragments.ProjectSettings;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
@@ -31,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class ProjectSettingsFragment extends ModifiedFragment {
+public class ProjectSettings_manageUsersFragment extends ModifiedFragment {
     private View root;
     private Context context;
 
@@ -41,13 +40,13 @@ public class ProjectSettingsFragment extends ModifiedFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_roles, container, false);
+        View root = inflater.inflate(R.layout.fragment_manage_users, container, false);
         context = getContext();
 
         view = root;
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 2, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, 5, getParentFragmentManager());
 
         listeners(root);
 
@@ -122,43 +121,46 @@ public class ProjectSettingsFragment extends ModifiedFragment {
 
     @NotNull
     private View.OnClickListener roleClicked() {
-        ProjectSettingsFragment fragment = this;
-
+        ProjectSettings_manageUsersFragment fragment = this;
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewGroup viewGroup = v.findViewById(android.R.id.content);
-
-                ArrayList<String> allColumnTitles = new ArrayList<>();
-                ArrayList<String> allColumnDescriptions = new ArrayList<>();
-                ArrayList<Integer> allColumnImages = new ArrayList<>();
-
-                allColumnTitles.add("Admin");
-                allColumnImages.add(R.drawable.ic_account_24dp);
-                allColumnDescriptions.add("Has all the abilities except altering of other admins or the owner");
-
-                allColumnTitles.add("Manager");
-                allColumnImages.add(R.drawable.ic_account_24dp);
-                allColumnDescriptions.add("Has all the abilities except altering other admins, managers or the owner");
-
-                allColumnTitles.add("Developer");
-                allColumnImages.add(R.drawable.ic_account_24dp);
-                allColumnDescriptions.add("Has ability to create, edit, remove tasks/fields and view project data");
-
-                allColumnTitles.add("User");
-                allColumnImages.add(R.drawable.ic_account_24dp);
-                allColumnDescriptions.add("Has abilities to create and edit tasks/fields and view project data");
-
-                allColumnTitles.add("Tester");
-                allColumnImages.add(R.drawable.ic_account_24dp);
-                allColumnDescriptions.add("Has the ability to view project data but not to change any of the contents");
-
-                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                        allColumnTitles, allColumnDescriptions, allColumnImages, tag);
+                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = roleClickedBottomDialog(context, v, tag);
 
                 bottomSheetDialog = pair.second;
-                pair.first.projectSettingsFragment = fragment;
+                pair.first.projectSettingsAddUserFragment = fragment;
             }
         };
+    }
+
+    public static Pair<MainRecyclerAdapter, BottomSheetDialog> roleClickedBottomDialog(Context context, View v, String tag){
+        ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+        ArrayList<String> allColumnTitles = new ArrayList<>();
+        ArrayList<String> allColumnDescriptions = new ArrayList<>();
+        ArrayList<Integer> allColumnImages = new ArrayList<>();
+
+        allColumnTitles.add("Admin");
+        allColumnImages.add(R.drawable.ic_account_24dp);
+        allColumnDescriptions.add("Has all the abilities except altering of other admins or the owner");
+
+        allColumnTitles.add("Manager");
+        allColumnImages.add(R.drawable.ic_account_24dp);
+        allColumnDescriptions.add("Has all the abilities except altering other admins, managers or the owner");
+
+        allColumnTitles.add("Developer");
+        allColumnImages.add(R.drawable.ic_account_24dp);
+        allColumnDescriptions.add("Has ability to create, edit, remove tasks/fields and view project data");
+
+        allColumnTitles.add("User");
+        allColumnImages.add(R.drawable.ic_account_24dp);
+        allColumnDescriptions.add("Has abilities to create and edit tasks/fields and view project data");
+
+        allColumnTitles.add("Tester");
+        allColumnImages.add(R.drawable.ic_account_24dp);
+        allColumnDescriptions.add("Has the ability to view project data but not to change any of the contents");
+
+        return Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                allColumnTitles, allColumnDescriptions, allColumnImages, tag);
     }
 }

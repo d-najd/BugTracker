@@ -82,8 +82,8 @@ public class ApiController {
                 URL,
                 null,
                 response -> {
-                    ApiSingleton.getInstance().reset(url);
-                    dataToSingleton(response, url);
+                    ApiSingleton.getInstance().reset(url); //removes any previous data
+                    dataToSingleton(response, url); //works with the data somewhere
 
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
@@ -383,10 +383,14 @@ public class ApiController {
         return params;
     }
 
-    private static void dataToSingleton(JSONArray data, String value) {
+    /**
+     * works with the data, fields need to be changed here and in singletonConstructor
+     * @param data the data array
+     */
+    private static void dataToSingleton(JSONArray data, String url) {
         try {
             for (int i = 0; i < data.length(); i++) {
-                singletonConstructor(data, value, i);
+                singletonConstructor(data, url, i);
             }
         } catch (JSONException e){
             Message.defErrMessage(context);
@@ -395,25 +399,26 @@ public class ApiController {
         }
         //reorder by position field if it exists in the current singleton
 
-        switch (value){
+        switch (url){
             case GlobalValues.ROADMAPS_URL:
             case GlobalValues.BOARDS_URL:
             case GlobalValues.PROJECTS_URL:
-                ApiSingleton.getInstance().reorderByPosition(false, value);
+            case GlobalValues.ROLES_URL:
+                ApiSingleton.getInstance().reorderByPosition(false, url);
                 break;
             case GlobalValues.TASKS_URL:
-                ApiSingleton.getInstance().reorderByPosition(true, value);
+                ApiSingleton.getInstance().reorderByPosition(true, url);
                 break;
             default:
-                Log.wtf("\nWARNING","the reordering order for the value " + value +
+                Log.wtf("\nWARNING","the reordering order for the value " + url +
                         " is not defined, will reorder items the default way\n" );
-                ApiSingleton.getInstance().reorderByPosition(false, value);
+                ApiSingleton.getInstance().reorderByPosition(false, url);
                 break;
         }
     }
 
     /**
-     * every type of value is added here so everything is in 1 place
+     * every type of value is added here so everything is in mostly one place
      * @param response the input array
      * @param type the name of the field
      * @param i the current iteration of the loop (for knowing which object inside the list to get
@@ -423,6 +428,8 @@ public class ApiController {
     private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
         try {
             switch (type) {
+                case GlobalValues.ROLES_URL:
+                    addSingletonRoles(response, i, type);
                 case GlobalValues.PROJECTS_URL:
                     addSingletonProjects(response, i, type);
                     break;
@@ -444,6 +451,22 @@ public class ApiController {
             throw exception;
         }
         return null;
+    }
+
+    private static void addSingletonRoles(JSONArray response, int i, String type) throws JSONException{
+        JSONObject object = response.getJSONObject(i);
+
+        Log.wtf("WARRNING", "UNIMPLEMENTED METHOD");
+        /*
+        int id = ApiController.checkIfIntNull("id", object, context);
+        String title = ApiController.checkIfStrNull("title", object, context);
+
+        ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                id,
+                title
+        ), type);
+
+         */
     }
 
     private static void addSingletonProjects(JSONArray response, int i, String type) throws JSONException{

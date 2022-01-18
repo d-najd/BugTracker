@@ -1,22 +1,18 @@
 package com.aatesting.bugtracker.activities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.fragments.DashboardFragment;
-import com.aatesting.bugtracker.fragments.ProjectSettingsFragment;
-import com.aatesting.bugtracker.fragments.ProjectsFragment;
+import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettingsFragment;
 import com.aatesting.bugtracker.fragments.RoadmapFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -67,16 +63,31 @@ public class ProjectsMainActivity extends AppCompatActivity {
         ImageButton backBtn = view.findViewById(R.id.backBtn);
         ImageButton addBtn = view.findViewById(R.id.addBtn);
         ImageButton moreBtn = view.findViewById(R.id.moreVerticalBtn);
-        TextView boardText = view.findViewById(R.id.boardText);
-        TextView roadmapText = view.findViewById(R.id.roadmapText);
-        TextView settingsText = view.findViewById(R.id.settingsText);
 
-        topbarSelected(view, fragment, boardText, roadmapText, settingsText);
+        TextView titleTopBar = view.findViewById(R.id.titleTopbar);
+
+        String projectNameFirstUppercase = projectName.substring(0, 1).toUpperCase() + projectName.substring(1);
+
+        if (titleTopBar != null)
+            titleTopBar.setText(projectNameFirstUppercase);
+
+        topbarSelected(view, fragment, fragmentManager);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (fragment >= 3 && fragment <= 5) {
+                    Bundle bundle = new Bundle();
+                    ProjectSettingsFragment settingsFragment = new ProjectSettingsFragment();
+                    settingsFragment.setArguments(bundle);
+
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.navHostFragment, settingsFragment);
+                    fragmentTransaction.disallowAddToBackStack();
+                    fragmentTransaction.commit();
+                }
+                else
+                    finish();
             }
         });
 
@@ -103,10 +114,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
         moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fragment == 0 || fragment == 1) {}
-                else if (fragment == 2){
-                    Message.message(context, "add radioGroup with the items add and view users in project");
-                }
+                if (fragment == 0 || fragment == 1 || fragment == 2) {}
                 else
                 {
                     Message.defErrMessage(context);
@@ -115,56 +123,20 @@ public class ProjectsMainActivity extends AppCompatActivity {
             }
         });
 
-        if (fragment != 0)
-            boardText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    DashboardFragment dashboardFragment = new DashboardFragment();
-                    dashboardFragment.setArguments(bundle);
 
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
-                    fragmentTransaction.disallowAddToBackStack();
-                    fragmentTransaction.commit();
-                }
-            });
-        if (fragment != 1){
-            roadmapText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    RoadmapFragment roadmapFragment = new RoadmapFragment();
-                    roadmapFragment.setArguments(bundle);
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.navHostFragment, roadmapFragment);
-                    fragmentTransaction.disallowAddToBackStack();
-                    fragmentTransaction.commit();
-                }
-            });
-        }
-        if (fragment != 2){
-            settingsText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    ProjectSettingsFragment projectSettingsFragment = new ProjectSettingsFragment();
-                    projectSettingsFragment.setArguments(bundle);
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
-                    fragmentTransaction.disallowAddToBackStack();
-                    fragmentTransaction.commit();
-                }
-            });
-        }
     }
 
-    private void topbarSelected(View view, int fragment, TextView boardText, TextView roadmapText, TextView settingsText) {
+    private void topbarSelected(View view, int fragment, FragmentManager fragmentManager) {
+        TextView boardText = view.findViewById(R.id.boardText);
+        TextView roadmapText = view.findViewById(R.id.roadmapText);
+        TextView settingsText = view.findViewById(R.id.settingsText);
+
         View boardTextUnderline = view.findViewById(R.id.boardTextUnderline);
         View roadmapTextUnderline = view.findViewById(R.id.roadmapTextUnderline);
         View settingsTextUnderline = view.findViewById(R.id.settingsTextUnderline);
+
+        ImageButton addBtn = view.findViewById(R.id.addBtn);
+        ImageButton moreBtn = view.findViewById(R.id.moreVerticalBtn);
 
         if (fragment == 0)
         {
@@ -175,6 +147,12 @@ public class ProjectsMainActivity extends AppCompatActivity {
             boardTextUnderline.setVisibility(View.VISIBLE);
             roadmapTextUnderline.setVisibility(View.GONE);
             settingsTextUnderline.setVisibility(View.GONE);
+
+            addBtn.setVisibility(View.VISIBLE);
+            moreBtn.setVisibility(View.VISIBLE);
+
+            roadmapText.setOnClickListener(roadmapTextListener(fragmentManager));
+            settingsText.setOnClickListener(settingsTextListener(fragmentManager));
         } else if (fragment == 1){
             boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             roadmapText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
@@ -183,7 +161,13 @@ public class ProjectsMainActivity extends AppCompatActivity {
             boardTextUnderline.setVisibility(View.GONE);
             roadmapTextUnderline.setVisibility(View.VISIBLE);
             settingsTextUnderline.setVisibility(View.GONE);
-        } else if (fragment == 2){
+
+            addBtn.setVisibility(View.VISIBLE);
+            moreBtn.setVisibility(View.VISIBLE);
+
+            boardText.setOnClickListener(boardTextListener(fragmentManager));
+            settingsText.setOnClickListener(settingsTextListener(fragmentManager));
+        } else if (fragment >= 2 && fragment <= 5){
             boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             roadmapText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             settingsText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
@@ -191,6 +175,58 @@ public class ProjectsMainActivity extends AppCompatActivity {
             boardTextUnderline.setVisibility(View.GONE);
             roadmapTextUnderline.setVisibility(View.GONE);
             settingsTextUnderline.setVisibility(View.VISIBLE);
+
+            addBtn.setVisibility(View.GONE);
+            moreBtn.setVisibility(View.GONE);
+
+            boardText.setOnClickListener(boardTextListener(fragmentManager));
+            roadmapText.setOnClickListener(roadmapTextListener(fragmentManager));
         }
+    }
+
+    private View.OnClickListener boardTextListener(FragmentManager fragmentManager){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                dashboardFragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            }
+        };
+    }
+
+    private View.OnClickListener roadmapTextListener(FragmentManager fragmentManager){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                RoadmapFragment roadmapFragment = new RoadmapFragment();
+                roadmapFragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, roadmapFragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            }
+        };
+    }    private View.OnClickListener settingsTextListener(FragmentManager fragmentManager){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                ProjectSettingsFragment projectSettingsFragment = new ProjectSettingsFragment();
+                projectSettingsFragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            }
+        };
     }
 }
