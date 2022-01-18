@@ -3,8 +3,15 @@ package com.aatesting.bugtracker.data;
 import android.content.Context;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.CheckBox;
 
+import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.fragments.ProjectSettingsFragment;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -86,5 +93,22 @@ public class UserData {
             e.printStackTrace();
         }
         return data;
+    }
+
+    /**
+     * @apiNote sets the checkboxes in the ProjectSettingsFragment
+     */
+    public static void setRolesCheckboxes(View view, Boolean manageProject, Boolean manageUsers, Boolean create, Boolean edit, Boolean delete){
+        CheckBox manageProjectCheckbox = view.findViewById(R.id.manageProjectCheckbox);
+        CheckBox manageUsersCheckbox = view.findViewById(R.id.manageUsersCheckbox);
+        CheckBox createCheckbox = view.findViewById(R.id.createCheckbox);
+        CheckBox editCheckbox = view.findViewById(R.id.editCheckbox);
+        CheckBox deleteCheckbox = view.findViewById(R.id.deleteCheckbox);
+
+        manageProjectCheckbox.setChecked(manageProject);
+        manageUsersCheckbox.setChecked(manageUsers);
+        createCheckbox.setChecked(create);
+        editCheckbox.setChecked(edit);
+        deleteCheckbox.setChecked(delete);
     }
 }

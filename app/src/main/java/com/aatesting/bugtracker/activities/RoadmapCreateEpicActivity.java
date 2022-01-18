@@ -137,7 +137,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 start 2020-01-01 due 2000-01-01 this is forbidden date.
              */
 
-
             @NotNull
             private String getStartDate() {
                 String startDate;

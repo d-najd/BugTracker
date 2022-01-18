@@ -97,7 +97,7 @@
             android:layout_height="32dp"
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
-            android:text="User"
+            android:text="Tester"
             android:textColor="@color/white60"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/roleImg"
@@ -398,6 +398,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/removeButton"
             app:layout_constraintTop_toBottomOf="@+id/deleteCardview" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

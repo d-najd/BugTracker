@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -27,6 +28,8 @@ import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.ProjectTableData;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
+import com.aatesting.bugtracker.data.UserData;
+import com.aatesting.bugtracker.fragments.ProjectSettingsFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
@@ -54,7 +57,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public String projectTableColumnName;
     public ModifiedFragment fragment;
     public Activity activity;
+
     public BottomSheetDialog bottomDialog;
+    public ProjectSettingsFragment projectSettingsFragment;
 
     //endregion
 
@@ -211,9 +216,48 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     ifTagTEDTBottomDialog(position, GlobalValues.BOARDS_URL);
                 }
             });
-        } else {
+        }
+        else if (recyclerData.getTag().equals(ProjectSettingsFragment.tag)){
+            holder.mainBtn.setOnClickListener(ifTagProjectSettingsBottomDialog(position));
+            holder.itemView.setOnClickListener(ifTagProjectSettingsBottomDialog(position));
+        }
+        else {
             Log.wtf("\nWARRNING", "there is no function for the current tag: " + recyclerData.getTag() + ", there might be something wrong\n");
         }
+    }
+
+    private View.OnClickListener ifTagProjectSettingsBottomDialog(Integer position){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = holderArrayList.get(position).title.getText().toString().toLowerCase();
+                View pjsView = projectSettingsFragment.view;
+                if (title.equals("admin"))
+                    UserData.setRolesCheckboxes(pjsView, true, true, true, true, true);
+                else if (title.equals("manager"))
+                    UserData.setRolesCheckboxes(pjsView,false, true, true, true ,true);
+                else if (title.equals("developer"))
+                    UserData.setRolesCheckboxes(pjsView,false, false, true, true ,true);
+                else if (title.equals("user"))
+                    UserData.setRolesCheckboxes(pjsView,false, false, true, true, false);
+                else if (title.equals("tester"))
+                    UserData.setRolesCheckboxes(pjsView,false, false, false, false, false);
+                else{
+                    Message.defErrMessage(v.getContext());
+                    Log.wtf("ERROR", "invalid field selected in the ProjectSettingsBottomDialog, selected field name: " + title);
+                    return;
+                }
+                try {
+                    View psfView = projectSettingsFragment.view;
+                    TextView psfTextView = psfView.findViewById(R.id.roleMainTxt);
+                    psfTextView.setText(holderArrayList.get(position).title.getText().toString());
+                } catch (NullPointerException e){
+                    Message.defErrMessage(v.getContext());
+                    e.printStackTrace();
+                }
+                projectSettingsFragment.bottomSheetDialog.dismiss();
+            }
+        };
     }
 
     private void ifTagTEDTBottomDialog(int position, @NotNull String type) {

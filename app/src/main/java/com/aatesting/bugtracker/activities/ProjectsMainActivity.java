@@ -3,6 +3,7 @@ package com.aatesting.bugtracker.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -65,9 +66,12 @@ public class ProjectsMainActivity extends AppCompatActivity {
     public void listeners(View view, int fragment, FragmentManager fragmentManager){ //NOTE this is called from the fragments
         ImageButton backBtn = view.findViewById(R.id.backBtn);
         ImageButton addBtn = view.findViewById(R.id.addBtn);
+        ImageButton moreBtn = view.findViewById(R.id.moreVerticalBtn);
         TextView boardText = view.findViewById(R.id.boardText);
         TextView roadmapText = view.findViewById(R.id.roadmapText);
         TextView settingsText = view.findViewById(R.id.settingsText);
+
+        topbarSelected(view, fragment, boardText, roadmapText, settingsText);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +100,21 @@ public class ProjectsMainActivity extends AppCompatActivity {
             }
         });
 
+        moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragment == 0 || fragment == 1) {}
+                else if (fragment == 2){
+                    Message.message(context, "add radioGroup with the items add and view users in project");
+                }
+                else
+                {
+                    Message.defErrMessage(context);
+                    Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
+                }
+            }
+        });
+
         if (fragment != 0)
             boardText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,7 +125,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
-                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.disallowAddToBackStack();
                     fragmentTransaction.commit();
                 }
             });
@@ -120,7 +139,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.navHostFragment, roadmapFragment);
-                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.disallowAddToBackStack();
                     fragmentTransaction.commit();
                 }
             });
@@ -135,10 +154,43 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
-                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.disallowAddToBackStack();
                     fragmentTransaction.commit();
                 }
             });
+        }
+    }
+
+    private void topbarSelected(View view, int fragment, TextView boardText, TextView roadmapText, TextView settingsText) {
+        View boardTextUnderline = view.findViewById(R.id.boardTextUnderline);
+        View roadmapTextUnderline = view.findViewById(R.id.roadmapTextUnderline);
+        View settingsTextUnderline = view.findViewById(R.id.settingsTextUnderline);
+
+        if (fragment == 0)
+        {
+            boardText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
+            roadmapText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+            settingsText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+
+            boardTextUnderline.setVisibility(View.VISIBLE);
+            roadmapTextUnderline.setVisibility(View.GONE);
+            settingsTextUnderline.setVisibility(View.GONE);
+        } else if (fragment == 1){
+            boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+            roadmapText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
+            settingsText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+
+            boardTextUnderline.setVisibility(View.GONE);
+            roadmapTextUnderline.setVisibility(View.VISIBLE);
+            settingsTextUnderline.setVisibility(View.GONE);
+        } else if (fragment == 2){
+            boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+            roadmapText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
+            settingsText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
+
+            boardTextUnderline.setVisibility(View.GONE);
+            roadmapTextUnderline.setVisibility(View.GONE);
+            settingsTextUnderline.setVisibility(View.VISIBLE);
         }
     }
 }

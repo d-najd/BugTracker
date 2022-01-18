@@ -89,8 +89,8 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
         Context context = this;
         ProjectTableEditTaskActivity projectCreateTableEditTask = this;
 
-        TextView issueTypeMainTxt = findViewById(R.id.roleMainTxt);
-        ImageButton issueTypeImg = findViewById(R.id.roleImg);
+        TextView issueTypeMainTxt = findViewById(R.id.issueTypeText);
+        ImageButton issueTypeImg = findViewById(R.id.issueTypeImg);
         ImageButton closeBtn = findViewById(R.id.closeBtn);
         Button deleteBtn = findViewById(R.id.deleteBtn);
 

@@ -46,8 +46,6 @@ public class RoadmapFragment extends ModifiedFragment {
         RecyclerView recyclerView = root.findViewById(R.id.epicsRecyclerView);
         tag = recyclerView.getTag().toString();
 
-        //((ProjectsMainActivity)requireActivity()).oldListeners(1); // for knowing which fragment is selected
-
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ApiController.getFields(true, true, true, mcontext,
                 GlobalValues.ROADMAPS_URL, this);

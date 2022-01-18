@@ -90,7 +90,7 @@
         android:paddingStart="0dp"
         android:padding="4dp"
         android:paddingEnd="8dp"
-        android:id="@+id/roleImg"
+        android:id="@+id/issueTypeImg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -102,16 +102,16 @@
     <TextView
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
-        android:id="@+id/roleMainTxt"
+        android:id="@+id/issueTypeText"
         android:layout_width="0dp"
         android:layout_height="32dp"
         android:text="@string/task"
         android:textColor="@color/white60"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@+id/roleImg"
+        app:layout_constraintBottom_toBottomOf="@+id/issueTypeImg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/roleImg"
-        app:layout_constraintTop_toTopOf="@+id/roleImg" />
+        app:layout_constraintStart_toEndOf="@+id/issueTypeImg"
+        app:layout_constraintTop_toTopOf="@+id/issueTypeImg" />
 
     <TextView
         android:id="@+id/textView3"
@@ -120,8 +120,8 @@
         android:text="Delete"
         android:layout_marginTop="24dp"
         android:textColor="@color/white60"
-        app:layout_constraintStart_toStartOf="@+id/roleImg"
-        app:layout_constraintTop_toBottomOf="@+id/roleImg" />
+        app:layout_constraintStart_toStartOf="@+id/issueTypeImg"
+        app:layout_constraintTop_toBottomOf="@+id/issueTypeImg" />
 
     <Button
         android:id="@+id/deleteBtn"

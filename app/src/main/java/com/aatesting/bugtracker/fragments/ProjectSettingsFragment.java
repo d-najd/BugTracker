@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +20,31 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
+import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 public class ProjectSettingsFragment extends ModifiedFragment {
     private View root;
     private Context context;
 
+    public static final String tag = "ProjectSettings_BottomDialog";
+    public View view;
+    public BottomSheetDialog bottomSheetDialog;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_roles, container, false);
         context = getContext();
+
+        view = root;
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ((ProjectsMainActivity)requireActivity()).listeners(root, 2, getParentFragmentManager());
@@ -78,7 +90,6 @@ public class ProjectSettingsFragment extends ModifiedFragment {
         };
     }
 
-
     @NotNull
     private View.OnClickListener addUser(EditText usernameEdt, View root){
         return new View.OnClickListener() {
@@ -111,10 +122,42 @@ public class ProjectSettingsFragment extends ModifiedFragment {
 
     @NotNull
     private View.OnClickListener roleClicked() {
+        ProjectSettingsFragment fragment = this;
+
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Message.message(context, "implement method");
+                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+
+                ArrayList<String> allColumnTitles = new ArrayList<>();
+                ArrayList<String> allColumnDescriptions = new ArrayList<>();
+                ArrayList<Integer> allColumnImages = new ArrayList<>();
+
+                allColumnTitles.add("Admin");
+                allColumnImages.add(R.drawable.ic_account_24dp);
+                allColumnDescriptions.add("Has all the abilities except altering of other admins or the owner");
+
+                allColumnTitles.add("Manager");
+                allColumnImages.add(R.drawable.ic_account_24dp);
+                allColumnDescriptions.add("Has all the abilities except altering other admins, managers or the owner");
+
+                allColumnTitles.add("Developer");
+                allColumnImages.add(R.drawable.ic_account_24dp);
+                allColumnDescriptions.add("Has ability to create, edit, remove tasks/fields and view project data");
+
+                allColumnTitles.add("User");
+                allColumnImages.add(R.drawable.ic_account_24dp);
+                allColumnDescriptions.add("Has abilities to create and edit tasks/fields and view project data");
+
+                allColumnTitles.add("Tester");
+                allColumnImages.add(R.drawable.ic_account_24dp);
+                allColumnDescriptions.add("Has the ability to view project data but not to change any of the contents");
+
+                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type", "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                        allColumnTitles, allColumnDescriptions, allColumnImages, tag);
+
+                bottomSheetDialog = pair.second;
+                pair.first.projectSettingsFragment = fragment;
             }
         };
     }
