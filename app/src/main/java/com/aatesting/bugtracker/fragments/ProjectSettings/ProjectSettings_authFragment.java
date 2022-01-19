@@ -23,11 +23,8 @@ import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,7 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_authorities, container, false);
+        View root = inflater.inflate(R.layout.fragment_project_roles, container, false);
 
         view = root;
 
@@ -49,11 +46,13 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
                 GlobalValues.projectOpened
         );
 
-        ApiController.getField(jsonObject, false, false, false,
+        String username = UserData.getLastUser(requireContext()).getUsername();
+        int projectOpened = GlobalValues.projectOpened;
+
+        ApiController.getField(jsonObject, false, "/username/" + username + "/projectId/" + projectOpened,
                 requireContext(), GlobalValues.ROLES_URL, this);
 
         listeners(root);
-
         return root;
     }
 
@@ -81,8 +80,14 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
     private void setupData(){
         try {
             ArrayList<ApiJSONObject> dataList = ApiSingleton.getInstance().getArray(GlobalValues.ROLES_URL);
+
+            if (dataList.size() > 1)
+            {
+                Log.wtf("ERROR", "there should be only 1 user since you get the roles for the user yet there are multiple users, this doesn't make sense");
+                return;
+            }
+
             ApiJSONObject data = dataList.get(0);
-            Message.message(requireContext(), "dataList size is " + dataList.size());
 
             setupRoles(data);
         } catch (RuntimeException e){
@@ -110,14 +115,14 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
         }
     }
 
-
     @NotNull
     private View.OnClickListener roleClicked() {
         ProjectSettings_authFragment fragment = this;
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = ProjectSettings_manageUsersFragment.roleClickedBottomDialog(requireContext(), v, null);
+                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = ProjectSettings_manageUsersFragment
+                        .roleClickedBottomDialog(requireContext(), v, null);
 
                 bottomSheetDialog = pair.second;
                 pair.first.projectSettings_authFragment = fragment;

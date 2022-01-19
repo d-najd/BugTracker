@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ApiJSONObject extends JSONObject {
-    private int id;
-    private int position;
-    private int userId;
-    private int projectId;
+    private int id = -1;
+    private int position = -1;
+    private int userId = -1;
+    private int projectId = -1;
     private String title;
     private String description;
     private String startDate;
@@ -94,6 +94,11 @@ public class ApiJSONObject extends JSONObject {
         this.title = title;
         this.description = description;
         this.dateCreated = dateCreated;
+    }
+
+    //for users, its kinda dumb to store other user data in objects for security reasons so try to avoid it
+    public ApiJSONObject(String username){
+        this.username = username;
     }
 
     public static Comparator<ApiJSONObject> positionComparator

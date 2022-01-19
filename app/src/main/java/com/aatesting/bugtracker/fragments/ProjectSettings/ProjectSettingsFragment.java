@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.fragments.ProjectSettings;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,11 +42,25 @@ public class ProjectSettingsFragment extends ModifiedFragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                ProjectSettings_authFragment projectSettings_authFragment = new ProjectSettings_authFragment();
-                projectSettings_authFragment.setArguments(bundle);
+                ProjectSettings_authFragment fragment = new ProjectSettings_authFragment();
+                fragment.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, projectSettings_authFragment);
+                fragmentTransaction.replace(R.id.navHostFragment, fragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            }
+        });
+
+        seeUsersText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                ProjectSettings_usersFragment fragment = new ProjectSettings_usersFragment();
+                fragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, fragment);
                 fragmentTransaction.disallowAddToBackStack();
                 fragmentTransaction.commit();
             }
@@ -55,11 +70,11 @@ public class ProjectSettingsFragment extends ModifiedFragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                ProjectSettings_manageUsersFragment dashboardFragment = new ProjectSettings_manageUsersFragment();
-                dashboardFragment.setArguments(bundle);
+                ProjectSettings_manageUsersFragment fragment = new ProjectSettings_manageUsersFragment();
+                fragment.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
+                fragmentTransaction.replace(R.id.navHostFragment, fragment);
                 fragmentTransaction.disallowAddToBackStack();
                 fragmentTransaction.commit();
             }

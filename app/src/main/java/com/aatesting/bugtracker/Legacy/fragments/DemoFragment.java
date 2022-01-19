@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments;
+package com.aatesting.bugtracker.Legacy.fragments;
 
 public class DemoFragment {
       /*

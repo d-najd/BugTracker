@@ -133,10 +133,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
-        android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/startDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/startDateTxt" />
 
@@ -163,10 +162,9 @@
         android:id="@+id/dueDateDescriptionTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
         android:textColor="@color/white87"
         android:textSize="17sp"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/dueDateTxt"
         app:layout_constraintTop_toBottomOf="@+id/dueDateTxt" />
 

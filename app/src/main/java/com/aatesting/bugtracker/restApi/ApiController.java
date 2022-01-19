@@ -11,40 +11,25 @@ import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.Authenticator;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
 
 public class ApiController {
     public static Context context;
@@ -110,14 +95,13 @@ public class ApiController {
 
     /**
      * used for getting a single json object, does not set up the project data
-     * @param includeProjectId include the current project id
-     * @param includeGetByUser includes "/getByUser" after include all has been checked
      * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
+     * @param restUrl the rest of the url, like xxx.xxx.xxx/{url}/{restUrl}
      * @param fragment if fragment is specified setupData response will be sent to the specified fragment
      */
 
-    public static void getField(ApiJSONObject object, boolean stringRequest, Boolean includeProjectId, Boolean includeGetByUser,
+    public static void getField(ApiJSONObject object, boolean stringRequest, String restUrl,
                                  @NotNull Context context, @NotNull String url, ModifiedFragment fragment)
 
     {
@@ -127,11 +111,8 @@ public class ApiController {
         }
 
         String URL = AppSettings.SERVERIP + "/" + url;
-
-        if (includeProjectId)
-            URL += "/" + GlobalValues.projectOpened;
-        if (includeGetByUser)
-            URL += "/" + GlobalValues.GET_BY_USER;
+        if (restUrl != null)
+            URL += restUrl;
 
         //java decided it wants final but this doesn't look like final to me?
         String finalURL = URL;
@@ -147,7 +128,6 @@ public class ApiController {
                     },
                     error -> {
                         try {
-
                             if (url.equals(GlobalValues.USERS_URL)) {
                                 if (error.networkResponse.statusCode == 401)
                                     Message.message(context, "Wrong credentials");
@@ -164,9 +144,7 @@ public class ApiController {
                             Message.message(context, "server seems to be offline");
                             Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
                         }
-
                     }
-
             ) {
                 @Override
                 public Map<String, String> getHeaders() {
@@ -184,36 +162,37 @@ public class ApiController {
             requestQueue.add(jsonArrayRequest);
         } else
         {
-            JSONObject jsonObject = objectToJSON(object, context);
-
-            jsonObject = jsonObject;
-            JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     URL,
-                    jsonObject,
+                    null,
                     response -> {
+                        JSONArray jsonArray = new JSONArray();
+                        jsonArray.put(response);
+
                         ApiSingleton.getInstance().reset(url); //removes any previous data
-                        dataToSingleton(new JSONArray().put(response), url); //works with the data somewhere
+                        dataToSingleton(jsonArray, url); //works with the data somewhere
 
                         fragment.onResponse(fragment.getString(R.string.setupData));
                     },
-                    error -> {
-                        try {
-                            Log.wtf("WARRNING", "Server error" + new String(error.networkResponse.data));
-                        } catch (NullPointerException e) {
-                            Message.message(context, "server seems to be offline");
-                            Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            try {
+                                Message.defErrMessage(context);
+                                Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
+                            } catch (NullPointerException e) {
+                                Message.message(context, "server seems to be offline");
+                                Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                            }
                         }
-
-                    }
-
-            ) {
+                    }) {
                 @Override
                 public Map<String, String> getHeaders() {
-                    return setHeaders(false);
+                    return setHeaders(true);
                 }
             };
-            requestQueue.add(jsonArrayRequest);
+            requestQueue.add(jsObjRequest);
         }
     }
 
@@ -435,6 +414,7 @@ public class ApiController {
 
         switch (url){
             case GlobalValues.ROADMAPS_URL:
+            case GlobalValues.USERS_URL:
             case GlobalValues.BOARDS_URL:
             case GlobalValues.PROJECTS_URL:
             case GlobalValues.ROLES_URL:
@@ -463,8 +443,12 @@ public class ApiController {
     private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
         try {
             switch (type) {
+                case GlobalValues.USERS_URL:
+                    addSingletonUsers(response, i, type);
+                    break;
                 case GlobalValues.ROLES_URL:
                     addSingletonRoles(response, i, type);
+                    break;
                 case GlobalValues.PROJECTS_URL:
                     addSingletonProjects(response, i, type);
                     break;
@@ -488,15 +472,32 @@ public class ApiController {
         return null;
     }
 
+    private static void addSingletonUsers(JSONArray response, int i, String type) throws JSONException{
+        JSONObject object = response.getJSONObject(i);
+        String username = checkIfStrNull("username", object, context);
+
+        ApiSingleton.getInstance().addToArray(new ApiJSONObject(
+                username
+        ), type);
+    }
+
     private static void addSingletonRoles(JSONArray response, int i, String type) throws JSONException{
         JSONObject object = response.getJSONObject(i);
 
-        String username = ApiController.checkIfStrNull("username", object, context);
-        int projectId = ApiController.checkIfIntNull("projectId", object, context);
+        Boolean manageProject = checkIfBooleanNull("manageProject", object, context);
+        Boolean manageUsers = checkIfBooleanNull("manageUsers", object, context);
+        Boolean create = checkIfBooleanNull("create", object, context);
+        Boolean edit = checkIfBooleanNull("edit", object, context);
+        Boolean delete = checkIfBooleanNull("delete", object, context);
 
+        ApiJSONObject apiJSONObject = JSONToObject(object, type, context);
         ApiSingleton.getInstance().addToArray(new ApiJSONObject(
-                username,
-                projectId
+                apiJSONObject,
+                manageProject,
+                manageUsers,
+                create,
+                edit,
+                delete
         ), type);
     }
 
@@ -576,7 +577,7 @@ public class ApiController {
         return mJSONObject;
     }
 
-    private static ApiJSONObject JSONToObject(JSONObject jsonObject, String type, Context context){
+    private static ApiJSONObject JSONToObject(JSONObject jsonObject, String type, Context context) {
         ApiJSONObject object = null;
         switch (type)
         {
@@ -594,6 +595,23 @@ public class ApiController {
                         description,
                         dateCreated);
                 break;
+            case GlobalValues.ROLES_URL:
+                JSONObject identity = null;
+                try {
+                    identity = (JSONObject) jsonObject.get("rolesIdentity");
+                } catch (JSONException e){
+                    Log.wtf("ERROR", "failed to get rolesIdentity while getting it from roles, located in JSONToObject in ApiController");
+                    e.printStackTrace();
+                    return null;
+                }
+
+                String username = ApiController.checkIfStrNull("username", identity, context);
+                int projectId = ApiController.checkIfIntNull("projectId", identity, context);
+
+                object = new ApiJSONObject(
+                        username,
+                        projectId);
+                break;
             default:
                 Log.wtf("ERROR", "unable to convert the type " + type + " to java object because the case for that object does not exist" );
                 Message.message(context, "Something went wrong");
@@ -601,7 +619,7 @@ public class ApiController {
         return object;
     }
 
-    private static String checkIfStrNull(String getVal, JSONObject object, Context context) {
+    private static String checkIfStrNull(@NotNull String getVal, JSONObject object, Context context) {
         try {
             if (!object.get(getVal).toString().equals("null"))
                 return object.getString(getVal);
@@ -615,7 +633,7 @@ public class ApiController {
         }
     }
 
-    private static int checkIfIntNull(String getVal, JSONObject object, Context context) {
+    private static int checkIfIntNull(@NotNull String getVal, JSONObject object, Context context) {
         try {
             if (!object.get(getVal).toString().equals("null"))
                 return Integer.parseInt(object.get(getVal).toString());
@@ -626,6 +644,17 @@ public class ApiController {
             Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    private static Boolean checkIfBooleanNull(@NotNull String getVal, JSONObject object, Context context) {
+        try {
+                return object.getBoolean(getVal);
+        } catch (NumberFormatException | JSONException e) {
+            Message.message(context, "something went wrong");
+            Log.wtf("ERROR", "the field " + getVal + " does not exist in the object " + object.toString());
+            e.printStackTrace();
+            return null;
         }
     }
 

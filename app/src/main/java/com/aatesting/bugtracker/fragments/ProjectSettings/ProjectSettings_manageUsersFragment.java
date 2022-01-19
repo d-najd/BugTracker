@@ -41,7 +41,7 @@ public class ProjectSettings_manageUsersFragment extends ModifiedFragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_manage_users, container, false);
+        View root = inflater.inflate(R.layout.fragment_project_manage_users, container, false);
         context = getContext();
 
         view = root;

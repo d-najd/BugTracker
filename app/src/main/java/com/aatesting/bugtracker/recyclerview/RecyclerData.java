@@ -70,7 +70,6 @@ public class RecyclerData {
         this.secondImgId = secondImgId;
     }
 
-
     public RecyclerData(String title, String tag) {
         this.title = title;
         this.tag = tag;

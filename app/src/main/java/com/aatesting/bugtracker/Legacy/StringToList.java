@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker;
+package com.aatesting.bugtracker.Legacy;
 
 import android.util.Log;
 

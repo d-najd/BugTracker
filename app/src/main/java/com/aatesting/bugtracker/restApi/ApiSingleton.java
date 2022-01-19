@@ -16,6 +16,7 @@ public class ApiSingleton {
     private ArrayList<ApiJSONObject> boardsList = null;
     private ArrayList<ApiJSONObject> roadmapsList = null;
     private ArrayList<ApiJSONObject> rolesList = null;
+    private ArrayList<ApiJSONObject> usersList = null;
 
     public static ApiSingleton getInstance() {
         if (mInstance == null)
@@ -28,6 +29,8 @@ public class ApiSingleton {
         projectList = new ArrayList<>();
         boardsList = new ArrayList<>();
         roadmapsList = new ArrayList<>();
+        rolesList = new ArrayList<>();
+        usersList = new ArrayList<>();
     }
 
     public ArrayList<ApiJSONObject> getArray(@NotNull String type) {
@@ -72,6 +75,8 @@ public class ApiSingleton {
         }
 
         switch (type){
+            case GlobalValues.USERS_URL:
+                return usersList;
             case GlobalValues.PROJECTS_URL:
                 return projectList;
             case GlobalValues.BOARDS_URL:

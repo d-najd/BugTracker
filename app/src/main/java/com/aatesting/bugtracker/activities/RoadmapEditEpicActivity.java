@@ -198,6 +198,11 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         GlobalValues.objectModified = apiJsonObject;
     }
 
+    /*
+     NOTE forbidden dates atm are dates where the start date is bigger than the due date ex:
+                start 2020-01-01 due 2000-01-01 this is forbidden date.
+     */
+
     public static boolean forbiddenDates(String startDateStr, String dueDateStr, Context context) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
         try {

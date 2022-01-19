@@ -40,8 +40,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roadmap_createepic);
 
-        Message.message(context, "put the current date for a start date and 2 weeks after for a due date automatically when this activity gets called");
-
         projectName = getIntent().getExtras().getString("projectName");
         Listeners();
     }
@@ -59,6 +57,11 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         ImageButton closeBtn = findViewById(R.id.closeBtn);
 
         titleMid.setText(projectName);
+
+        String startDateStr = getStartDate(startDateDescriptionTxt, dueDateDescriptionTxt);
+        String dueDateStr = getDueDate(startDateStr, dueDateDescriptionTxt);
+        startDateDescriptionTxt.setText(startDateStr);
+        dueDateDescriptionTxt.setText(dueDateStr);
 
         epicTypeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +118,8 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String title = titleEdt.getText().toString();
                 String description = editDescriptionTxt.getText().toString();
-                String startDateStr = getStartDate();
-                String dueDateStr = getDueDate(startDateStr);
+                String startDateStr = getStartDate(startDateDescriptionTxt, dueDateDescriptionTxt);
+                String dueDateStr = getDueDate(startDateStr, dueDateDescriptionTxt);
 
                 if (RoadmapEditEpicActivity.forbiddenDates(startDateStr, dueDateStr, context)) return;
 
@@ -132,64 +135,6 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
 
                 ApiController.createField(object, GlobalValues.ROADMAPS_URL, null, activity);
             }
-
-            /*forbidden dates atm are dates where the start date is bigger than the due date ex:
-                start 2020-01-01 due 2000-01-01 this is forbidden date.
-             */
-
-            @NotNull
-            private String getStartDate() {
-                String startDate;
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
-                if (!startDateDescriptionTxt.getText().toString().equals(""))
-                    startDate = startDateDescriptionTxt.getText().toString();
-                else {
-                    //if it dueDateDescriptionTxt is NOT empty set the startDateDescription 2 weeks before that
-                    if (!dueDateDescriptionTxt.getText().toString().equals("")){
-                        try {
-                            Date dueDate = simpleDateFormat.parse(dueDateDescriptionTxt.getText().toString());
-                            Calendar calendar = GregorianCalendar.getInstance();
-                            assert dueDate != null;
-                            calendar.setTime(dueDate);
-                            calendar.add(Calendar.WEEK_OF_YEAR, -2);
-                            startDate = simpleDateFormat.format(calendar.getTime());
-                        } catch (ParseException e){
-                            Message.defErrMessage(context);
-                            Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
-                            e.printStackTrace();
-                            startDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
-                        }
-                    }
-                    else {
-                        startDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
-                    }
-                }
-                return startDate;
-            }
-
-            @NotNull
-            private String getDueDate(String startDateStr) {
-                String dueDate;
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
-                if (!dueDateDescriptionTxt.getText().toString().equals(""))
-                    dueDate = dueDateDescriptionTxt.getText().toString();
-                else
-                {
-                    try {
-                        Date startDate = simpleDateFormat.parse(startDateStr);
-                        Calendar calendar = GregorianCalendar.getInstance();
-                        calendar.setTime(startDate);
-                        calendar.add(Calendar.WEEK_OF_YEAR, 2);
-                        dueDate = simpleDateFormat.format(calendar.getTime());
-                    } catch (ParseException e){
-                        Message.defErrMessage(context);
-                        Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
-                        e.printStackTrace();
-                        dueDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
-                    }
-                }
-                return dueDate;
-            }
         });
 
         closeBtn.setOnClickListener(new View.OnClickListener() {
@@ -198,6 +143,58 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private String getStartDate(TextView startDateDescriptionTxt, TextView dueDateDescriptionTxt) {
+        String startDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+        if (!startDateDescriptionTxt.getText().toString().equals(""))
+            startDate = startDateDescriptionTxt.getText().toString();
+        else {
+            //if it dueDateDescriptionTxt is NOT empty set the startDateDescription 2 weeks before that
+            if (!dueDateDescriptionTxt.getText().toString().equals("")){
+                try {
+                    Date dueDate = simpleDateFormat.parse(dueDateDescriptionTxt.getText().toString());
+                    Calendar calendar = GregorianCalendar.getInstance();
+                    assert dueDate != null;
+                    calendar.setTime(dueDate);
+                    calendar.add(Calendar.WEEK_OF_YEAR, -2);
+                    startDate = simpleDateFormat.format(calendar.getTime());
+                } catch (ParseException e){
+                    Message.defErrMessage(context);
+                    Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
+                    e.printStackTrace();
+                    startDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
+                }
+            }
+            else {
+                startDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
+            }
+        }
+        return startDate;
+    }
+
+    private String getDueDate(String startDateStr, TextView dueDateDescriptionTxt) {
+        String dueDate;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
+        if (!dueDateDescriptionTxt.getText().toString().equals(""))
+            dueDate = dueDateDescriptionTxt.getText().toString();
+        else
+        {
+            try {
+                Date startDate = simpleDateFormat.parse(startDateStr);
+                Calendar calendar = GregorianCalendar.getInstance();
+                calendar.setTime(startDate);
+                calendar.add(Calendar.WEEK_OF_YEAR, 2);
+                dueDate = simpleDateFormat.format(calendar.getTime());
+            } catch (ParseException e){
+                Message.defErrMessage(context);
+                Log.wtf("ERROR", "failed parsing the start/due date, the parse format is probably changed");
+                e.printStackTrace();
+                dueDate = simpleDateFormat.format(GregorianCalendar.getInstance().getTime());
+            }
+        }
+        return dueDate;
     }
 
     public void UpdateStartDateDescription(Calendar calendar) {

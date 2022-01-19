@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         mainActivity = this;
         context = this;
 
-
-
         mainBtn = findViewById(R.id.mainBtn);
         bottomBar = findViewById(R.id.bottomAppBar);
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);

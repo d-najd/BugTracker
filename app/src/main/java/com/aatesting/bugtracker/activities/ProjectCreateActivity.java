@@ -46,15 +46,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.reminderType), "Notification",  R.drawable.ic_notifications_24dp, tag));
         recyclerDataArrayList.add(new RecyclerData(getString(R.string.repeat), "Does not repeat",  R.drawable.ic_repeat_24dp, tag));
 
-
-        // added data from arraylist to adapter class.
         CreateProjectsAdapter adapter = new CreateProjectsAdapter(recyclerDataArrayList, this);
-
-        // setting grid layout manager to implement grid view.
-        // in this method '1' represents number of columns to be displayed in grid view.
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-        // at last set adapter to recycler view.
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
