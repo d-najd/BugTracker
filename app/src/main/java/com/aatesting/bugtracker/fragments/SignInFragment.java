@@ -137,7 +137,7 @@ public class SignInFragment extends ModifiedFragment {
                 password
         );
 
-        ApiController.getField(user, false, false,
+        ApiController.getField(user, true, false, false,
                 requireContext(), GlobalValues.USERS_URL, fragment);
     }
 

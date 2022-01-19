@@ -15,6 +15,7 @@ public class ApiSingleton {
     private ArrayList<ApiJSONObject> projectList = null;
     private ArrayList<ApiJSONObject> boardsList = null;
     private ArrayList<ApiJSONObject> roadmapsList = null;
+    private ArrayList<ApiJSONObject> rolesList = null;
 
     public static ApiSingleton getInstance() {
         if (mInstance == null)
@@ -66,7 +67,7 @@ public class ApiSingleton {
 
     private ArrayList<ApiJSONObject> findProjectByType(@NotNull String type) {
         if (type == null) {
-            Log.wtf("ERROR", "WHAT THE ACTUAL FUCK, THE TYPE IS WITH TAG @NOTNULL WTF");
+            Log.wtf("ERROR", "WHAT THE ACTUAL F***, THE TYPE IS WITH TAG @NOTNULL");
             return null;
         }
 
@@ -77,6 +78,8 @@ public class ApiSingleton {
                 return boardsList;
             case GlobalValues.ROADMAPS_URL:
                 return roadmapsList;
+            case GlobalValues.ROLES_URL:
+                return rolesList;
             default:
                 Log.wtf("ERROR", "use specific type for each of the singleton lists, returning default value");
                 return defaultList;

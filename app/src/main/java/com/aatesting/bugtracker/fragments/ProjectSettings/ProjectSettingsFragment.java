@@ -25,8 +25,6 @@ public class ProjectSettingsFragment extends ModifiedFragment {
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ((ProjectsMainActivity)requireActivity()).listeners(root, 2, getParentFragmentManager());
 
-        Message.message(requireContext(), "finish the get authorities and get users in the project");
-
         listeners(root);
 
         return root;

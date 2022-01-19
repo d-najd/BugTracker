@@ -11,8 +11,8 @@ import java.util.Comparator;
 
 public class ApiJSONObject extends JSONObject {
     private int id;
-    private int position = -1;
-    private int userId = -1;
+    private int position;
+    private int userId;
     private int projectId;
     private String title;
     private String description;
@@ -211,6 +211,54 @@ public class ApiJSONObject extends JSONObject {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public ApiJSONObject getRolesIdentity() {
+        return rolesIdentity;
+    }
+
+    public void setRolesIdentity(ApiJSONObject rolesIdentity) {
+        this.rolesIdentity = rolesIdentity;
+    }
+
+    public Boolean getManageProject() {
+        return manageProject;
+    }
+
+    public void setManageProject(Boolean manageProject) {
+        this.manageProject = manageProject;
+    }
+
+    public Boolean getManageUsers() {
+        return manageUsers;
+    }
+
+    public void setManageUsers(Boolean manageUsers) {
+        this.manageUsers = manageUsers;
+    }
+
+    public Boolean getCreate() {
+        return create;
+    }
+
+    public void setCreate(Boolean create) {
+        this.create = create;
+    }
+
+    public Boolean getEdit() {
+        return edit;
+    }
+
+    public void setEdit(Boolean edit) {
+        this.edit = edit;
+    }
+
+    public Boolean getDelete() {
+        return delete;
+    }
+
+    public void setDelete(Boolean delete) {
+        this.delete = delete;
     }
 }
 

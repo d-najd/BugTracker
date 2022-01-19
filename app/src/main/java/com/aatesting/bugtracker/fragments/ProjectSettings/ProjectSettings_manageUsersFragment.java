@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.fragments.ProjectSettings;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,9 +70,12 @@ public class ProjectSettings_manageUsersFragment extends ModifiedFragment {
 
     @Override
     public void onResponse(String code) {
-     if (code.equals(this.getString(R.string.getData)))
-         Message.message(context, "successfully created user");
-
+        if (code.equals(this.getString(R.string.getData)))
+            Message.message(context, "successfully created user");
+        else {
+            Log.wtf("ERROR", "onResponse crashed at ProjectsFragment with code " + code);
+            super.onResponse("ERROR");
+        }
     }
 
     @NotNull

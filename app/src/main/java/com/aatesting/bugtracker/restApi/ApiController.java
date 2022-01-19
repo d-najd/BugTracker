@@ -17,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
@@ -116,7 +117,7 @@ public class ApiController {
      * @param fragment if fragment is specified setupData response will be sent to the specified fragment
      */
 
-    public static void getField(ApiJSONObject object, Boolean includeProjectId, Boolean includeGetByUser,
+    public static void getField(ApiJSONObject object, boolean stringRequest, Boolean includeProjectId, Boolean includeGetByUser,
                                  @NotNull Context context, @NotNull String url, ModifiedFragment fragment)
 
     {
@@ -134,53 +135,86 @@ public class ApiController {
 
         //java decided it wants final but this doesn't look like final to me?
         String finalURL = URL;
-        StringRequest jsonArrayRequest = new StringRequest(
-                Request.Method.GET,
-                URL,
-                response -> {
-                    if (url.equals(GlobalValues.USERS_URL)){
-                        UserData.saveUser(context, object);
-                        fragment.onResponse("gotUser");
-                    }
-                },
-                error -> {
-                    try {
-
+        if (stringRequest) {
+            StringRequest jsonArrayRequest = new StringRequest(
+                    Request.Method.GET,
+                    URL,
+                    response -> {
                         if (url.equals(GlobalValues.USERS_URL)) {
-                            if (error.networkResponse.statusCode == 401)
-                                Message.message(context, "Wrong credentials");
-                            else {
-                                Message.defErrMessage(context);
-                                Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
-                            }
-                        } else {
-                            Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                            Message.defErrMessage(context);
-                            error.printStackTrace();
+                            UserData.saveUser(context, object);
+                            fragment.onResponse("gotUser");
                         }
-                    } catch (NullPointerException e){
-                        Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                    },
+                    error -> {
+                        try {
+
+                            if (url.equals(GlobalValues.USERS_URL)) {
+                                if (error.networkResponse.statusCode == 401)
+                                    Message.message(context, "Wrong credentials");
+                                else {
+                                    Message.defErrMessage(context);
+                                    Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
+                                }
+                            } else {
+                                Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
+                                Message.defErrMessage(context);
+                                error.printStackTrace();
+                            }
+                        } catch (NullPointerException e) {
+                            Message.message(context, "server seems to be offline");
+                            Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                        }
+
                     }
 
+            ) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    if (!url.equals(GlobalValues.USERS_URL))
+                        return setHeaders(false);
+                    else {
+                        HashMap<String, String> params = new HashMap<String, String>();
+                        String creds = String.format("%s:%s", object.getUsername(), object.getPassword());
+                        String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
+                        params.put("Authorization", auth);
+                        return params;
+                    }
                 }
+            };
+            requestQueue.add(jsonArrayRequest);
+        } else
+        {
+            JSONObject jsonObject = objectToJSON(object, context);
 
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                if (!url.equals(GlobalValues.USERS_URL))
+            jsonObject = jsonObject;
+            JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(
+                    Request.Method.GET,
+                    URL,
+                    jsonObject,
+                    response -> {
+                        ApiSingleton.getInstance().reset(url); //removes any previous data
+                        dataToSingleton(new JSONArray().put(response), url); //works with the data somewhere
+
+                        fragment.onResponse(fragment.getString(R.string.setupData));
+                    },
+                    error -> {
+                        try {
+                            Log.wtf("WARRNING", "Server error" + new String(error.networkResponse.data));
+                        } catch (NullPointerException e) {
+                            Message.message(context, "server seems to be offline");
+                            Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
+                        }
+
+                    }
+
+            ) {
+                @Override
+                public Map<String, String> getHeaders() {
                     return setHeaders(false);
-                else
-                {
-                    HashMap<String, String> params = new HashMap<String, String>();
-                    String creds = String.format("%s:%s",object.getUsername(),object.getPassword());
-                    String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
-                    params.put("Authorization", auth);
-                    return params;
                 }
-            }
-        };
-        requestQueue.add(jsonArrayRequest);
+            };
+            requestQueue.add(jsonArrayRequest);
+        }
     }
 
 
@@ -419,6 +453,7 @@ public class ApiController {
 
     /**
      * every type of value is added here so everything is in mostly one place
+     * @apiNote also a case needs to be added for each list in ApiSingleton.toArray as well
      * @param response the input array
      * @param type the name of the field
      * @param i the current iteration of the loop (for knowing which object inside the list to get
@@ -443,7 +478,7 @@ public class ApiController {
                     return JSONToObject(response.getJSONObject(i), GlobalValues.TASKS_URL, context);
                 default:
                     Message.message(context, "Something went wrong");
-                    Log.wtf("ERROR", "current url isn't defined for adding to singleton");
+                    Log.wtf("ERROR", "current url isn't defined for adding to singletonConstructor in ApiController");
                     break;
             }
 
@@ -456,17 +491,13 @@ public class ApiController {
     private static void addSingletonRoles(JSONArray response, int i, String type) throws JSONException{
         JSONObject object = response.getJSONObject(i);
 
-        Log.wtf("WARRNING", "UNIMPLEMENTED METHOD");
-        /*
-        int id = ApiController.checkIfIntNull("id", object, context);
-        String title = ApiController.checkIfStrNull("title", object, context);
+        String username = ApiController.checkIfStrNull("username", object, context);
+        int projectId = ApiController.checkIfIntNull("projectId", object, context);
 
         ApiSingleton.getInstance().addToArray(new ApiJSONObject(
-                id,
-                title
+                username,
+                projectId
         ), type);
-
-         */
     }
 
     private static void addSingletonProjects(JSONArray response, int i, String type) throws JSONException{
