@@ -43,13 +43,13 @@ public class SignUpFragment extends ModifiedFragment {
     private void listeners(View root) {
         Handler handler = new Handler();
         View mainBtn = ((MainActivity)getActivity()).mainBtn;
+        mainBtn.setVisibility(View.GONE);
 
         TextView signInText = root.findViewById(R.id.signInText);
         EditText usernameEdt = root.findViewById(R.id.usernameEdt);
         EditText passwordEdt = root.findViewById(R.id.passwordEdt);
         EditText reEnterPasswordEdt = root.findViewById(R.id.reEnterPasswordEdt);
         Button submit = root.findViewById(R.id.submit);
-
 
         ModifiedFragment fragment = this;
 
@@ -84,7 +84,6 @@ public class SignUpFragment extends ModifiedFragment {
                 return false;
             }
         });
-
 
         reEnterPasswordEdt.setOnKeyListener(new View.OnKeyListener() {
             @Override

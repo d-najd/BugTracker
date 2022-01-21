@@ -57,6 +57,7 @@ public class ProjectsFragment extends ModifiedFragment {
 
     private void listeners(){
         View mainBtn = ((MainActivity)getActivity()).mainBtn;
+        mainBtn.setVisibility(View.VISIBLE);
 
         mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +215,6 @@ public class ProjectsFragment extends ModifiedFragment {
     }
 
     public void removeProject(int field){
-        ApiController.removeField(null,null, this, GlobalValues.PROJECTS_URL + "/" + field);
+        ApiController.removeField(null,null, this, GlobalValues.PROJECTS_URL + "/" + field, null);
     }
 }

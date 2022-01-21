@@ -33,6 +33,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
     public View bottomBar;
     public View mainBtn;
     public ModifiedFragment thisFragment;
+    private int fragmentPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
         TextView titleTopBar = view.findViewById(R.id.titleTopbar);
 
+        fragmentPos = fragment;
+
         String projectNameFirstUppercase = projectName.substring(0, 1).toUpperCase() + projectName.substring(1);
 
         if (titleTopBar != null)
@@ -77,14 +80,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (fragment >= 3 && fragment <= 5) {
-                    Bundle bundle = new Bundle();
-                    ProjectSettingsFragment settingsFragment = new ProjectSettingsFragment();
-                    settingsFragment.setArguments(bundle);
-
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.navHostFragment, settingsFragment);
-                    fragmentTransaction.disallowAddToBackStack();
-                    fragmentTransaction.commit();
+                    swapToSettingsFragment(fragmentManager);
                 }
                 else
                     finish();
@@ -122,8 +118,6 @@ public class ProjectsMainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private void topbarSelected(View view, int fragment, FragmentManager fragmentManager) {
@@ -214,19 +208,33 @@ public class ProjectsMainActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
             }
         };
-    }    private View.OnClickListener settingsTextListener(FragmentManager fragmentManager){
+    }
+    private View.OnClickListener settingsTextListener(FragmentManager fragmentManager){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                ProjectSettingsFragment projectSettingsFragment = new ProjectSettingsFragment();
-                projectSettingsFragment.setArguments(bundle);
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
+                swapToSettingsFragment(fragmentManager);
             }
         };
+    }
+
+    private void swapToSettingsFragment(FragmentManager fragmentManager) {
+        Bundle bundle = new Bundle();
+        ProjectSettingsFragment projectSettingsFragment = new ProjectSettingsFragment();
+        projectSettingsFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.navHostFragment, projectSettingsFragment);
+        fragmentTransaction.disallowAddToBackStack();
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (fragmentPos >= 3 && fragmentPos <= 5)
+        {
+            swapToSettingsFragment(thisFragment.getParentFragmentManager());
+        } else
+            super.onBackPressed();
     }
 }

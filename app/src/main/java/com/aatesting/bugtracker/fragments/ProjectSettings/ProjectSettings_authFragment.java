@@ -1,5 +1,6 @@
 package com.aatesting.bugtracker.fragments.ProjectSettings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -26,33 +27,38 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ProjectSettings_authFragment extends ModifiedFragment {
     public View view;
     public BottomSheetDialog bottomSheetDialog;
+    private Bundle bundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_project_roles, container, false);
-
         view = root;
+
+        String setupCode = null;
+        bundle = this.getArguments();
+        if (bundle != null) {
+            setupCode = bundle.getString("setupCode");
+            if (setupCode == null){
+                Message.defErrMessage(getContext());
+                Log.wtf("ERROR", getClass().getSimpleName() + "requires a setupCode bundle of type string");
+            }
+        }
+        else{
+            Message.defErrMessage(getContext());
+            Log.wtf("ERROR", getClass().getSimpleName() + "requires a setupCode bundle of type string");
+        }
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ((ProjectsMainActivity)requireActivity()).listeners(root, 3, getParentFragmentManager());
 
-        ApiJSONObject jsonObject = new ApiJSONObject(
-                UserData.getLastUser(requireContext()).getUsername(),
-                GlobalValues.projectOpened
-        );
+        customSetup(setupCode);
 
-        String username = UserData.getLastUser(requireContext()).getUsername();
-        int projectOpened = GlobalValues.projectOpened;
-
-        ApiController.getField(jsonObject, false, "/username/" + username + "/projectId/" + projectOpened,
-                requireContext(), GlobalValues.ROLES_URL, this);
-
-        listeners(root);
         return root;
     }
 
@@ -113,6 +119,36 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
         } catch (RuntimeException e){
             throw e;
         }
+    }
+
+    //if the fragment is called from outside and repurposed with a few small changes
+    private void customSetup(String setupCode){
+        setupCode = setupCode.toLowerCase();
+        switch (setupCode) {
+            case "original":
+                String username = UserData.getLastUser(view.getContext()).getUsername();
+                int projectOpened = GlobalValues.projectOpened;
+
+                ApiController.getField(null, false, "/username/" + username + "/projectId/" + projectOpened,
+                        view.getContext(), GlobalValues.ROLES_URL, this);
+                break;
+            case "custom_user":
+                username = bundle.getString("username");
+                if (username == null){
+                    Message.defErrMessage(getContext());
+                    Log.wtf("ERROR", "string bundle with name username is required for setup of custom_user in fragment: " + getClass().getSimpleName());
+                }
+
+                ApiController.getField(null, false,
+                        "/username/" + username + "/projectId/" + GlobalValues.projectOpened,
+                        view.getContext(), GlobalValues.ROLES_URL, this);
+                break;
+            default:
+                Message.defErrMessage(getContext());
+                Log.wtf("ERROR", "the current " + setupCode + " setup code isn't accounted for in class: " + getClass().getSimpleName());
+                return;
+        }
+        listeners(view);
     }
 
     @NotNull

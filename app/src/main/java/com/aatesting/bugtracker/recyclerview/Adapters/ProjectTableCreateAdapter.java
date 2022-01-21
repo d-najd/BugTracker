@@ -138,7 +138,7 @@ public class ProjectTableCreateAdapter extends RecyclerView.Adapter<ProjectTable
                     object.getId() + "/second/" + ApiSingleton.getInstance().getObject(holderPosition + 1, GlobalValues.BOARDS_URL).getId());
         } else if (itemText == mcontext.getString(R.string.deleteColumn)){
             ApiController.removeField(null,null, projectMainActivity.thisFragment,"boards/" +
-                    ApiSingleton.getInstance().getObject(holderPosition, GlobalValues.BOARDS_URL).getId());
+                    ApiSingleton.getInstance().getObject(holderPosition, GlobalValues.BOARDS_URL).getId(), null);
         }
     }
 

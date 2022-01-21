@@ -243,7 +243,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
     public void DeleteEpic(){
         ApiController.removeField(null, activity, null, GlobalValues.ROADMAPS_URL + "/" +
-                ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL).getId());
+                ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL).getId(), null);
         Message.message(context, "Epic removed successfully");
     }
 }

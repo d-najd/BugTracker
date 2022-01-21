@@ -50,13 +50,14 @@ public class SignInFragment extends ModifiedFragment {
         Handler handler = new Handler();
         View mainBtn = ((MainActivity)getActivity()).mainBtn;
 
+        mainBtn.setVisibility(View.GONE);
+
         TextView signUpText = root.findViewById(R.id.signInText);
         EditText usernameEdt = root.findViewById(R.id.usernameEdt);
         EditText passwordEdt = root.findViewById(R.id.passwordEdt);
         Button submit = root.findViewById(R.id.submit);
 
         ModifiedFragment fragment = this;
-
 
         usernameEdt.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {

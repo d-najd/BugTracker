@@ -181,7 +181,7 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
                 int columnId = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getId();
                 int taskId = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos).getId();
                 ApiController.removeField(null, projectCreateTableEditTask, null,
-                        GlobalValues.TASKS_URL + "/" + taskId);
+                        GlobalValues.TASKS_URL, "/" + taskId);
             }
         });
 

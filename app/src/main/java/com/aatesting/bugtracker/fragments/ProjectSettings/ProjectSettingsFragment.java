@@ -42,6 +42,7 @@ public class ProjectSettingsFragment extends ModifiedFragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
+                bundle.putString("setupCode", "original");
                 ProjectSettings_authFragment fragment = new ProjectSettings_authFragment();
                 fragment.setArguments(bundle);
 

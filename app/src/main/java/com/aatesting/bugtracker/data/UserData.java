@@ -8,6 +8,8 @@ import android.widget.CheckBox;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +20,7 @@ public class UserData {
     private static final String FILE_NAME = "UserData";
     public static final String SEPARATOR = ":";
 
-    public static void saveUser(Context context, ApiJSONObject user){
+    public static void saveUser(@NotNull Context context, @NotNull ApiJSONObject user){
         String data =  user.getUsername() + SEPARATOR + user.getPassword();
 
         String encodedData = Base64.encodeToString(data.getBytes(), Base64.NO_WRAP);
@@ -45,7 +47,7 @@ public class UserData {
      * returns the user saved in memory
      * @return the user data if there is user saved in the device if not it doesn't return anything
      */
-    public static ApiJSONObject getLastUser(Context context){
+    public static ApiJSONObject getLastUser(@NotNull Context context){
         String dataOld = getData(context);
 
         if (dataOld == null)
@@ -66,11 +68,11 @@ public class UserData {
      * @apiNote only to be used if the data is encripted with base64
      * @return base64 string of the last user in the format username:password NOTE the : is the seperator
      */
-    public static String getLastUserRaw(Context context){
+    public static String getLastUserRaw(@NotNull Context context){
         return getData(context);
     }
 
-    private static String getData(Context context){
+    private static String getData(@NotNull Context context){
         String data = null;
 
         File f = new File(context.getFilesDir() + File.separator, FILE_NAME + ".txt");
@@ -91,7 +93,7 @@ public class UserData {
     /**
      * @apiNote sets the checkboxes in the ProjectSettingsFragment
      */
-    public static void setRolesCheckboxes(View view, Boolean manageProject, Boolean manageUsers, Boolean create, Boolean edit, Boolean delete){
+    public static void setRolesCheckboxes(@NotNull View view, Boolean manageProject, Boolean manageUsers, Boolean create, Boolean edit, Boolean delete){
         CheckBox manageProjectCheckbox = view.findViewById(R.id.manageProjectCheckbox);
         CheckBox manageUsersCheckbox = view.findViewById(R.id.manageUsersCheckbox);
         CheckBox createCheckbox = view.findViewById(R.id.createCheckbox);

@@ -83,12 +83,11 @@ public class ProjectSettings_manageUsersFragment extends ModifiedFragment {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ApiJSONObject rolesIdentity = new ApiJSONObject(
-                        usernameEdt.getText().toString(),
-                        GlobalValues.projectOpened
-                );
+                String username = usernameEdt.getText().toString();
 
-                ApiController.removeField(rolesIdentity, null, null, GlobalValues.ROLES_URL);
+                int projectOpened = GlobalValues.projectOpened;
+                ApiController.removeField(null, null, null, GlobalValues.ROLES_URL,
+                        "/username/" + username + "/projectId/" + projectOpened);
             }
         };
     }

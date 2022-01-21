@@ -54,6 +54,7 @@
     <string name="recentlyViewed">Recently Viewed</string>
     <string name="allProjects">All projects</string>
     <string name="starred">Starred</string>
-    <string name="TEDTBottomDialog">TableEditTask_BottomDialog</string> <!--dont change the value or it will break stuff-->
+    <string name="TEDTBottomDialog">TableEditTask_BottomDialog</string>
+    <string name="projectUsers">projectUsers</string> <!--dont change the value or it will break stuff-->
 
 </resources>

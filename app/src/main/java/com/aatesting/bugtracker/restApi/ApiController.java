@@ -311,9 +311,10 @@ public class ApiController {
      * @param object if not null will send the object along with the request
      * @param fragment if fragment is specified getData response will be sent to the specified fragment
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
+     * @param restUrl the rest of the url, like xxx.xxx.xxx/{url}/{restUrl}
      * @param activity if activity is passed it will be closed upon editing of the field
      */
-    public static void removeField(ApiJSONObject object, Activity activity, ModifiedFragment fragment, @NotNull String url) {
+    public static void removeField(ApiJSONObject object, Activity activity, ModifiedFragment fragment, @NotNull String url, String restUrl) {
         String URL = AppSettings.SERVERIP + "/" + url;
 
         if (requestQueue == null){
@@ -321,14 +322,18 @@ public class ApiController {
             Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
         }
 
+        if (restUrl != null)
+            URL += restUrl;
+
+        String finalURL = URL;
         StringRequest request = new StringRequest(
                 Request.Method.DELETE,
-                URL,
+                finalURL,
                 response -> {
                     if (!response.equals("ok"))
                     {
                         Message.message(context, "Something went wrong");
-                        Log.wtf("ERROR", "failed to remove field using url " + URL);
+                        Log.wtf("ERROR", "failed to remove field using url " + finalURL);
                     }
                     GlobalValues.objectModified = null;
                     if (activity != null)
@@ -340,12 +345,12 @@ public class ApiController {
                 error -> {
                     try {
                         GlobalValues.objectModified = null;
-                        Log.wtf("ERROR", "failed to get delete using url " + URL + ", error response is " + new String(error.networkResponse.data));
+                        Log.wtf("ERROR", "failed to get delete using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
                         Message.defErrMessage(context);
                         error.printStackTrace();
                     } catch (NullPointerException e){
                         Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
+                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
                     }
                 }
         ) {

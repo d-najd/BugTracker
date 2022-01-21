@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
@@ -29,9 +32,12 @@ import com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity;
 import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettings_authFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettings_manageUsersFragment;
+import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettings_usersFragment;
+import com.aatesting.bugtracker.fragments.ProjectsFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
+import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -59,6 +65,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     public BottomSheetDialog bottomDialog;
     public ProjectSettings_manageUsersFragment projectSettingsAddUserFragment;
     public ProjectSettings_authFragment projectSettings_authFragment;
+    public ProjectSettings_usersFragment projectSettings_usersFragment;
 
     //endregion
 
@@ -182,6 +189,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 }
             });
         }
+        else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectUsers))){
+            holder.itemView.setOnClickListener(ifTagProjectsUsers(position));
+            holder.mainBtn.setOnClickListener(ifTagProjectsUsers(position));
+        }
 
         else if (recyclerData.getTag().equals(mcontext.getString(R.string.projectCreateTask))) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -223,6 +234,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         else {
             Log.wtf("\nWARRNING", "there is no function for the current tag: " + recyclerData.getTag() + ", there might be something wrong\n");
         }
+    }
+
+    //the fragment in projectSettings
+    private View.OnClickListener ifTagProjectsUsers(Integer position){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = projectSettings_usersFragment.getParentFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putString("setupCode", "custom_user");
+                bundle.putString("username", holderArrayList.get(position).title.getText().toString());
+                ProjectSettings_authFragment fragment = new ProjectSettings_authFragment();
+                fragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, fragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            }
+        };
     }
 
     private View.OnClickListener ifTagProjectSettingsBottomDialog(Integer position){
@@ -302,12 +333,25 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     private void ifTagProjects(int position) {
         Intent intent = new Intent(mcontext, ProjectsMainActivity.class);
-        intent.putExtra("projectName", holderArrayList.get(position).title.getText().toString());
 
-        GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(position, GlobalValues.PROJECTS_URL).getId();
+        String projectName = holderArrayList.get(position).title.getText().toString();
+        intent.putExtra("projectName", projectName);
 
-        fragment.onResponse("NotifyProjectViewed", String.valueOf(GlobalValues.projectOpened));
-        mcontext.startActivity(intent);
+        ArrayList<ApiJSONObject> projectsList = ApiSingleton.getInstance().getArray(GlobalValues.PROJECTS_URL);
+        for (int i = 0; i < projectsList.size(); i++){
+            if (projectsList.get(i).getTitle().equals(projectName))
+            {
+                GlobalValues.projectOpened = ApiSingleton.getInstance().getObject(i, GlobalValues.PROJECTS_URL).getId();
+
+                fragment.onResponse("NotifyProjectViewed", String.valueOf(GlobalValues.projectOpened));
+                mcontext.startActivity(intent);
+                return;
+            }
+        }
+
+        Message.defErrMessage(mcontext);
+        Log.wtf("ERROR", "while getting a project in " + ProjectsFragment.class.getSimpleName() +
+                " got title which isn't in the list of projects in the phone, pressed item position is: " + position + ", project name is:" + projectName);
     }
 
     //specialpass is to skip checking and if you are completly sure that it will work and no way to fail

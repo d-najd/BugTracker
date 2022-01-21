@@ -23,6 +23,7 @@
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="200dp"
                 android:paddingStart="8dp"
                 android:layout_marginStart="4dp"
                 android:textColorHint="@color/white38"
@@ -35,8 +36,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:backgroundTint="@color/transparent"
-                android:maxLines="1"
-                android:maxLength="15"
+                android:lines="1"
+                android:maxLength="50"
                 />
 
             <TextView

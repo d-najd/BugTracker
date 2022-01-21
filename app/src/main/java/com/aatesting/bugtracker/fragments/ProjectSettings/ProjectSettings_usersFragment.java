@@ -16,6 +16,7 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
+import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
@@ -44,7 +45,7 @@ public class ProjectSettings_usersFragment extends ModifiedFragment {
         RecyclerView recyclerView = root.findViewById(R.id.mainRecyclerView);
         String tag = recyclerView.getTag().toString();
 
-        CreateProjectsAdapter adapter = new CreateProjectsAdapter(recyclerDataArrayList, requireContext());
+        MainRecyclerAdapter adapter = new MainRecyclerAdapter(recyclerDataArrayList, requireContext());
 
         ArrayList<ApiJSONObject> dataList = ApiSingleton.getInstance().getArray(GlobalValues.USERS_URL);
 
@@ -56,6 +57,7 @@ public class ProjectSettings_usersFragment extends ModifiedFragment {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        adapter.projectSettings_usersFragment = this;
     }
 
     @Override
