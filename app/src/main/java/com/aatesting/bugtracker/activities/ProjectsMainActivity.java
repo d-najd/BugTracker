@@ -27,7 +27,6 @@ import androidx.navigation.ui.NavigationUI;
 
 public class ProjectsMainActivity extends AppCompatActivity {
     private String projectName;
-    private ProjectsMainActivity projectsMainActivity;
     private Context context;
 
     public View bottomBar;
@@ -41,7 +40,6 @@ public class ProjectsMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_projects_main);
 
         projectName = getIntent().getExtras().getString("projectName");
-        projectsMainActivity = this;
         context = this;
 
         mainBtn = findViewById(R.id.mainBtn);
@@ -50,8 +48,8 @@ public class ProjectsMainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.bottomNavigationView);
         bottomBar.setBackground(null);
 
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_dashboard,  R.id.navigation_roadmap, R.id.navigation_project_settings)
+        new AppBarConfiguration.Builder(
+                R.id.navigation_dashboard, R.id.navigation_roadmap, R.id.navigation_project_settings)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.navHostFragment);
         NavigationUI.setupWithNavController(navView, navController);
@@ -76,46 +74,37 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
         topbarSelected(view, fragment, fragmentManager);
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment >= 3 && fragment <= 5) {
-                    swapToSettingsFragment(fragmentManager);
-                }
-                else
-                    finish();
+        backBtn.setOnClickListener(v -> {
+            if (fragment >= 3 && fragment <= 5) {
+                swapToSettingsFragment(fragmentManager);
+            }
+            else
+                finish();
+        });
+
+        addBtn.setOnClickListener(v -> {
+            if (fragment == 0)
+                Dialogs.NewColumnDialog(context, "Add column", "ADD",
+                        "Cancel", thisFragment);
+            else if (fragment == 1){
+                Intent intent = new Intent(ProjectsMainActivity.this, RoadmapCreateEpicActivity.class);
+                intent.putExtra("projectName", projectName);
+                startActivity(intent);
+            }
+            else if (fragment == 2) {}
+            else
+            {
+                Message.defErrMessage(context);
+                Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
             }
         });
 
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment == 0)
-                    Dialogs.NewColumnDialog(context, "Add column", "ADD",
-                            "Cancel", thisFragment);
-                else if (fragment == 1){
-                    Intent intent = new Intent(ProjectsMainActivity.this, RoadmapCreateEpicActivity.class);
-                    intent.putExtra("projectName", projectName);
-                    startActivity(intent);
-                }
-                else if (fragment == 2) {}
-                else
-                {
-                    Message.defErrMessage(context);
-                    Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
-                }
-            }
-        });
-
-        moreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment == 0 || fragment == 1 || fragment == 2) {}
-                else
-                {
-                    Message.defErrMessage(context);
-                    Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
-                }
+        moreBtn.setOnClickListener(v -> {
+            if (fragment == 0 || fragment == 1 || fragment == 2) {}
+            else
+            {
+                Message.defErrMessage(context);
+                Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
             }
         });
     }
@@ -179,43 +168,32 @@ public class ProjectsMainActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener boardTextListener(FragmentManager fragmentManager){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                DashboardFragment dashboardFragment = new DashboardFragment();
-                dashboardFragment.setArguments(bundle);
+        return v -> {
+            Bundle bundle = new Bundle();
+            DashboardFragment dashboardFragment = new DashboardFragment();
+            dashboardFragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.navHostFragment, dashboardFragment);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         };
     }
 
     private View.OnClickListener roadmapTextListener(FragmentManager fragmentManager){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                RoadmapFragment roadmapFragment = new RoadmapFragment();
-                roadmapFragment.setArguments(bundle);
+        return v -> {
+            Bundle bundle = new Bundle();
+            RoadmapFragment roadmapFragment = new RoadmapFragment();
+            roadmapFragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, roadmapFragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.navHostFragment, roadmapFragment);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         };
     }
     private View.OnClickListener settingsTextListener(FragmentManager fragmentManager){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                swapToSettingsFragment(fragmentManager);
-            }
-        };
+        return v -> swapToSettingsFragment(fragmentManager);
     }
 
     private void swapToSettingsFragment(FragmentManager fragmentManager) {

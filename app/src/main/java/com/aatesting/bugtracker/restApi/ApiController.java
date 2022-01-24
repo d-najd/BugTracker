@@ -13,7 +13,6 @@ import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -73,16 +72,7 @@ public class ApiController {
 
                     fragment.onResponse(fragment.getString(R.string.setupData));
                 },
-                error -> {
-                    try {
-                        Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                        Message.defErrMessage(context);
-                        error.printStackTrace();
-                    } catch (NullPointerException e){
-                        Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
-                    }
-                }
+                error -> errorHandler(error, finalURL, url)
 
         ) {
             @Override
@@ -119,39 +109,21 @@ public class ApiController {
         if (stringRequest) {
             StringRequest jsonArrayRequest = new StringRequest(
                     Request.Method.GET,
-                    URL,
+                    finalURL,
                     response -> {
                         if (url.equals(GlobalValues.USERS_URL)) {
                             UserData.saveUser(context, object);
                             fragment.onResponse("gotUser");
                         }
                     },
-                    error -> {
-                        try {
-                            if (url.equals(GlobalValues.USERS_URL)) {
-                                if (error.networkResponse.statusCode == 401)
-                                    Message.message(context, "Wrong credentials");
-                                else {
-                                    Message.defErrMessage(context);
-                                    Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
-                                }
-                            } else {
-                                Log.wtf("ERROR", "failed to get data using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                                Message.defErrMessage(context);
-                                error.printStackTrace();
-                            }
-                        } catch (NullPointerException e) {
-                            Message.message(context, "server seems to be offline");
-                            Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
-                        }
-                    }
+                    error -> errorHandler(error, finalURL, url)
             ) {
                 @Override
                 public Map<String, String> getHeaders() {
                     if (!url.equals(GlobalValues.USERS_URL))
                         return setHeaders(false);
                     else {
-                        HashMap<String, String> params = new HashMap<String, String>();
+                        HashMap<String, String> params = new HashMap<>();
                         String creds = String.format("%s:%s", object.getUsername(), object.getPassword());
                         String auth = "Basic " + Base64.encodeToString(creds.getBytes(), Base64.NO_WRAP);
                         params.put("Authorization", auth);
@@ -160,8 +132,7 @@ public class ApiController {
                 }
             };
             requestQueue.add(jsonArrayRequest);
-        } else
-        {
+        } else {
             JsonObjectRequest jsObjRequest = new JsonObjectRequest(
                     Request.Method.GET,
                     URL,
@@ -175,18 +146,7 @@ public class ApiController {
 
                         fragment.onResponse(fragment.getString(R.string.setupData));
                     },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            try {
-                                Message.defErrMessage(context);
-                                Log.wtf("ERROR", "Unexpected error while getting user data, error is: " + new String(error.networkResponse.data));
-                            } catch (NullPointerException e) {
-                                Message.message(context, "server seems to be offline");
-                                Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
-                            }
-                        }
-                    }) {
+                    error -> errorHandler(error, finalURL, url)) {
                 @Override
                 public Map<String, String> getHeaders() {
                     return setHeaders(true);
@@ -213,7 +173,6 @@ public class ApiController {
             Log.wtf("ERROR", "request queue is null which that you called some other field before calling to get the data from the server");
         }
 
-        JSONObject finalJsonObject = jsonObject;
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 URL,
@@ -224,18 +183,7 @@ public class ApiController {
                         fragment.onResponse(fragment.getString(R.string.getData));
                     }
                 },
-                error -> {
-                    try {
-                        Log.wtf("ERROR", "failed to save field, the error is " + new String(error.networkResponse.data));
-                        Message.defErrMessage(context);
-
-                        GlobalValues.objectModified = null;
-                        fragment.onResponse("Error");
-                    } catch (NullPointerException e){
-                        Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get post using url " + URL);
-                    }
-                }
+                error -> errorHandler(error, URL, url)
         ) {
             @Override
             public Map<String, String> getHeaders() {
@@ -280,17 +228,7 @@ public class ApiController {
                     if (fragment != null)
                         fragment.onResponse(fragment.getString(R.string.getData));
                 },
-                error -> {
-                    try {
-                        GlobalValues.objectModified = null;
-                        Log.wtf("ERROR", "failed to edit data using url " + URL + ", error response is " + new String(error.networkResponse.data));
-                        Message.defErrMessage(context);
-                        error.printStackTrace();
-                    } catch (NullPointerException e){
-                        Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + URL);
-                    }
-                }
+                error -> errorHandler(error, URL, url)
         ) {
             @Override
             public Map<String, String> getHeaders() {
@@ -342,17 +280,7 @@ public class ApiController {
                         fragment.onResponse(fragment.getString(R.string.getData));
                     }
                 },
-                error -> {
-                    try {
-                        GlobalValues.objectModified = null;
-                        Log.wtf("ERROR", "failed to get delete using url " + finalURL + ", error response is " + new String(error.networkResponse.data));
-                        Message.defErrMessage(context);
-                        error.printStackTrace();
-                    } catch (NullPointerException e){
-                        Message.message(context, "server seems to be offline");
-                        Log.wtf("WARRNING", "server seems to be offline, failed to get data using url " + finalURL);
-                    }
-                }
+                error -> errorHandler(error, finalURL, url)
         ) {
             @Override
             public Map<String, String> getHeaders() {
@@ -381,7 +309,7 @@ public class ApiController {
     @NotNull
     private static HashMap<String, String> setHeaders(Boolean includeObject) {
         //for sending json data
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         if (includeObject)
             params.put("Content-Type", "application/json; charset=utf-8");
 
@@ -399,6 +327,49 @@ public class ApiController {
         params.put("Authorization", auth);
 
         return params;
+    }
+
+    /**
+     * a default error handler for all requests
+     * @param url the final url used for the request
+     * @param type if there is a special error handling for a request, should always pass the type just in case
+     */
+    private static void errorHandler(VolleyError error, String url, String type) {
+        try {
+            switch (error.networkResponse.statusCode) {
+                case 400:
+                    Message.message(context, "Bad request");
+                    Log.wtf("DEBUG", "Bad request error: " + new String(error.networkResponse.data));
+                case 401:
+                    Message.message(context, "Wrong credentials");
+                    Log.wtf("DEBUG", "Entered wrong credentials, error: " + new String(error.networkResponse.data));
+                    break;
+                case 403:
+                    Message.message(context, "Missing authorities for current action");
+                    Log.wtf("DEBUG", "Missing authorities for request, error: " + new String(error.networkResponse.data));
+                    break;
+                case 418:
+                    Message.message(context, "The server refuses to brew coffee because it is a teapot");
+                    Log.wtf("DEBUG", "server says it is a teapot, error: " + new String(error.networkResponse.data));
+                    break;
+                case 500:
+                    Message.message(context, "Internal server error");
+                    Log.wtf("DEBUG", "Internal server error: " + new String(error.networkResponse.data));
+                    break;
+                case 503:
+                    Message.message(context, "Service unavailable");
+                    Log.wtf("DEBUG", "Service unavailable, error: " + new String(error.networkResponse.data));
+                    break;
+                default:
+                    Message.defErrMessage(context);
+                    Log.wtf("ERROR", "Unhandled server error code, error: " + new String(error.networkResponse.data));
+                    error.printStackTrace();
+                    break;
+            }
+        } catch (NullPointerException e){
+            Message.message(context, "server seems to be offline");
+            Log.wtf("WARNING", "server seems to be offline, failed to get data using url " + url);
+        }
     }
 
     /**
@@ -443,37 +414,32 @@ public class ApiController {
      * @param type the name of the field
      * @param i the current iteration of the loop (for knowing which object inside the list to get
      * @return returns ApiJsonObject if specific case has been added if not returns null
-     * @throws JSONException
      */
     private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
-        try {
-            switch (type) {
-                case GlobalValues.USERS_URL:
-                    addSingletonUsers(response, i, type);
-                    break;
-                case GlobalValues.ROLES_URL:
-                    addSingletonRoles(response, i, type);
-                    break;
-                case GlobalValues.PROJECTS_URL:
-                    addSingletonProjects(response, i, type);
-                    break;
-                case GlobalValues.BOARDS_URL:
-                    addSingletonBoards(response, i, type);
-                    break;
-                case GlobalValues.ROADMAPS_URL:
-                    addSingletonRoadmaps(response, i, type);
-                    break;
-                case GlobalValues.TASKS_URL:
-                    return JSONToObject(response.getJSONObject(i), GlobalValues.TASKS_URL, context);
-                default:
-                    Message.message(context, "Something went wrong");
-                    Log.wtf("ERROR", "current url isn't defined for adding to singletonConstructor in ApiController");
-                    break;
-            }
-
-        } catch (JSONException exception){
-            throw exception;
+        switch (type) {
+            case GlobalValues.USERS_URL:
+                addSingletonUsers(response, i, type);
+                break;
+            case GlobalValues.ROLES_URL:
+                addSingletonRoles(response, i, type);
+                break;
+            case GlobalValues.PROJECTS_URL:
+                addSingletonProjects(response, i, type);
+                break;
+            case GlobalValues.BOARDS_URL:
+                addSingletonBoards(response, i, type);
+                break;
+            case GlobalValues.ROADMAPS_URL:
+                addSingletonRoadmaps(response, i, type);
+                break;
+            case GlobalValues.TASKS_URL:
+                return JSONToObject(response.getJSONObject(i), GlobalValues.TASKS_URL, context);
+            default:
+                Message.message(context, "Something went wrong");
+                Log.wtf("ERROR", "current url isn't defined for adding to singletonConstructor in ApiController");
+                break;
         }
+
         return null;
     }
 
@@ -558,17 +524,6 @@ public class ApiController {
         ), type);
     }
 
-    /**
-     * transforms JSONObject to java object
-     * @return java user object
-     */
-    private static ApiJSONObject jsonUserToObject(JSONObject object) {
-        String username = checkIfStrNull("username", object, context);
-        String password = checkIfStrNull("password", object, context);
-
-        return new ApiJSONObject(username, password);
-    }
-
     private static JSONObject objectToJSON(ApiJSONObject object, Context context) {
         JSONObject mJSONObject = null;
         String jsonInString = new Gson().toJson(object);
@@ -601,7 +556,7 @@ public class ApiController {
                         dateCreated);
                 break;
             case GlobalValues.ROLES_URL:
-                JSONObject identity = null;
+                JSONObject identity;
                 try {
                     identity = (JSONObject) jsonObject.get("rolesIdentity");
                 } catch (JSONException e){

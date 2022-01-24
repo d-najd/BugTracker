@@ -31,8 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class RoadmapEditEpicActivity extends AppCompatActivity {
-    private RoadmapEditEpicActivity activity = this;
-    private String projectName;
+    private final RoadmapEditEpicActivity activity = this;
     private int epicId;
     private Context context;
 
@@ -48,7 +47,7 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         epicId = getIntent().getExtras().getInt("epicId");
         apiJsonObject = ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL);
-        projectName = getIntent().getExtras().getString("projectName");
+        getIntent().getExtras().getString("projectName");
 
         SetupActivityValues();
         Listeners();
@@ -81,36 +80,18 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         TextView startDateDescTxt = findViewById(R.id.startDateDescriptionTxt);
         TextView dueDateDescTxt = findViewById(R.id.dueDateDescriptionTxt);
 
-        editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ProjectTableEditDescriptionActivity.class);
+        editDescriptionTxt.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProjectTableEditDescriptionActivity.class);
 
-                intent.putExtra("oldData", editDescriptionTxt.getText().toString());
-                startActivityForResult(intent, 1); //for getting data back from the second activity
-            }
+            intent.putExtra("oldData", editDescriptionTxt.getText().toString());
+            startActivityForResult(intent, 1); //for getting data back from the second activity
         });
 
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        closeBtn.setOnClickListener(v -> finish());
 
-        startDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(context, v, activity, startDateDescTxt.getText().toString(), true);
-            }
-        });
+        startDateBtn.setOnClickListener(v -> Dialogs.CalendarDateSetterDialog(context, v, activity, startDateDescTxt.getText().toString(), true));
 
-        dueDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(context, v, activity, dueDateDescTxt.getText().toString(), false);
-            }
-        });
+        dueDateBtn.setOnClickListener(v -> Dialogs.CalendarDateSetterDialog(context, v, activity, dueDateDescTxt.getText().toString(), false));
 
         titleMiddle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -132,39 +113,31 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
             }
         });
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialogs.DeleteTaskDialog(context, "Delete this issue?", "deleting this " +
-                        "issue permanently erases the issue, including all subtasks", "CANCEL", "DELETE", activity);
-            }
-        });
+        deleteBtn.setOnClickListener(v -> Dialogs.DeleteTaskDialog(context, "Delete this issue?", "deleting this " +
+                "issue permanently erases the issue, including all subtasks", "CANCEL", "DELETE", activity));
 
-        issueTypeMainTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+        issueTypeMainTxt.setOnClickListener(v -> {
+            ViewGroup viewGroup = v.findViewById(android.R.id.content);
 
-                ArrayList<String> allColumnTitles = new ArrayList<>();
-                ArrayList<String> allColumnDescriptions = new ArrayList<>();
-                ArrayList<Integer> allColumnImages = new ArrayList<>();
+            ArrayList<String> allColumnTitles = new ArrayList<>();
+            ArrayList<String> allColumnDescriptions = new ArrayList<>();
+            ArrayList<Integer> allColumnImages = new ArrayList<>();
 
-                allColumnTitles.add("Epic");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A big, complex set of problems");
+            allColumnTitles.add("Epic");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("A big, complex set of problems");
 
-                allColumnTitles.add("Hybrid epic");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("An epic which acts like a column");
+            allColumnTitles.add("Hybrid epic");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("An epic which acts like a column");
 
-                allColumnTitles.add("Task");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A small, distinct piece of work");
+            allColumnTitles.add("Task");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("A small, distinct piece of work");
 
-                Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type",
-                        "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                        allColumnTitles, allColumnDescriptions, allColumnImages, "exampletag");
-            }
+            Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type",
+                    "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                    allColumnTitles, allColumnDescriptions, allColumnImages, "exampletag");
         });
     }
 

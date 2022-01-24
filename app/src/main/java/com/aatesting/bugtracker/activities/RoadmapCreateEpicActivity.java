@@ -21,8 +21,6 @@ import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,8 +29,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RoadmapCreateEpicActivity extends AppCompatActivity {
-    private RoadmapCreateEpicActivity activity = this;
-    private Context context = this;
+    private final RoadmapCreateEpicActivity activity = this;
+    private final Context context = this;
     private String projectName;
 
     @Override
@@ -63,86 +61,62 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         startDateDescriptionTxt.setText(startDateStr);
         dueDateDescriptionTxt.setText(dueDateStr);
 
-        epicTypeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ViewGroup viewGroup = v.findViewById(android.R.id.content);
+        epicTypeBtn.setOnClickListener(v -> {
+            ViewGroup viewGroup = v.findViewById(android.R.id.content);
 
-                ArrayList<String> allColumnTitles = new ArrayList<>();
-                ArrayList<String> allColumnDescriptions = new ArrayList<>();
-                ArrayList<Integer> allColumnImages = new ArrayList<>();
+            ArrayList<String> allColumnTitles = new ArrayList<>();
+            ArrayList<String> allColumnDescriptions = new ArrayList<>();
+            ArrayList<Integer> allColumnImages = new ArrayList<>();
 
-                allColumnTitles.add("Epic");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A big, complex set of problems");
+            allColumnTitles.add("Epic");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("A big, complex set of problems");
 
-                allColumnTitles.add("Hybrid epic");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("An epic which acts like a column");
+            allColumnTitles.add("Hybrid epic");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("An epic which acts like a column");
 
-                allColumnTitles.add("Task");
-                allColumnImages.add(2131165294);
-                allColumnDescriptions.add("A small, distinct piece of work");
+            allColumnTitles.add("Task");
+            allColumnImages.add(2131165294);
+            allColumnDescriptions.add("A small, distinct piece of work");
 
-                Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type",
-                        "These are the issue types that you can choose, based on the workflow of the current issue type.",
-                        allColumnTitles, allColumnDescriptions, allColumnImages, null);
-            }
+            Dialogs.BottomDialogCreator(context, v, viewGroup, "Issue Type",
+                    "These are the issue types that you can choose, based on the workflow of the current issue type.",
+                    allColumnTitles, allColumnDescriptions, allColumnImages, null);
         });
 
-        editDescriptionTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ProjectTableEditDescriptionActivity.class);
-                intent.putExtra("oldData", editDescriptionTxt.getText().toString());
-                startActivityForResult(intent, 1); //for getting data back from the second activity
-            }
+        editDescriptionTxt.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ProjectTableEditDescriptionActivity.class);
+            intent.putExtra("oldData", editDescriptionTxt.getText().toString());
+            startActivityForResult(intent, 1); //for getting data back from the second activity
         });
 
-        startDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(context, v, activity, startDateDescriptionTxt.getText().toString(),true);
-            }
+        startDateBtn.setOnClickListener(v -> Dialogs.CalendarDateSetterDialog(context, v, activity, startDateDescriptionTxt.getText().toString(),true));
+
+        dueDateBtn.setOnClickListener(v -> Dialogs.CalendarDateSetterDialog(context, v, activity, dueDateDescriptionTxt.getText().toString(), false));
+
+        createTxt.setOnClickListener(v -> {
+            String title = titleEdt.getText().toString();
+            String description = editDescriptionTxt.getText().toString();
+            String startDateStr1 = getStartDate(startDateDescriptionTxt, dueDateDescriptionTxt);
+            String dueDateStr1 = getDueDate(startDateStr1, dueDateDescriptionTxt);
+
+            if (RoadmapEditEpicActivity.forbiddenDates(startDateStr1, dueDateStr1, context)) return;
+
+            ApiJSONObject object = new ApiJSONObject(
+                    -1,
+                    GlobalValues.projectOpened,
+                    title,
+                    description,
+                    startDateStr1,
+                    dueDateStr1,
+                    null
+            );
+
+            ApiController.createField(object, GlobalValues.ROADMAPS_URL, null, activity);
         });
 
-        dueDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialogs.CalendarDateSetterDialog(context, v, activity, dueDateDescriptionTxt.getText().toString(), false);
-            }
-        });
-
-        createTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = titleEdt.getText().toString();
-                String description = editDescriptionTxt.getText().toString();
-                String startDateStr = getStartDate(startDateDescriptionTxt, dueDateDescriptionTxt);
-                String dueDateStr = getDueDate(startDateStr, dueDateDescriptionTxt);
-
-                if (RoadmapEditEpicActivity.forbiddenDates(startDateStr, dueDateStr, context)) return;
-
-                ApiJSONObject object = new ApiJSONObject(
-                        -1,
-                        GlobalValues.projectOpened,
-                        title,
-                        description,
-                        startDateStr,
-                        dueDateStr,
-                        null
-                );
-
-                ApiController.createField(object, GlobalValues.ROADMAPS_URL, null, activity);
-            }
-        });
-
-        closeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        closeBtn.setOnClickListener(v -> finish());
     }
 
     private String getStartDate(TextView startDateDescriptionTxt, TextView dueDateDescriptionTxt) {
@@ -184,6 +158,7 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
             try {
                 Date startDate = simpleDateFormat.parse(startDateStr);
                 Calendar calendar = GregorianCalendar.getInstance();
+                assert startDate != null;
                 calendar.setTime(startDate);
                 calendar.add(Calendar.WEEK_OF_YEAR, 2);
                 dueDate = simpleDateFormat.format(calendar.getTime());

@@ -1,5 +1,6 @@
 package com.aatesting.bugtracker.data;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.aatesting.bugtracker.AppSettings;
@@ -18,10 +19,9 @@ import java.util.List;
 
 
 public class RoadmapEpicJsonData {
-    /**
-     * @return seems to return date which is +1:00h from greenwich so take that into consideration
-     */
-    private static ApiSingleton apiSingleton = ApiSingleton.getInstance();
+
+    private static final ApiSingleton apiSingleton = ApiSingleton.getInstance();
+    @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat df = new SimpleDateFormat(AppSettings.SERVER_DATE_FORMAT);
 
     public static Date getEarliestOrLatestDate(boolean getEarliest){

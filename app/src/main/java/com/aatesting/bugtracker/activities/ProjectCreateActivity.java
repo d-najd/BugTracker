@@ -8,16 +8,15 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.Calendar;
 
-import com.aatesting.bugtracker.data.ProjectTableData;
-import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.Message;
+import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.data.ProjectsDatabase;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
-import com.aatesting.bugtracker.data.ProjectsDatabase;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ProjectCreateActivity extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -59,19 +58,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
         View mainBtn = findViewById(R.id.mainBtn);
         ImageButton backBtn = findViewById(R.id.cancelButton);
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        backBtn.setOnClickListener(v -> finish());
 
-        mainBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddProject(v);
-            }
-        });
+        mainBtn.setOnClickListener(this::AddProject);
     }
 
     public void AddProject(View view)
@@ -81,28 +70,19 @@ public class ProjectCreateActivity extends AppCompatActivity {
         String Pass = recyclerDataArrayList.get(0).getDescription();
 
         String t1 = Name.getText().toString();
-        String t2 = Pass;
-        if(t1.isEmpty() || t2.isEmpty())
+        if(t1.isEmpty() || Pass.isEmpty())
         {
             Message.message(this,"Enter Both Project Name and Description");
         }
         else
         {
-            long id = helper.InsertData(t1,t2);
+            long id = helper.InsertData(t1, Pass);
            // ProjectTableData.CreatingNewProject(t1, this);
             if(id<=0)
             {
                 Message.message(this,"Insertion Unsuccessful");
             }
         }
-    }
-
-    public void ViewData()
-    {
-        ProjectsDatabase helper = new ProjectsDatabase(this);
-
-        String data = helper.GetData();
-        Message.message(this,data);
     }
 
     /*
@@ -120,7 +100,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
             if(a<=0)
             {
                 Message.message(getApplicationContext(),"Unsuccessful");
-                updateold.setText(""); //shouldnt these be removed
+                updateold.setText(""); //shouldn't these be removed
                 updatenew.setText("");
             } else {
                 Message.message(getApplicationContext(),"Updated");
@@ -142,7 +122,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
             if(a<=0)
             {
                 Message.message(getApplicationContext(),"Unsuccessful");
-                delete.setText(""); //shouldnt this be removed
+                delete.setText(""); //shouldn't this be removed
             }
             else
             {

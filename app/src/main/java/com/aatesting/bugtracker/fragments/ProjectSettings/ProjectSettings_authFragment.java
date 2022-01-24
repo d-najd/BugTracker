@@ -139,6 +139,13 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
                     Log.wtf("ERROR", "string bundle with name username is required for setup of custom_user in fragment: " + getClass().getSimpleName());
                 }
 
+                String savedUsername = UserData.getLastUsername(view.getContext());
+                assert savedUsername != null;
+                if (!savedUsername.equals(username)){
+                TextView title = view.findViewById(R.id.titleText);
+                title.setText(username + "'s authorities");
+                }
+
                 ApiController.getField(null, false,
                         "/username/" + username + "/projectId/" + GlobalValues.projectOpened,
                         view.getContext(), GlobalValues.ROLES_URL, this);
@@ -154,15 +161,12 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
     @NotNull
     private View.OnClickListener roleClicked() {
         ProjectSettings_authFragment fragment = this;
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Pair<MainRecyclerAdapter, BottomSheetDialog> pair = ProjectSettings_manageUsersFragment
-                        .roleClickedBottomDialog(requireContext(), v, null);
+        return v -> {
+            Pair<MainRecyclerAdapter, BottomSheetDialog> pair = ProjectSettings_manageUsersFragment
+                    .roleClickedBottomDialog(requireContext(), v, null);
 
-                bottomSheetDialog = pair.second;
-                pair.first.projectSettings_authFragment = fragment;
-            }
+            bottomSheetDialog = pair.second;
+            pair.first.projectSettings_authFragment = fragment;
         };
     }
 }

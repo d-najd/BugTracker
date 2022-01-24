@@ -1,8 +1,6 @@
 package com.aatesting.bugtracker.fragments.ProjectSettings;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.ProjectsMainActivity;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
@@ -38,47 +35,38 @@ public class ProjectSettingsFragment extends ModifiedFragment {
 
         FragmentManager fragmentManager = getParentFragmentManager();
 
-        curAuthoritiesText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("setupCode", "original");
-                ProjectSettings_authFragment fragment = new ProjectSettings_authFragment();
-                fragment.setArguments(bundle);
+        curAuthoritiesText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("setupCode", "original");
+            ProjectSettings_authFragment fragment = new ProjectSettings_authFragment();
+            fragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, fragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.navHostFragment, fragment);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         });
 
-        seeUsersText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                ProjectSettings_usersFragment fragment = new ProjectSettings_usersFragment();
-                fragment.setArguments(bundle);
+        seeUsersText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            ProjectSettings_usersFragment fragment = new ProjectSettings_usersFragment();
+            fragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, fragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.navHostFragment, fragment);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         });
 
-        manageUsersText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                ProjectSettings_manageUsersFragment fragment = new ProjectSettings_manageUsersFragment();
-                fragment.setArguments(bundle);
+        manageUsersText.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            ProjectSettings_manageUsersFragment fragment = new ProjectSettings_manageUsersFragment();
+            fragment.setArguments(bundle);
 
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navHostFragment, fragment);
-                fragmentTransaction.disallowAddToBackStack();
-                fragmentTransaction.commit();
-            }
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.navHostFragment, fragment);
+            fragmentTransaction.disallowAddToBackStack();
+            fragmentTransaction.commit();
         });
     }
 }

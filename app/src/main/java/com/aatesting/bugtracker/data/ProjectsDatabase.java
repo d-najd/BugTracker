@@ -26,8 +26,7 @@ public class ProjectsDatabase {
         contentValues.put(MyDbHelper.description, pass);
         contentValues.put(MyDbHelper.title, name);
         contentValues.put(MyDbHelper.date, "");
-        long id = dbb.insert(MyDbHelper.TABLE_NAME, null , contentValues);
-        return id;
+        return dbb.insert(MyDbHelper.TABLE_NAME, null , contentValues);
     }
 
 

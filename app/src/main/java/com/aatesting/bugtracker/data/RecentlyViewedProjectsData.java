@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
@@ -13,10 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class RecentlyViewedProjectsData {
@@ -80,6 +77,7 @@ public class RecentlyViewedProjectsData {
             ex.printStackTrace();
         } finally {
             try {
+                assert writer != null;
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -124,8 +122,8 @@ public class RecentlyViewedProjectsData {
         File f = new File(context.getFilesDir() + File.separator + "ProjectData", FILE_NAME + ".txt");
         try {
             FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
+            int read;
+            StringBuilder buffer = new StringBuilder();
             while((read = fileInputStream.read())!= -1){
                 buffer.append((char)read);
             }

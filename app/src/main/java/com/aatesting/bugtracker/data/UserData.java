@@ -36,6 +36,7 @@ public class UserData {
             ex.printStackTrace();
         } finally {
             try {
+                assert writer != null;
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -64,9 +65,23 @@ public class UserData {
         return new ApiJSONObject(username, password);
     }
 
+    public static String getLastUsername(@NotNull Context context){
+        String dataOld = getData(context);
+
+        if (dataOld == null)
+            return null;
+
+        byte[] decodedBytes = Base64.decode(dataOld, Base64.NO_WRAP);
+        String decodedString = new String(decodedBytes);
+
+        String[] parts = decodedString.split(SEPARATOR);
+
+        return parts[0];
+    }
+
     /**
      * @apiNote only to be used if the data is encripted with base64
-     * @return base64 string of the last user in the format username:password NOTE the : is the seperator
+     * @return base64 string of the last user in the format username:password NOTE the : is the separator
      */
     public static String getLastUserRaw(@NotNull Context context){
         return getData(context);
@@ -78,8 +93,8 @@ public class UserData {
         File f = new File(context.getFilesDir() + File.separator, FILE_NAME + ".txt");
         try {
             FileInputStream fileInputStream = new FileInputStream(f);
-            int read = -1;
-            StringBuffer buffer = new StringBuffer();
+            int read;
+            StringBuilder buffer = new StringBuilder();
             while((read = fileInputStream.read())!= -1){
                 buffer.append((char)read);
             }

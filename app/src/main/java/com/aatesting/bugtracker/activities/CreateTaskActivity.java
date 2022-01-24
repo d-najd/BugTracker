@@ -14,15 +14,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class CreateTaskActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private ArrayList<RecyclerData> recyclerDataArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
-        recyclerDataArrayList = new ArrayList<>();
-        recyclerView = findViewById(R.id.weeksRecyclerView);
+        ArrayList<RecyclerData> recyclerDataArrayList = new ArrayList<>();
+        RecyclerView recyclerView = findViewById(R.id.weeksRecyclerView);
         String tag = recyclerView.getTag().toString();
 
         //types are epic for lot of tasks and task.
