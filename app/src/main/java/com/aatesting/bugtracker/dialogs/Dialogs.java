@@ -483,7 +483,7 @@ public class Dialogs {
     private static void AddMargins(EditText editText)
     {
         ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) editText.getLayoutParams();
-        p.setMargins(50, 0, 0, 0);
+        p.setMargins(12, 0, 0, 0);
         editText.requestLayout();
     }
 
