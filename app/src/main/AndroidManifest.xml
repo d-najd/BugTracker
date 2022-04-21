@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.aatesting.bugtracker.activities.ProjectCreateActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.Project.ProjectCreateActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.ProjectTableEditDescriptionActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity"/>

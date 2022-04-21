@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.activities;
+package com.aatesting.bugtracker.activities.Project;
 
 import android.os.Bundle;
 import android.view.View;

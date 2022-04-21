@@ -2,6 +2,7 @@ package com.aatesting.bugtracker.recyclerview;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -54,8 +55,9 @@ public class CustomSpinnerCreator<T> {
         // some other visual settings
         popupWindow.setFocusable(true);
         popupWindow.setBackgroundDrawable(mcontext.getDrawable(R.color.darkGray));
-        popupWindow.setWidth(500);
+        popupWindow.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         popupWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
 
         // set the list view as pop up window content
         popupWindow.setContentView(listView);
@@ -73,11 +75,11 @@ public class CustomSpinnerCreator<T> {
                 TextView listItem = new TextView(mcontext);
 
                 listItem.setText(text);
-                listItem.setTextSize(18);
+                listItem.setTextSize(16);
                 if (position != getCount() - 1)
-                    listItem.setPadding(32, 32, 32, 26);
+                    listItem.setPadding(32, 16, 16, 13);
                 else
-                    listItem.setPadding(32, 26, 32, 50);
+                    listItem.setPadding(32, 13, 16, 25);
                 listItem.setTextColor(Color.LTGRAY);
 
                 return listItem;
@@ -92,4 +94,13 @@ public class CustomSpinnerCreator<T> {
             projectTableCreate_recyclerAdapter.CustomSpinnerItemPressed(itemText, holderPosition, itemPosition);
         }
     }
+
+    private int pixelToDp(int pixels){
+        DisplayMetrics metrics = mcontext.getResources().getDisplayMetrics();
+        float dp = 20f;
+        float fpixels = metrics.density * dp;
+        return (int) (fpixels + 0.5f);
+    }
+
+
 }

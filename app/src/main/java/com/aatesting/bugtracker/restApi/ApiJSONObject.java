@@ -72,7 +72,8 @@ public class ApiJSONObject extends JSONObject {
     }
 
     //for roles
-    public ApiJSONObject(ApiJSONObject rolesIdentity, Boolean manageProject, Boolean manageUsers, Boolean create, Boolean edit, Boolean delete) {
+    public ApiJSONObject(ApiJSONObject rolesIdentity, Boolean manageProject, Boolean manageUsers,
+                         Boolean create, Boolean edit, Boolean delete) {
         this.rolesIdentity = rolesIdentity;
         this.manageProject = manageProject;
         this.manageUsers = manageUsers;

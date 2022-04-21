@@ -43,13 +43,15 @@ public class ApiSingleton {
         list.add(value);
     }
 
-
     public void reset(@NotNull String type) {
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         if (list != null)
             list.clear();
     }
 
+    /**
+     * @return the object at the selected position if it exists null if it doesn't
+     */
     public ApiJSONObject getObject(int pos, @NotNull String type){
         ArrayList<ApiJSONObject> list = findProjectByType(type);
         if (!list.isEmpty())
@@ -70,7 +72,7 @@ public class ApiSingleton {
 
     private ArrayList<ApiJSONObject> findProjectByType(@NotNull String type) {
         if (type == null) {
-            Log.wtf("ERROR", "WHAT THE ACTUAL F***, THE TYPE IS WITH TAG @NOTNULL");
+            Log.wtf("ERROR", "WHAT THE HELL HOW DID YOU MANAGE TO PUT NULL IN A TYPE WITH TAG @NOTNULL");
             return null;
         }
 

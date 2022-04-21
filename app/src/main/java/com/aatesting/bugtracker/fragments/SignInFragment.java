@@ -22,6 +22,7 @@ import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
+import com.aatesting.bugtracker.data.UserData;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
@@ -56,6 +57,11 @@ public class SignInFragment extends ModifiedFragment {
         EditText usernameEdt = root.findViewById(R.id.usernameEdt);
         EditText passwordEdt = root.findViewById(R.id.passwordEdt);
         Button submit = root.findViewById(R.id.submit);
+
+        String lastUsername = UserData.getLastUsername(root.getContext());
+        if (lastUsername != null)
+            usernameEdt.setText(lastUsername);
+
 
         ModifiedFragment fragment = this;
 

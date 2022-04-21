@@ -85,6 +85,7 @@ public class ApiController {
 
     /**
      * used for getting a single json object, does not set up the project data
+     * @param object if specified object will be sent along with the request
      * @param context the context is stored as a static function after so it doesn't have to be passed for other methods
      * @param url the last part of the url where the request is sent "xxx.xxx.xxx:xxxx/{url}
      * @param restUrl the rest of the url, like xxx.xxx.xxx/{url}/{restUrl}
@@ -414,6 +415,7 @@ public class ApiController {
      * @param type the name of the field
      * @param i the current iteration of the loop (for knowing which object inside the list to get
      * @return returns ApiJsonObject if specific case has been added if not returns null
+     * @throws JSONException
      */
     private static ApiJSONObject singletonConstructor(JSONArray response, String type, int i) throws JSONException {
         switch (type) {
