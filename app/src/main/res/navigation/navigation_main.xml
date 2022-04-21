@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_projects"
-        android:name="com.aatesting.bugtracker.fragments.ProjectsFragment"
+        android:name="com.aatesting.bugtracker.fragments.Main.ProjectsFragment"
         android:label="@string/titleProjects"
         tools:layout="@layout/fragment_projects" />
 
     <fragment
         android:id="@+id/navigation_account_signIn"
-        android:name="com.aatesting.bugtracker.fragments.SignInFragment"
+        android:name="com.aatesting.bugtracker.fragments.Authentication.SignInFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_signin" />
 
     <fragment
         android:id="@+id/navigation_account_signUp"
-        android:name="com.aatesting.bugtracker.fragments.SignInFragment"
+        android:name="com.aatesting.bugtracker.fragments.Authentication.SignInFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_signup" />
 </navigation>

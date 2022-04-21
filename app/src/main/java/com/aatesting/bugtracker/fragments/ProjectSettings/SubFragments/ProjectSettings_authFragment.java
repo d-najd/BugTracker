@@ -1,6 +1,5 @@
-package com.aatesting.bugtracker.fragments.ProjectSettings;
+package com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Pair;
@@ -16,8 +15,9 @@ import androidx.annotation.NonNull;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.UserData;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.restApi.ApiController;
@@ -27,7 +27,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class ProjectSettings_authFragment extends ModifiedFragment {
@@ -49,13 +48,13 @@ public class ProjectSettings_authFragment extends ModifiedFragment {
                 Log.wtf("ERROR", getClass().getSimpleName() + "requires a setupCode bundle of type string");
             }
         }
-        else{
+        else {
             Message.defErrMessage(getContext());
             Log.wtf("ERROR", getClass().getSimpleName() + "requires a setupCode bundle of type string");
         }
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 3, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.AUTH_FRAGMENT_ID, getParentFragmentManager());
 
         customSetup(setupCode);
 

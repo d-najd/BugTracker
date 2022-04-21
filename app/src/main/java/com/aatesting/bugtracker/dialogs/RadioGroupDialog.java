@@ -16,7 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatRadioButton;
 
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.fragments.SignInFragment;
+import com.aatesting.bugtracker.fragments.Authentication.SignInFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 
 import java.util.ArrayList;

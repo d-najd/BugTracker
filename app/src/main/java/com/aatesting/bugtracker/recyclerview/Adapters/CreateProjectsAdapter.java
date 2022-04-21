@@ -20,7 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.aatesting.bugtracker.Legacy.AnimationHandler;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.dialogs.RadioGroupDialog;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;

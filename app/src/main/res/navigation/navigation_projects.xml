@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.aatesting.bugtracker.fragments.DashboardFragment"
+        android:name="com.aatesting.bugtracker.fragments.Main.DashboardFragment"
         android:label="@string/titleProjects"
         tools:layout="@layout/fragment_projects" />
 
     <fragment
         android:id="@+id/navigation_roadmap"
-        android:name="com.aatesting.bugtracker.fragments.RoadmapFragment"
+        android:name="com.aatesting.bugtracker.fragments.Main.RoadmapFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_roadmap" />
 
     <fragment
         android:id="@+id/navigation_project_settings"
-        android:name="com.aatesting.bugtracker.fragments.RoadmapFragment"
+        android:name="com.aatesting.bugtracker.fragments.Main.RoadmapFragment"
         android:label="@string/titleRoadmap"
         tools:layout="@layout/fragment_settings" />
 

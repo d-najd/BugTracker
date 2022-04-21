@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments.ProjectSettings;
+package com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,8 +19,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.restApi.ApiController;
@@ -47,7 +48,7 @@ public class ProjectSettings_manageUsersFragment extends ModifiedFragment {
         view = root;
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 5, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.MANAGE_USERS_FRAGMENT_ID, getParentFragmentManager());
 
         listeners(root);
 

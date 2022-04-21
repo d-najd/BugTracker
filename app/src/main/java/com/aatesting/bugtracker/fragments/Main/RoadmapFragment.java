@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments;
+package com.aatesting.bugtracker.fragments.Main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.data.RoadmapEpicJsonData;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapWeeksAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.RoadmapEpicsAdapter;
@@ -53,7 +53,7 @@ public class RoadmapFragment extends ModifiedFragment {
 
         scrollViewLength.width = (int) (Math.round(10 * getResources().getDimension(R.dimen.activity_roadmap_weeks_width)));
 
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 1, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.ROADMAP_FRAGMENT_ID, getParentFragmentManager());
 
         return root;
     }

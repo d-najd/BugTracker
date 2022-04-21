@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.activities;
+package com.aatesting.bugtracker.activities.Projects;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,10 +10,12 @@ import android.widget.TextView;
 
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.activities.Roadmaps.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
-import com.aatesting.bugtracker.fragments.DashboardFragment;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
+import com.aatesting.bugtracker.fragments.Main.DashboardFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettingsFragment;
-import com.aatesting.bugtracker.fragments.RoadmapFragment;
+import com.aatesting.bugtracker.fragments.Main.RoadmapFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -75,7 +77,12 @@ public class ProjectsMainActivity extends AppCompatActivity {
         topbarSelected(view, fragment, fragmentManager);
 
         backBtn.setOnClickListener(v -> {
-            if (fragment >= 3 && fragment <= 5) {
+            if (
+                    fragment == FragmentSettings.AUTH_FRAGMENT_ID
+                    || fragment == FragmentSettings.USERS_FRAGMENT_ID
+                    || fragment == FragmentSettings.MANAGE_USERS_FRAGMENT_ID
+                    || fragment == FragmentSettings.GRID_FRAGMENT_ID
+            ){
                 swapToSettingsFragment(fragmentManager);
             }
             else
@@ -83,32 +90,37 @@ public class ProjectsMainActivity extends AppCompatActivity {
         });
 
         addBtn.setOnClickListener(v -> {
-            if (fragment == 0)
+            if (fragment == FragmentSettings.DASHBOARD_FRAGMENT_ID)
                 Dialogs.NewColumnDialog(context, "Add column", "ADD",
                         "Cancel", thisFragment);
-            else if (fragment == 1){
+            else if (fragment == FragmentSettings.ROADMAP_FRAGMENT_ID){
                 Intent intent = new Intent(ProjectsMainActivity.this, RoadmapCreateEpicActivity.class);
                 intent.putExtra("projectName", projectName);
                 startActivity(intent);
             }
-            else if (fragment == 2) {}
-            else
-            {
+            else {
                 Message.defErrMessage(context);
                 Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
             }
         });
 
         moreBtn.setOnClickListener(v -> {
-            if (fragment == 0 || fragment == 1 || fragment == 2) {}
-            else
-            {
+            if (
+                    fragment == FragmentSettings.DASHBOARD_FRAGMENT_ID
+                    || fragment == FragmentSettings.ROADMAP_FRAGMENT_ID
+            ) {}
+            else {
                 Message.defErrMessage(context);
                 Log.wtf("ERROR", "invalid fragment selected. the + create btn on top bar won't work, fragment selected is " + fragment);
             }
         });
     }
 
+    /**
+     * activate fragment in the topbar and deactivate if any other has been activated
+     * @param fragment the fragment we want to activate
+     * @apiNote only visuals and prevention of selecting the same fragment multiple times is done here
+     */
     private void topbarSelected(View view, int fragment, FragmentManager fragmentManager) {
         TextView boardText = view.findViewById(R.id.boardText);
         TextView roadmapText = view.findViewById(R.id.roadmapText);
@@ -121,7 +133,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
         ImageButton addBtn = view.findViewById(R.id.addBtn);
         ImageButton moreBtn = view.findViewById(R.id.moreVerticalBtn);
 
-        if (fragment == 0)
+        if (fragment == FragmentSettings.DASHBOARD_FRAGMENT_ID)
         {
             boardText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
             roadmapText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
@@ -136,7 +148,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
             roadmapText.setOnClickListener(roadmapTextListener(fragmentManager));
             settingsText.setOnClickListener(settingsTextListener(fragmentManager));
-        } else if (fragment == 1){
+        } else if (fragment == FragmentSettings.ROADMAP_FRAGMENT_ID){
             boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             roadmapText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
             settingsText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
@@ -150,7 +162,13 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
             boardText.setOnClickListener(boardTextListener(fragmentManager));
             settingsText.setOnClickListener(settingsTextListener(fragmentManager));
-        } else if (fragment >= 2 && fragment <= 5){
+        } else if (
+                fragment == FragmentSettings.PROJECT_SETTINGS_FRAGMENT_ID
+                || fragment == FragmentSettings.AUTH_FRAGMENT_ID
+                || fragment == FragmentSettings.USERS_FRAGMENT_ID
+                || fragment == FragmentSettings.MANAGE_USERS_FRAGMENT_ID
+                || fragment == FragmentSettings.GRID_FRAGMENT_ID
+        ){
             boardText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             roadmapText.setTextColor(getResources().getColor(R.color.white60, getTheme()));
             settingsText.setTextColor(getResources().getColor(R.color.purple_200, getTheme()));
@@ -209,8 +227,12 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (fragmentPos >= 3 && fragmentPos <= 5)
-        {
+        //for the nested
+        if (
+                fragmentPos == FragmentSettings.AUTH_FRAGMENT_ID
+                || fragmentPos == FragmentSettings.USERS_FRAGMENT_ID
+                || fragmentPos == FragmentSettings.MANAGE_USERS_FRAGMENT_ID
+        ){
             swapToSettingsFragment(thisFragment.getParentFragmentManager());
         } else
             super.onBackPressed();

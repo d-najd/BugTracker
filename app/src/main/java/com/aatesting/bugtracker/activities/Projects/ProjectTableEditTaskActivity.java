@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.activities;
+package com.aatesting.bugtracker.activities.Projects;
 
 import android.content.Context;
 import android.content.Intent;

@@ -19,7 +19,7 @@ import com.aatesting.bugtracker.AppSettings;
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.RoadmapEditEpicActivity;
+import com.aatesting.bugtracker.activities.Roadmaps.RoadmapEditEpicActivity;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
 
 import org.jetbrains.annotations.NotNull;

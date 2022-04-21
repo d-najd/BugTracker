@@ -21,13 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.aatesting.bugtracker.activities.Project.ProjectCreateActivity"/>
-        <activity android:name="com.aatesting.bugtracker.activities.ProjectTableEditTaskActivity"/>
-        <activity android:name="com.aatesting.bugtracker.activities.ProjectTableEditDescriptionActivity"/>
-        <activity android:name="com.aatesting.bugtracker.activities.RoadmapCreateEpicActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.Projects.ProjectCreateActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.Projects.ProjectTableEditTaskActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.Projects.ProjectTableEditDescriptionActivity"/>
+        <activity android:name="com.aatesting.bugtracker.activities.Roadmaps.RoadmapCreateEpicActivity"/>
         <activity android:name="com.aatesting.bugtracker.activities.CreateTaskActivity"/>
-        <activity android:name=".activities.RoadmapEditEpicActivity"/>
-        <activity android:name=".activities.ProjectsMainActivity"/>
+        <activity android:name=".activities.Roadmaps.RoadmapEditEpicActivity"/>
+        <activity android:name=".activities.Projects.ProjectsMainActivity"/>
     </application>
 
 </manifest>

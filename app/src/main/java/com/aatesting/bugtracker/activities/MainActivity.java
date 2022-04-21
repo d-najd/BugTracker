@@ -12,7 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.fragments.ProjectsFragment;
+import com.aatesting.bugtracker.fragments.Main.ProjectsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

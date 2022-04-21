@@ -2,7 +2,6 @@ package com.aatesting.bugtracker.recyclerview.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
-import com.aatesting.bugtracker.data.ProjectTableData;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.CustomSpinnerCreator;

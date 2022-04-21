@@ -1,11 +1,10 @@
-package com.aatesting.bugtracker.fragments;
+package com.aatesting.bugtracker.fragments.Main;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
-import com.aatesting.bugtracker.data.ProjectTableData;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.recyclerview.Adapters.ProjectTableCreateAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
@@ -39,7 +38,7 @@ public class DashboardFragment extends ModifiedFragment {
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 0, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.DASHBOARD_FRAGMENT_ID, getParentFragmentManager());
 
         recyclerView = root.findViewById(R.id.mainRecyclerView);
         tag = recyclerView.getTag().toString();

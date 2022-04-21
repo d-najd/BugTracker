@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments;
+package com.aatesting.bugtracker.fragments.Authentication;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +7,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,10 +20,10 @@ import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.MainActivity;
 import com.aatesting.bugtracker.data.UserData;
+import com.aatesting.bugtracker.fragments.Main.ProjectsFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 import com.aatesting.bugtracker.restApi.ApiController;
 import com.aatesting.bugtracker.restApi.ApiJSONObject;
-import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 public class SignUpFragment extends ModifiedFragment {
     ApiJSONObject user;

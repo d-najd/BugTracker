@@ -1,4 +1,4 @@
-package com.aatesting.bugtracker.fragments.ProjectSettings;
+package com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
-import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
-import com.aatesting.bugtracker.activities.ProjectsMainActivity;
+import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
+import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
-import com.aatesting.bugtracker.recyclerview.Adapters.CreateProjectsAdapter;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
 import com.aatesting.bugtracker.recyclerview.RecyclerData;
 import com.aatesting.bugtracker.restApi.ApiController;
@@ -23,7 +22,6 @@ import com.aatesting.bugtracker.restApi.ApiJSONObject;
 import com.aatesting.bugtracker.restApi.ApiSingleton;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class ProjectSettings_usersFragment extends ModifiedFragment {
     private View root;
@@ -33,7 +31,7 @@ public class ProjectSettings_usersFragment extends ModifiedFragment {
         root = inflater.inflate(R.layout.fragment_project_users, container, false);
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
-        ((ProjectsMainActivity)requireActivity()).listeners(root, 4, getParentFragmentManager());
+        ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.USERS_FRAGMENT_ID, getParentFragmentManager());
 
         ApiController.getFields(true, false, false, requireContext(), GlobalValues.USERS_URL, this);
 
