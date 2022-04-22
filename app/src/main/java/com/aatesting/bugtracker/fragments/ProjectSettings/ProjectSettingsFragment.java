@@ -75,6 +75,7 @@ public class ProjectSettingsFragment extends ModifiedFragment {
             fragmentTransaction.commit();
         });
 
+
         gridFragmentText.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             GridFragment fragment = new GridFragment();

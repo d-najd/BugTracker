@@ -14,6 +14,7 @@ import com.aatesting.bugtracker.activities.Roadmaps.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.fragments.Main.DashboardFragment;
+import com.aatesting.bugtracker.fragments.Main.GridFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettingsFragment;
 import com.aatesting.bugtracker.fragments.Main.RoadmapFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
@@ -58,6 +59,24 @@ public class ProjectsMainActivity extends AppCompatActivity {
 
         mainBtn.setVisibility(View.GONE);
         bottomBar.setVisibility(View.GONE);
+
+
+        //DEBUGGING
+        new Thread(() -> {
+            try {
+                Thread.sleep(100);
+                Bundle bundle = new Bundle();
+                GridFragment gridFragment = new GridFragment();
+                gridFragment.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = thisFragment.getParentFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.navHostFragment, gridFragment);
+                fragmentTransaction.disallowAddToBackStack();
+                fragmentTransaction.commit();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void listeners(View view, int fragment, FragmentManager fragmentManager){ //NOTE this is called from the fragments
