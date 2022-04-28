@@ -23,7 +23,7 @@
                 android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:text="Continue where you left off"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="26sp"
                 android:textStyle="bold|normal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,6 +49,7 @@
                 android:layout_height="52dp"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="28dp"
+                android:backgroundTint="@color/gray"
                 android:layout_marginRight="18dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/box_border"
@@ -79,8 +80,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="22dp"
                         android:gravity="left"
+                        android:textColor="@color/white"
                         android:text="Continue with google"
-                        android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -95,9 +96,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
+                android:textColor="@color/white"
                 android:alpha=".8"
                 android:text="OR"
-                android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -108,7 +109,7 @@
                 android:layout_width="32dp"
                 android:layout_height="1dp"
                 android:layout_marginEnd="2dp"
-                android:foreground="@color/black"
+                android:foreground="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textView12"
                 app:layout_constraintEnd_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toTopOf="@+id/textView12" />
@@ -117,7 +118,7 @@
                 android:layout_width="32dp"
                 android:layout_height="1dp"
                 android:layout_marginStart="2dp"
-                android:foreground="@color/black"
+                android:foreground="@color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/textView12"
                 app:layout_constraintStart_toEndOf="@+id/textView12"
                 app:layout_constraintTop_toTopOf="@+id/textView12" />
@@ -129,7 +130,7 @@
                 android:layout_marginBottom="4dp"
                 android:alpha=".6"
                 android:text="Username"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/usernameEdt"
                 app:layout_constraintStart_toStartOf="@+id/usernameEdt" />
 
@@ -149,6 +150,7 @@
             <EditText
                 android:id="@+id/usernameEdt"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="46dp"
@@ -163,8 +165,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:alpha=".6"
+                android:textColor="@color/white"
                 android:text="Password"
-                android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/passwordEdt"
                 app:layout_constraintStart_toStartOf="@+id/passwordEdt" />
 
@@ -185,6 +187,7 @@
             <EditText
                 android:id="@+id/passwordEdt"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="42dp"
@@ -200,6 +203,7 @@
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
+                android:textColor="@color/white"
                 android:text="by clicking you agree to our blah blah of service"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -40,6 +41,7 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
     private GridView gridView;
     private ViewGroup layout;
     private DisplayMetrics metrics;
+    private float dp;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,29 +50,43 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
 
 
         metrics = getContext().getResources().getDisplayMetrics();
+        dp = metrics.density;
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.GRID_FRAGMENT_ID, getParentFragmentManager());
 
         addGrid();
 
-        ConstraintLayout boardView = gBoardView();
-        ConstraintLayout editTextView = gEditTextView();
 
-        layout.addView(boardView);
-        layout.addView(editTextView);
+        gBoardView(120, 450);
+        gBoardView(210, 90);
+        //gEditTextView(90, 90);
+        addLine();
+
         return root;
     }
 
     //region Views
 
+    private void addLine(){
+        ArrowTest arrowTest = new ArrowTest(root.getContext(), 90, 90);
+        arrowTest.setMinimumWidth(50000);
+        arrowTest.setMinimumHeight(50000);
+        layout.addView(arrowTest);
+    }
+
+    /**
+     * creates and sets boardView to the layout
+     * @return the constraintLayout of the boardView
+     */
+
     @NotNull
-    private ConstraintLayout gBoardView() {
+    private ConstraintLayout gBoardView(float xPos, float yPos) {
         //region Views
 
         ImageButton imgBtn = new ImageButton(root.getContext());
-        imgBtn.setMinimumHeight((int) (90 * metrics.density));
-        imgBtn.setMinimumWidth((int) (90 * metrics.density));
+        imgBtn.setMinimumHeight((int) (90 * dp));
+        imgBtn.setMinimumWidth((int) (90 * dp));
         imgBtn.setBackgroundColor(Color.argb(255, 40, 40, 40));
         imgBtn.setTag("ImgBtn1");
         imgBtn.setId(View.generateViewId());
@@ -101,25 +117,32 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
                 imgBtn.getId(), ConstraintSet.START, 0);
         set.applyTo(conLayout);
 
-        textView.setPadding(0, (int) (7 * metrics.density), 0, 0);
+        textView.setPadding(0, (int) (7 * dp), 0, 0);
         //endregion
 
-        conLayout.setX(120 * metrics.density);
-        conLayout.setY(450 * metrics.density);
+        conLayout.setX(xPos * dp);
+        conLayout.setY(yPos * dp);
 
+        layout.addView(conLayout);
         return conLayout;
     }
 
+    /**
+     * creates and sets EdiTextView on the given coordinates
+     * @return constraintLayout of the ediTextView
+     */
     @NotNull
-    private ConstraintLayout gEditTextView(){
+    private ConstraintLayout gEditTextView(float xPos, float yPos){
         EditText editText = new EditText(root.getContext());
-        editText.setWidth((int) (300 * metrics.density));
-        editText.setMinHeight((int) (60 * metrics.density));
+        editText.setWidth((int) (300 * dp));
+        editText.setMinHeight((int) (60 * dp));
         editText.setTextColor(getResources().getColor(R.color.white87));
+        editText.setHintTextColor(getResources().getColor(R.color.white38));
         editText.setHint("Start typing...");
         editText.setTag("Edt1");
+        editText.setTextColor(getResources().getColor(R.color.white));
         editText.setId(View.generateViewId());
-        editText.setPadding((int) (10 * metrics.density), (int) (10 * metrics.density), (int) (10 * metrics.density), (int) (10 * metrics.density));
+        editText.setPadding((int) (10 * dp), (int) (10 * dp), (int) (10 * dp), (int) (10 * dp));
         editText.setBackgroundResource(android.R.color.transparent);
 
         ConstraintLayout conLayout = new ConstraintLayout(root.getContext());
@@ -128,9 +151,10 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
         editText.setOnLongClickListener(this);
         conLayout.setBackgroundColor(Color.argb(150, 40, 40, 40));
 
-        conLayout.setX(60 * metrics.density);
-        conLayout.setY(60 * metrics.density);
+        conLayout.setX(xPos * dp);
+        conLayout.setY(yPos * dp);
 
+        layout.addView(conLayout);
         return conLayout;
     }
 
@@ -162,12 +186,14 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
         View tagView = root.findViewWithTag(tag + "Layout");
 
         //in short we are adjusting the position so it follows the dots on the screen
-        float newX = Math.round((x - tagView.getWidth()/2f) / (gridView.spacing * metrics.density)) * gridView.spacing * metrics.density;
-        float newY = Math.round((y - tagView.getHeight()/2f) / (gridView.spacing * metrics.density)) * gridView.spacing * metrics.density;
+        float newX = Math.round((x - tagView.getWidth()/2f) / (gridView.spacing * dp)) * gridView.spacing * dp;
+        float newY = Math.round((y - tagView.getHeight()/2f) / (gridView.spacing * dp)) * gridView.spacing * dp;
 
         tagView.setX(newX);
         tagView.setY(newY);
     }
+
+    //region Listeners
 
     @Override
     public boolean onLongClick(View v) {
@@ -235,6 +261,92 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
         }
     }
 
+    //endregion
+
+    class ArrowTest extends View {
+        //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
+
+        private int arrowColor = Color.argb(150, 255, 255, 255);
+        
+        public ArrowTest(Context context, float xOff, float yOff){
+            super(context);
+
+            this.setX(150 * dp);
+            this.setY(150 * dp);
+        }
+        
+        public ArrowTest(Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            Paint linePaint = linePaint();
+            Paint arrowPaint = arrowPaint();
+
+            //wid 90 * dp
+
+            //gBoardView(120, 450); //bottom one
+            //gBoardView(210, 90); //top one
+
+            //define paths
+            Path linePath;
+            linePath = new Path();
+            linePath.moveTo(120, 900); //starting point
+            linePath.cubicTo(168, 368, 340, 375, 120, 450); //first 2 are the curves last one is ending pos
+            canvas.drawLine(120 * dp - 90 * dp, 450 * dp - 90 * dp, 210 * dp - 90 * dp, 90 * dp - 90 * dp, linePaint);
+
+
+            float xScal = .75f, yScal = 1f;
+
+            Path arrowPath = new Path(); {
+                arrowPath.moveTo(30 * xScal, 120 * yScal);
+                arrowPath.lineTo(90 * xScal, 60 * yScal);
+                arrowPath.lineTo(150 * xScal, 120 * yScal);
+                arrowPath.lineTo(30 * xScal, 120 * yScal);
+            }
+
+
+
+            //draw paths
+            //canvas.drawPath(linePath, linePaint);
+            canvas.drawPath(arrowPath, arrowPaint);
+
+        }
+
+
+
+        private Paint linePaint(){
+            Paint linePaint = new Paint();
+
+            linePaint.setColor(arrowColor);
+            linePaint.setAntiAlias(true);
+            linePaint.setStrokeCap(Paint.Cap.ROUND);
+            linePaint.setStrokeJoin(Paint.Join.ROUND);
+            linePaint.setStyle(Paint.Style.STROKE);
+            linePaint.setStrokeWidth(25);
+
+            return linePaint;
+        }
+
+        private Paint arrowPaint(){
+            Paint arrowPaint = new Paint();
+
+            arrowPaint.setColor(arrowColor);
+            arrowPaint.setAntiAlias(true);
+            arrowPaint.setStrokeCap(Paint.Cap.ROUND);
+            arrowPaint.setStrokeJoin(Paint.Join.ROUND);
+            arrowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            //the smoothness of the edges, the bigger the smoother they are and the bigger the arrow is
+            arrowPaint.setStrokeWidth(5);
+
+            return arrowPaint;
+        }
+    }
+
+
     class GridView extends View {
         public float spacing = 30f;
 
@@ -256,8 +368,8 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
             float yOff = 0;
             for (int x = 0; x < 100; x++){
                 for (int y = 0; y < 100; y++){
-                    float xVal = x * spacing * metrics.density;
-                    float yVal = y * spacing * metrics.density + yOff;
+                    float xVal = x * spacing * dp;
+                    float yVal = y * spacing * dp + yOff;
 
                     canvas.drawCircle(xVal, yVal, 2.5f, paint);
                 }

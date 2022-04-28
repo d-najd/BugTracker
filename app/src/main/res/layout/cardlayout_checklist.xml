@@ -11,6 +11,7 @@
     android:foreground="@drawable/cardview_ripple_effect"
     android:clickable="true"
     android:layout_marginBottom="2dp"
+    android:backgroundTint="@color/transparent"
     app:cardCornerRadius="2dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
