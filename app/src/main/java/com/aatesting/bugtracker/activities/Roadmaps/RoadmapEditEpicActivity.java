@@ -46,17 +46,32 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_roadmap_editepic);
         context = this;
 
-        epicId = getIntent().getExtras().getInt("epicId");
-        apiJsonObject = ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL);
-        getIntent().getExtras().getString("projectName");
+        try {
+            epicId = getIntent().getExtras().getInt("epicId");
+            apiJsonObject = ApiSingleton.getInstance().getObject(epicId, GlobalValues.ROADMAPS_URL);
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(this);
+
+            epicId = 1;
+        }
 
         SetupActivityValues();
         Listeners();
     }
 
     private void SetupActivityValues(){
-        String title = apiJsonObject.getTitle();
-        String description = apiJsonObject.getDescription();
+        String title, description;
+        try {
+            title = apiJsonObject.getTitle();
+            description = apiJsonObject.getDescription();
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(this);
+
+            title = "ERROR";
+            description = "ERROR";
+        }
 
         TextView titleMid = findViewById(R.id.titleMiddle);
         TextView descriptionTxt = findViewById(R.id.descriptionTxt);
@@ -65,8 +80,15 @@ public class RoadmapEditEpicActivity extends AppCompatActivity {
 
         titleMid.setText(title);
         descriptionTxt.setText(description);
-        startDateTxt.setText(apiJsonObject.getStartDate());
-        dueDateTxt.setText(apiJsonObject.getDueDate());
+        try {
+            startDateTxt.setText(apiJsonObject.getStartDate());
+            dueDateTxt.setText(apiJsonObject.getDueDate());
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(this);
+            startDateTxt.setText("ERROR");
+            dueDateTxt.setText("ERROR");
+        }
     }
 
     private void Listeners(){

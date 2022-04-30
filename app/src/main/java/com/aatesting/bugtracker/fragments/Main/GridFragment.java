@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -70,8 +72,7 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
 
     private void addLine(){
         ArrowTest arrowTest = new ArrowTest(root.getContext(), 90, 90);
-        arrowTest.setMinimumWidth(50000);
-        arrowTest.setMinimumHeight(50000);
+
         layout.addView(arrowTest);
     }
 
@@ -92,7 +93,7 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
         imgBtn.setId(View.generateViewId());
 
         TextView textView = new TextView(root.getContext());
-        textView.setText("I hate this");
+        textView.setText("fuck");
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextSize(5.5f * metrics.scaledDensity);
         textView.setTextColor(getResources().getColor(R.color.white87));
@@ -122,6 +123,17 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
 
         conLayout.setX(xPos * dp);
         conLayout.setY(yPos * dp);
+
+        ViewTreeObserver vto = conLayout.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                conLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int width  = layout.getMeasuredWidth();
+                int height = layout.getMeasuredHeight();
+
+            }
+        });
 
         layout.addView(conLayout);
         return conLayout;
@@ -266,13 +278,15 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
     class ArrowTest extends View {
         //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
 
-        private int arrowColor = Color.argb(150, 255, 255, 255);
-        
+        private final int arrowColor = Color.argb(255, 150, 150, 150);
+
         public ArrowTest(Context context, float xOff, float yOff){
             super(context);
 
-            this.setX(150 * dp);
-            this.setY(150 * dp);
+            this.setX(0 * dp);
+            this.setY(0 * dp);
+            this.setMinimumWidth(50000);
+            this.setMinimumHeight(50000);
         }
         
         public ArrowTest(Context context) {
@@ -291,12 +305,17 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
             //gBoardView(120, 450); //bottom one
             //gBoardView(210, 90); //top one
 
+
+
+            float x1 = (120 + 45) * dp, x2 = (210 + 45) * dp, x3 = 200 * dp;
+            float y1 = (450) * dp, y2 = (210 + 45) * dp, y3 = 400 * dp;
             //define paths
             Path linePath;
             linePath = new Path();
-            linePath.moveTo(120, 900); //starting point
-            linePath.cubicTo(168, 368, 340, 375, 120, 450); //first 2 are the curves last one is ending pos
-            canvas.drawLine(120 * dp - 90 * dp, 450 * dp - 90 * dp, 210 * dp - 90 * dp, 90 * dp - 90 * dp, linePaint);
+            linePath.moveTo(x1, y1); //starting point
+            linePath.cubicTo(x3, y3, x3, y3, x2, y2 - 90); //first 2 are the curves last one is ending pos
+
+
 
 
             float xScal = .75f, yScal = 1f;
@@ -308,12 +327,11 @@ public class GridFragment extends ModifiedFragment implements View.OnLongClickLi
                 arrowPath.lineTo(30 * xScal, 120 * yScal);
             }
 
-
-
             //draw paths
             //canvas.drawPath(linePath, linePaint);
             canvas.drawPath(arrowPath, arrowPaint);
-
+            //canvas.drawCircle(x3, y3, 10 * dp, arrowPaint);
+            canvas.drawLine((120 + 45) * dp, (450) * dp, (210 + 45) * dp, (90 + 90) * dp, linePaint);
         }
 
 

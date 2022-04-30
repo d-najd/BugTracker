@@ -39,7 +39,13 @@ public class RoadmapCreateEpicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roadmap_createepic);
 
-        projectName = getIntent().getExtras().getString("projectName");
+        try {
+            projectName = getIntent().getExtras().getString("projectName");
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(this);
+            projectName = "ERROR";
+        }
         Listeners();
     }
 

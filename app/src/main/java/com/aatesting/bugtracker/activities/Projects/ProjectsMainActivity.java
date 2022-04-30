@@ -42,7 +42,13 @@ public class ProjectsMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projects_main);
 
-        projectName = getIntent().getExtras().getString("projectName");
+        try {
+            projectName = getIntent().getExtras().getString("projectName");
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(this);
+            projectName = "ERROR";
+        }
         context = this;
 
         mainBtn = findViewById(R.id.mainBtn);

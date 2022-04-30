@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.recyclerview.Adapters.MainRecyclerAdapter;
@@ -74,15 +76,27 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
     private void getData() {
         tag = getString(R.string.projectEditTask);
 
-        columnPos = getIntent().getExtras().getInt("columnPos");
-        itemPos = getIntent().getExtras().getInt("itemPos");
-        
-        ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos);
+        try {
+            columnPos = getIntent().getExtras().getInt("columnPos");
+            itemPos = getIntent().getExtras().getInt("itemPos");
 
-        projectName = object.getTitle();
-        columnName = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTitle();
-        itemName = object.getTitle();
-        description = object.getDescription();
+            ApiJSONObject object = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos);
+
+            projectName = object.getTitle();
+            columnName = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTitle();
+            itemName = object.getTitle();
+            description = object.getDescription();
+        } catch (Exception e){
+            Log.wtf("ERROR", "unable to get columnPos or itemPos");
+            Message.defErrMessage(this);
+            columnPos = 1;
+            itemPos = 1;
+
+            projectName = "ERROR";
+            columnName = "ERROR";
+            itemName = "ERROR";
+            description = "ERROR";
+        }
     }
 
     private void Listeners(){
@@ -108,11 +122,16 @@ public class ProjectTableEditTaskActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 //the task
-                ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos);
-                taskObj.setTitle(s.toString());
+                try {
+                    ApiJSONObject taskObj = ApiSingleton.getInstance().getObject(columnPos, GlobalValues.BOARDS_URL).getTask(itemPos);
+                    taskObj.setTitle(s.toString());
 
-                topSave.setVisibility(View.VISIBLE);
-                GlobalValues.objectModified = taskObj;
+                    topSave.setVisibility(View.VISIBLE);
+                    GlobalValues.objectModified = taskObj;
+                } catch (Exception e){
+                    Log.wtf("ERROR", "failed to get data");
+                    Message.defErrMessage(context);
+                }
             }
         });
 

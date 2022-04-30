@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 
 public class ProjectTableEditDescriptionActivity extends AppCompatActivity {
@@ -23,7 +25,14 @@ public class ProjectTableEditDescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_projectcreate_editdescription);
 
-        String oldDescription = getIntent().getExtras().getString("oldData");
+        String oldDescription;
+        try{
+            oldDescription = getIntent().getExtras().getString("oldData");
+        } catch (Exception e){
+            Log.wtf("ERROR", "failed to get oldDescription");
+            Message.defErrMessage(this);
+            oldDescription = "ERROR";
+        }
         descriptionEdt = findViewById(R.id.descriptionEdt);
         closeActivityBtn = findViewById(R.id.closeActivityBtn);
         topSave = findViewById(R.id.topSave);

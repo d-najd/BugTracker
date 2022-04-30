@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.aatesting.bugtracker.GlobalValues;
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.fragments.FragmentSettings;
@@ -42,7 +43,14 @@ public class DashboardFragment extends ModifiedFragment {
 
         recyclerView = root.findViewById(R.id.mainRecyclerView);
         tag = recyclerView.getTag().toString();
-        projectName = requireActivity().getIntent().getExtras().getString("projectName");
+
+        try {
+            projectName = requireActivity().getIntent().getExtras().getString("projectName");
+        } catch (Exception e){
+            Log.wtf("ERROR", "Failed to get data");
+            Message.defErrMessage(getContext());
+            projectName = "ERROR";
+        }
 
         ApiController.getFields(true, true, false,  requireContext(), GlobalValues.BOARDS_URL, this);
         return root;
