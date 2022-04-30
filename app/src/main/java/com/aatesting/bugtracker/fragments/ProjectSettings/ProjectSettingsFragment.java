@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
 import com.aatesting.bugtracker.fragments.FragmentSettings;
-import com.aatesting.bugtracker.fragments.Main.GridFragment;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments.ProjectSettings_authFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments.ProjectSettings_manageUsersFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.SubFragments.ProjectSettings_usersFragment;

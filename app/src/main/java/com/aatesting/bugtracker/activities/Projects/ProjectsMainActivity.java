@@ -14,7 +14,7 @@ import com.aatesting.bugtracker.activities.Roadmaps.RoadmapCreateEpicActivity;
 import com.aatesting.bugtracker.dialogs.Dialogs;
 import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.fragments.Main.DashboardFragment;
-import com.aatesting.bugtracker.fragments.Main.GridFragment;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 import com.aatesting.bugtracker.fragments.ProjectSettings.ProjectSettingsFragment;
 import com.aatesting.bugtracker.fragments.Main.RoadmapFragment;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
