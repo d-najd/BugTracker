@@ -45,8 +45,8 @@ public class GridFragment extends ModifiedFragment {
 
         addGrid();
 
-        new GridFragmentBoardView(this, 120, 450);
-        new GridFragmentBoardView(this, 210, 90);
+        //new GridFragmentBoardView(this, 120, 450);
+        //new GridFragmentBoardView(this, 210, 90);
 
         GridFragmentArrowView GridFragmentArrowView = new GridFragmentArrowView(root.getContext(), 90, 90);
         layout.addView(GridFragmentArrowView);
@@ -73,6 +73,5 @@ public class GridFragment extends ModifiedFragment {
         gridColliders.setOnDragListener(gridFragmentListeners);
         gridColliders.setPadding(150, 150, 0, 0);
         layout.addView(gridColliders);
-
     }
 }
