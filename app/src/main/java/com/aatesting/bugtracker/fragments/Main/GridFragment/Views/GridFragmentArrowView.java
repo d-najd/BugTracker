@@ -11,78 +11,122 @@ import android.view.View;
 public class GridFragmentArrowView extends View {
     //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
 
-    private final int arrowColor = Color.argb(125, 150, 150, 150);
+    private final int color = Color.argb(255, 150, 150, 150);
     private float dp;
-    private float yOff;
 
+    private final float xStart;
+    private final float yStart;
+    private final float xEnd;
+    private final float yEnd;
 
-
-    public GridFragmentArrowView(Context context, float xOff, float yOff){
+    /**
+     * sets up a line between 2 views or just flying around
+     * <pre>
+     *    __        __
+     *   |  | ---> |  |
+     *   |__|      |__|
+     * </pre>
+     */
+    /*
+        TODO make it so the arrow follows views when moved around and ability to curve
+     */
+    public GridFragmentArrowView(Context context, float xStart, float yStart, float xEnd, float yEnd){
         super(context);
 
         dp = context.getResources().getDisplayMetrics().density;
-        yOff = 10 * dp;
 
-        this.setX(0 * dp);
-        this.setY(0 * dp);
+        this.xStart = xStart;
+        this.yStart = yStart;
+        this.xEnd = xEnd;
+        this.yEnd = yEnd;
+
+        //this.setX(0 * dp);
+        //this.setY(0 * dp);
         this.setMinimumWidth(50000);
         this.setMinimumHeight(50000);
-    }
-
-    public GridFragmentArrowView(Context context) {
-        super(context);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        drawLine(canvas);
+        drawArrow(canvas);
+    }
+
+    private void drawLine(Canvas canvas){
         Paint linePaint = linePaint();
-        Paint arrowPaint = arrowPaint();
 
-        //89.818184 117.09091
-        //gBoardView(120, 450); //bottom one
-        //gBoardView(210, 90); //top one
-
-        float xs = (120 + 45) * dp, ys = (450) * dp - yOff;
-        float xe = (210 + 45) * dp, ye = (210) * dp + yOff;
-        float xb = 200 * dp,        yb = 400 * dp;
-
-        //define paths
+        /*
         Path linePath = new Path();
         linePath.moveTo(xs, ys); //starting point
         linePath.cubicTo(xb, yb, xb, yb, xe, ye); //first 2 are the curves last one is ending pos
+        canvas.drawPath(linePath, linePaint);
+         */
 
-        float xScal = .75f, yScal = 1f;
-
-        Path arrowPath = new Path(); {
-            arrowPath.moveTo(30 * xScal, 120 * yScal);
-            arrowPath.lineTo(90 * xScal, 60 * yScal);
-            arrowPath.lineTo(150 * xScal, 120 * yScal);
-            arrowPath.lineTo(30 * xScal, 120 * yScal);
-        }
-
-        double angle = calculateAngle(xs, xe, ys, ye) * Math.PI/180;
-        Log.wtf("ERROR", angle + "");
-        Point point = new Point(xs, ys);
-        rotate_point(xe, ye, angle, point);
-
-        canvas.drawCircle(xs, ys, 5 * dp, linePaint);
-        canvas.drawCircle(xe, ye, 5 * dp, linePaint);
-
-        canvas.drawCircle(point.x, point.y, 5 * dp, linePaint);
-
-        //draw paths
-        //canvas.drawPath(linePath, linePaint);
-        //canvas.drawPath(arrowPath, arrowPaint);
-        //canvas.drawCircle(x3, y3, 10 * dp, arrowPaint);
-        //canvas.drawLine(xs, ys, xe, ye, linePaint);
-        canvas.drawRect(120 * dp, 450 * dp, (120 * dp) + (89.818184f * dp), (450 * dp) + (117.09091f * dp), linePaint);
-        canvas.drawRect(210 * dp, 90 * dp, (210 * dp) + (89.818184f * dp), (90 * dp) + (117.09091f * dp), linePaint);
-
+        canvas.drawLine(xStart, yStart, xEnd, yEnd, linePaint);
     }
 
-    static Point rotate_point(double cx, double cy, double angle, Point p)
+    private void drawArrow(Canvas canvas){
+        Paint arrowPaint = arrowPaint();
+
+        float[][] arrowPaths = getArrowPaths();
+        Path arrowPath = new Path(); {
+            arrowPath.moveTo(arrowPaths[0][0], arrowPaths[0][1]);
+            arrowPath.lineTo(arrowPaths[1][0], arrowPaths[1][1]);
+            arrowPath.lineTo(arrowPaths[2][0], arrowPaths[2][1]);
+            arrowPath.lineTo(arrowPaths[0][0], arrowPaths[0][1]);
+        }
+
+        canvas.drawPath(arrowPath, arrowPaint);
+    }
+
+    /**
+     * @apiNote they are rotated along the arrow line so that the arrow follows its rotation
+     * @return gets the arrow head point locations
+     */
+    private float[][] getArrowPaths(){
+        float xScaling = .6f, yScaling = .7f;
+        float spacing = GridFragmentBackgroundView.spacing;
+
+        float[][] arrowPaths = {
+                {-1 * spacing * dp * xScaling + xEnd, .5f * spacing * dp * yScaling + yEnd}, //left
+                {0 * spacing * dp * xScaling + xEnd, -.5f * spacing * dp * yScaling + yEnd}, //top
+                {1 * spacing * dp * xScaling + xEnd, .5f * spacing * dp * yScaling + yEnd} //right
+        };
+
+        double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
+
+        for (int i = 0; i < arrowPaths.length; i++){
+            Point rotatedPoint = rotate_point(xEnd, yEnd, (angle - 90) * Math.PI/180, new Point(arrowPaths[i][0], arrowPaths[i][1]));
+            arrowPaths[i][0] = rotatedPoint.x;
+            arrowPaths[i][1] = rotatedPoint.y;
+        }
+
+        return arrowPaths;
+    }
+
+    /**
+     * rotates a point along a given axis axis and an angle
+     *
+     * <pre>
+     *     ___________________________
+     *     |
+     *     |      (pointEnd)
+     *     |          |
+     *     |          |  angle (90 in this case)
+     *     |          |
+     *     |        cx,cy-------(pointStart)
+     *     |
+     * </pre>
+     * @param cx the x position of where we want the point to be rotated around
+     * @param cy the y position of where we want the point to be rotated around
+     * @param angle the angle that we want to rotate
+     * @param p the starting point
+     * @return rotated {@link GridFragmentArrowView.Point} object
+     * @see #calculateAngle(float, float, float, float) 
+     */
+    public static Point rotate_point(double cx, double cy, double angle, Point p)
     {
         double s = Math.sin(angle);
         double c = Math.cos(angle);
@@ -90,11 +134,11 @@ public class GridFragmentArrowView extends View {
         p.x -= cx;
         p.y -= cy;
         // rotate point
-        double Xnew = p.x * c - p.y * s;
-        double Ynew = p.x * s + p.y * c;
+        double xNew = p.x * c - p.y * s;
+        double yNew = p.x * s + p.y * c;
         // translate point back:
-        p.x = (float) (Xnew + cx);
-        p.y = (float) (Ynew + cy);
+        p.x = (float) (xNew + cx);
+        p.y = (float) (yNew + cy);
         return p;
     }
 
@@ -110,38 +154,38 @@ public class GridFragmentArrowView extends View {
      *     |     2,2
      * </pre>
      * @return - a double from 0 to 360
+     * @see #rotate_point(double, double, double, Point)
      */
 
-    private double calculateAngle(float startX, float endX, float startY, float endY){
-        float deltaX = startX - endX;
-        float deltaY = startY - endY;
+    public static double calculateAngle(float xStart, float yStart, float xEnd, float yEnd){
+        float deltaX = xStart - xEnd;
+        float deltaY = yStart - yEnd;
 
-        return Math.toDegrees(Math.atan2(deltaY, deltaX));
+        double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
+        return (result < 0) ? (360d + result) : result;
     }
 
     private Paint linePaint(){
         Paint linePaint = new Paint();
-
-        linePaint.setColor(arrowColor);
+        linePaint.setColor(color);
         linePaint.setAntiAlias(true);
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         linePaint.setStrokeJoin(Paint.Join.ROUND);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(25);
+        linePaint.setStrokeWidth(20);
 
         return linePaint;
     }
 
     private Paint arrowPaint(){
         Paint arrowPaint = new Paint();
-
-        arrowPaint.setColor(arrowColor);
+        arrowPaint.setColor(color);
         arrowPaint.setAntiAlias(true);
         arrowPaint.setStrokeCap(Paint.Cap.ROUND);
         arrowPaint.setStrokeJoin(Paint.Join.ROUND);
         arrowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         //the smoothness of the edges, the bigger the smoother they are and the bigger the arrow is
-        arrowPaint.setStrokeWidth(5);
+        arrowPaint.setStrokeWidth(3);
 
         return arrowPaint;
     }

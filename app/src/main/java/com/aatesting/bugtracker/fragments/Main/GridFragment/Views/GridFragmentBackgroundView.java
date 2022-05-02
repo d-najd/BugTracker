@@ -12,7 +12,7 @@ import android.view.View;
  */
 
 public class GridFragmentBackgroundView extends View {
-    public float spacing = 30f;
+    public static float spacing = 30f;
     private Paint paint = new Paint();
     private float dp;
 
@@ -27,8 +27,6 @@ public class GridFragmentBackgroundView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-
-        float spacing = 30f;
 
         //float yOff = topbar.getHeight();
         float yOff = 0;

@@ -32,8 +32,8 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
         View tagView = root.findViewWithTag(tag + "Layout");
 
         //in short we are adjusting the position so it follows the dots on the screen
-        float newX = Math.round((x - tagView.getWidth()/2f) / (gridFragmentBackgroundView.spacing * dp)) * gridFragmentBackgroundView.spacing * dp;
-        float newY = Math.round((y - tagView.getHeight()/2f) / (gridFragmentBackgroundView.spacing * dp)) * gridFragmentBackgroundView.spacing * dp;
+        float newX = Math.round((x - tagView.getWidth()/2f) / (GridFragmentBackgroundView.spacing * dp)) * GridFragmentBackgroundView.spacing * dp;
+        float newY = Math.round((y - tagView.getHeight()/2f) / (GridFragmentBackgroundView.spacing * dp)) * GridFragmentBackgroundView.spacing * dp;
 
         tagView.setX(newX);
         tagView.setY(newY);

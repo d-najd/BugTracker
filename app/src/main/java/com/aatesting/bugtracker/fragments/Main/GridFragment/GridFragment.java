@@ -45,10 +45,12 @@ public class GridFragment extends ModifiedFragment {
 
         addGrid();
 
-        //new GridFragmentBoardView(this, 120, 450);
-        //new GridFragmentBoardView(this, 210, 90);
+        new GridFragmentBoardView(this, 120, 450);
+        new GridFragmentBoardView(this, 210, 90);
 
-        GridFragmentArrowView GridFragmentArrowView = new GridFragmentArrowView(root.getContext(), 90, 90);
+        GridFragmentArrowView GridFragmentArrowView = new GridFragmentArrowView(root.getContext(),
+                (210 + 45) * dp, (210) * dp, //(210 + 45) * dp,  (210) * dp)
+                 (120 + 45) * dp,  (450) * dp); //(210 + 45) * dp
         layout.addView(GridFragmentArrowView);
 
         return root;
