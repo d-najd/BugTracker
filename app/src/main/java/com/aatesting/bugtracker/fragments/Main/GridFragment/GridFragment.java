@@ -1,20 +1,13 @@
 package com.aatesting.bugtracker.fragments.Main.GridFragment;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.activities.Projects.ProjectsMainActivity;
@@ -24,19 +17,17 @@ import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBa
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBoardView;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 
-import org.jetbrains.annotations.NotNull;
-
 public class GridFragment extends ModifiedFragment {
     private View root;
     private GridFragmentBackgroundView gridFragmentBackgroundView;
     public GridFragmentListeners gridFragmentListeners;
-    public ViewGroup layout;
+    public ViewGroup viewGroup;
     public float dp;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_grid, container, false);
-        layout = (ViewGroup) root.findViewById(R.id.container);
+        viewGroup = (ViewGroup) root.findViewById(R.id.container);
 
         dp = requireContext().getResources().getDisplayMetrics().density;
 
@@ -48,10 +39,13 @@ public class GridFragment extends ModifiedFragment {
         new GridFragmentBoardView(this, 120, 450);
         new GridFragmentBoardView(this, 210, 90);
 
-        GridFragmentArrowView GridFragmentArrowView = new GridFragmentArrowView(root.getContext(),
-                (210 + 45) * dp, (210) * dp, //(210 + 45) * dp,  (210) * dp)
-                 (120 + 45) * dp,  (450) * dp); //(210 + 45) * dp
-        layout.addView(GridFragmentArrowView);
+        GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(
+                root.getContext(), viewGroup,
+                (210 + 45) * dp, (450) * dp, //(210 + 45) * dp,  (210) * dp)
+                 (210 + 45) * dp,  (210) * dp); //(210 + 45) * dp   120 + 45
+        viewGroup.addView(gridFragmentArrowView);
+
+        //gridFragmentArrowView.setBackgroundColor(R.color.red);
 
         return root;
     }
@@ -63,7 +57,7 @@ public class GridFragment extends ModifiedFragment {
         gridFragmentBackgroundView = new GridFragmentBackgroundView(root.getContext());
         gridFragmentBackgroundView.setMinimumWidth(50000);
         gridFragmentBackgroundView.setMinimumHeight(50000);
-        layout.addView(gridFragmentBackgroundView);
+        viewGroup.addView(gridFragmentBackgroundView);
 
         gridFragmentListeners = new GridFragmentListeners(root, gridFragmentBackgroundView);
 
@@ -74,6 +68,6 @@ public class GridFragment extends ModifiedFragment {
         gridColliders.setTag("gridColliders");
         gridColliders.setOnDragListener(gridFragmentListeners);
         gridColliders.setPadding(150, 150, 0, 0);
-        layout.addView(gridColliders);
+        viewGroup.addView(gridColliders);
     }
 }

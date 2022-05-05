@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.aatesting.bugtracker.R;
@@ -24,7 +23,7 @@ public class GridFragmentTextView extends ConstraintLayout {
     public GridFragmentTextView(@NotNull GridFragment gridFragment, float xPos, float yPos){
         super(gridFragment.requireContext());
         Context context = gridFragment.requireContext();
-        ViewGroup layout = gridFragment.layout;
+        ViewGroup layout = gridFragment.viewGroup;
         float dp = gridFragment.dp;
 
         EditText editText = new EditText(context);

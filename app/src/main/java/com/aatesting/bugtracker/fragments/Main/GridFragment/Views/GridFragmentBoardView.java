@@ -10,7 +10,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
@@ -18,8 +17,6 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
 
 public class GridFragmentBoardView extends ConstraintLayout {
 
@@ -32,7 +29,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
     public GridFragmentBoardView(@NotNull GridFragment gridFragment, float xPos, float yPos) {
         super(gridFragment.requireContext());
         Context context = gridFragment.requireContext();
-        ViewGroup layout = gridFragment.layout;
+        ViewGroup layout = gridFragment.viewGroup;
         float dp = gridFragment.dp;
 
         ImageButton imgBtn = new ImageButton(context);
