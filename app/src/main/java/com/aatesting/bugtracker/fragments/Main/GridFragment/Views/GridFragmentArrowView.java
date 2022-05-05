@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aatesting.bugtracker.R;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 
 public class GridFragmentArrowView extends View {
     //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
@@ -17,6 +18,7 @@ public class GridFragmentArrowView extends View {
     private final int color = Color.argb(255, 150, 150, 150);
     private final float dp;
     private ViewGroup viewGroup;
+    private GridFragment gridFragment;
 
     private final float xStart;
     private final float yStart;
@@ -41,11 +43,12 @@ public class GridFragmentArrowView extends View {
     /*
         TODO make it so the arrow follows views when moved around and ability to curve
      */
-    public GridFragmentArrowView(Context context, ViewGroup viewGroup, float xStart, float yStart, float xEnd, float yEnd){
-        super(context);
+    public GridFragmentArrowView(GridFragment gridFragment, ViewGroup viewGroup, float xStart, float yStart, float xEnd, float yEnd){
+        super(gridFragment.getContext());
 
-        dp = context.getResources().getDisplayMetrics().density;
+        dp = gridFragment.getContext().getResources().getDisplayMetrics().density;
         this.viewGroup = viewGroup;
+        this.gridFragment = gridFragment;
 
         this.xStart = xStart;
         this.yStart = yStart;
@@ -127,6 +130,9 @@ public class GridFragmentArrowView extends View {
         viewGroup.addView(headCollider);
         viewGroup.addView(backCollider);
         viewGroup.addView(bodyCollider);
+
+        headCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
+        headCollider.setTag("arrowView");
     }
 
     private void drawLine(Canvas canvas){

@@ -40,7 +40,7 @@ public class GridFragment extends ModifiedFragment {
         new GridFragmentBoardView(this, 210, 90);
 
         GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(
-                root.getContext(), viewGroup,
+                this, viewGroup,
                 (210 + 45) * dp, (450) * dp, //(210 + 45) * dp,  (210) * dp)
                  (210 + 45) * dp,  (210) * dp); //(210 + 45) * dp   120 + 45
         viewGroup.addView(gridFragmentArrowView);

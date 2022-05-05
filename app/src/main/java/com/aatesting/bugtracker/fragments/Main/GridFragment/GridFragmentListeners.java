@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBackgroundView;
 
@@ -27,9 +28,10 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
 
     /**
      * sets position of a given view
+     * @throws exception when its not able to set the position
      */
-    private void setPos(String tag, float x, float y){
-        View tagView = root.findViewWithTag(tag + "Layout");
+    private void setPos(String tag, float x, float y) throws Exception {
+        View tagView = root.findViewWithTag(tag);
 
         //in short we are adjusting the position so it follows the dots on the screen
         float newX = Math.round((x - tagView.getWidth()/2f) / (GridFragmentBackgroundView.spacing * dp)) * GridFragmentBackgroundView.spacing * dp;
@@ -41,8 +43,6 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
 
     @Override
     public boolean onLongClick(View v) {
-        Log.wtf("TESTING root", v + "");
-        Log.wtf("TESTNG backview", gridFragmentBackgroundView + "");
         View.DragShadowBuilder mShadow = new View.DragShadowBuilder(v);
         ClipData.Item item = new ClipData.Item(v.getTag().toString());
         String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
@@ -55,25 +55,29 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
     @Override
     public boolean onDrag(View v, DragEvent event)
     {
-        Log.wtf("TESTING root", root + "");
-        Log.wtf("TESTNG backview", gridFragmentBackgroundView + "");
         String clipData;
         View tagView;
         switch (event.getAction()) {
             case DragEvent.ACTION_DRAG_STARTED:
+                try {
+                    ((ImageView) v).setColorFilter(Color.YELLOW);
+                    v.invalidate();
 
-                ((ImageView) v).setColorFilter(Color.YELLOW);
-                v.invalidate();
+                    clipData = event.getClipDescription().getLabel().toString();
 
-                clipData = event.getClipDescription().getLabel().toString();
-                tagView = root.findViewWithTag(clipData + "Layout");
-                tagView.setVisibility(View.INVISIBLE);
+                    tagView = root.findViewWithTag(clipData + "Layout");
+                    tagView.setVisibility(View.VISIBLE);
+                } catch (Exception e){
+                    //e.printStackTrace();
+                    Log.wtf("ERROR", "Unable to get tag of view");
+                    Message.defErrMessage(v.getContext());
+                }
 
                 return true;
 
             case DragEvent.ACTION_DRAG_ENTERED:
                 ((ImageButton) v).setColorFilter(ContextCompat.getColor(v.getContext(), R.color.green), android.graphics.PorterDuff.Mode.MULTIPLY);
-                clipData = event.getClipDescription().getLabel().toString();
+                //clipData = event.getClipDescription().getLabel().toString();
                 v.invalidate();
                 return true;
 
@@ -91,14 +95,21 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
                 return true;
 
             case DragEvent.ACTION_DROP:
-                clipData = event.getClipDescription().getLabel().toString();
+                try {
+                    v.invalidate();
 
-                setPos(clipData, event.getX(), event.getY());
-                v.invalidate();
+                    clipData = event.getClipDescription().getLabel().toString();
+                    tagView = root.findViewWithTag(clipData + "Layout");
 
-                clipData = event.getClipDescription().getLabel().toString();
-                tagView = root.findViewWithTag(clipData + "Layout");
-                tagView.setVisibility(View.VISIBLE);
+                    setPos(clipData + "Layout", event.getX(), event.getY());
+
+                    tagView.setVisibility(View.VISIBLE);
+                } catch (Exception e){
+                    //e.printStackTrace();
+                    Log.wtf("ERROR", "Unable to move view");
+                    Message.defErrMessage(v.getContext());
+                }
+
                 return true;
 
             case DragEvent.ACTION_DRAG_ENDED:
