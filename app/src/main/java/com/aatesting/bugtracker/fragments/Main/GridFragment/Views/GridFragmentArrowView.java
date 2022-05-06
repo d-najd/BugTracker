@@ -1,11 +1,9 @@
 package com.aatesting.bugtracker.fragments.Main.GridFragment.Views;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,8 +24,8 @@ public class GridFragmentArrowView extends View {
     private final float yEnd;
 
     //the smaller of the *start and *end values (Math.min(*start, *end) + edgesPadding * dp)
-    private final float xMin;
-    private final float yMin;
+    private final float xMinM;
+    private final float yMinM;
 
     //edges padding, so that the arrow displays fully and for easier grabbing
     private final float edgesPadding;
@@ -57,11 +55,11 @@ public class GridFragmentArrowView extends View {
 
         edgesPadding = 24 * dp;
 
-        xMin = Math.min(xStart, xEnd) - edgesPadding;
-        yMin = Math.min(yStart, yEnd) - edgesPadding;
+        xMinM = Math.min(xStart, xEnd) - edgesPadding;
+        yMinM = Math.min(yStart, yEnd) - edgesPadding;
 
-        this.setX(xMin);
-        this.setY(yMin);
+        this.setX(xMinM);
+        this.setY(yMinM);
         //gets multiplied by 2 to compensate for dividing in xMin
         this.setMinimumWidth((int) (Math.max(xStart, xEnd) - Math.min(xStart, xEnd) + edgesPadding*2));
         this.setMinimumHeight((int) (Math.max(yStart, yEnd) - Math.min(yStart, yEnd) + edgesPadding*2));
@@ -94,17 +92,18 @@ public class GridFragmentArrowView extends View {
         View headCollider = new View(getContext());
         View backCollider = new View(getContext());
         View bodyCollider = new View(getContext());
-        float size = 52 * dp;
-        int width = (int) ((int) Math.max(Math.max(xStart - xMin, xEnd - xMin), Math.max(yStart - yMin, yEnd - yMin)) + edgesPadding*2);
+
         double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
 
+        float size = 52 * dp;
+        double width = getBodyColliderWidth(angle);
 
         headCollider.setMinimumWidth((int) size);
         headCollider.setMinimumHeight((int) size);
         backCollider.setMinimumWidth((int) size);
         backCollider.setMinimumHeight((int) size);
-        bodyCollider.setMinimumWidth((int) (width + size/1.85));
-        bodyCollider.setMinimumHeight((int) size);
+        bodyCollider.setMinimumWidth((int) size);
+        bodyCollider.setMinimumHeight((int) width);
 
         headCollider.setX(xEnd - size/2);
         headCollider.setY(yEnd - size/2);
@@ -116,28 +115,50 @@ public class GridFragmentArrowView extends View {
         backCollider.setBackgroundColor(R.color.red);
         backCollider.setRotation((float) (angle + 180));
 
-        //TODO fix the rotation
-        // making a system that looks at the current rotation angle and has values for each of the
-        // rotations and a procentage applied for the current rotation, for ex if angle is 90
-        // pivotx val 1 will be 100% 2,3,4 0 and all others 0 (val1 is size/2)
-        // example if angle is between 0 and 90 it gets a procentage, 90 all 45 half and half to other
-        // like a circle with quadrants n stuff at school
-        bodyCollider.setPivotX(0f); //90 degree (size/2) 180 (size/4)
-        bodyCollider.setPivotY(0f); //                   180 (size/4)
 
-        bodyCollider.setX(xStart); //0~ -(size/2) 90~ +(size/2) 180~ +(size/2) 270~ -(size/2)
-        bodyCollider.setY((float) (yStart - size/1.4)); //0~ -(size/2) 90~ -(size/2) 180~ +(size/2) 270~ +(size/2)
-        Log.wtf("curAgle", "ang " + (angle + 180));
-        bodyCollider.setRotation((float) angle + 180);
+        bodyCollider.setX(xStart - size/2);
+        bodyCollider.setY(yStart - size/2);
+        bodyCollider.setPivotY(size/2);
+        bodyCollider.setPivotX(size/2);
 
         bodyCollider.setBackgroundColor(R.color.red);
+        bodyCollider.setRotation((float) angle + 90);
 
+        viewGroup.addView(bodyCollider);
         viewGroup.addView(headCollider);
         viewGroup.addView(backCollider);
-        viewGroup.addView(bodyCollider);
 
         headCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
         headCollider.setTag("arrowView");
+    }
+
+    /**
+     * calculates the width that the arrowBody has, the reason why this is used is because the width
+     * seems to be different from the biggest position value, thus needing to use this cursed code,
+     * first, we get value between, 0-90, we don't get a value below that because it will screw up
+     * how the closeness is calculated.
+     *
+     * the closer that we are to 45 the smaller the value is, ranging from 0-45
+     * @param angle without angle how would we calculate closeness to angle?
+     * @return the width of the arrow view's body collider
+     * @see #setCollision()
+     */
+    private double getBodyColliderWidth(double angle){
+        double distFrom45d = angle % 90;
+
+        if (distFrom45d >= 45){
+            distFrom45d = distFrom45d - 45;
+        } else
+            distFrom45d = 45 - distFrom45d;
+
+        distFrom45d = distFrom45d * 2.222;
+
+        final float smallestVal = Math.min(Math.min(xStart, xEnd), Math.min(yStart, yEnd));
+        double secondVal =
+                smallestVal * (distFrom45d / 100) +
+                        smallestVal / 2 * ((100 - distFrom45d) / 100 - 0.06);
+
+        return (Math.max(Math.max(xStart, xEnd), Math.max(yStart, yEnd)) - secondVal);
     }
 
     private void drawLine(Canvas canvas){
@@ -152,7 +173,7 @@ public class GridFragmentArrowView extends View {
          */
 
         //canvas.drawLine(xStart, yStart, xEnd, yEnd, linePaint);
-        canvas.drawLine(xStart - xMin, yStart - yMin, xEnd - xMin, yEnd - yMin, linePaint);
+        canvas.drawLine(xStart - xMinM, yStart - yMinM, xEnd - xMinM, yEnd - yMinM, linePaint);
     }
 
     private void drawArrow(Canvas canvas){
@@ -160,10 +181,10 @@ public class GridFragmentArrowView extends View {
 
         float[][] arrowPaths = getArrowPaths();
         Path arrowPath = new Path(); {
-            arrowPath.moveTo(arrowPaths[0][0] - xMin, arrowPaths[0][1] - yMin);
-            arrowPath.lineTo(arrowPaths[1][0] - xMin, arrowPaths[1][1] - yMin);
-            arrowPath.lineTo(arrowPaths[2][0] - xMin, arrowPaths[2][1] - yMin);
-            arrowPath.lineTo(arrowPaths[0][0] - xMin, arrowPaths[0][1] - yMin);
+            arrowPath.moveTo(arrowPaths[0][0] - xMinM, arrowPaths[0][1] - yMinM);
+            arrowPath.lineTo(arrowPaths[1][0] - xMinM, arrowPaths[1][1] - yMinM);
+            arrowPath.lineTo(arrowPaths[2][0] - xMinM, arrowPaths[2][1] - yMinM);
+            arrowPath.lineTo(arrowPaths[0][0] - xMinM, arrowPaths[0][1] - yMinM);
         }
 
         canvas.drawPath(arrowPath, arrowPaint);
