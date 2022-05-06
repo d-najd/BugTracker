@@ -95,7 +95,9 @@ public class GridFragmentArrowView extends View {
         View backCollider = new View(getContext());
         View bodyCollider = new View(getContext());
         float size = 52 * dp;
-        int width = (int) Math.max(Math.max(xStart - xMin, xEnd - xMin), Math.max(yStart - yMin, yEnd - yMin));
+        int width = (int) ((int) Math.max(Math.max(xStart - xMin, xEnd - xMin), Math.max(yStart - yMin, yEnd - yMin)) + edgesPadding*2);
+        double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
+
 
         headCollider.setMinimumWidth((int) size);
         headCollider.setMinimumHeight((int) size);
@@ -107,10 +109,12 @@ public class GridFragmentArrowView extends View {
         headCollider.setX(xEnd - size/2);
         headCollider.setY(yEnd - size/2);
         headCollider.setBackgroundColor(R.color.red);
+        headCollider.setRotation((float) (angle + 180));
 
         backCollider.setX(xStart - size/2);
         backCollider.setY(yStart - size/2);
         backCollider.setBackgroundColor(R.color.red);
+        backCollider.setRotation((float) (angle + 180));
 
         //TODO fix the rotation
         // making a system that looks at the current rotation angle and has values for each of the
@@ -118,11 +122,12 @@ public class GridFragmentArrowView extends View {
         // pivotx val 1 will be 100% 2,3,4 0 and all others 0 (val1 is size/2)
         // example if angle is between 0 and 90 it gets a procentage, 90 all 45 half and half to other
         // like a circle with quadrants n stuff at school
-        double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
-        bodyCollider.setPivotX(size/2); //changing this
-        bodyCollider.setPivotY(0f);
-        bodyCollider.setX(xStart); //and this
-        bodyCollider.setY(yStart); //and this should fix all problems
+        bodyCollider.setPivotX(0f); //90 degree (size/2) 180 (size/4)
+        bodyCollider.setPivotY(0f); //                   180 (size/4)
+
+        bodyCollider.setX(xStart); //0~ -(size/2) 90~ +(size/2) 180~ +(size/2) 270~ -(size/2)
+        bodyCollider.setY((float) (yStart - size/1.4)); //0~ -(size/2) 90~ -(size/2) 180~ +(size/2) 270~ +(size/2)
+        Log.wtf("curAgle", "ang " + (angle + 180));
         bodyCollider.setRotation((float) angle + 180);
 
         bodyCollider.setBackgroundColor(R.color.red);
