@@ -41,10 +41,17 @@ public class GridFragment extends ModifiedFragment {
 
         GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(
                 this, viewGroup,
-                (50 + 250) * dp, (50 + 250) * dp, //(210 + 45) * dp, (210) * dp      // 1-180 2-270
-                 (50 + 300) * dp,  (50 + 300) * dp); //(120 + 45) * dp,  (450) * dp)  // 1-0/360 2-90
+                (50 + 0) * dp, (50 + 0) * dp, //(210 + 45) * dp, (210) * dp
+                 (50 + 750) * dp,  (50 + 750) * dp); //(120 + 45) * dp,  (450) * dp)
+
+        GridFragmentArrowView gridFragmentArrowView1 = new GridFragmentArrowView(
+                this, viewGroup,
+                (50 + 200) * dp, (50 + 350) * dp, //(210 + 45) * dp, (210) * dp
+                (50 + 350) * dp,  (50 + 500) * dp); //(120 + 45) * dp,  (450) * dp)
+
         viewGroup.addView(gridFragmentArrowView);
-       // gridFragmentArrowView.setBackgroundColor(R.color.red);
+        viewGroup.addView(gridFragmentArrowView1);
+        // gridFragmentArrowView.setBackgroundColor(R.color.red);
 
         //gridFragmentArrowView.setBackgroundColor(R.color.red);
 

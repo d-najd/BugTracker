@@ -165,11 +165,10 @@ public class GridFragmentArrowView extends View {
             taken from it depending on the closeness from 45 degree
          */
 
-        float test = (Math.max(Math.max(xStart, xEnd), Math.max(yStart, yEnd)));
+        float test = (Math.max(Math.max(xStart, xEnd) - Math.min(xStart, xEnd), Math.max(yStart, yEnd) - Math.min(yStart, yEnd)));
 
-        double secondVal = test * (distFrom45d / 100) + test / 2 * ((100 - distFrom45d) / 100 - 0.06);
-
-        return test - secondVal;
+        double secondVal = smallestVal * (distFrom45d / 100) + smallestVal / 2 * ((100 - distFrom45d) / 100 - 0.06);
+        return test + 900;
     }
 
     private void drawLine(Canvas canvas){
