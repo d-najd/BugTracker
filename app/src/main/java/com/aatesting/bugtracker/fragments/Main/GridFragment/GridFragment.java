@@ -22,7 +22,8 @@ public class GridFragment extends ModifiedFragment {
     private GridFragmentBackgroundView gridFragmentBackgroundView;
     public GridFragmentListeners gridFragmentListeners;
     public ViewGroup viewGroup;
-    public float dp;
+    public static float dp;
+    private float spacing;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,27 +31,22 @@ public class GridFragment extends ModifiedFragment {
         viewGroup = (ViewGroup) root.findViewById(R.id.container);
 
         dp = requireContext().getResources().getDisplayMetrics().density;
+        spacing = GridFragmentSettings.spacing;
 
         ((ProjectsMainActivity)requireActivity()).thisFragment = this;
         ((ProjectsMainActivity)requireActivity()).listeners(root, FragmentSettings.GRID_FRAGMENT_ID, getParentFragmentManager());
 
         addGrid();
 
-        new GridFragmentBoardView(this, 120, 450);
-        new GridFragmentBoardView(this, 210, 90);
+        new GridFragmentBoardView(this, spacing * 2 * dp, spacing * 15 * dp);
+        new GridFragmentBoardView(this, spacing * 8 * dp, spacing * 2 * dp);
 
         GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(
                 this, viewGroup,
-                (50 + 0) * dp, (50 + 0) * dp, //(210 + 45) * dp, (210) * dp
-                 (50 + 750) * dp,  (50 + 750) * dp); //(120 + 45) * dp,  (450) * dp)
-
-        GridFragmentArrowView gridFragmentArrowView1 = new GridFragmentArrowView(
-                this, viewGroup,
-                (50 + 200) * dp, (50 + 350) * dp, //(210 + 45) * dp, (210) * dp
-                (50 + 350) * dp,  (50 + 500) * dp); //(120 + 45) * dp,  (450) * dp)
+                spacing * (2 + 1.5f) * dp, spacing * (15) * dp, //(210 + 45) * dp, (210) * dp
+                spacing * (8 + 1.5f) * dp,  spacing * 2 * dp + 110 * dp + spacing*dp/2); //(120 + 45) * dp,  (450) * dp)
 
         viewGroup.addView(gridFragmentArrowView);
-        viewGroup.addView(gridFragmentArrowView1);
         // gridFragmentArrowView.setBackgroundColor(R.color.red);
 
         //gridFragmentArrowView.setBackgroundColor(R.color.red);

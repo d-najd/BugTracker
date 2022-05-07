@@ -4,11 +4,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
 
 public class GridFragmentArrowView extends View {
     //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
@@ -30,6 +33,10 @@ public class GridFragmentArrowView extends View {
     //edges padding, so that the arrow displays fully and for easier grabbing
     private final float edgesPadding;
 
+    private View headCollider = new View(getContext());
+    private View backCollider = new View(getContext());
+    private View bodyCollider = new View(getContext());
+
     /**
      * sets up a line between 2 views or just flying around
      * <pre>
@@ -38,11 +45,9 @@ public class GridFragmentArrowView extends View {
      *   |__|      |__|
      * </pre>
      */
-    /*
-        TODO make it so the arrow follows views when moved around and ability to curve
-     */
     public GridFragmentArrowView(GridFragment gridFragment, ViewGroup viewGroup, float xStart, float yStart, float xEnd, float yEnd){
         super(gridFragment.getContext());
+        GridFragmentSettings.curId++;
 
         dp = gridFragment.getContext().getResources().getDisplayMetrics().density;
         this.viewGroup = viewGroup;
@@ -58,6 +63,7 @@ public class GridFragmentArrowView extends View {
         xMinM = Math.min(xStart, xEnd) - edgesPadding;
         yMinM = Math.min(yStart, yEnd) - edgesPadding;
 
+        this.setTag(GridFragmentSettings.ARROW_VIEW_TAG + GridFragmentSettings.curId);
         this.setX(xMinM);
         this.setY(yMinM);
         //gets multiplied by 2 to compensate for dividing in xMin
@@ -89,86 +95,57 @@ public class GridFragmentArrowView extends View {
      */
 
     private void setCollision(){
-        View headCollider = new View(getContext());
-        View backCollider = new View(getContext());
-        View bodyCollider = new View(getContext());
+        headCollider = new View(getContext());
+        backCollider = new View(getContext());
+        bodyCollider = new View(getContext());
 
         double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
+        float size = 40 * dp;
 
-        float size = 52 * dp;
-        double width = getBodyColliderWidth(angle);
+        boolean displayColliders = true;
 
         headCollider.setMinimumWidth((int) size);
         headCollider.setMinimumHeight((int) size);
+        headCollider.setElevation(GridFragmentSettings.ARROW_HEAD_LAYER);
         backCollider.setMinimumWidth((int) size);
         backCollider.setMinimumHeight((int) size);
+        backCollider.setElevation(GridFragmentSettings.ARROW_BACK_LAYER);
         bodyCollider.setMinimumWidth((int) size);
-        bodyCollider.setMinimumHeight((int) width);
+        bodyCollider.setMinimumHeight((int) ((Math.sqrt(Math.pow(xStart - xEnd, 2) + Math.pow(yStart - yEnd, 2))) + size));
+        bodyCollider.setElevation(GridFragmentSettings.ARROW_BODY_LAYER);
 
         headCollider.setX(xEnd - size/2);
         headCollider.setY(yEnd - size/2);
-        headCollider.setBackgroundColor(R.color.red);
         headCollider.setRotation((float) (angle + 180));
 
         backCollider.setX(xStart - size/2);
         backCollider.setY(yStart - size/2);
-        backCollider.setBackgroundColor(R.color.red);
         backCollider.setRotation((float) (angle + 180));
-
 
         bodyCollider.setX(xStart - size/2);
         bodyCollider.setY(yStart - size/2);
         bodyCollider.setPivotY(size/2);
         bodyCollider.setPivotX(size/2);
-
-        bodyCollider.setBackgroundColor(R.color.red);
         bodyCollider.setRotation((float) angle + 90);
 
         viewGroup.addView(bodyCollider);
         viewGroup.addView(headCollider);
         viewGroup.addView(backCollider);
 
+        headCollider.setTag(GridFragmentSettings.ARROW_HEAD_TAG + GridFragmentSettings.curId);
+        bodyCollider.setTag(GridFragmentSettings.ARROW_BODY_TAG + GridFragmentSettings.curId);
+        backCollider.setTag(GridFragmentSettings.ARROW_BACK_TAG + GridFragmentSettings.curId);
+
         headCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
-        headCollider.setTag("arrowView");
-    }
+        bodyCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
+        backCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
 
-    /**
-     * calculates the width that the arrowBody has, the reason why this is used is because the width
-     * seems to be different from the biggest position value, thus needing to use this cursed code,
-     * first, we get value between, 0-90, we don't get a value below that because it will screw up
-     * how the closeness is calculated.
-     *
-     * the closer that we are to 45 the smaller the value is, ranging from 0-45
-     * @param angle without angle how would we calculate closeness to angle?
-     * @return the width of the arrow view's body collider
-     * @see #setCollision()
-     */
-    private double getBodyColliderWidth(double angle){
-        double distFrom45d = angle % 90;
 
-        if (distFrom45d >= 45){
-            distFrom45d = distFrom45d - 45;
-        } else
-            distFrom45d = 45 - distFrom45d;
-
-        distFrom45d = distFrom45d * 2.222;
-
-        final float smallestVal = Math.min(Math.min(xStart, xEnd), Math.min(yStart, yEnd));
-
-        /*TODO                 READ
-                                |
-                                |
-                                |
-                               \_/
-
-         TODO I think this can work but I think the max value has to be used and a percentage
-            taken from it depending on the closeness from 45 degree
-         */
-
-        float test = (Math.max(Math.max(xStart, xEnd) - Math.min(xStart, xEnd), Math.max(yStart, yEnd) - Math.min(yStart, yEnd)));
-
-        double secondVal = smallestVal * (distFrom45d / 100) + smallestVal / 2 * ((100 - distFrom45d) / 100 - 0.06);
-        return test + 900;
+        if (displayColliders){
+            headCollider.setBackgroundColor(getResources().getColor(R.color.green));
+            backCollider.setBackgroundColor(getResources().getColor(R.color.red));
+            bodyCollider.setBackgroundColor(getResources().getColor(R.color.blue));
+        }
     }
 
     private void drawLine(Canvas canvas){
@@ -205,8 +182,8 @@ public class GridFragmentArrowView extends View {
      * @return gets the arrow head point locations
      */
     private float[][] getArrowPaths(){
-        float xScaling = .6f, yScaling = .7f;
-        float spacing = GridFragmentBackgroundView.spacing;
+        float xScaling = .45f, yScaling = .5f;
+        float spacing = GridFragmentSettings.spacing;
 
         float[][] arrowPaths = {
                 {-1 * spacing * dp * xScaling + xEnd , .5f * spacing * dp * yScaling + yEnd}, //left
@@ -277,8 +254,8 @@ public class GridFragmentArrowView extends View {
      */
 
     public static double calculateAngle(float xStart, float yStart, float xEnd, float yEnd){
-        float deltaX = xStart - xEnd;
-        float deltaY = yStart - yEnd;
+        double deltaX = xStart - xEnd;
+        double deltaY = yStart - yEnd;
 
         double result = Math.toDegrees(Math.atan2(deltaY, deltaX));
         return (result < 0) ? (360d + result) : result;
@@ -291,7 +268,7 @@ public class GridFragmentArrowView extends View {
         linePaint.setStrokeCap(Paint.Cap.ROUND);
         linePaint.setStrokeJoin(Paint.Join.ROUND);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(20);
+        linePaint.setStrokeWidth(15);
 
         return linePaint;
     }
@@ -308,6 +285,30 @@ public class GridFragmentArrowView extends View {
 
         return arrowPaint;
     }
+
+    public void Move(float xPos, float yPos){
+        float newX = Math.round((xPos - this.getWidth() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
+        float newY = Math.round((yPos - this.getHeight() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
+
+        this.setX(newX);
+        this.setY(newY);
+
+        /**
+         * TODO to fix rotation maybe just place this in constraint layout? or move each element separately
+         */
+
+        bodyCollider.setX(newX);
+        bodyCollider.setY(newY);
+
+        /*
+                headCollider.setX(xEnd - size/2);
+        headCollider.setY(yEnd - size/2);
+
+                bodyCollider.setX(xStart - size/2);
+        bodyCollider.setY(yStart - size/2);
+         */
+    }
+
 
     /**
      * nothing else wants to work, I will go crazy if I spend another hour trying to figure out why it doesn't work

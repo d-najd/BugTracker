@@ -7,12 +7,13 @@ import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
+
 /**
  * basically the grid on the background
  */
 
 public class GridFragmentBackgroundView extends View {
-    public static float spacing = 30f;
     private Paint paint = new Paint();
     private float dp;
 
@@ -30,10 +31,10 @@ public class GridFragmentBackgroundView extends View {
 
         //float yOff = topbar.getHeight();
         float yOff = 0;
-        for (int x = 0; x < 100; x++){
-            for (int y = 0; y < 100; y++){
-                float xVal = x * spacing * dp;
-                float yVal = y * spacing * dp + yOff;
+        for (int x = 0; x < 1000; x++){
+            for (int y = 0; y < 1000; y++){
+                float xVal = x * GridFragmentSettings.spacing * dp;
+                float yVal = y * GridFragmentSettings.spacing * dp + yOff;
 
                 canvas.drawCircle(xVal, yVal, 2.5f, paint);
             }

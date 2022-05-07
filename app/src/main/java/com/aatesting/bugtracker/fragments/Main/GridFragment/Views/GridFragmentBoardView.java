@@ -15,10 +15,12 @@ import androidx.constraintlayout.widget.ConstraintSet;
 
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
 
 import org.jetbrains.annotations.NotNull;
 
 public class GridFragmentBoardView extends ConstraintLayout {
+    final String BOARD_TAG = GridFragmentSettings.BOARD_TAG;
 
     /**
      * creates and sets boardView to the gridFragment viewGroup
@@ -28,15 +30,18 @@ public class GridFragmentBoardView extends ConstraintLayout {
      */
     public GridFragmentBoardView(@NotNull GridFragment gridFragment, float xPos, float yPos) {
         super(gridFragment.requireContext());
+        GridFragmentSettings.curId++;
+        long curId = GridFragmentSettings.curId;
+
         Context context = gridFragment.requireContext();
         ViewGroup layout = gridFragment.viewGroup;
         float dp = gridFragment.dp;
 
         ImageButton imgBtn = new ImageButton(context);
-        imgBtn.setMinimumHeight((int) (90 * dp));
-        imgBtn.setMinimumWidth((int) (90 * dp));
+        imgBtn.setMinimumHeight((int) (GridFragmentSettings.spacing * 3 * dp));
+        imgBtn.setMinimumWidth((int) (GridFragmentSettings.spacing * 3 * dp));
         imgBtn.setBackgroundColor(Color.argb(255, 40, 40, 40));
-        imgBtn.setTag("ImgBtn1");
+        imgBtn.setTag(BOARD_TAG + curId);
         imgBtn.setId(View.generateViewId());
 
         TextView textView = new TextView(context);
@@ -47,7 +52,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
         textView.setId(View.generateViewId());
 
         ConstraintLayout conLayout = new ConstraintLayout(context);
-        conLayout.setTag("ImgBtn1Layout");
+        conLayout.setTag(BOARD_TAG + curId + "Layout");
         conLayout.addView(imgBtn);
         conLayout.addView(textView);
         //conLayout.setBackgroundColor(R.color.red);
@@ -65,8 +70,8 @@ public class GridFragmentBoardView extends ConstraintLayout {
 
         textView.setPadding(0, (int) (7 * dp), 0, 0);
 
-        conLayout.setX(xPos * dp);
-        conLayout.setY(yPos * dp);
+        conLayout.setX(xPos);
+        conLayout.setY(yPos);
 
         ViewTreeObserver vto = conLayout.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
