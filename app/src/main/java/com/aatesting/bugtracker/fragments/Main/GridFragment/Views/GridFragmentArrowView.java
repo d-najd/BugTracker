@@ -297,8 +297,8 @@ public class GridFragmentArrowView extends View {
          * TODO to fix rotation maybe just place this in constraint layout? or move each element separately
          */
 
-        bodyCollider.setX(newX);
-        bodyCollider.setY(newY);
+        //bodyCollider.setX(newX);
+        //bodyCollider.setY(newY);
 
         /*
                 headCollider.setX(xEnd - size/2);
