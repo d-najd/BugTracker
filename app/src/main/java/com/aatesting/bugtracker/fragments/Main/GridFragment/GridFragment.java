@@ -41,8 +41,7 @@ public class GridFragment extends ModifiedFragment {
         new GridFragmentBoardView(this, spacing * 2 * dp, spacing * 15 * dp);
         new GridFragmentBoardView(this, spacing * 8 * dp, spacing * 2 * dp);
 
-        GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(
-                this, viewGroup,
+        GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(this, viewGroup,
                 spacing * (2 + 1.5f) * dp, spacing * (15) * dp, //(210 + 45) * dp, (210) * dp
                 spacing * (8 + 1.5f) * dp,  spacing * 2 * dp + 110 * dp + spacing*dp/2); //(120 + 45) * dp,  (450) * dp)
 

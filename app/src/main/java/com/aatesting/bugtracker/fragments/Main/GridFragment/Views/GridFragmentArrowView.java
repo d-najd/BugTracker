@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ public class GridFragmentArrowView extends View {
     private final float dp;
     private ViewGroup viewGroup;
     private GridFragment gridFragment;
+    private Canvas canvas;
 
     private final float xStart;
     private final float yStart;
@@ -75,8 +78,10 @@ public class GridFragmentArrowView extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        drawLine(canvas);
-        drawArrow(canvas);
+        this.canvas = canvas;
+
+        drawLine();
+        drawArrow();
         setCollision();
     }
 
@@ -101,8 +106,6 @@ public class GridFragmentArrowView extends View {
 
         double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
         float size = 40 * dp;
-
-        boolean displayColliders = true;
 
         headCollider.setMinimumWidth((int) size);
         headCollider.setMinimumHeight((int) size);
@@ -140,30 +143,30 @@ public class GridFragmentArrowView extends View {
         bodyCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
         backCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
 
-
-        if (displayColliders){
+        boolean debug = false;
+        if (debug){
             headCollider.setBackgroundColor(getResources().getColor(R.color.green));
             backCollider.setBackgroundColor(getResources().getColor(R.color.red));
             bodyCollider.setBackgroundColor(getResources().getColor(R.color.blue));
         }
     }
 
-    private void drawLine(Canvas canvas){
+    private void drawLine(){
         Paint linePaint = linePaint();
 
         /*
+        curved line code
+
         Path linePath = new Path();
         linePath.moveTo(xs, ys); //starting point
         linePath.cubicTo(xb, yb, xb, yb, xe, ye); //first 2 are the curves last one is ending pos
         canvas.drawPath(linePath, linePaint);
-
          */
 
-        //canvas.drawLine(xStart, yStart, xEnd, yEnd, linePaint);
         canvas.drawLine(xStart - xMinM, yStart - yMinM, xEnd - xMinM, yEnd - yMinM, linePaint);
     }
 
-    private void drawArrow(Canvas canvas){
+    private void drawArrow(){
         Paint arrowPaint = arrowPaint();
 
         float[][] arrowPaths = getArrowPaths();
@@ -203,7 +206,7 @@ public class GridFragmentArrowView extends View {
     }
 
     /**
-     * rotates a point along a given axis axis and an angle
+     * rotates a point along a a given angle and a point of rotation
      *
      * <pre>
      *     ___________________________
@@ -215,15 +218,14 @@ public class GridFragmentArrowView extends View {
      *     |        cx,cy-------(pointStart)
      *     |
      * </pre>
-     * @param cx the x position of where we want the point to be rotated around
-     * @param cy the y position of where we want the point to be rotated around
-     * @param angle the angle that we want to rotate
+     * @param cx the x position of where we want the starting point to be rotated around
+     * @param cy the y position of where we want the starting point to be rotated around
+     * @param angle the number of degrees we want to rotate
      * @param p the starting point
      * @return rotated {@link GridFragmentArrowView.Point} object
      * @see #calculateAngle(float, float, float, float) 
      */
-    public static Point rotate_point(double cx, double cy, double angle, Point p)
-    {
+    public static Point rotate_point(double cx, double cy, double angle, Point p) {
         double s = Math.sin(angle);
         double c = Math.cos(angle);
         // translate point back to origin:
@@ -286,29 +288,78 @@ public class GridFragmentArrowView extends View {
         return arrowPaint;
     }
 
-    public void Move(float xPos, float yPos){
+    /**
+     * moves the view and its colliders to a given position
+     * @param xPos the x pos we want the view to be located at
+     * @param yPos the y pos we want the view to be located at
+     */
+    public void moveFully(float xPos, float yPos){
+        //new positions of the arrow
         float newX = Math.round((xPos - this.getWidth() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
         float newY = Math.round((yPos - this.getHeight() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
 
-        this.setX(newX);
-        this.setY(newY);
+        //difference between the starting positions and new positions, for ex arrow starts at 100
+        //and new is 150, difference is 50
+        float difX = newX - this.getX();
+        float difY = newY - this.getY();
 
-        /**
-         * TODO to fix rotation maybe just place this in constraint layout? or move each element separately
-         */
+        this.setX(this.getX() + difX);
+        this.setY(this.getY() + difY);
+        headCollider.setX(headCollider.getX() + difX);
+        headCollider.setY(headCollider.getY() + difY);
+        bodyCollider.setX(bodyCollider.getX() + difX);
+        bodyCollider.setY(bodyCollider.getY() + difY);
+        backCollider.setX(backCollider.getX() + difX);
+        backCollider.setY(backCollider.getY() + difY);
 
-        //bodyCollider.setX(newX);
-        //bodyCollider.setY(newY);
-
-        /*
-                headCollider.setX(xEnd - size/2);
-        headCollider.setY(yEnd - size/2);
-
-                bodyCollider.setX(xStart - size/2);
-        bodyCollider.setY(yStart - size/2);
-         */
+        moveHead(1, 1, true);
     }
 
+    /**
+     * moves the head or back to a given position, for example
+     *
+     * <pre>
+     *     |          /
+     *     |   to    /
+     *    \_/      \_/
+     * </pre>
+     *
+     * @apiNote <p>moving the head also affects the position and rotation of the view and its colliders</p>
+     * @implNote <h2>moving the head also removes and redraws the view and its colliders</h2>
+     * @param xPos final x position of the arrow head
+     * @param yPos final y position of the arrow head
+     * @param head if true the head gets moved, if false the back gets moved
+     * @return the view created from the new positions
+     */
+    public View moveHead(float xPos, float yPos, boolean head){
+        float spacing = GridFragmentSettings.spacing;
+
+        xPos = spacing * (8 + 1.5f) * dp;
+        yPos = spacing * (15) * dp;
+        float startX = backCollider.getX();
+        float startY = backCollider.getY();
+        float endX = headCollider.getX();
+        float endY = headCollider.getY();
+
+        ((ViewGroup) headCollider.getParent()).removeView(headCollider);
+        ((ViewGroup) bodyCollider.getParent()).removeView(bodyCollider);
+        ((ViewGroup) backCollider.getParent()).removeView(backCollider);
+        ((ViewGroup) this.getParent()).removeView(this);
+
+        GridFragmentArrowView newView;
+        if (head) {
+            newView = new GridFragmentArrowView(gridFragment, viewGroup,
+                    startX, startY,
+                    xPos, yPos);
+        } else {
+            newView = new GridFragmentArrowView(gridFragment, viewGroup,
+                    xPos, yPos,
+                    endX, endY);
+        }
+
+        viewGroup.addView(newView);
+        return newView;
+    }
 
     /**
      * nothing else wants to work, I will go crazy if I spend another hour trying to figure out why it doesn't work

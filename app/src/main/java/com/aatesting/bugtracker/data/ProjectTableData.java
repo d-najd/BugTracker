@@ -440,7 +440,7 @@ public class ProjectTableData {
         }
 
         if (newColumnPos == oldColumnPos){
-            Log.d("Debug", "you cant move the new column in the place of the old column");
+            Log.d("Debug", "you cant moveFully the new column in the place of the old column");
             return;
         }
 
@@ -495,7 +495,7 @@ public class ProjectTableData {
         }
 
         if (newColumn == oldColumn){
-            Log.d("Debug", "trying to move column 1 to colum 1 basicly replace the item inside the column, skipping this");
+            Log.d("Debug", "trying to moveFully column 1 to colum 1 basicly replace the item inside the column, skipping this");
             return;
         }
 

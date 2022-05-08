@@ -86,7 +86,7 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
 
                             GridFragmentArrowView tagView = root.findViewWithTag(GridFragmentSettings.ARROW_VIEW_TAG + id);
 
-                            tagView.Move(event.getX(), event.getY());
+                            tagView.moveFully(event.getX(), event.getY());
                         } else {
                             Message.defErrMessage(v.getContext());
                             Log.wtf("ERROR", "invalid arrow tag ");
@@ -98,7 +98,7 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
                         return false;
                     }
                 } catch (Exception e) {
-                    Log.wtf("ERROR", "unable to move " + clipData);
+                    Log.wtf("ERROR", "unable to moveFully " + clipData);
                     Message.defErrMessage(v.getContext());
                     return false;
                 }

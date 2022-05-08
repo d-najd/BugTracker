@@ -35,7 +35,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
 
         Context context = gridFragment.requireContext();
         ViewGroup layout = gridFragment.viewGroup;
-        float dp = gridFragment.dp;
+        float dp = GridFragment.dp;
 
         ImageButton imgBtn = new ImageButton(context);
         imgBtn.setMinimumHeight((int) (GridFragmentSettings.spacing * 3 * dp));
@@ -45,7 +45,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
         imgBtn.setId(View.generateViewId());
 
         TextView textView = new TextView(context);
-        textView.setText("fuck");
+        textView.setText("1234567890");
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextSize(5.5f * dp);
         textView.setTextColor(getResources().getColor(R.color.white87));

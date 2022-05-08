@@ -28,7 +28,7 @@ public class RecentlyViewedProjectsData {
     //add the project to the list when its opened
             /*
         the way that this works is for ex if there are 3 projects opened and len is 3 already
-        pro4::pro3::pro5 and the new one is1 then it should move all projects to the right and
+        pro4::pro3::pro5 and the new one is1 then it should moveFully all projects to the right and
         delete the last, pro1::pro4::pro3 if there arent it should add a new element
         ex: pro1::pro5 to pro1::pro5::pro2
          */
