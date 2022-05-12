@@ -70,7 +70,7 @@ public class ProjectsMainActivity extends AppCompatActivity {
         //DEBUGGING
         new Thread(() -> {
             try {
-                Thread.sleep(100);
+                Thread.sleep(250);
                 Bundle bundle = new Bundle();
                 GridFragment gridFragment = new GridFragment();
                 gridFragment.setArguments(bundle);

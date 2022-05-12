@@ -19,7 +19,7 @@ public class GridFragmentBackgroundView extends View {
 
     public GridFragmentBackgroundView(Context context) {
         super(context);
-        paint.setColor(Color.parseColor("#606060"));
+        paint.setColor(Color.parseColor("#353535"));
 
         dp = context.getResources().getDisplayMetrics().density;
     }
@@ -36,7 +36,7 @@ public class GridFragmentBackgroundView extends View {
                 float xVal = x * GridFragmentSettings.spacing * dp;
                 float yVal = y * GridFragmentSettings.spacing * dp + yOff;
 
-                canvas.drawCircle(xVal, yVal, 2.5f, paint);
+                canvas.drawCircle(xVal, yVal, 2.0f, paint);
             }
         }
     }

@@ -15,6 +15,8 @@ import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
 
+import java.util.ArrayList;
+
 public class GridFragmentArrowView extends View {
     //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
 
@@ -24,6 +26,7 @@ public class GridFragmentArrowView extends View {
     private GridFragment gridFragment;
     private Canvas canvas;
 
+    //these 6 should only be used when creating the view, since the arrow position can change with moving it n stuff but these don't
     private final float xStart;
     private final float yStart;
     private final float xEnd;
@@ -39,6 +42,11 @@ public class GridFragmentArrowView extends View {
     private View headCollider = new View(getContext());
     private View backCollider = new View(getContext());
     private View bodyCollider = new View(getContext());
+    private final float colliderSize;
+
+    //the view that the head/back is following
+    private String headFollowTag;
+    private String backFollowTag;
 
     /**
      * sets up a line between 2 views or just flying around
@@ -53,6 +61,7 @@ public class GridFragmentArrowView extends View {
         GridFragmentSettings.curId++;
 
         dp = gridFragment.getContext().getResources().getDisplayMetrics().density;
+        colliderSize = 36 * dp;
         this.viewGroup = viewGroup;
         this.gridFragment = gridFragment;
 
@@ -67,6 +76,7 @@ public class GridFragmentArrowView extends View {
         yMinM = Math.min(yStart, yEnd) - edgesPadding;
 
         this.setTag(GridFragmentSettings.ARROW_VIEW_TAG + GridFragmentSettings.curId);
+        GridFragmentSettings.allExistingViewTags.add(GridFragmentSettings.ARROW_VIEW_TAG + GridFragmentSettings.curId);
         this.setX(xMinM);
         this.setY(yMinM);
         //gets multiplied by 2 to compensate for dividing in xMin
@@ -105,30 +115,29 @@ public class GridFragmentArrowView extends View {
         bodyCollider = new View(getContext());
 
         double angle = calculateAngle(xStart, yStart, xEnd, yEnd);
-        float size = 40 * dp;
 
-        headCollider.setMinimumWidth((int) size);
-        headCollider.setMinimumHeight((int) size);
+        headCollider.setMinimumWidth((int) colliderSize);
+        headCollider.setMinimumHeight((int) colliderSize);
         headCollider.setElevation(GridFragmentSettings.ARROW_HEAD_LAYER);
-        backCollider.setMinimumWidth((int) size);
-        backCollider.setMinimumHeight((int) size);
+        backCollider.setMinimumWidth((int) colliderSize);
+        backCollider.setMinimumHeight((int) colliderSize);
         backCollider.setElevation(GridFragmentSettings.ARROW_BACK_LAYER);
-        bodyCollider.setMinimumWidth((int) size);
-        bodyCollider.setMinimumHeight((int) ((Math.sqrt(Math.pow(xStart - xEnd, 2) + Math.pow(yStart - yEnd, 2))) + size));
+        bodyCollider.setMinimumWidth((int) colliderSize);
+        bodyCollider.setMinimumHeight((int) ((Math.sqrt(Math.pow(xStart - xEnd, 2) + Math.pow(yStart - yEnd, 2))) + colliderSize));
         bodyCollider.setElevation(GridFragmentSettings.ARROW_BODY_LAYER);
 
-        headCollider.setX(xEnd - size/2);
-        headCollider.setY(yEnd - size/2);
+        headCollider.setX(xEnd - colliderSize/2);
+        headCollider.setY(yEnd - colliderSize/2);
         headCollider.setRotation((float) (angle + 180));
 
-        backCollider.setX(xStart - size/2);
-        backCollider.setY(yStart - size/2);
+        backCollider.setX(xStart - colliderSize/2);
+        backCollider.setY(yStart - colliderSize/2);
         backCollider.setRotation((float) (angle + 180));
 
-        bodyCollider.setX(xStart - size/2);
-        bodyCollider.setY(yStart - size/2);
-        bodyCollider.setPivotY(size/2);
-        bodyCollider.setPivotX(size/2);
+        bodyCollider.setX(xStart - colliderSize/2);
+        bodyCollider.setY(yStart - colliderSize/2);
+        bodyCollider.setPivotY(colliderSize/2);
+        bodyCollider.setPivotX(colliderSize/2);
         bodyCollider.setRotation((float) angle + 90);
 
         viewGroup.addView(bodyCollider);
@@ -139,9 +148,9 @@ public class GridFragmentArrowView extends View {
         bodyCollider.setTag(GridFragmentSettings.ARROW_BODY_TAG + GridFragmentSettings.curId);
         backCollider.setTag(GridFragmentSettings.ARROW_BACK_TAG + GridFragmentSettings.curId);
 
-        headCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
-        bodyCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
-        backCollider.setOnLongClickListener(gridFragment.gridFragmentListeners);
+        headCollider.setOnTouchListener(gridFragment.gridFragmentListeners);
+        bodyCollider.setOnTouchListener(gridFragment.gridFragmentListeners);
+        backCollider.setOnTouchListener(gridFragment.gridFragmentListeners);
 
         boolean debug = false;
         if (debug){
@@ -185,7 +194,7 @@ public class GridFragmentArrowView extends View {
      * @return gets the arrow head point locations
      */
     private float[][] getArrowPaths(){
-        float xScaling = .45f, yScaling = .5f;
+        float xScaling = .45f, yScaling = .6f;
         float spacing = GridFragmentSettings.spacing;
 
         float[][] arrowPaths = {
@@ -312,7 +321,7 @@ public class GridFragmentArrowView extends View {
         backCollider.setX(backCollider.getX() + difX);
         backCollider.setY(backCollider.getY() + difY);
 
-        moveHead(1, 1, true);
+        //movePart(1, 1, true);
     }
 
     /**
@@ -324,33 +333,45 @@ public class GridFragmentArrowView extends View {
      *    \_/      \_/
      * </pre>
      *
+     * and also sets a view to follow if its over one
+     *
+     * @param xPos final x position of the arrow head/back
+     * @param yPos final y position of the arrow head/back
+     * @param head if true the head gets moved, if false the back gets moved
      * @apiNote <p>moving the head also affects the position and rotation of the view and its colliders</p>
      * @implNote <h2>moving the head also removes and redraws the view and its colliders</h2>
-     * @param xPos final x position of the arrow head
-     * @param yPos final y position of the arrow head
-     * @param head if true the head gets moved, if false the back gets moved
+     * @see #checkIfOverView(float, float, boolean)
      * @return the view created from the new positions
      */
-    public View moveHead(float xPos, float yPos, boolean head){
+    public View movePart(float xPos, float yPos, boolean head){
         float spacing = GridFragmentSettings.spacing;
 
-        xPos = spacing * (8 + 1.5f) * dp;
-        yPos = spacing * (15) * dp;
-        float startX = backCollider.getX();
-        float startY = backCollider.getY();
-        float endX = headCollider.getX();
-        float endY = headCollider.getY();
+        //xPos = spacing * (8 + 1.5f) * dp;
+        //yPos = spacing * (15) * dp;
+        float startX = backCollider.getX() + colliderSize/2;
+        float startY = backCollider.getY() + colliderSize/2;
+        float endX = headCollider.getX() + colliderSize/2;
+        float endY = headCollider.getY() + colliderSize/2;
 
         ((ViewGroup) headCollider.getParent()).removeView(headCollider);
         ((ViewGroup) bodyCollider.getParent()).removeView(bodyCollider);
         ((ViewGroup) backCollider.getParent()).removeView(backCollider);
         ((ViewGroup) this.getParent()).removeView(this);
 
+        //String backOver = checkIfOverView();
+        //String headOver = checkIfOverView();
+
         GridFragmentArrowView newView;
         if (head) {
             newView = new GridFragmentArrowView(gridFragment, viewGroup,
                     startX, startY,
                     xPos, yPos);
+            /* TODO finish this, another arrowView that also supports following of views
+            newView = new GridFragmentArrowView(gridFragment, viewGroup,
+                    startX, startY,
+                    xPos, yPos,
+                    backOver, headOver);
+             */
         } else {
             newView = new GridFragmentArrowView(gridFragment, viewGroup,
                     xPos, yPos,
@@ -359,6 +380,30 @@ public class GridFragmentArrowView extends View {
 
         viewGroup.addView(newView);
         return newView;
+    }
+
+    /** TODO finish this
+     * checks if the current position is over some view and sets the tag to the arrow current part if it is
+     * @param head if true checks for head if false for the back
+     * @see #setFollowTag(String, boolean)
+     * @return the tag of the view that arrow part is over
+     */
+    private String checkIfOverView(float xPos, float yPos, boolean head){
+        for (String curView : GridFragmentSettings.allExistingViewTags);
+
+        return null;
+    }
+
+    /**
+     * tells us the view that the arrow's head/back is following the movement of
+     * @param tag tag of the view, if null removes any view tag that was previously entered
+     * @param head if true the head follows the view, if false the back does
+     */
+    public void setFollowTag(String tag, boolean head) {
+        if (head)
+            headFollowTag = tag;
+        else
+            backFollowTag = tag;
     }
 
     /**

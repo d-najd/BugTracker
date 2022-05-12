@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/dimit/AndroidStudioProjects/BugTracker/app/src/main/res/drawable/box_border.xml" value="0.184" />
+        <entry key="..\:/Users/dimit/AndroidStudioProjects/BugTracker/app/src/main/res/drawable/box_border_black.xml" value="0.184" />
+        <entry key="..\:/Users/dimit/AndroidStudioProjects/BugTracker/app/src/main/res/drawable/round_corner.xml" value="0.184" />
+        <entry key="..\:/Users/dimit/AndroidStudioProjects/BugTracker/app/src/main/res/drawable/shape_seperator.xml" value="0.184" />
         <entry key="..\:/Users/dimit/AndroidStudioProjects/BugTracker/app/src/main/res/layout/test.xml" value="0.264" />
       </map>
     </option>

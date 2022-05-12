@@ -15,6 +15,7 @@ import com.aatesting.bugtracker.fragments.FragmentSettings;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentArrowView;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBackgroundView;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBoardView;
+import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentTextView;
 import com.aatesting.bugtracker.modifiedClasses.ModifiedFragment;
 
 public class GridFragment extends ModifiedFragment {
@@ -40,6 +41,7 @@ public class GridFragment extends ModifiedFragment {
 
         new GridFragmentBoardView(this, spacing * 2 * dp, spacing * 15 * dp);
         new GridFragmentBoardView(this, spacing * 8 * dp, spacing * 2 * dp);
+        new GridFragmentTextView(this, spacing * 22 * dp, spacing * 15 * dp);
 
         GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(this, viewGroup,
                 spacing * (2 + 1.5f) * dp, spacing * (15) * dp, //(210 + 45) * dp, (210) * dp

@@ -17,4 +17,8 @@
     <style name="checkbox_style1" parent="Theme.AppCompat.Light">
         <item name="colorControlActivated">@color/purple_200</item>
     </style>
+
+    <style name="imageViewRounded">
+        <item name="cornerSize">12%</item>
+    </style>
 </resources>

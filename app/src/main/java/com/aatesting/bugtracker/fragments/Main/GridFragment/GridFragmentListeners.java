@@ -1,16 +1,18 @@
 package com.aatesting.bugtracker.fragments.Main.GridFragment;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentArrowView;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBackgroundView;
 
-public class GridFragmentListeners implements View.OnLongClickListener, View.OnDragListener {
+public class GridFragmentListeners implements View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
     public GridFragmentBackgroundView gridFragmentBackgroundView;
 
     private View root;
@@ -41,15 +43,26 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        startDrag(v);
+        return false;
+    }
+
     @Override
     public boolean onLongClick(View v) {
+        startDrag(v);
+        return false;
+    }
+
+    private void startDrag(View v){
         View.DragShadowBuilder mShadow = new View.DragShadowBuilder(v);
         ClipData.Item item = new ClipData.Item(v.getTag().toString());
         String[] mimeTypes = {ClipDescription.MIMETYPE_TEXT_PLAIN};
         ClipData data = new ClipData(v.getTag().toString(), mimeTypes, item);
 
         v.startDragAndDrop(data, mShadow, null, 0);
-        return false;
     }
 
     @Override
@@ -79,6 +92,13 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
                         GenericSetPosition(clipData + "Layout", event.getX(), event.getY());
                     } else if (clipData.contains(GridFragmentSettings.ARROW_MAIN)) {
                         if (clipData.contains(GridFragmentSettings.ARROW_HEAD_TAG)) {
+                            //just getting the id since we don't need the name
+                            String[] idArr = clipData.split(GridFragmentSettings.ARROW_HEAD_TAG);
+                            String id = idArr[1];
+
+                            GridFragmentArrowView tagView = root.findViewWithTag(GridFragmentSettings.ARROW_VIEW_TAG + id);
+
+                            tagView.movePart(event.getX(), event.getY(), true);
                         } else if (clipData.contains(GridFragmentSettings.ARROW_BODY_TAG)) {
                             //just getting the id since we don't need the name
                             String[] idArr = clipData.split(GridFragmentSettings.ARROW_BODY_TAG);
@@ -87,11 +107,21 @@ public class GridFragmentListeners implements View.OnLongClickListener, View.OnD
                             GridFragmentArrowView tagView = root.findViewWithTag(GridFragmentSettings.ARROW_VIEW_TAG + id);
 
                             tagView.moveFully(event.getX(), event.getY());
+                        } else if (clipData.contains(GridFragmentSettings.ARROW_BACK_TAG)) {
+                            //just getting the id since we don't need the name
+                            String[] idArr = clipData.split(GridFragmentSettings.ARROW_BACK_TAG);
+                            String id = idArr[1];
+
+                            GridFragmentArrowView tagView = root.findViewWithTag(GridFragmentSettings.ARROW_VIEW_TAG + id);
+
+                            tagView.movePart(event.getX(), event.getY(), false);
                         } else {
                             Message.defErrMessage(v.getContext());
                             Log.wtf("ERROR", "invalid arrow tag ");
                             return false;
                         }
+                    } else if (clipData.contains(GridFragmentSettings.EDIT_TEXT_TAG)){
+                        GenericSetPosition(clipData + "Layout", event.getX(), event.getY());
                     } else {
                         Message.defErrMessage(v.getContext());
                         Log.wtf("ERROR", "Invalid view tag, " + clipData);
