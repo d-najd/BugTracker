@@ -4,23 +4,28 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
+import com.aatesting.bugtracker.modifiedClasses.GridFragmentCustomConstraintLayout;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GridFragmentBoardView extends ConstraintLayout {
+public class GridFragmentBoardView extends GridFragmentCustomConstraintLayout {
     final String BOARD_TAG = GridFragmentSettings.BOARD_TAG;
+    float dp;
 
     /**
      * creates and sets boardView to the gridFragment viewGroup
@@ -35,7 +40,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
 
         Context context = gridFragment.requireContext();
         ViewGroup layout = gridFragment.viewGroup;
-        float dp = GridFragment.dp;
+        dp = GridFragment.dp;
 
         ShapeableImageView imgBtn = new ShapeableImageView(context);
         imgBtn.setMinimumHeight((int) (GridFragmentSettings.spacing * 4 * dp));
@@ -48,16 +53,16 @@ public class GridFragmentBoardView extends ConstraintLayout {
         imgBtn.setId(View.generateViewId());
 
         TextView textView = new TextView(context);
-        textView.setText("1234567890");
+        textView.setText("boardView");
         textView.setTypeface(null, Typeface.BOLD);
-        //textView.setTextSize(5.5f * dp);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         textView.setWidth((int) (imgBtn.getMinimumWidth() * 1.2f));
         textView.setTextColor(getResources().getColor(R.color.white87));
         textView.setId(View.generateViewId());
 
         ConstraintLayout conLayout = new ConstraintLayout(context);
         conLayout.setTag(BOARD_TAG + curId + "Layout");
-        GridFragmentSettings.allExistingViewTags.add(BOARD_TAG + curId + "Layout");
+        GridFragmentSettings.allExistingViewTags.add(this);
         conLayout.addView(imgBtn);
         conLayout.addView(textView);
         //conLayout.setBackgroundColor(R.color.red);
@@ -73,7 +78,7 @@ public class GridFragmentBoardView extends ConstraintLayout {
                 imgBtn.getId(), ConstraintSet.START, 0);
         set.applyTo(conLayout);
 
-        textView.setPadding(0, (int) (7 * dp), (int) (6.75 * dp), 0);
+        textView.setPadding((int) (7 * dp), (int) (7 * dp), (int) (5 * dp), 0);
 
         conLayout.setX(xPos);
         conLayout.setY(yPos);
@@ -91,5 +96,24 @@ public class GridFragmentBoardView extends ConstraintLayout {
         });
 
         layout.addView(conLayout);
+    }
+
+    /*
+        TODO finish this, this is supposed to move along with the arrow if there is 1
+     */
+
+    @Override
+    public void moveFully(float x, float y){
+        try {
+            //in short we are adjusting the position so it follows the dots on the screen
+            float newX = Math.round((x - this.getWidth() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
+            float newY = Math.round((y - this.getHeight() / 2f) / (GridFragmentSettings.spacing * dp)) * GridFragmentSettings.spacing * dp;
+
+            this.setX(newX);
+            this.setY(newY);
+        } catch (Exception e){
+            Message.defErrMessage(this.getContext());
+            Log.wtf("ERROR", "Unable to get or set position for view with tag " + this.getTag());
+        }
     }
 }

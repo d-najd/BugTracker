@@ -4,18 +4,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.R;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragment;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.GridFragmentSettings;
-
-import java.util.ArrayList;
+import com.aatesting.bugtracker.modifiedClasses.GridFragmentCustomConstraintLayout;
 
 public class GridFragmentArrowView extends View {
     //http://blogs.sitepointstatic.com/examples/tech/canvas-curves/bezier-curve.html
@@ -45,18 +43,28 @@ public class GridFragmentArrowView extends View {
     private final float colliderSize;
 
     //the view that the head/back is following
-    private String headFollowTag;
-    private String backFollowTag;
+    private GridFragmentCustomConstraintLayout headFollowView;
+    private GridFragmentCustomConstraintLayout backFollowView;
 
     /**
-     * sets up a line between 2 views or just flying around
+     * sets a arrow which is following view/layout's
      * <pre>
      *    __        __
      *   |  | ---> |  |
      *   |__|      |__|
      * </pre>
+     * @param gridFragment this view is made for the {@link GridFragment} specifically so we need one
+     * @param xStart starting x position of the arrow
+     * @param yStart starting y position of the arrow
+     * @param xEnd ending x position of the arrow, the arrow head is located here
+     * @param yEnd ending y position of the arrow, the arrow head is located here
+     * @param backFollowView the constraint layout that the back of the arrow is following, if not null xStart and yStart will be overridden
+     * @param headFollowView the constraint layout that the arrow head is following, if not null xEnd and yEnd will be overridden
      */
-    public GridFragmentArrowView(GridFragment gridFragment, ViewGroup viewGroup, float xStart, float yStart, float xEnd, float yEnd){
+    public GridFragmentArrowView(GridFragment gridFragment, ViewGroup viewGroup,
+                                 float xStart, float yStart, float xEnd, float yEnd,
+                                 GridFragmentCustomConstraintLayout backFollowView,
+                                 GridFragmentCustomConstraintLayout headFollowView){
         super(gridFragment.getContext());
         GridFragmentSettings.curId++;
 
@@ -76,7 +84,7 @@ public class GridFragmentArrowView extends View {
         yMinM = Math.min(yStart, yEnd) - edgesPadding;
 
         this.setTag(GridFragmentSettings.ARROW_VIEW_TAG + GridFragmentSettings.curId);
-        GridFragmentSettings.allExistingViewTags.add(GridFragmentSettings.ARROW_VIEW_TAG + GridFragmentSettings.curId);
+        GridFragmentSettings.allExistingArrowViews.add(this);
         this.setX(xMinM);
         this.setY(yMinM);
         //gets multiplied by 2 to compensate for dividing in xMin
@@ -321,6 +329,12 @@ public class GridFragmentArrowView extends View {
         backCollider.setX(backCollider.getX() + difX);
         backCollider.setY(backCollider.getY() + difY);
 
+        headFollowView.arrowsPointed.remove(headCollider);
+        backFollowView.arrowsPointed.remove(backCollider);
+
+        headFollowView = null;
+        backFollowView = null;
+
         //movePart(1, 1, true);
     }
 
@@ -335,19 +349,19 @@ public class GridFragmentArrowView extends View {
      *
      * and also sets a view to follow if its over one
      *
-     * @param xPos final x position of the arrow head/back
-     * @param yPos final y position of the arrow head/back
+     * @param newXPos final x position of the arrow head/back
+     * @param newYPos final y position of the arrow head/back
      * @param head if true the head gets moved, if false the back gets moved
      * @apiNote <p>moving the head also affects the position and rotation of the view and its colliders</p>
      * @implNote <h2>moving the head also removes and redraws the view and its colliders</h2>
      * @see #checkIfOverView(float, float, boolean)
      * @return the view created from the new positions
      */
-    public View movePart(float xPos, float yPos, boolean head){
+    public View movePart(float newXPos, float newYPos, boolean head){
         float spacing = GridFragmentSettings.spacing;
 
-        //xPos = spacing * (8 + 1.5f) * dp;
-        //yPos = spacing * (15) * dp;
+        //newXPos = spacing * (8 + 1.5f) * dp;
+        //newYPos = spacing * (15) * dp;
         float startX = backCollider.getX() + colliderSize/2;
         float startY = backCollider.getY() + colliderSize/2;
         float endX = headCollider.getX() + colliderSize/2;
@@ -358,52 +372,52 @@ public class GridFragmentArrowView extends View {
         ((ViewGroup) backCollider.getParent()).removeView(backCollider);
         ((ViewGroup) this.getParent()).removeView(this);
 
-        //String backOver = checkIfOverView();
-        //String headOver = checkIfOverView();
+        checkIfOverView(newXPos, newYPos, head);
 
         GridFragmentArrowView newView;
         if (head) {
             newView = new GridFragmentArrowView(gridFragment, viewGroup,
                     startX, startY,
-                    xPos, yPos);
-            /* TODO finish this, another arrowView that also supports following of views
-            newView = new GridFragmentArrowView(gridFragment, viewGroup,
-                    startX, startY,
-                    xPos, yPos,
-                    backOver, headOver);
-             */
+                    newXPos, newYPos, backFollowView, headFollowView);
         } else {
             newView = new GridFragmentArrowView(gridFragment, viewGroup,
-                    xPos, yPos,
-                    endX, endY);
+                    newXPos, newYPos,
+                    endX, endY, backFollowView, headFollowView);
         }
 
         viewGroup.addView(newView);
         return newView;
     }
 
-    /** TODO finish this
-     * checks if the current position is over some view and sets the tag to the arrow current part if it is
-     * @param head if true checks for head if false for the back
-     * @see #setFollowTag(String, boolean)
-     * @return the tag of the view that arrow part is over
-     */
-    private String checkIfOverView(float xPos, float yPos, boolean head){
-        for (String curView : GridFragmentSettings.allExistingViewTags);
-
-        return null;
-    }
-
     /**
-     * tells us the view that the arrow's head/back is following the movement of
-     * @param tag tag of the view, if null removes any view tag that was previously entered
-     * @param head if true the head follows the view, if false the back does
+     * checks if the current position is over some view and sets it to be followed n stuff if it does
+     * @param head if true checks for head if false for the back
+     * @return the the constraint layout of the view
      */
-    public void setFollowTag(String tag, boolean head) {
-        if (head)
-            headFollowTag = tag;
-        else
-            backFollowTag = tag;
+    private GridFragmentCustomConstraintLayout checkIfOverView(float xPos, float yPos, boolean head){
+        String packageName = viewGroup.getContext().getPackageName();
+
+        for (GridFragmentCustomConstraintLayout curView : GridFragmentSettings.allExistingViewTags) {
+            if (    //basically checking if the arrow is in bounds of the current view
+                    (xPos >= curView.getX() && xPos <= curView.getX() + curView.getWidth()) &&
+                    (yPos >= curView.getY() && yPos <= curView.getY() + curView.getHeight())){
+                if (head) {
+                    curView.arrowsPointed.add(headCollider);
+                    headFollowView = curView;
+                }
+                else {
+                    curView.arrowsPointed.add(backCollider);
+                    backFollowView = curView;
+                }
+                return curView;
+            }
+        }
+        if (head && headFollowView != null){
+            headFollowView.arrowsPointed.remove(headCollider);
+        } else if (headFollowView != null){
+            backFollowView.arrowsPointed.remove(backCollider);
+        }
+        return null;
     }
 
     /**

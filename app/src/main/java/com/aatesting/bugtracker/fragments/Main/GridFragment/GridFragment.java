@@ -45,7 +45,7 @@ public class GridFragment extends ModifiedFragment {
 
         GridFragmentArrowView gridFragmentArrowView = new GridFragmentArrowView(this, viewGroup,
                 spacing * (2 + 1.5f) * dp, spacing * (15) * dp, //(210 + 45) * dp, (210) * dp
-                spacing * (8 + 1.5f) * dp,  spacing * 2 * dp + 110 * dp + spacing*dp/2); //(120 + 45) * dp,  (450) * dp)
+                spacing * (8 + 1.5f) * dp,  spacing * 2 * dp + 110 * dp + spacing*dp/2, null, null); //(120 + 45) * dp,  (450) * dp)
 
         viewGroup.addView(gridFragmentArrowView);
         // gridFragmentArrowView.setBackgroundColor(R.color.red);

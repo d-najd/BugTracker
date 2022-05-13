@@ -17,7 +17,6 @@
     <!--seems like because the dots are child of the main constraint layout that they are
         not affected by the constraint layout of the horizontalScrollView-->
 
-
     <HorizontalScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +35,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </HorizontalScrollView>
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

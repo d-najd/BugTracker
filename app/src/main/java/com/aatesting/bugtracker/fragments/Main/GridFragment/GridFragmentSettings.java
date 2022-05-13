@@ -1,5 +1,9 @@
 package com.aatesting.bugtracker.fragments.Main.GridFragment;
 
+import android.view.View;
+
+import com.aatesting.bugtracker.modifiedClasses.GridFragmentCustomConstraintLayout;
+
 import java.util.ArrayList;
 
 public class GridFragmentSettings {
@@ -19,9 +23,13 @@ public class GridFragmentSettings {
     public static final float ARROW_BODY_LAYER = .010f;
 
     /*
-        each view has to have a different tag, so I am using an universal id for all of them
+        each view has to have a different tag, so I am using an universal id for all of them, this
+        should be client based
      */
     public static long curId = 0;
-    public static ArrayList<String> allExistingViewTags = new ArrayList<>(); //the tags of all existing views
+    //the tags of all existing views/constraint layouts
+    public static ArrayList<GridFragmentCustomConstraintLayout> allExistingViewTags = new ArrayList<>();
+    //all the arrow views
+    public static ArrayList<View> allExistingArrowViews = new ArrayList<>();
 
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import com.aatesting.bugtracker.Message;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentArrowView;
 import com.aatesting.bugtracker.fragments.Main.GridFragment.Views.GridFragmentBackgroundView;
+import com.aatesting.bugtracker.modifiedClasses.GridFragmentCustomConstraintLayout;
 
 public class GridFragmentListeners implements View.OnTouchListener, View.OnLongClickListener, View.OnDragListener {
     public GridFragmentBackgroundView gridFragmentBackgroundView;
@@ -89,7 +90,12 @@ public class GridFragmentListeners implements View.OnTouchListener, View.OnLongC
 
                 try {
                     if (clipData.contains(GridFragmentSettings.BOARD_TAG)) {
-                        GenericSetPosition(clipData + "Layout", event.getX(), event.getY());
+                        for (GridFragmentCustomConstraintLayout curView : GridFragmentSettings.allExistingViewTags)
+                        {
+                            if (curView.getTag() == clipData + "Layout"){
+                                curView.moveFully(event.getX(), event.getY());
+                            }
+                        }
                     } else if (clipData.contains(GridFragmentSettings.ARROW_MAIN)) {
                         if (clipData.contains(GridFragmentSettings.ARROW_HEAD_TAG)) {
                             //just getting the id since we don't need the name
@@ -128,7 +134,8 @@ public class GridFragmentListeners implements View.OnTouchListener, View.OnLongC
                         return false;
                     }
                 } catch (Exception e) {
-                    Log.wtf("ERROR", "unable to moveFully " + clipData);
+                    e.printStackTrace();
+                    Log.wtf("ERROR", "unable to move fully " + clipData);
                     Message.defErrMessage(v.getContext());
                     return false;
                 }
