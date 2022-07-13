@@ -1,0 +1,243 @@
+{
+  "info": {
+    "_postman_id": "db6c1f4f-705b-4463-b631-7608e7c89b7a",
+    "name": "UmlDesigner",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Schema",
+      "item": [
+        {
+          "name": "Item",
+          "item": [
+            {
+              "name": "Get all",
+              "id": "f7349aba-4a1b-48f3-a4f3-b29e9536a42f",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table"
+              },
+              "response": []
+            },
+            {
+              "name": "Get all By Table Uuid",
+              "id": "d4832165-8fcd-4d24-9fa1-32f49d0fba91",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table/cd0f8215-b2f3-4190-ad90-8530d27ed786/item"
+              },
+              "response": []
+            },
+            {
+              "name": "Get By Id",
+              "id": "40e0942f-7268-4df6-8e49-5bb75f57307f",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table/item/id/2"
+              },
+              "response": []
+            },
+            {
+              "name": "Get By Uuid",
+              "id": "f45c27ac-12ef-42b3-b383-67306312a7a3",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table/item/6b0b1281-df44-4b66-b4f1-47545efee402"
+              },
+              "response": []
+            },
+            {
+              "name": "Create",
+              "id": "5e56a30c-dbee-4764-9be3-d15f98b2236a",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "    {\r\n        \"position\": 100,\r\n        \"type\": \"test\",\r\n        \"value\": \"5\"\r\n    }"
+                },
+                "url": "http://localhost:8080/s/table/97867839-c0ed-49f2-9f87-fb5b3b525eb4/item"
+              },
+              "response": []
+            },
+            {
+              "name": "Create List",
+              "id": "620d1454-d72a-44e9-b50b-7eb1890e21a5",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "[\r\n            {\r\n                \"position\": 0,\r\n                \"type\": \"Item1\",\r\n                \"value\": \"5\"\r\n            },\r\n            {\r\n                \"position\": 1,\r\n                \"type\": \"Item2\",\r\n                \"value\": \"5\"\r\n            }\r\n        ]"
+                },
+                "url": "http://localhost:8080/s/table/16e0ad19-f706-4ce3-b176-fee1f5de5abc/item/list"
+              },
+              "response": []
+            },
+            {
+              "name": "Update",
+              "id": "29ee16d5-cce1-46a7-a32a-6e6e87ab5044",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"position\": 100,\r\n    \"type\": \"Item2Edited\",\r\n    \"value\": \"5\"\r\n}"
+                },
+                "url": "http://localhost:8080/s/table/item/bc4a40ba-9de6-4b2a-9dca-083d32dd5076"
+              },
+              "response": []
+            },
+            {
+              "name": "Swap Items",
+              "id": "f66c71cf-4248-4fbf-9b58-c5df9ee93278",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": "http://localhost:8080/s/table/16e0ad19-f706-4ce3-b176-fee1f5de5abc/item1/9d556706-8e8c-4396-851b-6a4fffc19eab/item2/3937731a-2c33-4dc8-918a-39baeaae0860"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "id": "04b2b176-9828-49db-a997-a9032520169c",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "http://localhost:8080/s/table/item/6b0b1281-df44-4b66-b4f1-47545efee402"
+              },
+              "response": []
+            }
+          ],
+          "id": "4821d406-3ab0-4b1b-95a6-f69d79026a98"
+        },
+        {
+          "name": "Table",
+          "item": [
+            {
+              "name": "Get all",
+              "id": "8990f18e-fa3e-4849-8686-614ff70bbc8c",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table"
+              },
+              "response": []
+            },
+            {
+              "name": "Get By Id",
+              "id": "823e64db-afa4-4bcf-a4ab-c06a6ce8bf89",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table/id/20"
+              },
+              "response": []
+            },
+            {
+              "name": "Get By Uuid",
+              "id": "0082c220-2e4e-4e87-9ab0-f3ae5ab67cd9",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/table/e367a82a-2e14-4230-af7e-6b02da5f7050"
+              },
+              "response": []
+            },
+            {
+              "name": "Create",
+              "id": "30ec5878-4226-43bc-bfd5-bd238a35fc51",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "    {\r\n        \"uuid\": \"rand\",\r\n        \"x\": 5.0,\r\n        \"y\": 5.0,\r\n        \"title\": \"table2\",\r\n        \"items\": [\r\n            {\r\n                \"uuid\": \"cccac93f-d0e0-4e46-ab1a-1b9b1a0c7335\",\r\n                \"position\": 250,\r\n                \"type\": \"RATATATATA\",\r\n                \"value\": \"100\"\r\n            },\r\n            {\r\n                \"uuid\": \"cccac93f-d0e0-4e46-ab1a-1b9b1a0c7335\",\r\n                \"position\": 250,\r\n                \"type\": \"Second?\",\r\n                \"value\": \"10\"\r\n            },\r\n            {\r\n                \"uuid\": \"cccac93f-d0e0-4e46-ab1a-1b9b1a0c7335\",\r\n                \"position\": 250,\r\n                \"type\": \"Third?\",\r\n                \"value\": \"10\"\r\n            }\r\n        ]\r\n    }"
+                },
+                "url": "http://localhost:8080/s/table/"
+              },
+              "response": []
+            },
+            {
+              "name": "Update",
+              "id": "af255e81-5215-4685-85bc-8847adb53b22",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "    {\r\n        \"uuid\": \"rand\",\r\n        \"x\": 5.0,\r\n        \"y\": 5.0,\r\n        \"title\": \"table_with_items_edited\",\r\n        \"items\": [\r\n            {\r\n                \"uuid\": \"cccac93f-d0e0-4e46-ab1a-1b9b1a0c7335\",\r\n                \"position\": 2,\r\n                \"type\": \"cremapped\",\r\n                \"value\": \"100\"\r\n            }\r\n        ]\r\n    }"
+                },
+                "url": "http://localhost:8080/s/table/16e0ad19-f706-4ce3-b176-fee1f5de5abc"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "id": "497a042b-1c85-4d24-866b-da5e8adce6b2",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": "http://localhost:8080/s/table/8d9b0816-5d60-45b0-9453-d7236499f23c"
+              },
+              "response": []
+            }
+          ],
+          "id": "d491f993-12d7-4053-ad93-ed6f56492ddc"
+        },
+        {
+          "name": "Foreign Key",
+          "item": [
+            {
+              "name": "Get",
+              "id": "83701fe7-1cce-4edb-a14f-112839717d3e",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "http://localhost:8080/s/item/foreignKey/.../..."
+              },
+              "response": []
+            }
+          ],
+          "id": "772cd2e8-9633-4473-b487-4557bbe11a3e"
+        }
+      ],
+      "id": "b034f188-7aca-4e6d-b538-66e10f88838a"
+    }
+  ]
+}
